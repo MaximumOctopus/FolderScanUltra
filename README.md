@@ -17,7 +17,7 @@ The included sqlite3.dll and sqlite3.lib files are x64 versions. They can only b
 
 # History 
 
-This was originally a Delphi application called X.Robot which received a C++ rewrite in 2019. 
+This was originally a Delphi application, released as part of the Xinorbis toolset, called XCom, it was renamed X.Robot many years ago, and received a C++ rewrite in 2019. 
 
 In 2022 I decided to rename it and add it to my pool of applications receiving regular updates (two applications now, so maybe a puddle, not a pool).
 
