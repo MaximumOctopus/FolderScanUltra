@@ -220,6 +220,23 @@ namespace ReportHandler
 
 				case __ReportTypeHTMLDeep:
 				{
+					HTMLReportOptions trOptions;
+
+					trOptions.Filename = lParameterDetails.Value;
+					trOptions.Align = L"right";
+					trOptions.LayoutSize = Utility::OptionToInt(lParameterDetails.Options[10]);
+					trOptions.Units = Utility::OptionToInt(lParameterDetails.Options[11]);
+					trOptions.DeepScan = true;
+
+					trOptions.Layout[0] = true;
+
+					for (int t = 1; t < __HTMLLayoutOptionsCount; t++)
+					{
+						trOptions.Layout[t] = Utility::StringToBool(lParameterDetails.Options[t]);
+					}
+
+					ReportHTML::GenerateReport(trOptions);
+
 					reportCount++;
 
 					break;

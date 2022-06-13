@@ -18,7 +18,7 @@
 
 class FolderHistory
 {
-	std::wstring ScanPath;
-	std::wstring ComputerName;
-	std::wstring MD5;
+	std::wstring ScanPath = L"";
+	std::wstring ComputerName = L"";
+	std::wstring MD5 = L"";
 };

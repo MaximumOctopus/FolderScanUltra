@@ -16,8 +16,10 @@
 #include <chrono>
 #include <string>
 #include <vector>
+
 #include "FileObject.h"
 #include "FileDateObject.h"
+#include "ReportConstants.h"
 #include "RootFolder.h"
 #include "ScanDetails.h"
 #include "SizeOfFolder.h"
@@ -26,20 +28,20 @@
 
 struct Disk
 {
-	unsigned __int64 DriveSpaceTotal;
-	unsigned __int64 DriveSpaceFree;
-	unsigned __int64 DriveSpaceUsed;
+	unsigned __int64 DriveSpaceTotal = 0;
+	unsigned __int64 DriveSpaceFree = 0;
+	unsigned __int64 DriveSpaceUsed = 0;
 
-	std::wstring diskType;
+	std::wstring diskType = L"";
 
-	int sectorsPerCluster;
-	int bytesPerSector;
-	int freeClusters;
-	int totalClusters;
+	int sectorsPerCluster = 0;
+	int bytesPerSector = 0;
+	int freeClusters = 0;
+	int totalClusters = 0;
 
-	std::wstring volumeName;
-	std::wstring serialNumber;
-	std::wstring fileSystem;
+	std::wstring volumeName = L"";
+	std::wstring serialNumber = L"";
+	std::wstring fileSystem = L"";
 };
 
 
@@ -60,23 +62,24 @@ private:
 
 	void BuildTop100SizeLists();
 	void BuildTop100DateLists();
-public:
-	std::wstring ScanPath;
-	std::wstring ScanDateStr;
-	std::wstring ScanDateInt;
-	
-	bool ScanPathSet;
 
-	bool AllowVirtualFiles;
+public:
+	std::wstring ScanPath = L"";
+	std::wstring ScanDateStr = L"";
+	std::wstring ScanDateInt = L"";
+	
+	bool ScanPathSet = false;
+
+	bool AllowVirtualFiles = false;
 
 	std::chrono::system_clock::time_point StartTime;
 
-	int FileCount;
-	int FolderCount;
-	unsigned __int64 TotalSize;
-	unsigned __int64 TotalSizeOD;
-	unsigned __int64 AverageFileSize;
-	float AverageFilesPerFolder;
+	int FileCount = 0;
+	int FolderCount = 0;
+	unsigned __int64 TotalSize = 0;
+	unsigned __int64 TotalSizeOD = 0;
+	unsigned __int64 AverageFileSize = 0;
+	float AverageFilesPerFolder = 0;
 	
 	Disk DiskStats;
 
@@ -119,4 +122,6 @@ public:
 	void AddUserNotSpecified();
 
 	SizeOfFolder GetSizeOfFolder(std::wstring folderName);
+
+	int GetFolderIndex(std::wstring folderName);
 };

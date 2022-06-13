@@ -308,7 +308,6 @@ std::wstring ParameterHandler::ReportSwitch(int report)
 
 int ParameterHandler::HelpSwitch(std::wstring& help)
 {
-
 	std::transform(help.begin(), help.end(), help.begin(), ::tolower);
 
 	if ((help == L"/?") || (help == L"/h"))

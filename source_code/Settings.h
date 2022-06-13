@@ -18,6 +18,7 @@
 #include <string>
 
 #include "Ini.h"
+#include "ReportConstants.h"
 #include "ReportHTMLReportOptions.h"
 
 

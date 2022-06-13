@@ -13,9 +13,7 @@
 #pragma once
 
 #include <string>
-
-
-static const int __TextReportOptionsCount = 11;
+#include "ReportConstants.h"
 
 
 struct TextReportOptions

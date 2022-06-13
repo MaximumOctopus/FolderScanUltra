@@ -20,20 +20,20 @@
 class FileObject
 {
 public:
-    int FilePathIndex;
-    std::wstring FileName;
-	unsigned __int64 Size;
-    int SizeOnDisk;
-    int FileDateC;	// yyyymmdd
-    int FileDateA;	// yyyymmdd
-    int FileDateM;	// yyyymmdd
-    int FileTimeC;	// hhmmss
-    int FileTimeA;	// hhmmss
-    int FileTimeM;	// hhmmss
-	int Category;
-    DWORD Attributes;
-    bool Temp;
-    int Owner;
+    int FilePathIndex = 0;
+    std::wstring FileName = L"";
+	unsigned __int64 Size = 0;
+    int SizeOnDisk = 0;
+    int FileDateC = 0;	// yyyymmdd
+    int FileDateA = 0;	// yyyymmdd
+    int FileDateM = 0;	// yyyymmdd
+    int FileTimeC = 0;	// hhmmss
+    int FileTimeA = 0;	// hhmmss
+    int FileTimeM = 0;	// hhmmss
+	int Category = 0;
+    DWORD Attributes = 0;
+    bool Temp = false;
+    int Owner = 0;
 
 	FileObject();
 };

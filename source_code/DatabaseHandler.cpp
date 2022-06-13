@@ -26,6 +26,7 @@
 #include "FolderHistoryHandler.h"
 #include "LanguageHandler.h"
 #include "Registry.h"
+#include "ReportConstants.h"
 #include "ScanHistoryObject.h"
 #include "Utility.h"
 #include "WindowsUtility.h"

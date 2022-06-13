@@ -19,12 +19,12 @@
 class FileExtension
 {
 public:
-    std::wstring Name;
+    std::wstring Name = L"";
 
-    int Category;
-    int Quantity;
+    int Category = 0;
+    int Quantity = 0;
 	
-	unsigned __int64 Size;
+	unsigned __int64 Size = 0;
 
     FileExtension();
 };

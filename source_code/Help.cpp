@@ -130,7 +130,7 @@ namespace Help
 		std::wcout << L"    /allowvirtual          : enable processing of virtual files" << "\n";
 		std::wcout << "\n";
         std::wcout << L"  Saves to default output folder if filename not specified." << "\n";
-        std::wcout << L"    <FolderScanUltra install\data\reports\>" << "\n";
+        std::wcout << L"    <FolderScanUltra install\\data\\reports\\>" << "\n";
         std::wcout << std::endl;
     }
 

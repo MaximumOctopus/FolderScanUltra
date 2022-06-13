@@ -108,8 +108,8 @@ void ScanDetails::AddUserNotSpecified()
 	UserData ud;
 	
 	ud.Name    = GLanguageHandler->XText[rsNOT_SPECIFIED];
-	ud.Data[0] = GScanDetails->FileCount;
-	ud.Data[1] = GScanDetails->TotalSize;
+	ud.Data[0] = FileCount;
+	ud.Data[1] = TotalSize;
 
 	Users.push_back(ud);
 }
@@ -135,7 +135,7 @@ void ScanDetails::PopulateDiskStat()
 	ULARGE_INTEGER total;
 	ULARGE_INTEGER free;
 
-	if (GetDiskFreeSpaceExW(GScanDetails->ScanPath.c_str(),
+	if (GetDiskFreeSpaceExW(ScanPath.c_str(),
 		                    &available,
 							&total,
 							&free) != 0)
@@ -570,7 +570,7 @@ void ScanDetails::AnalyseRootFolders()
 	if (RootFolders.size() != 0)
 	{
 
-		for (int t = 0; t < GScanDetails->Files.size(); t++)
+		for (int t = 0; t < Files.size(); t++)
 		{
 			// =======================================================================
 			// =================== Ony process files =================================
@@ -680,9 +680,9 @@ void ScanDetails::ScanFolder(const std::wstring &directory)
 
 						newUser.Name = owner;
 
-						GScanDetails->Users.push_back(newUser);
+						Users.push_back(newUser);
 
-						z = GScanDetails->Users.size() - 1;
+						z = Users.size() - 1;
 					}
 					
 					lFileObject.Owner = z;
@@ -891,4 +891,18 @@ SizeOfFolder ScanDetails::GetSizeOfFolder(std::wstring folderName)
 	}
 
 	return sof;
+}
+
+
+int ScanDetails::GetFolderIndex(std::wstring folderName)
+{
+	for (int t = 0; t < Folders.size(); t++)
+	{
+		if (Folders[t].rfind(folderName, 0) == 0)
+		{
+			return t;
+		}
+	}
+
+	return -1;
 }

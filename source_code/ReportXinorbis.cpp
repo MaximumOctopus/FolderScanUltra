@@ -10,18 +10,22 @@
 // 
 
 
-#include "Convert.h"
-#include "ReportXinorbis.h"
-#include "ReportXinorbisReportOptions.h"
-#include "ScanDetails.h"
-#include "Utility.h"
 #include <algorithm>
 #include <codecvt>
 #include <fstream>
 #include <iostream>
 #include <string>
 
+#include "Constants.h"
+#include "Convert.h"
+#include "ReportXinorbis.h"
+#include "ReportXinorbisReportOptions.h"
+#include "ScanDetails.h"
+#include "Utility.h"
+
+
 extern ScanDetails* GScanDetails;
+
 
 namespace ReportXinorbis
 {

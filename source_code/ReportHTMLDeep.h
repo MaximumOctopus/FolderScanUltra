@@ -13,12 +13,21 @@
 #pragma once
 
 
-#include "ReportConstants.h"
-#include "ReportHTMLReportOptions.h"
 #include <string>
+#include <vector>
+
+#include "ReportHTMLReportOptions.h"
+#include "SizeOfFolder.h"
 
 
-namespace ReportHTMLDeep
+class ReportHTMLDeep
 {
-	
+public:
+	std::vector<SizeOfFolder> FolderData;
+
+	// ======================================================================
+
+	ReportHTMLDeep();
+
+	void ProcessFolder(int);
 };

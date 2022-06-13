@@ -21,10 +21,10 @@ class ScanHistoryObject
 public:
 
 	int DateI;
-	std::wstring TimeI;
+	std::wstring TimeI = L"";
 
-	std::wstring Path;
+	std::wstring Path = L"";
 
-	std::wstring ExcludeFiles;
-	std::wstring ExcludeFolders;
+	std::wstring ExcludeFiles = L"";
+	std::wstring ExcludeFolders = L"";
 };

@@ -10,19 +10,22 @@
 // 
 
 
-#include "Convert.h"
-#include "FolderHistoryHandler.h"
-#include "SystemGlobal.h"
-#include "MD5.h"
-#include "ScanDetails.h"
-#include "Utility.h"
-#include "WindowsUtility.h"
 #include <algorithm>
 #include <codecvt>
 #include <fstream>
 #include <iostream>
 #include <locale>
 #include <string>
+
+#include "Constants.h"
+#include "Convert.h"
+#include "FolderHistoryHandler.h"
+#include "SystemGlobal.h"
+#include "MD5.h"
+#include "ReportConstants.h"
+#include "ScanDetails.h"
+#include "Utility.h"
+#include "WindowsUtility.h"
 
 
 extern ScanDetails* GScanDetails;

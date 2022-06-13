@@ -16,7 +16,12 @@
 #include <string>
 
 
-static const std::wstring __FSUVersion = L"5.0.0";
+#ifdef _DEBUG
+static const std::wstring __FSUVersion = L"5.1.0 (debug)";
+#else
+static const std::wstring __FSUVersion = L"5.1.0";
+#endif
+
 static const std::wstring __FSUDate    = L"June 12th 2022";
 
 // ===========================================================================
@@ -28,9 +33,6 @@ static const int __ScanSourceLive = 0;
 // ===========================================================================
 // == Categories =============================================================
 // ===========================================================================
-
-static const int __FileCategoriesCount   = 20;
-static const int __FileCategoriesOther   =  9;
 
 static const int __FileCategoryDirectory =  0;
 
@@ -936,40 +938,6 @@ static const int __ReportTypeError = 99;
 static const bool __IsDateReport[11]     = { true, true, true, true, true, false, false, false, true, true, true };
 static const bool __IsFileDateReport[11] = { false, true, false, true, true, false, false, false, false, false, false };
 static const bool __IsSizeReport[11]     = { true, true, true, true, true, false, true, true, false, false, true };
-
-// ===========================================================================
-// == Reports ================================================================
-// ===========================================================================
-
-static const int __SpectrumMod = 29;
-
-static const int __ReportSizes[3][7] = { { 770, 150, 310, 380,  766, 380,  766},	// 800x  mode
-										 { 960, 230, 330, 470,  950, 470,  950},    // 1024x mode
-										 {1250, 240, 350, 618, 1238, 618, 1238} };  // 1280x mode
-
-static const int __SpectrumColours[__SpectrumMod] = { 0x0000FF, 0x0022FF, 0x0054FF, 0x0084FF, 0x00B4FF, 0x00E4FF, 0x00FFA8, 0x00FF36, 0x3EFF00, 0xB0FF00,
-											     	  0xFFFA00, 0xFFDC00, 0xFFBE00, 0xFFA000, 0xFF8200, 0xFF6400, 0xFF4600, 0xFF2800, 0xFF0A00, 0xFF0020,
-												      0xFF0050, 0xFF0080, 0xFF00B0, 0xFF00E0, 0xFF02F0, 0xFF05F0, 0xFF08F0, 0xFF0BF0, 0xFF0EF0 };
-
-static const int __DefaultDisplayColours[__FileCategoriesCount] = { 0xFFFF00, 0x9d9fff, 0x70b7fe, 0x72f1fc, 0x73fcb7, 0xc5fd71, 0xeefc72, 0xfccf72, 0xfc8d72, 0xfe79be,
-																    0xfe70f3, 0x99bdd5, 0x8c8c8c, 0xd1d1d1, 0xffffff, 0xffffff, 0xffffff, 0xffffff, 0xffffff, 0xffffff };
-
-static const bool __SaveLocationRegistry  = false;
-static const bool __SaveLocationConfigIni = true;
-
-static const int __AttributesToDisplayCount = 13;    // attributes that are output to reports/screen etc.
-static const int __AttributesCount = 21; 
-static const int __MagnitudesCount = 13;
-
-static const int __HTMLColoursCount = 11;
-
-static const int __rsTableWidth = 0;
-static const int __rsBarGraph = 1;
-static const int __rsChartDD = 2;
-static const int __rsChartCM = 3;
-static const int __rsChartCD = 4;
-static const int __rsChartXM = 5;
-static const int __rsChartFD = 6;
 
 // ===========================================================================
 // == System =================================================================

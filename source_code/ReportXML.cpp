@@ -10,19 +10,21 @@
 // 
 
 
+#include <codecvt>
+#include <fstream>
+#include <iostream>
+#include <string>
+
 #include "Constants.h"
 #include "Convert.h"
 #include "FileExtensionHandler.h"
 #include "Formatting.h"
 #include "LanguageHandler.h"
+#include "ReportConstants.h"
 #include "ReportXML.h"
 #include "ReportXMLReportOptions.h"
 #include "ScanDetails.h"
 #include "Utility.h"
-#include <codecvt>
-#include <fstream>
-#include <iostream>
-#include <string>
 
 
 extern FileExtensionHandler *GFileExtensionHandler;

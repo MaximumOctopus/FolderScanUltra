@@ -7,9 +7,6 @@
     <ClCompile Include="ReportCSV.cpp">
       <Filter>Source Files\Reports</Filter>
     </ClCompile>
-    <ClCompile Include="ReportHandler.cpp">
-      <Filter>Source Files\Reports</Filter>
-    </ClCompile>
     <ClCompile Include="ReportHTML.cpp">
       <Filter>Source Files\Reports</Filter>
     </ClCompile>
@@ -106,6 +103,12 @@
     <ClCompile Include="Test.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
+    <ClCompile Include="ReportHTMLDeep.cpp">
+      <Filter>Source Files\Reports</Filter>
+    </ClCompile>
+    <ClCompile Include="ReportHandler.cpp">
+      <Filter>Source Files\Handlers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DatabaseHandler.h">
@@ -121,9 +124,6 @@
       <Filter>Header Files\Reports</Filter>
     </ClInclude>
     <ClInclude Include="ReportCSV.h">
-      <Filter>Header Files\Reports</Filter>
-    </ClInclude>
-    <ClInclude Include="ReportHandler.h">
       <Filter>Header Files\Reports</Filter>
     </ClInclude>
     <ClInclude Include="ReportCSVReportOptions.h">
@@ -251,6 +251,15 @@
     </ClInclude>
     <ClInclude Include="Test.h">
       <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="ReportHTMLDeep.h">
+      <Filter>Header Files\Reports</Filter>
+    </ClInclude>
+    <ClInclude Include="ReportConstants.h">
+      <Filter>Header Files\Reports</Filter>
+    </ClInclude>
+    <ClInclude Include="ReportHandler.h">
+      <Filter>Header Files\Handlers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

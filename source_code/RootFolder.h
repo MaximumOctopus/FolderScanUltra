@@ -20,9 +20,9 @@
 class RootFolder
 {
 public:
-	std::wstring Name;
+	std::wstring Name = L"";
 
-	DWORD Attributes;
-	unsigned __int64 Data[2];   // [0] count
-								// [1] size
+	DWORD Attributes = 0;
+	unsigned __int64 Data[2] = { 0, 0 };   // [0] count
+								           // [1] size
 };

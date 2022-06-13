@@ -13,17 +13,16 @@
 #pragma once
 
 
-#include "ReportHTMLReportOptions.h"
 #include <string>
-
-
-const int __MagniColours[13] = { 0x8383FF, 0x83BAFF, 0x83ECFF, 0x83FFCC, 0x92ff83, 0xD5FF83, 0xFFFE83, 0xFFCF83, 0xFF9283, 0xFF83AF, 0xFF83F5, 0xFF83F5, 0xFF83F5 };
-const int __GraphColours[13] = { 0x8383FF, 0x83BAFF, 0x83ECFF, 0x83FFCC, 0x92ff83, 0xD5FF83, 0xFFFE83, 0xFFCF83, 0xFF9283, 0xFF83AF, 0xFF83F5, 0xD6D5DB, 0xFFFFFF };
+#include "ReportHTMLReportOptions.h"
+#include "SizeOfFolder.h"
 
 
 namespace ReportHTML
 {
 	void GenerateReport(HTMLReportOptions options);
+
+	void CreateDeepReport(std::wofstream&);
 
 	void ReportHeader(std::wofstream &ofile, HTMLReportOptions options, std::wstring menuString);
 	void ReportFileCategory(std::wofstream &ofile, HTMLReportOptions options);
@@ -40,10 +39,15 @@ namespace ReportHTML
 	void ReportFileDates(std::wofstream &ofile, HTMLReportOptions options);
 	void ReportNullFiles(std::wofstream &ofile, HTMLReportOptions options);
 
+	void DeepReportFrom(std::wofstream&, SizeOfFolder);
+
 	std::wstring BuildMenuList(HTMLReportOptions options);
 	void InsertSpacingTable(std::wofstream &ofile);
 
 	void BuildGraphScript(std::wofstream &ofile, HTMLReportOptions options);
+
+	void DoubleGraph(std::wofstream&, std::wstring, std::wstring);
+	void SingleGraph(std::wofstream&, int, std::wstring);
 	
 	void BuildGraphData(std::wofstream &ofile, HTMLReportOptions options);
 	void BuildGraphCode(std::wofstream &ofile, HTMLReportOptions options);
@@ -53,4 +57,17 @@ namespace ReportHTML
 	void BuildGraphDataDirectory(std::wofstream &ofile);
 	void BuildGraphDataMagnitude(std::wofstream &ofile);
 	void BuildGraphDataFileDates(std::wofstream &ofile);
+
+	void FourColumnTableDoubleTitleHeader(std::wofstream&, std::wstring anchor, std::wstring, std::wstring, std::wstring, std::wstring);
+	void FourColumnTableRow(std::wofstream&, int, std::wstring, std::wstring, std::wstring, int, float);
+
+	void FourColumnTableDoubleTitleHeaderNoGraph(std::wofstream&, std::wstring anchor, std::wstring, std::wstring, std::wstring, std::wstring, std::wstring);
+	void FourColumnTableDoubleTitleNoGraphRow(std::wofstream&, int, std::wstring, std::wstring, std::wstring, std::wstring);
+
+	void SevenColumnTableHeader(std::wofstream&, std::wstring anchor, std::wstring);
+	void SevenColumnTableRow(std::wofstream&, int row, std::wstring, std::wstring, std::wstring, std::wstring, std::wstring, int, float, float);
+	void SevenColumnTableRowBlank(std::wofstream&, int, std::wstring);
+	void SevenColumnTableEnd(std::wofstream&);
+
+	void SevenColumnTableDoubleTitleHeader(std::wofstream&, std::wstring anchor, std::wstring, std::wstring);
 };

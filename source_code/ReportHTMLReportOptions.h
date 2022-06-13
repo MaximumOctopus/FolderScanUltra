@@ -26,7 +26,9 @@ struct HTMLReportOptions
 	int Units;
 	std::wstring Align;
 	bool Layout[__HTMLLayoutOptionsCount];
-	int LayoutSize;						 // 1 = 800x600, 2 = 1024x768, 3 = 1280x960
+	int LayoutSize = 2;						 // 0 = 800x600, 1 = 1024x768, 2 = 1280x960
 	bool CategoryList[20];
-	bool AutoOpen;
+	bool AutoOpen = false;
+
+	bool DeepScan = false;
 };

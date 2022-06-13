@@ -14,15 +14,15 @@
 
 
 #include <string>
-#include "Constants.h"
+#include "ReportConstants.h"
 
 
 class UserData
 {
 public:
-    std::wstring Name;
+    std::wstring Name = L"";
     
-	unsigned __int64 Data[2];
+	unsigned __int64 Data[2] = { 0, 0 };
 
     int CategoryDataQty[__FileCategoriesCount];
 	unsigned __int64 CategoryDataSize[__FileCategoriesCount];

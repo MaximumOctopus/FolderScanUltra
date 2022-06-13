@@ -13,23 +13,26 @@
 // https://developers.google.com/chart/
 
 
+#include <algorithm>
+#include <codecvt>
+#include <fstream>
+#include <iostream>
+#include <string>
+
 #include "Constants.h"
 #include "Convert.h"
 #include "FileExtension.h"
 #include "FileExtensionHandler.h"
 #include "Formatting.h"
 #include "LanguageHandler.h"
+#include "ReportConstants.h"
 #include "ReportHTML.h"
+#include "ReportHTMLDeep.h"
 #include "ReportHTMLReportOptions.h"
 #include "ScanDetails.h"
 #include "Settings.h"
 #include "Utility.h"
 #include "WindowsUtility.h"
-#include <algorithm>
-#include <codecvt>
-#include <fstream>
-#include <iostream>
-#include <string>
 
 
 extern FileExtensionHandler* GFileExtensionHandler;
@@ -141,17 +144,20 @@ namespace ReportHTML
 				}
 			}
 
-			// ===========================================================================
+			if (options.DeepScan)
+			{
+				CreateDeepReport(file);
+			}
 
+			// ===========================================================================
 			// footer table. always gets added
-			file << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[options.LayoutSize][__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" << "\n";
+
+			file << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" << "\n";
 			file << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" << "\n";
 			file << L"<td align=\"center\" class=\"C7G\">" << "\n";
 			file << L"<a href=\"mailto:paul@freshney.org\">paul@freshney.org</a> / <a href=\"https://github.com/MaximumOctopus/FolderScanUltra\" target=\"_blank\">https://github.com/MaximumOctopus/FolderScanUltra</a></td>" << "\n";
 			file << L"</tr>" << "\n";
-			file << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\" class=\"C7G\">" << "\n";
-			file << L"<td align=\"center\">(c) Paul Alan Freshney 2002-" + Utility::CurrentYear() + L"</td>" << "\n";
-			file << L"</tr>" << "\n";
+			file << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\" class=\"C7G\"><td align=\"center\">(c) Paul Alan Freshney 2002-" + Utility::CurrentYear() + L"</td></tr>";
 			file << L"</table></body></html>" << std::endl;
 		
 			file.close();
@@ -165,13 +171,33 @@ namespace ReportHTML
 	}
 
 
+	void CreateDeepReport(std::wofstream& ofile)
+	{
+		ReportHTMLDeep deep;
+
+		for (int r = 0; r < GScanDetails->RootFolders.size(); r++)
+		{
+			std::wcout << GScanDetails->ScanPath + GScanDetails->RootFolders[r].Name << L"\\" << "\n";
+
+			deep.ProcessFolder(GScanDetails->GetFolderIndex(GScanDetails->ScanPath + GScanDetails->RootFolders[r].Name + L"\\"));
+
+			for (int s = 0; s < deep.FolderData.size(); s++)
+			{
+				DeepReportFrom(ofile, deep.FolderData[s]);
+			}
+		}
+
+		InsertSpacingTable(ofile);
+	}
+
+
 	void ReportHeader(std::wofstream &ofile, HTMLReportOptions options, std::wstring menuString)
 	{
 		// ============================================================================
 		// == header table ============================================================
 		// ============================================================================
 
-		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[options.LayoutSize][__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
+		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
 		ofile << L"<tr class=\"C4G\">" << "\n";
 
 		ofile << L"<td class=\"C4C\"><b>FolderScanUltra " + __FSUVersion + L"</b> " + GLanguageHandler->XText[rsReportFor] +
@@ -230,7 +256,8 @@ namespace ReportHTML
 		// ============================================================================
 		// == navigation table ========================================================
 		// ============================================================================
-		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[options.LayoutSize][__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" +
+
+		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" +
 			L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\"><td class=\"C7G\"><strong>Menu</strong></td></tr>" +
 			L"<tr class=\"C4C\"><td>" + menuString + L"</td></tr></table>" << std::endl;
 
@@ -243,17 +270,9 @@ namespace ReportHTML
 		// ============================================================================
 		// == file category table =====================================================
 		// ============================================================================
-		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[options.LayoutSize][__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" +
-			L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" +
-			L"<td width=\"100\" height=\"13\" class=\"C7G\"><a name=\"op3\" /><b>" + GLanguageHandler->XText[rsCategory] + L"</b></td>" +
-			L"<td width=\"64\" height=\"13\" class=\"C7CB\">" + GLanguageHandler->XText[rsQuantity] + L"</td>" +
-			L"<td width=\"64\" height=\"13\" class=\"C7CB\">" + GLanguageHandler->XText[rsAsPercent] + L"</td>" +
-			L"<td width=\"160\" height=\"13\">&nbsp;</td>" +
-			L"<td width=\"85\" height=\"13\" class=\"C7CB\">" + GLanguageHandler->XText[rsSizeOfFiles] + L"</td>" +
-			L"<td width=\"67\" height=\"13\" class=\"C7CB\">" + GLanguageHandler->XText[rsAsPercent] + L"</td>" +
-			L"<td width=\"160\" height=\"20\">&nbsp;</td>" +
-			L"</tr>" << std::endl;
 
+		SevenColumnTableHeader(ofile, L"op2", GLanguageHandler->XText[rsCategory]);
+		
 		if (GScanDetails->FileCount != 0)
 		{
 			int rowidx = 1;
@@ -270,99 +289,44 @@ namespace ReportHTML
 					if (std::round(((double)GScanDetails->ExtensionSpread[t][__esCount] / (double)GScanDetails->FileCount) * 100) > large1) { large1 = std::round(((double)GScanDetails->ExtensionSpread[t][__esCount] / (double)GScanDetails->FileCount) * 100); }
 				}
 
-				if (large1 <= 0) { large1 = __ReportSizes[options.LayoutSize][__rsBarGraph]; }
-				if (large2 <= 0) { large2 = __ReportSizes[options.LayoutSize][__rsBarGraph]; }
+				if (large1 <= 0) { large1 = __ReportSizes[__rsBarGraph]; }
+				if (large2 <= 0) { large2 = __ReportSizes[__rsBarGraph]; }
 								
 				//build the file category table
 				for (int t = 1; t < __FileCategoriesCount; t++)
 				{
 					if (GScanDetails->ExtensionSpread[t][__esCount] != 0)
 					{
-						// ==================================================================
-						if (!(rowidx % 2 == 0))
-						{
-							ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
-						}
-						else
-						{
-							ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[10]) + L"\">" << "\n";
-						}
+						SevenColumnTableRow(ofile, rowidx, GLanguageHandler->TypeDescriptions[t],
+							std::to_wstring(GScanDetails->ExtensionSpread[t][__esCount]),
+							Convert::DoubleToPercent((double)GScanDetails->ExtensionSpread[t][__esCount] / (double)GScanDetails->FileCount),
+							Convert::GetSizeString(options.Units, GScanDetails->ExtensionSpread[t][__esSize]),
+							Convert::DoubleToPercent((double)GScanDetails->ExtensionSpread[t][__esSize] / (double)GScanDetails->TotalSize),
+							GSettings->FileCategoryColors[t],
+							(((double)GScanDetails->ExtensionSpread[t][__esCount] / (double)GScanDetails->FileCount) * 100) * ((double)__ReportSizes[__rsBarGraph] / (double)large1),
+							(((double)GScanDetails->ExtensionSpread[t][__esSize] / (double)GScanDetails->TotalSize) * 100) * ((double)__ReportSizes[__rsBarGraph] / (double)large2)
+							);
 
 						rowidx++;
-						// ==================================================================
-
-						ofile << L"<td width=\"100\" class=\"C4L\">" + GLanguageHandler->TypeDescriptions[t] + L"</td>" << "\n";
-						ofile << L"<td width=\"64\" class=\"C4C\">" + std::to_wstring(GScanDetails->ExtensionSpread[t][__esCount]) + L"</td>" << "\n";
-						ofile << L"<td width=\"64\" class=\"C4C\">" + Convert::DoubleToPercent((double)GScanDetails->ExtensionSpread[t][__esCount] / (double)GScanDetails->FileCount) + L"</td>" << "\n";
-						ofile << L"<td width=\"160\">" <<
-							L"<table width=\"" << std::to_wstring(std::round((((double)GScanDetails->ExtensionSpread[t][__esCount] / (double)GScanDetails->FileCount) * 100) * ((double)__ReportSizes[options.LayoutSize][__rsBarGraph] / (double)large1))) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(GSettings->FileCategoryColors[t]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" +
-							L"<tr><td></td></tr>" <<
-							L"</table>" <<
-							L"</td>" << "\n";
-						ofile << L"<td width=\"85\" class=\"C4G\"><div align=\"" + options.Align + L"\">" + Convert::GetSizeString(options.Units, GScanDetails->ExtensionSpread[t][__esSize]) + L"</div></td>" << "\n";
-						ofile << L"<td width=\"67\" class=\"C4C\">" + Convert::DoubleToPercent((double)GScanDetails->ExtensionSpread[t][__esSize] / (double)GScanDetails->TotalSize) + L"</td>" << "\n";
-						ofile << L"<td width=\"160\">" <<
-							L"<table width=\"" << std::to_wstring(std::round((((double)GScanDetails->ExtensionSpread[t][__esSize] / (double)GScanDetails->TotalSize) * 100)*((double)__ReportSizes[options.LayoutSize][__rsBarGraph] / (double)large2))) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(GSettings->FileCategoryColors[t]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" +
-							L"<tr><td></td></tr>" <<
-							L"</table>" <<
-							L"</td>" << "\n";
-						ofile << L"</tr>" << std::endl;
 					}
 				}
 			}
 
-			// ==================================================================
-			if (rowidx % 2 == 0)
-			{
-				ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
-			}
-			else
-			{
-				ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[10]) + L"\">" << "\n";
-			}
+			SevenColumnTableRowBlank(ofile, rowidx, L"");
 
 			rowidx++;
 
 			// ==================================================================
-			ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" +
-				L"<td width=\"10\">&nbsp;</td>" +
-				L"<td width=\"64\">&nbsp;</td>" +
-				L"<td width=\"64\">&nbsp;</td>" +
-				L"<td width=\"160\">&nbsp;</td>" +
-				L"<td width=\"85\">&nbsp;</td>" +
-				L"<td width=\"67\">&nbsp;</td>" +
-				L"<td width=\"160\">&nbsp;</td>" +
-				L"</tr>" << "\n";
-
-			// ==================================================================
-			if (rowidx % 2 == 0)
-			{
-				ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
-			}
-			else
-			{
-				ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[10]) + L"\">" << "\n";
-			}
-
-			// ==================================================================
 			
-			ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
-			ofile << L"<td width=\"100\" class=\"C4L\">" + GLanguageHandler->XText[rsTemporary] + L"</td>" << "\n";
-			ofile << L"<td width=\"64\" class=\"C4C\">" + std::to_wstring(GScanDetails->ExtensionSpread[0][0]) + L"</td>" << "\n";
-			ofile << L"<td width=\"64\" class=\"C4C\">" + Convert::DoubleToPercent((double)GScanDetails->ExtensionSpread[0][0] / (double)GScanDetails->FileCount) + L"</td>" << "\n";
-			ofile << L"<td width=\"160\">" <<
-				L"<table width=\"" << std::to_wstring(std::round((((double)GScanDetails->ExtensionSpread[0][1] / (double)GScanDetails->FileCount) * 100) * ((double)__ReportSizes[options.LayoutSize][__rsBarGraph] / (double)large1))) + L"\" border=\"0\" bgcolor=\"#000000\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" +
-				L"<tr><td></td></tr>" <<
-				L"</table>" <<
-				L"</td>" << "\n";
-			ofile << L"<td width=\"85\" class=\"C4G\"><div align=\"" + options.Align + L"\">" + Convert::GetSizeString(options.Units, GScanDetails->ExtensionSpread[0][1]) + L"</div></td>" << "\n";
-			ofile << L"<td width=\"67\" class=\"C4C\">" + Convert::DoubleToPercent((double)GScanDetails->ExtensionSpread[0][1] / (double)GScanDetails->TotalSize) + L"</td>" << "\n";
-			ofile << L"<td width=\"160\">" <<
-				L"<table width=\"" << std::to_wstring(std::round((((double)GScanDetails->ExtensionSpread[0][2] / (double)GScanDetails->TotalSize) * 100) * ((double)__ReportSizes[options.LayoutSize][__rsBarGraph] / (double)large2))) + L"\" border=\"0\" bgcolor=\"#000000\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" +
-				L"<tr><td></td></tr>" <<
-				L"</table>" <<
-				L"</td>" << "\n";
-			ofile << L"</tr>" << "\n";
+			SevenColumnTableRow(ofile, rowidx, GLanguageHandler->XText[rsTemporary],
+				std::to_wstring(GScanDetails->ExtensionSpread[0][0]),
+				Convert::DoubleToPercent((double)GScanDetails->ExtensionSpread[0][0] / (double)GScanDetails->FileCount),
+				Convert::GetSizeString(options.Units, GScanDetails->ExtensionSpread[0][1]),
+				Convert::DoubleToPercent((double)GScanDetails->ExtensionSpread[0][1] / (double)GScanDetails->TotalSize),
+				0x000000,
+				(((double)GScanDetails->ExtensionSpread[0][1] / (double)GScanDetails->FileCount) * 100)* ((double)__ReportSizes[__rsBarGraph] / (double)large1),
+				(((double)GScanDetails->ExtensionSpread[0][2] / (double)GScanDetails->TotalSize) * 100)* ((double)__ReportSizes[__rsBarGraph] / (double)large2)
+				);
 
 			ofile << L"</table>" << std::endl;
 
@@ -371,16 +335,7 @@ namespace ReportHTML
 			//build the graph table
 			if (options.Layout[0])
 			{
-				ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[options.LayoutSize][__rsTableWidth]) + L"\" border=\"0\" cellspacing=\"1\" cellpadding=\"1\">" << "\n";
-				ofile << L"<tr class=\"C7CB\">" <<
-					L"<td bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" + GLanguageHandler->XText[rsQuantity] + L"</td>" +
-					L"<td bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" + GLanguageHandler->XText[rsSize] + L"</td>" +
-					L"</tr>" +
-					L"<tr>" << "\n";
-				ofile << L"<td bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\"><div align=\"center\" id=\"chartCategory1\"></td>" +
-					L"<td bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\"><div align=\"center\" id=\"chartCategory2\"></td>" +
-					L"</tr>" +
-					L"</table>" << std::endl;
+				DoubleGraph(ofile, L"chartCategory1", L"chartCategory2");
 
 				InsertSpacingTable(ofile);
 			}
@@ -394,16 +349,7 @@ namespace ReportHTML
 		// == file attributes table ===================================================
 		// ============================================================================
 
-		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[options.LayoutSize][__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" << "\n";
-		ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" +
-			L"<td width=\"100\" height=\"13\" class=\"C7G\"> <a name=\"op2\" /><b>" + GLanguageHandler->XText[rsFileAttributes] + L"</b></td>" +
-			L"<td width=\"64\" height=\"13\" class=\"C7CB\">" + GLanguageHandler->XText[rsQuantity] + L"</td>" +
-			L"<td width=\"64\" height=\"13\" class=\"C7CB\">" + GLanguageHandler->XText[rsAsPercent] + L"</td>" +
-			L"<td width=\"160\" height=\"13\"> &nbsp; </td>" +
-			L"<td width=\"85\" height=\"13\" class=\"C7CB\">" + GLanguageHandler->XText[rsSizeOfFiles] + L"</td>" +
-			L"<td width=\"67\" height=\"13\" class=\"C7CB\">" + GLanguageHandler->XText[rsAsPercent] + L"</td>" +
-			L"<td width=\"160\" height=\"20\">&nbsp;</td>" +
-			L"</tr>" << "\n";
+		SevenColumnTableHeader(ofile, L"op2", GLanguageHandler->XText[rsFileAttributes]);
 
 		if (GScanDetails->FileCount > 0)
 		{
@@ -420,39 +366,21 @@ namespace ReportHTML
 					if (std::round(((double)GScanDetails->FileAttributes[t][__faSize] / (double)GScanDetails->TotalSize) * 100) > large2) { large2 = std::round(((double)GScanDetails->FileAttributes[t][__faSize] / (double)GScanDetails->TotalSize) * 100); };
 				}
 
-				if (large1 <= 0) { large1 = __ReportSizes[options.LayoutSize][__rsBarGraph]; }
-				if (large2 <= 0) { large2 = __ReportSizes[options.LayoutSize][__rsBarGraph]; }
+				if (large1 <= 0) { large1 = __ReportSizes[__rsBarGraph]; }
+				if (large2 <= 0) { large2 = __ReportSizes[__rsBarGraph]; }
 
 				//build the file category table
 				for (int t  = 0; t < __AttributesToDisplayCount; t++)
 				{
-					if (t % 2 != 0) 
-					{
-						ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
-					}
-					else
-					{
-						ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[10]) + L"\">" << "\n";
-					}
-
-					ofile << L"<td width=\"100\" class=\"C4L\">" + GLanguageHandler->LanguageTypes[t] + L"</td>" << "\n";
-					ofile << L"<td width=\"64\" class=\"C4C\">" + std::to_wstring(GScanDetails->FileAttributes[t][__faCount]) + L"</td>" << "\n";
-					ofile << L"<td width=\"64\" class=\"C4C\">" + Convert::DoubleToPercent((double)GScanDetails->FileAttributes[t][__faCount] / (double)GScanDetails->FileCount) + L"</td>" << "\n";
-					ofile << L"<td width=\"160\"> " <<
-						L"<table width=\"" << std::to_wstring(std::round((((double)GScanDetails->FileAttributes[t][__faCount] / (double)GScanDetails->FileCount) * 100) * ((double)__ReportSizes[options.LayoutSize][__rsBarGraph] / (double)large1))) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[4]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" +
-						L"<tr><td></td></tr>" <<
-						L"</table>" <<
-						L"</td>" << "\n";
-					ofile << L"<td width=\"85\" class=\"C4G\">" <<
-						L"<div align=\"" + options.Align + L"\">" + Convert::GetSizeString(options.Units, GScanDetails->FileAttributes[t][__faSize]) + L"</div>" +
-						L"</td>" << "\n";
-					ofile << L"<td width=\"67\" class=\"C4C\">" + Convert::DoubleToPercent((double)GScanDetails->FileAttributes[t][__faSize] / (double)GScanDetails->TotalSize) + L"</td>" +
-						L"<td width=\"160\">" <<
-							L"<table width=\"" << std::to_wstring(std::round((((double)GScanDetails->FileAttributes[t][__faSize] / (double)GScanDetails->TotalSize) * 100) * ((double)__ReportSizes[options.LayoutSize][__rsBarGraph] / (double)large2))) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[4]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" +
-						L"<tr><td></td></tr>" <<
-						L"</table>" <<
-						L"</td>" << "\n";
-					ofile << L"</tr>" << "\n";
+					SevenColumnTableRow(ofile, t, GLanguageHandler->LanguageTypes[t], 
+						std::to_wstring(GScanDetails->FileAttributes[t][__faCount]),
+						Convert::DoubleToPercent((double)GScanDetails->FileAttributes[t][__faCount] / (double)GScanDetails->FileCount),
+						Convert::GetSizeString(options.Units, GScanDetails->FileAttributes[t][__faSize]),
+						Convert::DoubleToPercent((double)GScanDetails->FileAttributes[t][__faSize] / (double)GScanDetails->TotalSize),
+						GSettings->Report.HTMLColours[4],
+						(((double)GScanDetails->FileAttributes[t][__faCount] / (double)GScanDetails->FileCount) * 100) * ((double)__ReportSizes[__rsBarGraph] / (double)large1),
+						(((double)GScanDetails->FileAttributes[t][__faSize] / (double)GScanDetails->TotalSize) * 100) * ((double)__ReportSizes[__rsBarGraph] / (double)large2)
+					);
 				}
 			}
 		}
@@ -469,17 +397,7 @@ namespace ReportHTML
 		// == Username ================================================================
 		// ============================================================================
 
-		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[options.LayoutSize][__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" << "\n";
-		ofile << L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\"><td colspan=\"7\" height=\"13\"><a name=\"op10\" /><b>" + GLanguageHandler->XText[rsUsageByUser] + L"</b></td><tr>" << std::endl;
-		ofile << L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" +
-			L"<td width=\"100\" height=\"13\"><b>" + GLanguageHandler->XText[rsOwner] + L"</b></td>" +
-			L"<td width=\"64\" height=\"13\" class=\"XCB\">" + GLanguageHandler->XText[rsQuantity] + L"</td>" +
-			L"<td width=\"64\" height=\"13\" class=\"XCB\">" + GLanguageHandler->XText[rsAsPercent] + L"</td>" +
-			L"<td width=\"160\" height=\"13\">&nbsp; </td>" +
-			L"<td width=\"85\" height=\"13\" class=\"XCB\">" + GLanguageHandler->XText[rsSizeOfFiles] + L"</td>" +
-			L"<td width=\"67\" height=\"13\" class=\"XCB\">" + GLanguageHandler->XText[rsAsPercent] + L"</td>" +
-			L"<td width=\"160\" height=\"20\">&nbsp; </td>" +
-			L"</tr>" << std::endl;
+		SevenColumnTableDoubleTitleHeader(ofile, L"op10", GLanguageHandler->XText[rsUsageByUser], GLanguageHandler->XText[rsOwner]);
 
 		if (GScanDetails->FileCount != 0)
 		{
@@ -495,8 +413,8 @@ namespace ReportHTML
 					if (std::round(((double)GScanDetails->Users[i].Data[__UserSize] / (double)GScanDetails->TotalSize) * 100) > large2) { large2 = std::round(((double)GScanDetails->Users[i].Data[__UserSize] / (double)GScanDetails->TotalSize) * 100); }
 				}
 				
-				if (large1 <= 0) { large1 = __ReportSizes[options.LayoutSize][__rsBarGraph]; }
-				if (large2 <= 0) { large2 = __ReportSizes[options.LayoutSize][__rsBarGraph]; }
+				if (large1 <= 0) { large1 = __ReportSizes[__rsBarGraph]; }
+				if (large2 <= 0) { large2 = __ReportSizes[__rsBarGraph]; }
 
 				// ============================================================
 
@@ -506,37 +424,17 @@ namespace ReportHTML
 
 				for (int t = 0; t < GScanDetails->Users.size(); t++)
 				{
-					// ==================================================================
-					if (rowidx % 2 != 0)
-					{
-						ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
-					}
-					else
-					{
-						ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[10]) + L"\">" << "\n";
-					}
+					SevenColumnTableRow(ofile, rowidx, GScanDetails->Users[t].Name,
+						std::to_wstring(GScanDetails->Users[t].Data[__UserCount]),
+						Convert::DoubleToPercent((double)GScanDetails->Users[t].Data[__UserCount] / (double)GScanDetails->FileCount),
+						Convert::GetSizeString(options.Units, GScanDetails->Users[t].Data[__UserSize]),
+						Convert::DoubleToPercent((double)GScanDetails->Users[t].Data[__UserSize] / (double)GScanDetails->TotalSize),
+						GSettings->Report.HTMLColours[4],
+						(((double)GScanDetails->Users[t].Data[__UserCount] / (double)GScanDetails->FileCount) * 100)* ((double)__ReportSizes[__rsBarGraph] / (double)large1),
+						((double)(GScanDetails->Users[t].Data[__UserSize] / (double)GScanDetails->TotalSize) * 100)* ((double)__ReportSizes[__rsBarGraph] / (double)large2)
+					);
 
 					rowidx++;
-					// ==================================================================
-
-					ofile << L"<td width=\"100\" height=\"13\">" + GScanDetails->Users[t].Name + L"</td>" << "\n";
-					ofile << L"<td width=\"64\" height=\"13\"><div align=\"center\">" + std::to_wstring(GScanDetails->Users[t].Data[__UserCount]) + L"</div></td>" << "\n";
-					ofile << L"<td width=\"64\" height=\"13\"><div align=\"center\">" + Convert::DoubleToPercent((double)GScanDetails->Users[t].Data[__UserCount] / (double)GScanDetails->FileCount) + L"</div></td>" << "\n";
-					ofile << L"<td width=\"160\">" <<
-								L"<table width=\"" << std::to_wstring(std::round((((double)GScanDetails->Users[t].Data[__UserCount] / (double)GScanDetails->FileCount) * 100) * ((double)__ReportSizes[options.LayoutSize][__rsBarGraph] / (double)large1))) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[4]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" +
-								L"<tr><td></td></tr>" <<
-								L"</table>" <<
-								L"</td>" << "\n";
-					ofile << L"<td width=\"85\" height=\"13\"><div align=\"" + options.Align + L"\">" + Convert::GetSizeString(options.Units, GScanDetails->Users[t].Data[__UserSize]) + L"</div></td>" << "\n";
-					ofile << L"<td width=\"67\" height=\"13\">" <<
-							L"<div align=\"center\">" << Convert::DoubleToPercent((double)GScanDetails->Users[t].Data[__UserSize] / (double)GScanDetails->TotalSize) + L"</div>" +
-							L"</td>" << "\n";
-					ofile << L"<td width=\"160\">" <<
-							L"<table width=\"" << std::to_wstring(std::round(((double)(GScanDetails->Users[t].Data[__UserSize] / (double)GScanDetails->TotalSize) * 100)*((double)__ReportSizes[options.LayoutSize][__rsBarGraph] / (double)large2))) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[4]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" +
-							L"<tr><td></td></tr>" <<
-							L"</table>" <<
-							L"</td>" << "\n";
-					ofile << L"</tr>" << std::endl;
 				}
 
 				InsertSpacingTable(ofile);
@@ -567,26 +465,17 @@ namespace ReportHTML
 					if (std::round(((double)GFileExtensionHandler->Extensions[i].Size / (double)GScanDetails->TotalSize) * 100) > large2) { large2 = std::round(((double)GFileExtensionHandler->Extensions[i].Size / (double)GScanDetails->TotalSize) * 100); }
 				}
 
-				if (large1 <= 0) { large1 = __ReportSizes[options.LayoutSize][__rsBarGraph]; }
-				if (large2 <= 0) { large2 = __ReportSizes[options.LayoutSize][__rsBarGraph]; }
+				if (large1 <= 0) { large1 = __ReportSizes[__rsBarGraph]; }
+				if (large2 <= 0) { large2 = __ReportSizes[__rsBarGraph]; }
 
 				for (int t = 1; t < __FileCategoriesCount; t++)
 				{
 					if ((options.CategoryList[t]) && (GScanDetails->ExtensionSpread[t][__esCount] != 0))
 					{
-						ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[options.LayoutSize][__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" << "\n";
-						ofile << L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" +
-							L"<td colspan=\"7\" height=\"13\"><a name=\"op6\" /><b>" + GLanguageHandler->TypeDescriptions[t] + L" [ " + std::to_wstring(GScanDetails->ExtensionSpread[t][__esCount]) + L" files (" + Convert::DoubleToPercent((double)GScanDetails->ExtensionSpread[t][__esCount] / (double)GScanDetails->FileCount) + L") / " + Convert::GetSizeString(options.Units, GScanDetails->ExtensionSpread[t][__esSize]) + L" (" + Convert::DoubleToPercent((double)GScanDetails->ExtensionSpread[t][__esSize] / (double)GScanDetails->TotalSize) + L") ]" + L"</b></td>" +
-							L"<tr>" << "\n";
-						ofile << L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" +
-							L"<td width=\"100\" height=\"13\"><b>" + GLanguageHandler->XText[rsExtension] + L"</b></td>" +
-							L"<td width=\"64\" height=\"13\" class=\"XCB\">" + GLanguageHandler->XText[rsQuantity] + L"</td>" +
-							L"<td width=\"64\" height=\"13\" class=\"XCB\">" + GLanguageHandler->XText[rsAsPercent] + L"</td>" +
-							L"<td width=\"160\" height=\"13\">&nbsp; </td>" +
-							L"<td width=\"85\" height=\"13\" class=\"XCB\">" + GLanguageHandler->XText[rsSizeOfFiles] + L"</td>" +
-							L"<td width=\"67\" height=\"13\" class=\"XCB\">" + GLanguageHandler->XText[rsAsPercent] + L"</td>" +
-							L"<td width=\"160\" height=\"20\">&nbsp;</td>" +
-							L"</tr>" << std::endl;
+						SevenColumnTableDoubleTitleHeader(ofile, L"op6",
+							GLanguageHandler->TypeDescriptions[t] + L" [ " + std::to_wstring(GScanDetails->ExtensionSpread[t][__esCount]) + L" files (" + Convert::DoubleToPercent((double)GScanDetails->ExtensionSpread[t][__esCount] / (double)GScanDetails->FileCount) + L") / " + Convert::GetSizeString(options.Units, GScanDetails->ExtensionSpread[t][__esSize]) + L" (" + Convert::DoubleToPercent((double)GScanDetails->ExtensionSpread[t][__esSize] / (double)GScanDetails->TotalSize) + L") ]",
+							GLanguageHandler->XText[rsExtension]
+						);
 
 						linecount = 0;
 						
@@ -603,37 +492,19 @@ namespace ReportHTML
 									//only include within report if number of files in extension > 0
 									if (tfx.Quantity > 0)
 									{
-										// ==================================================================
-										if (rowidx % 2 != 0)
-										{
-											ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
-										}
-										else
-										{
-											ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[10]) + L"\">" << "\n";
-										}
+										SevenColumnTableRow(ofile, rowidx, tfx.Name,
+											std::to_wstring(tfx.Quantity),
+											Convert::DoubleToPercent((double)tfx.Quantity / (double)GScanDetails->FileCount),
+											Convert::GetSizeString(options.Units, tfx.Size),
+											Convert::DoubleToPercent((double)tfx.Size / (double)GScanDetails->TotalSize),
+											GSettings->Report.HTMLColours[4],
+											(((double)tfx.Quantity / (double)GScanDetails->FileCount) * 100)* ((double)__ReportSizes[__rsBarGraph] / (double)large1),
+											(((double)tfx.Size / (double)GScanDetails->TotalSize) * 100)* ((double)__ReportSizes[__rsBarGraph] / (double)large2)
+											);
 	
-										rowidx++;
-										// ==================================================================
-
-										ofile << L"<td width=\"100\" height=\"13\">." + tfx.Name + L"</td>" << "\n";
-										ofile << L"<td width=\"64\" height=\"13\"><div align=\"center\">" + std::to_wstring(tfx.Quantity) + L"</div></td>" << "\n";
-										ofile << L"<td width=\"64\" height=\"13\"><div align=\"center\">" + Convert::DoubleToPercent((double)tfx.Quantity / (double)GScanDetails->FileCount) + L"</div></td>" << "\n";
-										ofile << L"<td width=\"160\">" <<
-											L"<table width=\"" << std::to_wstring(std::round((((double)tfx.Quantity / (double)GScanDetails->FileCount) * 100) * ((double)__ReportSizes[options.LayoutSize][__rsBarGraph] / (double)large1))) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[4]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" +
-											L"<tr><td></td></tr>" <<
-											L"</table>" <<
-											L"</td>" << "\n";
-										ofile << L"<td width=\"85\" height=\"13\"><div align=\"" + options.Align + L"\">" + Convert::GetSizeString(options.Units, tfx.Size) + L"</div></td>" << "\n";
-										ofile << L"<td width=\"67\" height=\"13\"><div align=\"center\">" + Convert::DoubleToPercent((double)tfx.Size / (double)GScanDetails->TotalSize) + L"</div></td>" << "\n";
-										ofile << L"<td width=\"160\"> " <<
-											L"<table width=\"" << std::to_wstring(std::round((((double)tfx.Size / (double)GScanDetails->TotalSize) * 100) * ((double)__ReportSizes[options.LayoutSize][__rsBarGraph] / (double)large2))) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[4]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" +
-												L"<tr><td></td></tr>" <<
-												L"</table>" <<
-												L"</td>" << "\n";
-										ofile << L"</tr>" << "\n";
-
 										linecount++;
+
+										rowidx++;
 									}
 								}
 							}
@@ -652,8 +523,8 @@ namespace ReportHTML
 								}
 							}
 
-							if (large1 <= 0) { large1 = __ReportSizes[options.LayoutSize][__rsBarGraph]; }
-							if (large2 <= 0) { large2 = __ReportSizes[options.LayoutSize][__rsBarGraph]; }
+							if (large1 <= 0) { large1 = __ReportSizes[__rsBarGraph]; }
+							if (large2 <= 0) { large2 = __ReportSizes[__rsBarGraph]; }
 
 							rowidx = 1;
 
@@ -677,6 +548,7 @@ namespace ReportHTML
 										rowidx++;
 										// ==================================================================
 
+
 										if (GFileExtensionHandler->Extensions[z].Name == L"")
 										{
 											ofile << L"<td width=\"100\" height=\"13\"><i>none</i></td>" << "\n";
@@ -692,7 +564,7 @@ namespace ReportHTML
 										
 										if (large1 != 0)
 										{
-											ofile << L"<table width=\"" + std::to_wstring(std::round((((double)GFileExtensionHandler->Extensions[z].Quantity / (double)GScanDetails->FileCount) * 100) * ((double)__ReportSizes[options.LayoutSize][__rsBarGraph] / (double)large1))) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[4]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" << "\n";
+											ofile << L"<table width=\"" + std::to_wstring(std::round((((double)GFileExtensionHandler->Extensions[z].Quantity / (double)GScanDetails->FileCount) * 100) * ((double)__ReportSizes[__rsBarGraph] / (double)large1))) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[4]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" << "\n";
 										}
 										else
 										{
@@ -713,7 +585,7 @@ namespace ReportHTML
 
 										if (large2 != 0)
 										{
-											ofile << L"<table width=\"" + std::to_wstring(std::round((double)percentage * ((double)__ReportSizes[options.LayoutSize][__rsBarGraph] / (double)large2))) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[4]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" << "\n";
+											ofile << L"<table width=\"" + std::to_wstring(std::round((double)percentage * ((double)__ReportSizes[__rsBarGraph] / (double)large2))) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[4]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" << "\n";
 										}
 										else
 										{
@@ -752,16 +624,7 @@ namespace ReportHTML
 		// == magnitude table =========================================================
 		// ============================================================================
 
-		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[options.LayoutSize][__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" +
-			L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" +
-			L"<td width=\"100\" height=\"13\" class=\"C7G\"><a name=\"op5\" / ><b>" + GLanguageHandler->XText[rsMagnitude] + L"</b></td>" +
-			L"<td width=\"64\" height=\"13\" class=\"C7CB\">" + GLanguageHandler->XText[rsQuantity] + L"</td>" +
-			L"<td width=\"64\" height=\"13\" class=\"C7CB\">" + GLanguageHandler->XText[rsAsPercent] + L"</td>" +
-			L"<td width=\"160\" height=\"13\">&nbsp; </td>" +
-			L"<td width=\"85\" height=\"13\" class=\"C7CB\">" + GLanguageHandler->XText[rsSizeOfFiles] + L"</td>" +
-			L"<td width=\"67\" height=\"13\" class=\"C7CB\">" + GLanguageHandler->XText[rsAsPercent] + L"</td>" +
-			L"<td width=\"160\" height=\"20\">&nbsp;</td>" +
-			L"</tr>" << std::endl;
+		SevenColumnTableHeader(ofile, L"op5", GLanguageHandler->XText[rsMagnitude]);
 
 		if (GScanDetails->FileCount != 0)
 		{
@@ -777,37 +640,21 @@ namespace ReportHTML
 					if (std::round(((double)GScanDetails->Magnitude[t][__mSize] / (double)GScanDetails->TotalSize) * 100) > large2) { large2 = std::round(((double)GScanDetails->Magnitude[t][__mSize] / (double)GScanDetails->TotalSize) * 100); }
 				}
 
-				if (large1 <= 0) { large1 = __ReportSizes[options.LayoutSize][__rsBarGraph]; }
-				if (large2 <= 0) { large2 = __ReportSizes[options.LayoutSize][__rsBarGraph]; }
+				if (large1 <= 0) { large1 = __ReportSizes[__rsBarGraph]; }
+				if (large2 <= 0) { large2 = __ReportSizes[__rsBarGraph]; }
 
 				//build the file category table
 				for (int t = 0; t < __MagnitudesCount; t++)
 				{
-					if (t % 2 == 0)
-					{
-						ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
-					}
-					else
-					{
-						ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[10]) + L"\">" << "\n";
-					}
-
-					ofile << L"<td width=\"100\" class=\"C4L\">" + __MagniLabels3[t] + L"</td>" << "\n";
-					ofile << L"<td width=\"64\" class=\"C4C\">" + std::to_wstring(GScanDetails->Magnitude[t][__mCount]) + L"</td>" << "\n";
-					ofile << L"<td width=\"64\" class=\"C4C\">" + Convert::DoubleToPercent((double)GScanDetails->Magnitude[t][__mCount] / (double)GScanDetails->FileCount) + L"</td>" << "\n";
-					ofile << L"<td width=\"160\">" <<
-						L"<table width=\"" << std::to_wstring(std::round((((double)GScanDetails->Magnitude[t][__mCount] / (double)GScanDetails->FileCount) * 100) * ((double)__ReportSizes[options.LayoutSize][__rsBarGraph] / (double)large1))) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(__MagniColours[t]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" +
-						L"<tr><td></td></tr>" <<
-						L"</table>" <<
-						L"</td>" << "\n";
-					ofile << L"<td width=\"85\" class=\"C4G\"><div align=\"" + options.Align + L"\">" + Convert::GetSizeString(options.Units, GScanDetails->Magnitude[t][__mSize]) + L"</div></td>" << "\n";
-					ofile << L"<td width=\"67\" class=\"C4C\">" + Convert::DoubleToPercent((double)GScanDetails->Magnitude[t][__mSize] / (double)GScanDetails->TotalSize) + L"</td>" << "\n";
-					ofile << L"<td width=\"160\">" <<
-						L"<table width=\"" << std::to_wstring(std::round((((double)GScanDetails->Magnitude[t][__mSize] / (double)GScanDetails->TotalSize) * 100) * ((double)__ReportSizes[options.LayoutSize][__rsBarGraph] / (double)large2))) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(__MagniColours[t]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" +
-						L"<tr><td></td></tr>" +
-						L"</table>" +
-						L"</td>" << "\n";
-					ofile << L"</tr>" << "\n";
+					SevenColumnTableRow(ofile, t, __MagniLabels3[t],
+						std::to_wstring(GScanDetails->Magnitude[t][__mCount]),
+						Convert::DoubleToPercent((double)GScanDetails->Magnitude[t][__mCount] / (double)GScanDetails->FileCount),
+						Convert::GetSizeString(options.Units, GScanDetails->Magnitude[t][__mSize]),
+						Convert::DoubleToPercent((double)GScanDetails->Magnitude[t][__mSize] / (double)GScanDetails->TotalSize),
+						__MagniColours[t],
+						(((double)GScanDetails->Magnitude[t][__mCount] / (double)GScanDetails->FileCount) * 100) * ((double)__ReportSizes[__rsBarGraph] / (double)large1),
+						(((double)GScanDetails->Magnitude[t][__mSize] / (double)GScanDetails->TotalSize) * 100) * ((double)__ReportSizes[__rsBarGraph] / (double)large2)
+					);
 				}
 
 				ofile << L"</table>" << std::endl;
@@ -816,16 +663,9 @@ namespace ReportHTML
 
 				if (options.Layout[0])
 				{
-					ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[options.LayoutSize][__rsTableWidth]) + L"\" border=\"0\" cellspacing=\"1\" cellpadding=\"1\">" +
-						L"<tr class=\"C7CB\">" +
-						L"<td bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" + GLanguageHandler->XText[rsQuantity] + L"</td>" +
-						L"<td bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" + GLanguageHandler->XText[rsSize] + L"</td>" +
-						L"</tr>" +
-						L"<tr>" +
-						L"<td bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\"><div align=\"center\" id=\"chartMagnitude1\"></td>" +
-						L"<td bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\"><div align=\"center\" id=\"chartMagnitude2\"></td>" +
-						L"</tr>" +
-						L"</table>" << std::endl;
+					DoubleGraph(ofile, L"chartMagnitude1", L"chartMagnitude2");
+
+					InsertSpacingTable(ofile);
 				}
 			}
 		}
@@ -838,7 +678,7 @@ namespace ReportHTML
 		// == quick info table ========================================================
 		// ============================================================================
 
-		ofile << L"<table align=\"center\" width=\"" << std::to_wstring(__ReportSizes[options.LayoutSize][__rsTableWidth]) + L"\" height=\"180\" border=\"0\" cellspacing=\"1\" cellpadding=\"1\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
+		ofile << L"<table align=\"center\" width=\"" << std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" height=\"180\" border=\"0\" cellspacing=\"1\" cellpadding=\"1\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
 		ofile << L"<tr><td width=\"100%\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\" class=\"C7G\"><strong>" + GLanguageHandler->XText[rsSummary] + L"</strong></td></tr>" << "\n";
 		ofile << L"<tr>" << "\n";
 		ofile << L"<td>" << "\n";
@@ -927,16 +767,7 @@ namespace ReportHTML
 		// == directory list---by file count ==========================================
 		// ============================================================================
 
-		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[options.LayoutSize][__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" +
-			L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" +
-			L"<td width=\"387\" height=\"20\"><a name=\"op4\"/><b>" + GLanguageHandler->XText[rsFoldersRootQuantity] + L"</b></td>" +
-			L"</tr>" << "\n";
-		ofile << L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" +
-			L"<td width=\"387\" height=\"20\"><b>" + GLanguageHandler->XText[rsFolder] + L"</b></td>" +
-			L"<td width=\"83\" height=\"20\" class=\"XCB\">" + GLanguageHandler->XText[rsQtyOfFiles] + L"</td>" +
-			L"<td width=\"65\" height=\"20\" class=\"XCB\">" + GLanguageHandler->XText[rsAsPercent] + L"</td>" +
-			L"<td width=\"155\" height=\"20\">&nbsp;</td>" +
-			L"</tr>" << std::endl;
+		FourColumnTableDoubleTitleHeader(ofile, L"op4", GLanguageHandler->XText[rsFoldersRootQuantity], GLanguageHandler->XText[rsFolder], GLanguageHandler->XText[rsQtyOfFiles], GLanguageHandler->XText[rsAsPercent]);
 
 		if (GScanDetails->FileCount != 0) 
 		{
@@ -953,7 +784,7 @@ namespace ReportHTML
 				}
 			}
 			
-			if (large1 <= 0) { large1 = __ReportSizes[options.LayoutSize][__rsBarGraph]; }
+			if (large1 <= 0) { large1 = __ReportSizes[__rsBarGraphSmall]; }
 			
 			for (int t = 0; t < GScanDetails->RootFolders.size(); t++)
 			{
@@ -970,39 +801,25 @@ namespace ReportHTML
 
 					// ==================================================================
 
-					if (rowidx % 2 != 0)
-					{
-						ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
-					}
-					else
-					{
-						ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[10]) + L"\">" << "\n";
-					}
-
-					rowidx++;
-
-					// ==================================================================
-
-					ofile << L"<td width=\"387\" class=\"C4L\">" << "\n";
+					std::wstring link = L"";
 
 					if (t == 0)
 					{
-						ofile << L"<a href=\"" + Utility::WebFileLink(GScanDetails->ScanPath) + L"\" target=\"_blank\">" + Formatting::MakeItalic(GScanDetails->RootFolders[t].Name, GScanDetails->RootFolders[t].Attributes & FILE_ATTRIBUTE_HIDDEN) + L"</a>" << "\n";
+						link = L"<a href=\"" + Utility::WebFileLink(GScanDetails->ScanPath) + L"\" target=\"_blank\">" + Formatting::MakeItalic(GScanDetails->RootFolders[t].Name, GScanDetails->RootFolders[t].Attributes & FILE_ATTRIBUTE_HIDDEN) + L"</a>";
 					}
 					else
 					{
-						ofile << L"<a href=\"" + Utility::WebFileLink(GScanDetails->ScanPath + GScanDetails->RootFolders[t].Name) + L"\" target=\"_blank\">" + Formatting::MakeItalic(GScanDetails->RootFolders[t].Name, GScanDetails->RootFolders[t].Attributes & FILE_ATTRIBUTE_HIDDEN) + L"</a>" << "\n";
+						link = L"<a href=\"" + Utility::WebFileLink(GScanDetails->ScanPath + GScanDetails->RootFolders[t].Name) + L"\" target=\"_blank\">" + Formatting::MakeItalic(GScanDetails->RootFolders[t].Name, GScanDetails->RootFolders[t].Attributes & FILE_ATTRIBUTE_HIDDEN) + L"</a>";
 					}
-					
-					ofile << L"</td>" << "\n";
-					ofile << L"<td width=\"83\" class=\"C4C\">" + std::to_wstring(GScanDetails->RootFolders[t].Data[__RootCount]) + L"</td>" << "\n";
-					ofile << L"<td width=\"65\" class=\"C4C\">" + Convert::DoubleToPercent((double)GScanDetails->RootFolders[t].Data[__RootCount] / (double)GScanDetails->FileCount) + L"</td>" << "\n";
-					ofile << L"<td width=\"160\"> " <<
-						L"<table width=\"" + std::to_wstring(std::round((((double)GScanDetails->RootFolders[t].Data[__RootCount] / (double)GScanDetails->FileCount) * 100) * ((double)__ReportSizes[options.LayoutSize][__rsBarGraph] / (double)large1))) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(colour) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" +
-						L"<tr><td></td></tr>" +
-						L"</table>" +
-						L"</td>" << "\n";
-					ofile << L"</tr>" << "\n";
+
+					FourColumnTableRow(ofile, rowidx, link,
+						std::to_wstring(GScanDetails->RootFolders[t].Data[__RootCount]),
+						Convert::DoubleToPercent((double)GScanDetails->RootFolders[t].Data[__RootCount] / (double)GScanDetails->FileCount),
+						colour,
+						(((double)GScanDetails->RootFolders[t].Data[__RootCount] / (double)GScanDetails->FileCount) * 100) * ((double)__ReportSizes[__rsBarGraphSmall] / (double)large1)
+					);
+
+					rowidx++;
 				}
 			}
 				
@@ -1010,12 +827,7 @@ namespace ReportHTML
 
 			if ((options.Layout[0]) && (fileDatesCount != 0))
 			{
-				ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[options.LayoutSize][__rsTableWidth]) + L"\" border=\"0\" cellspacing=\"1\" cellpadding=\"1\">" +
-					L"<tr class=\"C7CB\">" +
-					L"<td bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" + GLanguageHandler->XText[rsQuantity] + L"</td>" +
-					L"</tr>" +
-					L"<tr><td bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\"><div align=\"center\" id=\"chartDirectory1\"></td></tr>" +
-					L"</table>" << std::endl;
+				SingleGraph(ofile, rsQuantity, L"chartDirectory1");
 			}
 
 			InsertSpacingTable(ofile);
@@ -1023,17 +835,8 @@ namespace ReportHTML
 			// ============================================================================
 			// == directory list---by file size ===========================================
 			// ============================================================================
-				
-			ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[options.LayoutSize][__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" +
-				L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\" class=\"C7G\">" +
-				L"<td width=\"387\" height=\"20\"><b>" + GLanguageHandler->XText[rsFoldersRootSize] + L"</b></td>" +
-				L"</tr>" << "\n";
-			ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\" class=\"C7G\">" +
-				L"<td width=\"387\" height=\"20\"><b>" + GLanguageHandler->XText[rsFolder] + L"</b></td>" +
-				L"<td width=\"83\" height=\"20\" class=\"XCB\" > " + GLanguageHandler->XText[rsSizeOfFiles] + L"</td>" +
-				L"<td width=\"65\" height=\"20\" class=\"XCB\" > " + GLanguageHandler->XText[rsAsPercent] + L"</td>" +
-				L"<td width=\"155\" height=\"20\">&nbsp;</td>" +
-				L"</tr>" << std::endl;
+			
+			FourColumnTableDoubleTitleHeader(ofile, L"op4", GLanguageHandler->XText[rsFoldersRootSize], GLanguageHandler->XText[rsFolder], GLanguageHandler->XText[rsSizeOfFiles], GLanguageHandler->XText[rsAsPercent]);
 
 			if (GScanDetails->TotalSize != 0)
 			{
@@ -1048,7 +851,7 @@ namespace ReportHTML
 					}
 				}
 
-				if (large1 <= 0) { large1 = __ReportSizes[options.LayoutSize][__rsBarGraph]; }
+				if (large1 <= 0) { large1 = __ReportSizes[__rsBarGraphSmall]; }
 
 				rowidx = 1;
 
@@ -1065,41 +868,25 @@ namespace ReportHTML
 							colour = __SpectrumColours[t % __SpectrumMod];
 						}
 
-						// ==================================================================
-						if (rowidx % 2 != 0)
-						{
-							ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
-						}
-						else
-						{
-							ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[10]) + L"\">" << "\n";
-						}
-
-						rowidx++;
-						// ==================================================================
-
-						ofile << L"<td width=\"387\" class=\"C4L\">" << "\n";
+						std::wstring link = L"";
 						
 						if (t == 0)
 						{
-							ofile << L"<a href=\"" + Utility::WebFileLink(GScanDetails->ScanPath) + L"\" target=\"_blank\">" + Formatting::MakeItalic(GScanDetails->RootFolders[t].Name, GScanDetails->RootFolders[t].Attributes & FILE_ATTRIBUTE_HIDDEN) + L"</a>" << "\n";
+							link = L"<a href=\"" + Utility::WebFileLink(GScanDetails->ScanPath) + L"\" target=\"_blank\">" + Formatting::MakeItalic(GScanDetails->RootFolders[t].Name, GScanDetails->RootFolders[t].Attributes & FILE_ATTRIBUTE_HIDDEN) + L"</a>";
 						}
 						else
 						{
-							ofile << L"<a href=\"" + Utility::WebFileLink(GScanDetails->ScanPath + GScanDetails->RootFolders[t].Name) + L"\" target=\"_blank\">" + Formatting::MakeItalic(GScanDetails->RootFolders[t].Name, GScanDetails->RootFolders[t].Attributes  & FILE_ATTRIBUTE_HIDDEN) + L"</a>" << "\n";
+							link = L"<a href=\"" + Utility::WebFileLink(GScanDetails->ScanPath + GScanDetails->RootFolders[t].Name) + L"\" target=\"_blank\">" + Formatting::MakeItalic(GScanDetails->RootFolders[t].Name, GScanDetails->RootFolders[t].Attributes  & FILE_ATTRIBUTE_HIDDEN) + L"</a>";
 						}
 
-						ofile << L"</td>" << "\n";
-						ofile << L"<td width=\"83\" class=\"C4G\">" <<
-							L"<div align=\"" + options.Align + L"\">" + Convert::GetSizeString(options.Units, GScanDetails->RootFolders[t].Data[__RootSize]) + L"</div>" +
-							L"</td>" << "\n";
-						ofile << L"<td width=\"65\" class=\"C4C\">" + Convert::DoubleToPercent((double)GScanDetails->RootFolders[t].Data[__RootSize] / (double)GScanDetails->TotalSize) + L"</td>" << "\n";
-						ofile << L"<td width=\"160\">" <<
-							L"<table width=\"" << std::to_wstring(std::round((((double)GScanDetails->RootFolders[t].Data[__RootSize] / (double)GScanDetails->TotalSize) * 100) * ((double)__ReportSizes[options.LayoutSize][__rsBarGraph] / (double)large1))) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(colour) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" +
-							L"<tr><td></td></tr>" <<
-							L"</table>" <<
-							L"</td>" << "\n";
-						ofile << L"</tr>" << std::endl;
+						FourColumnTableRow(ofile, rowidx, link,
+							Convert::GetSizeString(options.Units, GScanDetails->RootFolders[t].Data[__RootSize]),
+							Convert::DoubleToPercent((double)GScanDetails->RootFolders[t].Data[__RootSize] / (double)GScanDetails->TotalSize),
+							colour,
+							(((double)GScanDetails->RootFolders[t].Data[__RootSize] / (double)GScanDetails->TotalSize) * 100)* ((double)__ReportSizes[__rsBarGraphSmall] / (double)large1)
+						);
+
+						rowidx++;
 					}
 				}
 
@@ -1107,15 +894,18 @@ namespace ReportHTML
 				{
 					ofile << L"</table>" << "\n";
 
-					ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[options.LayoutSize][__rsTableWidth]) + L"\" border=\"0\" cellspacing=\"1\" cellpadding=\"1\">" +
-						L"<tr class=\"C7CB\"><td bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" + GLanguageHandler->XText[rsSize] + L"</td></tr>" +
-						L"<tr><td bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\"><div align=\"center\" id=\"chartDirectory2\"></td></tr>" +
-						L"</table>" << std::endl;
+					SingleGraph(ofile, rsSize, L"chartDirectory2");
 				}
 			}
 		}
 
 		InsertSpacingTable(ofile);
+	}
+
+
+	void DeepReportFrom(std::wofstream& ofile, SizeOfFolder sof)
+	{
+
 	}
 
 
@@ -1125,46 +915,27 @@ namespace ReportHTML
 		// == top 50 largest files ====================================================
 		// ============================================================================
 
-		ofile << L"<table align=\"center\" width=\"" << std::to_wstring(__ReportSizes[options.LayoutSize][__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" +
-			L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\"><td colspan=\"4\" height=\"13\"><a name=\"op9\" /><b>" + GLanguageHandler->XText[rsTop101] + L"(" + GLanguageHandler->XText[rsLargest] + L")</b></td></tr>" +
-			L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" +
-			L"<td height=\"13\" width=\"440\"><b>" + GLanguageHandler->XText[rsFileTypes] + L"</b></td>" +
-			L"<td height=\"13\" width=\"160\" class=\"XCB\">&nbsp;</td>" +
-			L"<td height=\"13\" width=\"85\" class=\"XCB\">" + GLanguageHandler->XText[rsCancel] + L"</td>" +
-			L"<td height=\"13\" width=\"85\" class=\"XCB\">" + GLanguageHandler->XText[rsOwner] + L"</td>" +
-			L"</tr>" << "\n";
+		FourColumnTableDoubleTitleHeader(ofile, L"op9", GLanguageHandler->XText[rsTop101] + L"(" + GLanguageHandler->XText[rsLargest] + L")", GLanguageHandler->XText[rsFileTypes],
+			GLanguageHandler->XText[rsSize],
+			GLanguageHandler->XText[rsOwner]
+			);
 
 		for (int t = 0; t < GScanDetails->Top100Large.size(); t++)
 		{
-			// ==================================================================
-			if (t % 2 != 0)
-			{
-				ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
-			}
-			else
-			{
-				ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[10]) + L"\">" << "\n";
-			}
-		
-			// ==================================================================
-			ofile << L"<td height=\"13\" width=\"440\">" + GScanDetails->Folders[GScanDetails->Top100Large[t].FilePathIndex] + GScanDetails->Top100Large[t].FileName + L"</td>" << "\n";
-			ofile << L"<td height=\"13\" width=\"160\">" << "\n";
+			float tableWidth = 0;
 
 			if (GScanDetails->TotalSize != 0)
 			{
-				ofile << L"<table width=\"" + std::to_wstring(std::round(((double)GScanDetails->Top100Large[t].Size / (double)GScanDetails->TotalSize) * (double)__ReportSizes[options.LayoutSize][__rsBarGraph])) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[4]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" << "\n";
-			}
-			else
-			{
-				ofile << L"<table width=\"140\" border=\"0\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[4]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" << "\n";
+				tableWidth = ((double)GScanDetails->Top100Large[t].Size / (double)GScanDetails->TotalSize) * (double)__ReportSizes[__rsBarGraphSmall];
 			}
 
-			ofile << L"<tr><td></td></tr>" << "\n";
-			ofile << L"</table>" << "\n";
-			ofile << L"</td>" << "\n";
-			ofile << L"<td height=\"13\" width=\"85\"><div align=\"" + options.Align + L"\">" + Convert::GetSizeString(options.Units, GScanDetails->Top100Large[t].Size) + L"</div></td>" << "\n";
-			ofile << L"<td height=\"13\" width=\"85\"><div align=\"" + options.Align + L"\">" + GScanDetails->Users[GScanDetails->Top100Large[t].Owner].Name + L"</div></td>" << "\n";
-			ofile << L"</tr>" << "\n";
+			FourColumnTableRow(ofile, t, 
+				GScanDetails->Folders[GScanDetails->Top100Large[t].FilePathIndex] + GScanDetails->Top100Large[t].FileName,
+				Convert::GetSizeString(options.Units, GScanDetails->Top100Large[t].Size),
+				GScanDetails->Users[GScanDetails->Top100Large[t].Owner].Name,
+				GSettings->Report.HTMLColours[4],
+				tableWidth
+				);
 		}
 
 		ofile << L"</table>" << std::endl;
@@ -1175,7 +946,7 @@ namespace ReportHTML
 
 	void ReportTop101Smallest(std::wofstream &ofile, HTMLReportOptions options)
 	{
-		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[options.LayoutSize][__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" +
+		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" +
 			L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\"><td colspan=\"2\" height=\"13\"><a name=\"op14\"/><b>" + GLanguageHandler->XText[rsTop101] + L"(" + GLanguageHandler->XText[rsSmallest] + L")</b></td></tr>" +
 			L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" +
 			L"<td height=\"13\" width=\"685\"><b>" + GLanguageHandler->XText[rsFiles] + L"</b></td>" +
@@ -1184,8 +955,6 @@ namespace ReportHTML
 
 		for (int t = 0; t < GScanDetails->Top100Small.size(); t++)
 		{
-			// ==================================================================
-
 			if (t % 2 != 0)
 			{
 				ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
@@ -1195,8 +964,6 @@ namespace ReportHTML
 				ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[10]) + L"\">" << "\n";
 			}
 			
-			// ==================================================================
-
 			ofile << L"<td height=\"13\" width=\"685\">" + GScanDetails->Folders[GScanDetails->Top100Small[t].FilePathIndex] + GScanDetails->Top100Small[t].FileName + L"</td>" << "\n";
 			ofile << L"<td height=\"13\" width=\"85\"><div align=\"" + options.Align + L"\">" + Convert::GetSizeString(options.Units, GScanDetails->Top100Small[t].Size) + L"</div></td>" << "\n";
 			ofile << L"</tr>" << "\n";
@@ -1210,35 +977,19 @@ namespace ReportHTML
 
 	void ReportTop101Newest(std::wofstream &ofile, HTMLReportOptions options)
 	{
-		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[options.LayoutSize][__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" << "\n";
-		ofile << L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" << "\n";
-		ofile << L"<td colspan=\"4\" height=\"13\"><a name=\"op15\" /><b>" + GLanguageHandler->XText[rsHTMLReport16] + L"</b></td>" << "\n";
-		ofile << L"</tr>" << "\n";
-		ofile << L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" << "\n";
-		ofile << L"<td height=\"13\" width=\"510\"><b>" + GLanguageHandler->XText[rsFiles] + L"</b></td>" << "\n";
-		ofile << L"<td height=\"13\" width=\"90\" align=\"center\"><b>" + GLanguageHandler->XText[rsCreated] + L"</b></td>" << "\n";
-		ofile << L"<td height=\"13\" width=\"85\" align=\"center\"><b>" + GLanguageHandler->XText[rsSize] + L"</b></td>" << "\n";
-		ofile << L"<td height=\"13\" width=\"85\" align=\"center\"><b>" + GLanguageHandler->XText[rsOwner] + L"</b></td>" << "\n";
-		ofile << L"</tr>" << "\n";
+		FourColumnTableDoubleTitleHeaderNoGraph(ofile, L"op13", GLanguageHandler->XText[rsHTMLReport16], GLanguageHandler->XText[rsFiles],
+			GLanguageHandler->XText[rsCreated],
+			GLanguageHandler->XText[rsSize],
+			GLanguageHandler->XText[rsOwner]
+		);
 
 		for (int t = 0; t < GScanDetails->Top100Newest.size(); t++)
 		{
-			// ==================================================================
-			if (t % 2 != 0)
-			{
-				ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
-			}
-			else
-			{
-				ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[10]) + L"\">" << "\n";
-			}
-			// ==================================================================
-
-			ofile << L"<td height=\"13\" width=\"510\">" + GScanDetails->Top100Newest[t].FileName + L"</td>" << "\n";
-			ofile << L"<td height=\"13\" width=\"90\"><div align=\"center\">" + Convert::IntDateToString(GScanDetails->Top100Newest[t].FileDateC) + L"</div></td>" << "\n";
-			ofile << L"<td height=\"13\" width=\"85\"><div align=\"" + options.Align + L"\">" + Convert::GetSizeString(options.Units, GScanDetails->Top100Newest[t].Size) + L"</div></td>" << "\n";
-			ofile << L"<td height=\"13\" width=\"85\"><div align=\"" + options.Align + L"\">" + GScanDetails->Users[GScanDetails->Top100Newest[t].Owner].Name + L"</div></td>" << "\n";
-			ofile << L"</tr>" << "\n";
+			FourColumnTableDoubleTitleNoGraphRow(ofile, t, GScanDetails->Top100Newest[t].FileName,
+				Convert::IntDateToString(GScanDetails->Top100Newest[t].FileDateC),
+				Convert::GetSizeString(options.Units, GScanDetails->Top100Newest[t].Size),
+				GScanDetails->Users[GScanDetails->Top100Newest[t].Owner].Name
+			);		
 		}
 
 		ofile << L"</table>" << std::endl;
@@ -1249,35 +1000,19 @@ namespace ReportHTML
 
 	void ReportTop101Oldest(std::wofstream &ofile, HTMLReportOptions options)
 	{
-		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[options.LayoutSize][__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" << "\n";
-		ofile << L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" << "\n";
-		ofile << L"<td colspan=\"4\" height=\"13\"><a name=\"op16\" /><b>" + GLanguageHandler->XText[rsHTMLReport17] + L"</b></td>" << "\n";
-		ofile << L"</tr>" << "\n";
-		ofile << L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" << "\n";
-		ofile << L"<td height=\"13\" width=\"510\"><b>" + GLanguageHandler->XText[rsFiles] + L"</b></td>" << "\n";
-		ofile << L"<td height=\"13\" width=\"90\" align=\"center\"><b>" + GLanguageHandler->XText[rsCreated] + L"</b></td>" << "\n";
-		ofile << L"<td height=\"13\" width=\"85\" align=\"center\"><b>" + GLanguageHandler->XText[rsSize] + L"</b></td>" << "\n";
-		ofile << L"<td height=\"13\" width=\"85\" align=\"center\"><b>" + GLanguageHandler->XText[rsOwner] + L"</b></td>" << "\n";
-		ofile << L"</tr>" << "\n";
+		FourColumnTableDoubleTitleHeaderNoGraph(ofile, L"op14", GLanguageHandler->XText[rsHTMLReport17], GLanguageHandler->XText[rsFiles],
+			GLanguageHandler->XText[rsCreated],
+			GLanguageHandler->XText[rsSize],
+			GLanguageHandler->XText[rsOwner]
+		);
 
 		for (int t = 0; t < GScanDetails->Top100Oldest.size(); t++)
 		{
-			// ==================================================================
-			if (t % 2 != 0)
-			{
-				ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
-			}
-			else
-			{
-				ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[10]) + L"\">" << "\n";
-			}
-			// ==================================================================
-
-			ofile << L"<td height=\"13\" width=\"510\">" + GScanDetails->Top100Oldest[t].FileName + L"</td>" << "\n";
-			ofile << L"<td height=\"13\" width=\"90\"><div align=\"center\">" + Convert::IntDateToString(GScanDetails->Top100Oldest[t].FileDateC) + L"</div></td>" << "\n";
-			ofile << L"<td height=\"13\" width=\"85\"><div align=\"" + options.Align + L"\">" + Convert::GetSizeString(options.Units, GScanDetails->Top100Oldest[t].Size) + L"</div></td>" << "\n";
-			ofile << L"<td height=\"13\" width=\"85\"><div align=\"" + options.Align + L"\">" + GScanDetails->Users[GScanDetails->Top100Oldest[t].Owner].Name + L"</div></td>" << "\n";
-			ofile << L"</tr>" << "\n";
+			FourColumnTableDoubleTitleNoGraphRow(ofile, t, GScanDetails->Top100Newest[t].FileName,
+				Convert::IntDateToString(GScanDetails->Top100Oldest[t].FileDateC),
+				Convert::GetSizeString(options.Units, GScanDetails->Top100Oldest[t].Size),
+				GScanDetails->Users[GScanDetails->Top100Oldest[t].Owner].Name
+			);
 		}
 
 		ofile << L"</table>" << std::endl;
@@ -1288,35 +1023,16 @@ namespace ReportHTML
 
 	void ReportFileDates(std::wofstream &ofile, HTMLReportOptions options)
 	{
-
 		if (options.Layout[0])
 		{
-			ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[options.LayoutSize][__rsTableWidth]) + L"\" border=\"0\" cellspacing=\"1\" cellpadding=\"1\">" +
-				L"<tr class=\"C7CB\"><td bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\"><a name=\"op8\" />" + GLanguageHandler->XText[rsFileDates] + L"</td></tr>" +
-				L"<tr><td bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\"><div id=\"chartFileDates1\"></div></td></tr>" +
-				L"'</table>" << "\n";
+			SingleGraph(ofile, rsFileDates, L"chartFileDates1");
 
-			ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[options.LayoutSize][__rsTableWidth]) + L"\" border=\"0\" cellspacing=\"1\" cellpadding=\"1\">" +
-				L"<tr class=\"C7CB\"><td bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\"><a name=\"op8\" />" + GLanguageHandler->XText[rsFileDates] + L"</td></tr>" +
-				L"<tr><td bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\"><div id=\"chartFileDates2\"></div></td></tr>" +
-				L"'</table>" << std::endl;
+			SingleGraph(ofile, rsFileDates, L"chartFileDates2");
 
 			InsertSpacingTable(ofile);
 		}
 
-		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[options.LayoutSize][__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" << "\n";
-		ofile << L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" << "\n";
-		ofile << L"<td colspan=\"7\" width=\"387\" height=\"20\"><a name=\"op8\" /><b>" + GLanguageHandler->XText[rsFileAttributes] + L" (Created)</b></td>" << "\n";
-		ofile << L"</tr>" << "\n";
-		ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" << "\n";
-		ofile << L"<td width=\"100\" height=\"13\" class=\"C7G\"><a name=\"op3\" /><b>" + GLanguageHandler->XText[rsYear] + L"</b></td>" << "\n";
-		ofile << L"<td width=\"64\" height=\"13\" class=\"C7G\"><div align=\"center\"><b>" + GLanguageHandler->XText[rsQuantity] + L"</b></div></td>" << "\n";
-		ofile << L"<td width=\"64\" height=\"13\" class=\"C7G\"><div align=\"center\"><b>" + GLanguageHandler->XText[rsAsPercent] + L"</b></div></td>" << "\n";
-		ofile << L"<td width=\"160\" height=\"13\">&nbsp;</td>" << "\n";
-		ofile << L"<td width=\"85\" height=\"13\" class=\"C7G\"><div align=\"center\"><b>" + GLanguageHandler->XText[rsSizeOfFiles] + L"</b></div></td>" << "\n";
-		ofile << L"<td width=\"67\" height=\"13\" class=\"C7G\"><div align=\"center\"><b>" + GLanguageHandler->XText[rsAsPercent] + L"</b></div></td>" << "\n";
-		ofile << L"<td width=\"160\" height=\"20\">&nbsp;</td>" << "\n";
-		ofile << L"</tr>" << std::endl;
+		SevenColumnTableDoubleTitleHeader(ofile, L"op9", GLanguageHandler->XText[rsFileAttributes] + L" (Created)", GLanguageHandler->XText[rsYear]);
 
 		if (GScanDetails->Files.size() != 0)
 		{
@@ -1340,8 +1056,8 @@ namespace ReportHTML
 				}
 			}
 	
-			if (large1 == 0) { large1 = __ReportSizes[options.LayoutSize][__rsBarGraph]; }
-			if (large2 == 0) { large2 = __ReportSizes[options.LayoutSize][__rsBarGraph]; }
+			if (large1 == 0) { large1 = __ReportSizes[__rsBarGraph]; }
+			if (large2 == 0) { large2 = __ReportSizes[__rsBarGraph]; }
 
 			int rowidx = 1;
 
@@ -1350,54 +1066,30 @@ namespace ReportHTML
 
 				if ((GScanDetails->FileCount != 0) && (GScanDetails->FileDates[t].Count != 0))
 				{
-					// ==================================================================
-					if (rowidx % 2 == 0)
+					std::wstring aspc = L"100%";
+					float aspcgraph = (double)__ReportSizes[__rsBarGraph];
+
+					if (GScanDetails->TotalSize != 0)
 					{
-						ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
+						aspc = Convert::DoubleToPercent((double)GScanDetails->FileDates[t].Size / (double)GScanDetails->TotalSize);
 					}
-					else
+
+					if (GScanDetails->TotalSize != 0)
 					{
-						ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[10]) + L"\">" << "\n";
+						aspcgraph = (((double)GScanDetails->FileDates[t].Size / (double)GScanDetails->TotalSize) * 100) * ((double)__ReportSizes[__rsBarGraph] / (double)large2);
 					}
+
+					SevenColumnTableRow(ofile, rowidx, std::to_wstring(GScanDetails->FileDates[t].Year),
+						std::to_wstring(GScanDetails->FileDates[t].Count),
+						Convert::DoubleToPercent((double)GScanDetails->FileDates[t].Count / (double)GScanDetails->FileCount),
+						Convert::GetSizeString(options.Units, GScanDetails->FileDates[t].Size),
+						aspc,
+						GSettings->Report.HTMLColours[4],
+						(((double)GScanDetails->FileDates[t].Count / (double)GScanDetails->FileCount) * 100) * ((double)__ReportSizes[__rsBarGraph] / (double)large1),
+						aspcgraph
+						);
 
 					rowidx++;
-
-					// ==================================================================
-
-					ofile << L"<td width=\"100\" class=\"C4G\"><div align=\"left\">" + std::to_wstring(GScanDetails->FileDates[t].Year) + L"</div></td>" << "\n";
-					ofile << L"<td width=\"64\" class=\"C4G\"><div align=\"center\">" + std::to_wstring(GScanDetails->FileDates[t].Count) + L"</div></td>" << "\n";
-					ofile << L"<td width=\"64\" class=\"C4G\"><div align=\"center\">" + Convert::DoubleToPercent((double)GScanDetails->FileDates[t].Count / (double)GScanDetails->FileCount) + L"</div></td>" << "\n";
-					ofile << L"<td width=\"160\">" << "\n";
-					ofile << L"<table width=\"" + std::to_wstring(std::round((((double)GScanDetails->FileDates[t].Count / (double)GScanDetails->FileCount) * 100) * ((double)__ReportSizes[options.LayoutSize][__rsBarGraph] / (double)large1))) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[4]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" << "\n";
-					ofile << L"<tr><td></td></tr>" << "\n";
-					ofile << L"</table>" << "\n";
-					ofile << L"</td>" << "\n";
-					ofile << L"<td width=\"85\" class=\"C4G\"><div align=\"" + options.Align + L"\">" + Convert::GetSizeString(options.Units, GScanDetails->FileDates[t].Size) + L"</div></td>" << "\n";
-
-					if (GScanDetails->TotalSize != 0)
-					{
-						ofile << L"<td width=\"67\" class=\"C4G\"><div align=\"center\">" + Convert::DoubleToPercent((double)GScanDetails->FileDates[t].Size / (double)GScanDetails->TotalSize) + L"</div></td>" << "\n";
-					}
-					else
-					{	
-						ofile << L"<td width=\"67\" class=\"C4G\"><div align=\"center\">100%</div></td>" << "\n";
-					}
-
-					ofile << L"<td width=\"160\">" << "\n";
-
-					if (GScanDetails->TotalSize != 0)
-					{
-						ofile << L"<table width=\"" + std::to_wstring(std::round((((double)GScanDetails->FileDates[t].Size / (double)GScanDetails->TotalSize) * 100) * ((double)__ReportSizes[options.LayoutSize][__rsBarGraph] / (double)large2))) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[4]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" << "\n";
-					}
-					else
-					{
-						ofile << L"<table width=\"140\" border=\"0\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[4]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" << "\n";
-					}
-	
-					ofile << L"<tr><td></td></tr>" << "\n";
-					ofile << L"</table>" << "\n";
-					ofile << L"</td>" << "\n";
-					ofile << L"</tr>" << std::endl;
 				}
 			}
 
@@ -1405,15 +1097,7 @@ namespace ReportHTML
 		}
 		else
 		{
-			ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
-			ofile << L"<td width=\"100\" height=\"13\" class=\"C7G\"><a name=\"op3\" /><b>No data</b></td>" << "\n";
-			ofile << L"<td width=\"64\" height=\"13\" class=\"C7G\">&nbsp;</td>" << "\n";
-			ofile << L"<td width=\"64\" height=\"13\" class=\"C7G\">&nbsp;</td>" << "\n";
-			ofile << L"<td width=\"160\" height=\"13\">&nbsp;</td>" << "\n";
-			ofile << L"<td width=\"85\" height=\"13\" class=\"C7G\">&nbsp;</td>" << "\n";
-			ofile << L"<td width=\"67\" height=\"13\" class=\"C7G\">&nbsp;</td>" << "\n";
-			ofile << L"<td width=\"160\" height=\"20\">&nbsp;</td>" << "\n";
-			ofile << L"</tr>" << std::endl;
+			SevenColumnTableRowBlank(ofile, 0, L"<b>No data</b");
 
 			InsertSpacingTable(ofile);
 		}
@@ -1427,7 +1111,7 @@ namespace ReportHTML
 		// == null files ==============================================================
 		// ============================================================================
 
-		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[options.LayoutSize][__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" << "\n";
+		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" << "\n";
 		ofile << L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\"><td height=\"13\"><a name=\"op7\" /><b>" + GLanguageHandler->XText[rsNullFiles] + L"</b></td></tr>" << "\n";
 
 		if (GScanDetails->NullFiles.size() == 0)
@@ -1438,7 +1122,6 @@ namespace ReportHTML
 		{
 			for (int t = 0; t < GScanDetails->NullFiles.size(); t++)
 			{
-				// ==================================================================
 				if (t % 2 == 0)
 				{
 					ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
@@ -1448,12 +1131,11 @@ namespace ReportHTML
 					ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[10]) + L"\">" << "\n";
 				}
 
-				rowidx++;
-				// ==================================================================
-
 				ofile << L"<td height=\"13\">" + GScanDetails->NullFiles[t] + L"</td>" << "\n";
 
 				ofile << L"</tr>" << "\n";
+
+				rowidx++;
 			}
 		}
 		
@@ -1487,13 +1169,38 @@ namespace ReportHTML
 	} 
 
 
+	void DoubleGraph(std::wofstream& ofile, std::wstring id1, std::wstring id2)
+	{
+		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellspacing=\"1\" cellpadding=\"1\">" +
+			L"<tr class=\"C7CB\">" +
+			L"<td bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" + GLanguageHandler->XText[rsQuantity] + L"</td>" +
+			L"<td bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" + GLanguageHandler->XText[rsSize] + L"</td>" +
+			L"</tr>" +
+			L"<tr>" +
+			L"<td bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\"><div align=\"center\" id=\"" + id1 + L"\"></td>" +
+			L"<td bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\"><div align=\"center\" id=\"" + id2 + L"\"></td>" +
+			L"</tr>" +
+			L"</table>" << std::endl;
+	}
+
+
+	void SingleGraph(std::wofstream& ofile, int title_language_id, std::wstring id)
+	{
+		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellspacing=\"1\" cellpadding=\"1\">" +
+			L"<tr class=\"C7CB\">" +
+			L"<td bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" + GLanguageHandler->XText[title_language_id] + L"</td>" +
+			L"</tr>" +
+			L"<tr><td bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\"><div align=\"center\" id=\"" + id + L"\"></td></tr>" +
+			L"</table>" << std::endl;
+	}
+
+
 	void BuildGraphScript(std::wofstream &ofile, HTMLReportOptions options)
 	{
 		ofile << L"<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>" << "\n";
 		ofile << L"<script type=\"text/javascript\">" << "\n";
 		ofile << L"google.charts.load('current', {'packages':['corechart']});" << "\n";
 		ofile << L"google.charts.setOnLoadCallback(drawChart);" << "\n";
-
 
 		ofile << L"function drawChart() {" << "\n";
 
@@ -1502,7 +1209,6 @@ namespace ReportHTML
 		BuildGraphCode(ofile, options);
 
 		ofile << L"}" << "\n";
-
 
 		ofile << L"</script>" << std::endl;
 	}
@@ -1551,8 +1257,8 @@ namespace ReportHTML
 				switch (t)
 				{
 				case 0:
-					ofile << L"var optionsQI1 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[options.LayoutSize][__rsChartDD]) + L", 'height' : 200 };" << "\n";
-					ofile << L"var optionsQI2 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[options.LayoutSize][__rsChartDD]) + L", 'height' : 200 };" << "\n";
+					ofile << L"var optionsQI1 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartDD]) + L", 'height' : 200 };" << "\n";
+					ofile << L"var optionsQI2 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartDD]) + L", 'height' : 200 };" << "\n";
 
 					ofile << L"var chartQI1 = new google.visualization.PieChart(document.getElementById('chartQuickInfo1'));" << "\n";
 					ofile << L"var chartQI2 = new google.visualization.PieChart(document.getElementById('chartQuickInfo2'));" << "\n";
@@ -1561,8 +1267,8 @@ namespace ReportHTML
 
 					break;
 				case 2:
-					ofile << L"var optionsC1 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[options.LayoutSize][__rsChartCM]) + L", 'height' : 220 };" << "\n";
-					ofile << L"var optionsC2 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[options.LayoutSize][__rsChartCM]) + L", 'height' : 220 };" << "\n";
+					ofile << L"var optionsC1 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartCM]) + L", 'height' : 220 };" << "\n";
+					ofile << L"var optionsC2 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartCM]) + L", 'height' : 220 };" << "\n";
 
 					ofile << L"var chartC1 = new google.visualization.ColumnChart(document.getElementById('chartCategory1'));" << "\n";
 					ofile << L"var chartC2 = new google.visualization.ColumnChart(document.getElementById('chartCategory2'));" << "\n";
@@ -1572,8 +1278,8 @@ namespace ReportHTML
 
 					break;
 				case 3:
-					ofile << L"var optionsD1 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[options.LayoutSize][__rsChartCD]) + L", 'height' : 400 };" << "\n";
-					ofile << L"var optionsD2 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[options.LayoutSize][__rsChartCD]) + L", 'height' : 400 };" << "\n";
+					ofile << L"var optionsD1 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartCD]) + L", 'height' : 400 };" << "\n";
+					ofile << L"var optionsD2 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartCD]) + L", 'height' : 400 };" << "\n";
 
 					ofile << L"var chartD1 = new google.visualization.ColumnChart(document.getElementById('chartDirectory1'));" << "\n";
 					ofile << L"var chartD2 = new google.visualization.ColumnChart(document.getElementById('chartDirectory2'));" << "\n";
@@ -1584,8 +1290,8 @@ namespace ReportHTML
 					break;
 				case 4:
 
-					ofile << L"var optionsM1 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[options.LayoutSize][__rsChartXM]) + L", 'height' : 220 };" << "\n";
-					ofile << L"var optionsM2 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[options.LayoutSize][__rsChartXM]) + L", 'height' : 220 };" << "\n";
+					ofile << L"var optionsM1 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartXM]) + L", 'height' : 220 };" << "\n";
+					ofile << L"var optionsM2 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartXM]) + L", 'height' : 220 };" << "\n";
 
 					ofile << L"var chartM1 = new google.visualization.ColumnChart(document.getElementById('chartMagnitude1'));" << "\n";
 					ofile << L"var chartM2 = new google.visualization.ColumnChart(document.getElementById('chartMagnitude2'));" << "\n";
@@ -1597,8 +1303,8 @@ namespace ReportHTML
 					break;
 				case 7:
 
-					ofile << L"var optionsFD1 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[options.LayoutSize][__rsChartFD]) + L", 'height' : 400 };" << "\n";
-					ofile << L"var optionsFD2 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[options.LayoutSize][__rsChartFD]) + L", 'height' : 400 };" << "\n";
+					ofile << L"var optionsFD1 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartFD]) + L", 'height' : 400 };" << "\n";
+					ofile << L"var optionsFD2 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartFD]) + L", 'height' : 400 };" << "\n";
 
 					ofile << L"var chartFD1 = new google.visualization.ColumnChart(document.getElementById('chartFileDates1'));" << "\n";
 					ofile << L"var chartFD2 = new google.visualization.ColumnChart(document.getElementById('chartFileDates2'));" << "\n";
@@ -1726,5 +1432,155 @@ namespace ReportHTML
 		}
 
 		ofile << L"]);" << "\n";
+	}
+
+	void FourColumnTableDoubleTitleHeader(std::wofstream& ofile, std::wstring anchor, std::wstring title_top, std::wstring title_bottom, std::wstring col1, std::wstring col2)
+	{
+		ofile << L"<table align=\"center\" width=\"" << std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" +
+			L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\"><td colspan=\"4\" height=\"13\"><a name=\"" + anchor + L"\" /><b>" + title_top + L"</b></td></tr>" +
+			L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" +
+			L"<td height=\"13\" width=\"910\"><b>" + title_bottom + L"</b></td>" +
+			L"<td height=\"13\" width=\"160\" class=\"XCB\">&nbsp;</td>" +
+			L"<td height=\"13\" width=\"90\" class=\"XCB\">" + col1 + L"</td>" +
+			L"<td height=\"13\" width=\"90\" class=\"XCB\">" + col2 + L"</td>" +
+			L"</tr>" << "\n";
+	}
+
+	void FourColumnTableRow(std::wofstream& ofile, int row, std::wstring col1, std::wstring col3, std::wstring col4, int graph_colour, float graph)
+	{
+		if (row % 2 != 0)
+		{
+			ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
+		}
+		else
+		{
+			ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[10]) + L"\">" << "\n";
+		}
+
+		ofile << L"<td height=\"13\">" + col1 + L"</td>" << "\n";
+		ofile << L"<td height=\"13\">" << "\n";
+		ofile << L"<table width=\"" + std::to_wstring(graph) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(graph_colour) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" << "\n";
+		ofile << L"<tr><td></td></tr>" << "\n";
+		ofile << L"</table>" << "\n";
+		ofile << L"</td>" << "\n";
+		ofile << L"<td height=\"13\" align=\"right\">" + col3 + L"</td>" << "\n";
+		ofile << L"<td height=\"13\" align=\"right\">" + col4 + L"</td>" << "\n";
+		ofile << L"</tr>" << "\n";
+	}
+
+	void FourColumnTableDoubleTitleHeaderNoGraph(std::wofstream& ofile, std::wstring anchor, std::wstring title_top, std::wstring title_bottom, std::wstring col1, std::wstring col2, std::wstring col3)
+	{
+		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" << "\n";
+		ofile << L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" << "\n";
+		ofile << L"<td colspan=\"4\" height=\"13\"><a name=\"" + anchor + L"\" /><b>" + title_top + L"</b></td>" << "\n";
+		ofile << L"</tr>" << "\n";
+		ofile << L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" << "\n";
+		ofile << L"<td height=\"13\" width=\"980\"><b>" + title_bottom + L"</b></td>" << "\n";
+		ofile << L"<td height=\"13\" width=\"90\" align=\"center\"><b>" + col1 + L"</b></td>" << "\n";
+		ofile << L"<td height=\"13\" width=\"90\" align=\"center\"><b>" + col2 + L"</b></td>" << "\n";
+		ofile << L"<td height=\"13\" width=\"90\" align=\"center\"><b>" + col3 + L"</b></td>" << "\n";
+	}
+
+	void FourColumnTableDoubleTitleNoGraphRow(std::wofstream& ofile, int row, std::wstring col1, std::wstring col2, std::wstring col3, std::wstring col4)
+	{
+		if (row % 2 != 0)
+		{
+			ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
+		}
+		else
+		{
+			ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[10]) + L"\">" << "\n";
+		}
+
+		ofile << L"<td height=\"13\">" + col1 + L"</td>" << "\n";
+		ofile << L"<td height=\"13\" align=\"right\">" + col2 + L"</td>" << "\n";
+		ofile << L"<td height=\"13\" align=\"right\">" + col3 + L"</td>" << "\n";
+		ofile << L"<td height=\"13\" align=\"left\">" + col4 + L"</td>" << "\n";
+		ofile << L"</tr>" << "\n";
+	}
+
+	void SevenColumnTableHeader(std::wofstream& ofile, std::wstring anchor, std::wstring title)
+	{
+		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" << "\n";
+		ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" +
+			L"<td width=\"150\" height=\"13\" class=\"C7G\"> <a name=\"" + anchor + L"\" /><b>" + title + L"</b></td>" +
+			L"<td width=\"90\" height=\"13\" class=\"C7CB\">" + GLanguageHandler->XText[rsQuantity] + L"</td>" +
+			L"<td width=\"80\" height=\"13\" class=\"C7CB\">" + GLanguageHandler->XText[rsAsPercent] + L"</td>" +
+			L"<td width=\"380\" height=\"13\"> &nbsp; </td>" +
+			L"<td width=\"90\" height=\"13\" class=\"C7CB\">" + GLanguageHandler->XText[rsSizeOfFiles] + L"</td>" +
+			L"<td width=\"80\" height=\"13\" class=\"C7CB\">" + GLanguageHandler->XText[rsAsPercent] + L"</td>" +
+			L"<td width=\"380\" height=\"20\">&nbsp;</td>" +
+			L"</tr>" << "\n";
+	}
+
+	void SevenColumnTableRow(std::wofstream& ofile, int row, std::wstring caption, std::wstring col1, std::wstring col2, std::wstring col3, std::wstring col4, int graph_colour, float graph_left, float graph_right)
+	{
+		if (row % 2 != 0)
+		{
+			ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
+		}
+		else
+		{
+			ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[10]) + L"\">" << "\n";
+		}
+
+		ofile << L"<td class=\"C4L\">" + caption + L"</td>" << "\n";
+		ofile << L"<td class=\"C4G\" align=\"right\">" + col1 + L"</td>" << "\n";
+		ofile << L"<td class=\"C4G\" align=\"right\">" + col2 + L"</td>" << "\n";
+		ofile << L"<td> " <<
+			L"<table width=\"" << std::to_wstring((int)graph_left) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(graph_colour) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" +
+			L"<tr><td></td></tr>" <<
+			L"</table>" <<
+			L"</td>" << "\n";
+		ofile << L"<td class=\"C4G\" align=\"right\">" + col3 + L"</td>" << "\n";
+		ofile << L"<td class=\"C4G\" align=\"right\">" + col4 + L"</td>" +
+			L"<td>" <<
+			L"<table width=\"" << std::to_wstring((int)graph_right) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(graph_colour) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" +
+			L"<tr><td></td></tr>" <<
+			L"</table>" <<
+			L"</td>" << "\n";
+		ofile << L"</tr>" << "\n";
+	}
+
+	void SevenColumnTableRowBlank(std::wofstream& ofile, int row, std::wstring caption)
+	{
+		if (row % 2 != 0)
+		{
+			ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" << "\n";
+		}
+		else
+		{
+			ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[10]) + L"\">" << "\n";
+		}
+
+		ofile << L"<td class=\"C4L\">" + caption + L"</td>" << "\n";
+		ofile << L"<td class=\"C4C\" align=\"right\">&nbsp;</td>" << "\n";
+		ofile << L"<td class=\"C4C\" align=\"right\">&nbsp;</td>" << "\n";
+		ofile << L"<td>&nbsp;</td>" << "\n";
+		ofile << L"<td class=\"C4G\" align=\"right\">&nbsp;</td>" << "\n";
+		ofile << L"<td class=\"C4C\" align=\"right\">&nbsp;</td>" << "\n";
+		ofile << L"<td>&nbsp;</td></tr>" << "\n";
+	}
+
+	void SevenColumnTableEnd(std::wofstream& ofile)
+	{
+		ofile << L"</table>" << std::endl;
+	}
+
+	void SevenColumnTableDoubleTitleHeader(std::wofstream& ofile, std::wstring anchor, std::wstring title_top, std::wstring title_bottom)
+	{
+		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" << "\n";
+		ofile << L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" << "\n";
+		ofile << L"<td colspan=\"7\" width=\"387\" height=\"20\"><a name=\"" + anchor + L"\" /><b>" + title_top + L"</b></td>" << "\n";
+		ofile << L"</tr>" << "\n";
+		ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" << "\n";
+		ofile << L"<td width=\"150\" height=\"13\" class=\"C7G\"><a name=\"op3\" /><b>" + GLanguageHandler->XText[rsYear] + L"</b></td>" << "\n";
+		ofile << L"<td width=\"90\" height=\"13\" class=\"C7G\"><div align=\"center\"><b>" + GLanguageHandler->XText[rsQuantity] + L"</b></div></td>" << "\n";
+		ofile << L"<td width=\"80\" height=\"13\" class=\"C7G\"><div align=\"center\"><b>" + GLanguageHandler->XText[rsAsPercent] + L"</b></div></td>" << "\n";
+		ofile << L"<td width=\"380\" height=\"13\">&nbsp;</td>" << "\n";
+		ofile << L"<td width=\"90\" height=\"13\" class=\"C7G\"><div align=\"center\"><b>" + GLanguageHandler->XText[rsSizeOfFiles] + L"</b></div></td>" << "\n";
+		ofile << L"<td width=\"80\" height=\"13\" class=\"C7G\"><div align=\"center\"><b>" + GLanguageHandler->XText[rsAsPercent] + L"</b></div></td>" << "\n";
+		ofile << L"<td width=\"380\" height=\"20\">&nbsp;</td>" << "\n";
+		ofile << L"</tr>" << std::endl;
 	}
 };
