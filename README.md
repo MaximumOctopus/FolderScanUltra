@@ -1,4 +1,4 @@
-# FolderScanUltra
+# FolderScanUltra 5.0.1
 
 (c) Paul Alan Freshney 2019-2022
 
@@ -12,7 +12,6 @@ It can generate CSV, XML, Text, Tree, and summary reports.
 The included sqlite3.dll and sqlite3.lib files are x64 versions. They can only be used to compile the 64-bit version.
 
 32-bit sqlite3.dll and sqlite3.def (for building the .lib) files can be found on the official sqlite site: http://sqlite.org
-
 
 
 # History 
@@ -39,8 +38,7 @@ The weird "n years after" phenomenon has happened again. It's almost exactly two
 
 4.1.1 / June 6th 2020
 
-Added /versioncheck switch
-Warns if new version available.		
+Added /versioncheck switch. Warns if new version available.		
 
 4.1.0 / June 5th 2020
 
