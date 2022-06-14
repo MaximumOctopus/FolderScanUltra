@@ -1,4 +1,4 @@
-# FolderScanUltra 5.0.1
+# FolderScanUltra 5.1.0
 
 (c) Paul Alan Freshney 2019-2022
 
@@ -21,6 +21,14 @@ This was originally a Delphi application, released as part of the Xinorbis tools
 In 2022 I decided to rename it and add it to my pool of applications receiving regular updates (two applications now, so maybe a puddle, not a pool). It'll be distanced somewhat from xinorbis and become better for it. Many updates are planned.
 
 # Release History
+
+5.1.0 / June 14th 2022
+
+Added new HTML and Text reports: /deephtml and /deeptext
+
+These add an extra level of folder detail to the respective html and text reports.
+
+Tweaked the text report tables to show slightly more data.
 
 5.0.1 / June 13th 2022
 
