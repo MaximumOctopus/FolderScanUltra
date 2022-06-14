@@ -59,9 +59,9 @@ bool WindowsUtility::DirectoryExistsWString(const std::wstring& dirName_in)
 }
 
 
-bool WindowsUtility::FileExists(const std::wstring& aFileName)
+bool WindowsUtility::FileExists(const std::wstring& file_name)
 {
-	if (FILE *file = _wfopen(aFileName.c_str(), L"r"))
+	if (FILE *file = _wfopen(file_name.c_str(), L"r"))
 	{
 		fclose(file);
 		
@@ -117,7 +117,7 @@ std::wstring WindowsUtility::GetDataFolder()
 }
 
 // https://stackoverflow.com/questions/4130180/how-to-use-vs-c-getenvironmentvariable-as-cleanly-as-possible
-std::wstring WindowsUtility::GetEnvVariable(std::wstring aName)
+std::wstring WindowsUtility::GetEnvVariable(std::wstring name)
 {
 	DWORD bufferSize = 65535;
 
@@ -125,7 +125,7 @@ std::wstring WindowsUtility::GetEnvVariable(std::wstring aName)
 
 	value.resize(bufferSize);
 
-	bufferSize = GetEnvironmentVariableW(aName.c_str(), &value[0], bufferSize);
+	bufferSize = GetEnvironmentVariableW(name.c_str(), &value[0], bufferSize);
 
 	if (!bufferSize)
 	{
@@ -138,7 +138,7 @@ std::wstring WindowsUtility::GetEnvVariable(std::wstring aName)
 }
 
 
-std::wstring WindowsUtility::GetFileOwner(std::wstring aFileName)
+std::wstring WindowsUtility::GetFileOwner(std::wstring file_name)
 {
 	DWORD dwRtnCode = 0;
 	PSID pSidOwner = NULL;
@@ -151,7 +151,7 @@ std::wstring WindowsUtility::GetFileOwner(std::wstring aFileName)
 	PSECURITY_DESCRIPTOR pSD = NULL;
 
 	// Get the handle of the file object.
-	hFile = CreateFile(aFileName.c_str(),	GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING,	FILE_ATTRIBUTE_NORMAL, NULL);
+	hFile = CreateFile(file_name.c_str(),	GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING,	FILE_ATTRIBUTE_NORMAL, NULL);
 
 	// Check GetLastError for CreateFile error code.
 	if (hFile == INVALID_HANDLE_VALUE) 

@@ -21,19 +21,19 @@ class LanguageHandler
 {
 private:
 
-	int currentLanguage;
+	int currentLanguage = 0;
 
-    bool LoadLanguage(std::wstring fileName);
+    bool LoadLanguage(std::wstring);
 
 	void SetReportText();
 	void SetXDates();
 
-    std::wstring GetLanguageSymbol(int languageIndex);
+    std::wstring GetLanguageSymbol(int);
 
 public:
 	std::wstring ShortDays[7] = { L"Sun", L"Mon", L"Tue", L"Wed", L"Thu", L"Fri", L"Sat" };
 
-	bool LanguageLoadOK;
+	bool LanguageLoadOK = false;
 	
 	std::vector<std::wstring> XText;
 	std::vector<std::wstring> XDates;
@@ -52,5 +52,5 @@ public:
 
 	std::wstring GetLanguageSymbol(void);
 
-    LanguageHandler(std::wstring folder, int languageIndex);
+    LanguageHandler(std::wstring, int);
 };

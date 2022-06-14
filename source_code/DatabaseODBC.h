@@ -28,28 +28,28 @@ private:
 	SQLHANDLE hSqlConnection;
 	SQLHANDLE hSqlStatement;
 
-	int dbMode;
+	int dbMode = 0;
 
-	bool CreateConnection(std::wstring &connectionString);
+	bool CreateConnection(std::wstring&);
 
 public:
 
-	bool dbAvailable;
+	bool dbAvailable = false;
 
-	bool CreateNewFileTable(std::wstring tableName);
-	bool CreateNewFolderTable(std::wstring tableName);
+	bool CreateNewFileTable(std::wstring);
+	bool CreateNewFolderTable(std::wstring);
 
-	bool PopulateFileTable(std::wstring tableName);
-	bool PopulateFolderTable(std::wstring tableName);
+	bool PopulateFileTable(std::wstring);
+	bool PopulateFolderTable(std::wstring);
 
-	bool CreateNewDataTable(std::wstring tableName);
-	bool CreateNewSystemTable(std::wstring tableName);
+	bool CreateNewDataTable(std::wstring);
+	bool CreateNewSystemTable(std::wstring);
 
-	bool PopulateDataTable(std::wstring tableName);
-	bool PopulateSystemTable(std::wstring tableName, std::wstring dataTableName);
+	bool PopulateDataTable(std::wstring);
+	bool PopulateSystemTable(std::wstring, std::wstring);
 
-	void DatabaseODBC::ShowError(unsigned int handletype, const SQLHANDLE& handle);
+	void DatabaseODBC::ShowError(unsigned int, const SQLHANDLE&);
 
-	DatabaseODBC(std::wstring &connectionString);
+	DatabaseODBC(std::wstring &);
 	~DatabaseODBC();
 };

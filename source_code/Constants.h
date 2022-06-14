@@ -22,7 +22,7 @@ static const std::wstring __FSUVersion = L"5.1.0 (debug)";
 static const std::wstring __FSUVersion = L"5.1.0";
 #endif
 
-static const std::wstring __FSUDate    = L"June 12th 2022";
+static const std::wstring __FSUDate    = L"June 14th 2022";
 
 // ===========================================================================
 // == Scanning ===============================================================
@@ -901,8 +901,9 @@ static const int  rsThisReportCanBeImported = 780;
 static const int  rsReportContainsVirtualFiles = 781;
 static const int  rsScanStoppedBeforeComplete = 782;
 static const int  rsIgnoreVirtualFolders = 783;
+static const int  rsDeepScan = 784;
 
-static const int  rsLanguageConstantsCount = 784;
+static const int  rsLanguageConstantsCount = 785;
 #pragma endregion
 
 static const int  __rsDateDD = 0;
@@ -935,9 +936,9 @@ static const int __ReportLast  = __ReportTypeHTMLDeep;
 
 static const int __ReportTypeError = 99;
 
-static const bool __IsDateReport[11]     = { true, true, true, true, true, false, false, false, true, true, true };
-static const bool __IsFileDateReport[11] = { false, true, false, true, true, false, false, false, false, false, false };
-static const bool __IsSizeReport[11]     = { true, true, true, true, true, false, true, true, false, false, true };
+static const bool __IsDateReport[14]     = { true, true, true, true, true, false, false, false, true, true, true, true, true, true };
+static const bool __IsFileDateReport[14] = { false, true, false, true, true, false, false, false, false, false, false, true, true, true };
+static const bool __IsSizeReport[14]     = { true, true, true, true, true, false, true, true, false, false, true, true, true, true };
 
 // ===========================================================================
 // == System =================================================================

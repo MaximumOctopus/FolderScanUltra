@@ -18,7 +18,7 @@
 #include "Registry.h"
 
 
-std::wstring Registry::ReadRegistryString(HKEY hKey, std::wstring aKeyname, std::wstring aDefaultValue)
+std::wstring Registry::ReadRegistryString(HKEY hKey, std::wstring key_name, std::wstring aDefaultValue)
 {
 	const DWORD SIZE = 1024;
 	wchar_t szValue[SIZE];
@@ -26,7 +26,7 @@ std::wstring Registry::ReadRegistryString(HKEY hKey, std::wstring aKeyname, std:
 	DWORD dwType = 0;
 
 	long dwRet = RegQueryValueEx(hKey,
-		aKeyname.c_str(),
+		key_name.c_str(),
 		NULL,
 		&dwType,
 		(LPBYTE)&szValue,
@@ -41,14 +41,14 @@ std::wstring Registry::ReadRegistryString(HKEY hKey, std::wstring aKeyname, std:
 }
 
 
-int Registry::ReadRegistryInteger(HKEY hKey, std::wstring aKeyname, int aDefaultValue)
+int Registry::ReadRegistryInteger(HKEY hKey, std::wstring key_name, int default_value)
 {
 	DWORD dwBufferSize(sizeof(DWORD));
 	DWORD nResult(0);
 	DWORD dwType = 0;
 
 	long dwRet = RegQueryValueEx(hKey,
-		aKeyname.c_str(),
+		key_name.c_str(),
 		NULL,
 		&dwType,
 		reinterpret_cast<LPBYTE>(&nResult),
@@ -56,21 +56,21 @@ int Registry::ReadRegistryInteger(HKEY hKey, std::wstring aKeyname, int aDefault
 
 	if (dwRet != ERROR_SUCCESS)
 	{
-		return aDefaultValue;
+		return default_value;
 	}
 
 	return nResult;
 }
 
 
-bool Registry::ReadRegistryBool(HKEY hKey, std::wstring aKeyname, bool aDefaultValue)
+bool Registry::ReadRegistryBool(HKEY hKey, std::wstring key_name, bool default_value)
 {
 	DWORD val = 0;
 	DWORD valSize = sizeof(DWORD);
 	DWORD valType = REG_NONE;
 
 	long ret = RegQueryValueEx(hKey, 
-		                       aKeyname.c_str(),
+		                       key_name.c_str(),
 							   NULL,
 		                       &valType,
 		                       (PBYTE)&val, &valSize);
@@ -80,14 +80,14 @@ bool Registry::ReadRegistryBool(HKEY hKey, std::wstring aKeyname, bool aDefaultV
 		return (0 != val);
 	}
 
-	return aDefaultValue;
+	return default_value;
 }
 
 
-bool Registry::WriteRegistryString(HKEY hKey, const std::wstring& aKeyName, const std::wstring& value)
+bool Registry::WriteRegistryString(HKEY hKey, const std::wstring& key_name, const std::wstring& value)
 {
 	return (RegSetValueExW(hKey,
-		                   aKeyName.c_str(),
+		                   key_name.c_str(),
 		                   0,
 		                   REG_SZ,
 		                   (LPBYTE)(value.c_str()),

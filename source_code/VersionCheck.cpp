@@ -26,7 +26,7 @@
 // download the file as UTF-8, copy it to the 8-bit buffer (lpResult), then
 // smash it out to the versionInfo wide string using built-in conversion routines
 // http://www.rohitab.com/discuss/topic/28719-downloading-a-file-winsock-http-c/page-2
-bool VersionCheck::IsNewVersion(std::wstring currentVersion)
+bool VersionCheck::IsNewVersion(std::wstring current_version)
 {
     // avoid caching issues by adding time as a parameter
     std::wstring url = L"http://maximumoctopus.com/versions/folderscanultra.php?" + Utility::GetTime(__GETTIMEFORMAT_FILE);

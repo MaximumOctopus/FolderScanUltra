@@ -107,21 +107,21 @@ public:
 	
 	// ======================================================================
 
-	ScanDetails(std::wstring folder);
+	ScanDetails(std::wstring);
 
 	void ClearData();
 
-	int ScanDetails::FindUser(std::wstring name);
+	int ScanDetails::FindUser(std::wstring);
 
-	bool Scan(bool processData, bool processTop100Size, bool processTop100Date, bool processFileDates);
+	bool Scan(bool, bool, bool, bool);
 
-	void ScanFolder(const std::wstring &directory);
+	void ScanFolder(const std::wstring &);
 
 	void ListRoot();
 
 	void AddUserNotSpecified();
 
-	SizeOfFolder GetSizeOfFolder(std::wstring folderName);
+	SizeOfFolder GetSizeOfFolder(std::wstring, std::wstring);
 
-	int GetFolderIndex(std::wstring folderName);
+	int GetFolderIndex(std::wstring);
 };

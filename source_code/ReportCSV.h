@@ -19,6 +19,6 @@
 
 namespace ReportCSV
 {
-	void Summary(CSVReportOptions options);
-	void FullList(CSVReportOptions options);
+	void Summary(CSVReportOptions);
+	void FullList(CSVReportOptions);
 };

@@ -22,9 +22,9 @@ static const int __HTMLLayoutOptionsCount = 10;
 
 struct HTMLReportOptions
 {
-	std::wstring Filename;
-	int Units;
-	std::wstring Align;
+	std::wstring Filename = L"";
+	int Units = 0;
+	std::wstring Align = L"";
 	bool Layout[__HTMLLayoutOptionsCount];
 	int LayoutSize = 2;						 // 0 = 800x600, 1 = 1024x768, 2 = 1280x960
 	bool CategoryList[20];

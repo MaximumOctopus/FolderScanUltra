@@ -18,5 +18,5 @@
 
 namespace VersionCheck
 {
-	bool IsNewVersion(std::wstring currentVersion);
+	bool IsNewVersion(std::wstring);
 }

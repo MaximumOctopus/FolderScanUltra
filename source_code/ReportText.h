@@ -17,9 +17,9 @@
 #include <string>
 
 
-const int TRDescriptionWidth = 25;
-const int TRQuantityWidth    = 9;
-const int TRAsPercentWidth   = 7;
+const int TRDescriptionWidth = 39;
+const int TRQuantityWidth    =  9;
+const int TRAsPercentWidth   =  7;
 const int TRSizeWidth        = 11;
 
 
@@ -30,22 +30,27 @@ const std::string magnilabels3[] = { "less than 1K", "1K - 1MB", "1MB - 10MB", "
 
 namespace ReportText
 {
-	void FullList(TextReportOptions options);
+	void FullList(TextReportOptions);
 
-	void ReportHeader(std::wofstream &file);
-	void ReportSummary(std::wofstream &ofile);
-	void ReportAttributes(std::wofstream &ofile);
-	void ReportCategories(std::wofstream &ofile);
-	void ReportDirectoryList(std::wofstream &ofile);
-	void ReportFileDates(std::wofstream &ofile);
-	void ReportMagnitude(std::wofstream &ofile);
-	void ReportExtensions(std::wofstream &ofile, TextReportOptions options);
-	void ReportNullFiles(std::wofstream &ofile);
-	void ReportUsers(std::wofstream &ofile);
+	void CreateDeepReport(std::wofstream&);
 
-	void ReportLargestFiles(std::wofstream &ofile);
-	void ReportSmallestFiles(std::wofstream &ofile);
+	void ReportHeader(std::wofstream &);
+	void ReportSummary(std::wofstream &);
+	void ReportAttributes(std::wofstream &);
+	void ReportCategories(std::wofstream &);
+	void ReportDirectoryList(std::wofstream &);
+	void ReportFileDates(std::wofstream &);
+	void ReportMagnitude(std::wofstream &);
+	void ReportExtensions(std::wofstream &, TextReportOptions);
+	void ReportNullFiles(std::wofstream &);
+	void ReportUsers(std::wofstream &);
 
-	void ReportNewestFiles(std::wofstream &ofile);
-	void ReportOldestFiles(std::wofstream &ofile);
+	void ReportLargestFiles(std::wofstream &);
+	void ReportSmallestFiles(std::wofstream &);
+
+	void ReportNewestFiles(std::wofstream &);
+	void ReportOldestFiles(std::wofstream &);
+
+	void TitleBlock5Row(std::wofstream&, int, int);
+	void TitleBlock3Row(std::wofstream&, int);
 };

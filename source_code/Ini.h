@@ -19,16 +19,16 @@
 class Ini
 {
 private:
-	bool LoadFile(std::wstring fileName);
+	bool LoadFile(std::wstring);
 
 public:
 
-	bool Loaded;
+	bool Loaded = false;
 
 	std::vector<std::wstring> Lines;
 
-	Ini(std::wstring fileName);
+	Ini(std::wstring);
 
-	std::wstring ReadString(std::wstring section, std::wstring key, std::wstring default);
-	int ReadInteger(std::wstring section, std::wstring key, int default);
+	std::wstring ReadString(std::wstring, std::wstring, std::wstring);
+	int ReadInteger(std::wstring, std::wstring, int);
 };

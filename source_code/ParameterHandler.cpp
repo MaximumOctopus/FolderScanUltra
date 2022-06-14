@@ -180,8 +180,9 @@ int ParameterHandler::GetParameterType(std::wstring parameter)
 	if (parameter.find(L"/xml") != std::wstring::npos) { return __parameterReportXML; }
 	if (parameter.find(L"/xfl") != std::wstring::npos) { return __parameterReportXMLFileList; }
 
-	if (parameter.find(L"/textdeep") != std::wstring::npos) { return __parameterReportTextDeep; }
-	if (parameter.find(L"/htmldeep") != std::wstring::npos) { return __parameterReportHTMLDeep; }
+	if (parameter.find(L"/deeptext") != std::wstring::npos) { return __parameterReportTextDeep; }
+	if (parameter.find(L"/deephtml") != std::wstring::npos) { return __parameterReportHTMLDeep; }
+
 
 	if (parameter.find(L"/sum") != std::wstring::npos) { return __parameterReportSummary; }
 	if (parameter.find(L"/top20") != std::wstring::npos) { return __parameterReportTop20; }
@@ -294,10 +295,10 @@ std::wstring ParameterHandler::ReportSwitch(int report)
 			break;
 
 		case __ReportTypeTextDeep:
-			return L"/txtdeep";
+			return L"/deeptext";
 			break;
 		case __ReportTypeHTMLDeep:
-			return L"/htmldeep";
+			return L"/deephtml";
 			break;
 
 		default:

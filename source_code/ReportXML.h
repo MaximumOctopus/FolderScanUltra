@@ -19,21 +19,21 @@
 
 namespace ReportXML
 {
-	void Summary(XMLReportOptions options);
-	void FullList(XMLReportOptions options);
+	void Summary(XMLReportOptions);
+	void FullList(XMLReportOptions);
 
-	void ReportSummary(std::wofstream &ofile);
-	void ReportFileAttributes(std::wofstream &ofile);
-	void ReportFileAttributes(std::wofstream &ofile);
-	void ReportFileCategory(std::wofstream &ofile);
-	void ReportFolderList(std::wofstream &ofile);
-	void ReportFileDates(std::wofstream &ofile);
-	void ReportMagnitude(std::wofstream &ofile);
-	void ReportExtensionLists(std::wofstream &ofile);
-	void ReportNullFiles(std::wofstream &ofile);
-	void ReportTopLarge(std::wofstream &ofile);
-	void ReportTopSmallest(std::wofstream &ofile);
-	void ReportTopNewest(std::wofstream &ofile);
-	void ReportTopOldest(std::wofstream &ofile);
-	void ReportUsers(std::wofstream &ofile);
+	void ReportSummary(std::wofstream &);
+	void ReportFileAttributes(std::wofstream &);
+	void ReportFileAttributes(std::wofstream &);
+	void ReportFileCategory(std::wofstream &);
+	void ReportFolderList(std::wofstream &);
+	void ReportFileDates(std::wofstream &);
+	void ReportMagnitude(std::wofstream &);
+	void ReportExtensionLists(std::wofstream &);
+	void ReportNullFiles(std::wofstream &);
+	void ReportTopLarge(std::wofstream &);
+	void ReportTopSmallest(std::wofstream &);
+	void ReportTopNewest(std::wofstream &);
+	void ReportTopOldest(std::wofstream &);
+	void ReportUsers(std::wofstream &);
 };

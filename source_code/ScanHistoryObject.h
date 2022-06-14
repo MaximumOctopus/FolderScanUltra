@@ -20,7 +20,7 @@ class ScanHistoryObject
 {
 public:
 
-	int DateI;
+	int DateI = 0;
 	std::wstring TimeI = L"";
 
 	std::wstring Path = L"";

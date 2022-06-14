@@ -14,91 +14,91 @@
 
 namespace Formatting
 {
-	std::wstring AddLeading(std::wstring aInput, int aLength, char aCharacter)
+	std::wstring AddLeading(std::wstring input, int length, char character)
 	{
-		if (aInput.length() == aLength)
+		if (input.length() == length)
 		{
-			return aInput;
+			return input;
 		}
-		else if (aInput.length() < aLength)
+		else if (input.length() < length)
 		{
-			for (int t = aInput.length(); t < aLength; t++)
+			for (int t = input.length(); t < length; t++)
 			{
-				aInput.insert(aInput.begin(), aCharacter);
+				input.insert(input.begin(), character);
 			}
 
-			return aInput;
+			return input;
 		}
 		else
 		{
-			return aInput;
+			return input;
 		}
 	}
 
 
-	std::wstring AddTrailing(std::wstring aInput, int aLength, char aCharacter)
+	std::wstring AddTrailing(std::wstring input, int length, char character)
 	{
-		if (aInput.length() == aLength)
+		if (input.length() == length)
 		{
-			return aInput;
+			return input;
 		}
-		else if (aInput.length() < aLength)
+		else if (input.length() < length)
 		{
-			for (int t = aInput.length(); t < aLength; t++)
+			for (int t = input.length(); t < length; t++)
 			{
-				aInput += aCharacter;
+				input += character;
 			}
 
-			return aInput;
+			return input;
 		}
 		else
 		{
-			return aInput; // to do (should trim)
+			return input; // to do (should trim)
 		}
 	}
 
 
-	std::wstring MakeItalic(std::wstring aInput, bool aCondition)
+	std::wstring MakeItalic(std::wstring input, bool condition)
 	{
-		if (aCondition)
+		if (condition)
 		{
-			return L"<i>" + aInput + L"</i>";
+			return L"<i>" + input + L"</i>";
 		}
 		else
 		{
-			return aInput;
+			return input;
 		}
 	}
 
 
-	std::wstring InsertElement(std::wstring aName, std::wstring aContents, int aLevel)
+	std::wstring InsertElement(std::wstring name, std::wstring contents, int level)
 	{
-		std::wstring output(aLevel * 2, L' ');
+		std::wstring output(level * 2, L' ');
 
-		return output + L"<" + aName + L">" + aContents + L"</" + aName + L">";
+		return output + L"<" + name + L">" + contents + L"</" + name + L">";
 	}
 
 
-	std::wstring ReplaceEntitiesForXML(std::wstring aContent)
+	std::wstring ReplaceEntitiesForXML(std::wstring content)
 	{
 		size_t pos = 0;
 
 		std::wstring searchFor   = L"&";
 		std::wstring replaceWith = L"&amp;";
 
-		while ((pos = aContent.find(searchFor, pos)) != std::wstring::npos)
+		while ((pos = content.find(searchFor, pos)) != std::wstring::npos)
 		{
-			aContent.replace(pos, searchFor.length(), replaceWith);
+			content.replace(pos, searchFor.length(), replaceWith);
 
 			pos += replaceWith.length();
 		}
 
-		return aContent;
+		return content;
 	}
 
 
-	std::wstring TrimFileNameForOutput(std::wstring aFileName)
+	std::wstring TrimFileNameForOutput(std::wstring file_name)
 	{
-		return aFileName;
+		return file_name;
 	}
 }

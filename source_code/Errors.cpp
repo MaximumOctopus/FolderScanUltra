@@ -18,9 +18,9 @@
 
 namespace ErrorHandler
 {
-	std::wstring GetErrorString(int errorID)
+	std::wstring GetErrorString(int error_ID)
 	{
-		switch (errorID)
+		switch (error_ID)
 		{
 		case __ErrorScanFolderDoesNotExist:
 			return L"Folder does not exist.";
@@ -42,10 +42,10 @@ namespace ErrorHandler
 	}
 
 
-	void OutputErrorConsole(int errorID)
+	void OutputErrorConsole(int error_ID)
 	{
 		std::wcout << L"" << "\n";
-		std::wcout << GetErrorString(errorID) << "\n";
+		std::wcout << GetErrorString(error_ID) << "\n";
 		std::wcout << L"" << std::endl;
 	}
 }

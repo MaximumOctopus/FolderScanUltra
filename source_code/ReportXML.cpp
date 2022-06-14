@@ -142,14 +142,11 @@ namespace ReportXML
 
 	void ReportFileAttributes(std::wofstream &ofile)
 	{
-		//-----------------------------------------------------------------
-		//file attributes -------------------------------------------------
-		//-----------------------------------------------------------------
 		ofile << L"<categorylist>" << "\n";
 
 		if (GScanDetails->FileCount != 0)
 		{
-			for (int t = 0; t < __AttributesCount; t++)
+			for (int t = 0; t < __AttributesToDisplayCount; t++)
 			{
 				ofile << L"  <attribute name=\"" + GLanguageHandler->LanguageTypes[t] + L"\">" << "\n";
 				ofile << Formatting::InsertElement(L"numberfiles", std::to_wstring(GScanDetails->FileAttributes[t][__faCount]), 2) << "\n";
@@ -175,9 +172,6 @@ namespace ReportXML
 
 	void ReportFileCategory(std::wofstream &ofile)
 	{
-		//-----------------------------------------------------------------
-		//file category table----------------------------------------------
-		//-----------------------------------------------------------------
 		ofile << L"<categorylist>" << "\n";
 
 		if (GScanDetails->FileCount != 0)
@@ -209,9 +203,6 @@ namespace ReportXML
 
 	void ReportFolderList(std::wofstream &ofile)
 	{
-		//----------------------------------------------------------------------------
-		// --directory list---by file count-------------------------------------------
-		//----------------------------------------------------------------------------
 		ofile << L"<folderlist>" << "\n";
 
 		if (GScanDetails->FileCount != 0)
@@ -243,9 +234,6 @@ namespace ReportXML
 
 	void ReportMagnitude(std::wofstream &ofile)
 	{
-		//-----------------------------------------------------------------
-		//-- magnitudes ---------------------------------------------------
-		//-----------------------------------------------------------------
 		ofile << L"<magnitudelist>" << "\n";
 
 		if (GScanDetails->FileCount != 0)
@@ -276,9 +264,6 @@ namespace ReportXML
 
 	void ReportExtensionLists(std::wofstream &ofile)
 	{
-		//-----------------------------------------------------------------
-		//----- extension lists -------------------------------------------
-		//-----------------------------------------------------------------
 		for (int t = 1; t < __FileCategoriesCount; t++)
 		{
 			ofile << L"<extensiondata>" << "\n";
@@ -364,10 +349,6 @@ namespace ReportXML
 
 	void ReportNullFiles(std::wofstream &ofile)
 	{
-		//-----------------------------------------------------------------
-		//--null files ----------------------------------------------------
-		//-----------------------------------------------------------------
-
 		if (GScanDetails->NullFiles.size() != 0)
 		{
 			ofile << L"<nullfiles>" << "\n";
@@ -526,7 +507,7 @@ namespace ReportXML
 				L"</top101old>" << "\n";
 		}
 
-		ofile << L"</top101oldest>" << std::endl;
+		ofile << L"</top101oldest>" << "\n";
 	}
 
 	

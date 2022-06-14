@@ -18,9 +18,9 @@
 
 struct CSVReportOptions
 {
-	std::wstring Filename;
-	int Separator;
-	int Units;
-	bool Titles;
-	int Category; //0-14 or -1 for ALL
+	std::wstring Filename = L"";
+	int Separator = 0;
+	int Units = 0;
+	bool Titles = true;
+	int Category = -1; //0-14 or -1 for ALL
 };

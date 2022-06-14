@@ -18,7 +18,10 @@
 
 struct TextReportOptions
 {
-	std::wstring Filename;
+	std::wstring Filename = L"";
+
 	bool Layout[__TextReportOptionsCount];
 	bool CategoryList[__FileCategoriesCount];
+
+	bool DeepScan = false;
 };

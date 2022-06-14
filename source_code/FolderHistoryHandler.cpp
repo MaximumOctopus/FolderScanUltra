@@ -67,7 +67,7 @@ bool FolderHistoryHandler::UpdateFolderHistoryFile()
 			file << L"Y" + Convert::IntToHex(t, 2) + L":" + std::to_wstring(GScanDetails->ExtensionSpread[t][__esSize]) << "\n";
 		}
 
-		for (int t = 0; t < __FileCategoriesCount; t++)
+		for (int t = 0; t < __MagnitudesCount; t++)
 		{
 			file << L"M" + Convert::IntToHex(t, 1) + L"C:" + std::to_wstring(GScanDetails->Magnitude[t][__mCount]) << "\n";
 			file << L"M" + Convert::IntToHex(t, 1) + L"S:" + std::to_wstring(GScanDetails->Magnitude[t][__mSize]) << "\n";

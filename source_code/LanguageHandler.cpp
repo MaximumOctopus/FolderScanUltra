@@ -24,11 +24,11 @@
 LanguageHandler* GLanguageHandler;
 
 
-LanguageHandler::LanguageHandler(std::wstring aFolder, int languageIndex)
+LanguageHandler::LanguageHandler(std::wstring folder, int language_index)
 {
-	currentLanguage = languageIndex;
+	currentLanguage = language_index;
 
-    std::wstring fileName = aFolder + L"system\\languages\\" + GetLanguageSymbol(languageIndex) + L"\\language.txt";
+    std::wstring fileName = folder + L"system\\languages\\" + GetLanguageSymbol(language_index) + L"\\language.txt";
 
 	if (LoadLanguage(fileName))
 	{
@@ -44,11 +44,11 @@ LanguageHandler::LanguageHandler(std::wstring aFolder, int languageIndex)
 }
 
 
-bool LanguageHandler::LoadLanguage(std::wstring fileName)
+bool LanguageHandler::LoadLanguage(std::wstring file_name)
 {
-	if (WindowsUtility::FileExists(fileName))
+	if (WindowsUtility::FileExists(file_name))
 	{
-		std::wifstream file(fileName);
+		std::wifstream file(file_name);
 
 		file.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
 
@@ -67,7 +67,7 @@ bool LanguageHandler::LoadLanguage(std::wstring fileName)
 
 			if (XText.size() != rsLanguageConstantsCount)
 			{
-				std::wcout << "Check your language files are up-to-date.They appear to have an incorrect number of entries! (" << rsLanguageConstantsCount << " vs " << XText.size()  << ")\n" << fileName << "\n" << "<install>\\system\\languages\\" << std::endl;
+				std::wcout << "Check your language files are up-to-date.They appear to have an incorrect number of entries! (" << rsLanguageConstantsCount << " vs " << XText.size()  << ")\n" << file_name << "\n" << "<install>\\system\\languages\\" << std::endl;
 
 				for (int t = XText.size(); t < rsLanguageConstantsCount + 1; t++)
 				{
@@ -84,7 +84,7 @@ bool LanguageHandler::LoadLanguage(std::wstring fileName)
 	}
 	else
 	{
-		std::wcout << L"Language file missing: " << "\n" << fileName << std::endl;
+		std::wcout << L"Language file missing: " << "\n" << file_name << std::endl;
 	}
 
     return false;
@@ -209,9 +209,9 @@ void LanguageHandler::SetXDates()
 }
 
 
-std::wstring LanguageHandler::GetLanguageSymbol(int languageIndex)
+std::wstring LanguageHandler::GetLanguageSymbol(int language_index)
 {
-    switch (languageIndex)
+    switch (language_index)
     {
         case __LanguageUK:
             return L"uk";

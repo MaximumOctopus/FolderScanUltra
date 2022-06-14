@@ -19,5 +19,5 @@
 
 namespace ReportXinorbis
 {
-	void GenerateXinorbisReport(XinorbisReportOptions options);
+	void GenerateXinorbisReport(XinorbisReportOptions);
 }

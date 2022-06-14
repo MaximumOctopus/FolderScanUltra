@@ -148,9 +148,9 @@ void ScanDetails::PopulateDiskStat()
 }
 
 
-bool ScanDetails::Scan(bool processData, bool processTop100Size, bool processTop100Date, bool processFileDates)
+bool ScanDetails::Scan(bool process_data, bool process_top_100_size, bool process_top_100_date, bool process_file_dates)
 {
-	if (processData)
+	if (process_data)
 	{
 		PopulateDiskStat();
 
@@ -160,17 +160,17 @@ bool ScanDetails::Scan(bool processData, bool processTop100Size, bool processTop
 
 		AnalyseRootFolders();
 
-		if (processFileDates)
+		if (process_file_dates)
 		{
 			BuildFileDates();
 		}
 
-		if (processTop100Size)
+		if (process_top_100_size)
 		{
 			BuildTop100SizeLists();
 		}
 
-		if (processTop100Date)
+		if (process_top_100_date)
 		{
 			BuildTop100DateLists();
 		}
@@ -612,16 +612,16 @@ void ScanDetails::AnalyseRootFolders()
 
 // stage 1, process all files and folders in select directory
 // stage 2, another pass, but ScanFolder for each found directory
-void ScanDetails::ScanFolder(const std::wstring &directory)
+void ScanDetails::ScanFolder(const std::wstring &folder)
 {
-	std::wstring tmp = directory + L"*";
+	std::wstring tmp = folder + L"*";
 
 	int sizeOfFolder = 0;
 
-	Folders.push_back(directory);
+	Folders.push_back(folder);
 
 	CurrentFolderIndex = Folders.size() - 1;
-	CurrentFolder      = directory;
+	CurrentFolder      = folder;
 
 	WIN32_FIND_DATAW file;
 	
@@ -661,7 +661,9 @@ void ScanDetails::ScanFolder(const std::wstring &directory)
 			// Files
 			// =======================================================================================================
 			{
-				lFileObject.Size = (file.nFileSizeHigh * (MAXDWORD + 1)) + file.nFileSizeLow;
+                lFileObject.Size = file.nFileSizeHigh;
+				lFileObject.Size <<= sizeof(file.nFileSizeHigh) * 8;
+				lFileObject.Size |= file.nFileSizeLow;
 
 				if (GSettings->Optimisations.GetUserDetails)
 				{
@@ -722,11 +724,11 @@ void ScanDetails::ScanFolder(const std::wstring &directory)
 				if ((!lstrcmpW(file.cFileName, L".")) || (!lstrcmpW(file.cFileName, L"..")))
 					continue;
 
-				tmp = directory + std::wstring(file.cFileName) + L"\\";
+				tmp = folder + std::wstring(file.cFileName) + L"\\";
 
 				if (!AllowVirtualFiles)
 				{
-					if (!(file.dwFileAttributes & FILE_ATTRIBUTE_OFFLINE) & !(file.dwFileAttributes & FILE_ATTRIBUTE_RECALL_ON_OPEN) & !(file.dwFileAttributes & FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS))
+					if (!(file.dwFileAttributes & FILE_ATTRIBUTE_OFFLINE) && !(file.dwFileAttributes & FILE_ATTRIBUTE_RECALL_ON_OPEN) && !(file.dwFileAttributes & FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS))
 					{
 						ScanFolder(tmp);
 					}
@@ -800,7 +802,7 @@ void ScanDetails::BuildTop100SizeLists()
 
 	std::sort(Files.begin(), Files.end(), sortBySize);
 
-	int i     = 0;
+	int i = 0;
 
 	while ((i < 100) && (i < Files.size()))
 	{
@@ -872,19 +874,21 @@ void ScanDetails::ListRoot()
 }
 
 
-SizeOfFolder ScanDetails::GetSizeOfFolder(std::wstring folderName)
+SizeOfFolder ScanDetails::GetSizeOfFolder(std::wstring full_folder_name, std::wstring folder)
 {
 	SizeOfFolder sof;
+
+	sof.Folder = folder;
 
 	for (int f = 0; f < Files.size(); f++)
 	{
 		if (Files[f].Category != __FileCategoryDirectory)
 		{
-			if (Folders[Files[f].FilePathIndex].rfind(folderName + L'\\', 0) == 0)
+			if (Folders[Files[f].FilePathIndex].rfind(full_folder_name + L'\\', 0) == 0)
 			{
 				sof.Size += Files[f].Size;
 				sof.SizeOnDisk += Files[f].SizeOnDisk;
-				
+
 				sof.FileCount++;
 			}
 		}
@@ -894,11 +898,11 @@ SizeOfFolder ScanDetails::GetSizeOfFolder(std::wstring folderName)
 }
 
 
-int ScanDetails::GetFolderIndex(std::wstring folderName)
+int ScanDetails::GetFolderIndex(std::wstring folder_name)
 {
 	for (int t = 0; t < Folders.size(); t++)
 	{
-		if (Folders[t].rfind(folderName, 0) == 0)
+		if (Folders[t].rfind(folder_name, 0) == 0)
 		{
 			return t;
 		}

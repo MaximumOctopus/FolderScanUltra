@@ -128,7 +128,7 @@ void Settings::ProcessDatabaseSetting(int pds, std::wstring value)
 }
 
 
-bool Settings::OpenSettings(bool readOnly)
+bool Settings::OpenSettings(bool read_only)
 {
     if (Custom.SettingsSaveLocation == __SaveLocationConfigIni)
     {
@@ -146,7 +146,7 @@ bool Settings::OpenSettings(bool readOnly)
     }
     else
     {
-        if (readOnly)
+        if (read_only)
         {
             LONG dwRet;
 
@@ -358,28 +358,28 @@ bool Settings::LoadLanguage()
 }
 
 
-std::wstring Settings::ReadStringFromSettings(std::wstring section, std::wstring name, std::wstring defaultValue)
+std::wstring Settings::ReadStringFromSettings(std::wstring section, std::wstring name, std::wstring default_value)
 {
     if (Custom.SettingsSaveLocation == __SaveLocationConfigIni)
     {
-		std::wstring rs = __iniFile->ReadString(section, name, defaultValue);
+		std::wstring rs = __iniFile->ReadString(section, name, default_value);
 
 		return rs;
     }
     else
     {
-        return Registry::ReadRegistryString(hKey, name, defaultValue);
+        return Registry::ReadRegistryString(hKey, name, default_value);
     }
 }
 
 
-int Settings::ReadIntegerFromSettings(std::wstring section, std::wstring name, int defaultValue, int ifZero)
+int Settings::ReadIntegerFromSettings(std::wstring section, std::wstring name, int default_value, int ifZero)
 {
     int lResult;
 
     if (Custom.SettingsSaveLocation == __SaveLocationConfigIni)
     {
-		int ri = __iniFile->ReadInteger(section, name, defaultValue);
+		int ri = __iniFile->ReadInteger(section, name, default_value);
 
 		if (ri == 0)
 		{
@@ -390,7 +390,7 @@ int Settings::ReadIntegerFromSettings(std::wstring section, std::wstring name, i
     }
     else
     {
-        lResult = Registry::ReadRegistryInteger(hKey, name, defaultValue);
+        lResult = Registry::ReadRegistryInteger(hKey, name, default_value);
     }
 
     if (lResult == 0)
@@ -411,15 +411,15 @@ int Settings::ReadIntegerFromSettings(std::wstring section, std::wstring name, i
 }
 
 
-int Settings::ReadIntegerFromSettingsInputCheck(std::wstring section, std::wstring name, int defaultValue, int min, int max)
+int Settings::ReadIntegerFromSettingsInputCheck(std::wstring section, std::wstring name, int default_value, int min, int max)
 {
 	if (Custom.SettingsSaveLocation == __SaveLocationConfigIni)
 	{
-		int ri = __iniFile->ReadInteger(section, name, defaultValue);
+		int ri = __iniFile->ReadInteger(section, name, default_value);
 
 		if ((ri < min) || (ri > max))
 		{
-			return  defaultValue;
+			return  default_value;
 		}
 		else
 		{
@@ -428,11 +428,11 @@ int Settings::ReadIntegerFromSettingsInputCheck(std::wstring section, std::wstri
 	}
 	else
 	{
-		int lResult = Registry::ReadRegistryInteger(hKey, name, defaultValue);
+		int lResult = Registry::ReadRegistryInteger(hKey, name, default_value);
 	
 		if ((lResult < min) || (lResult > max))
 		{
-			return  defaultValue;
+			return  default_value;
 		}
 		else
 		{
@@ -442,7 +442,7 @@ int Settings::ReadIntegerFromSettingsInputCheck(std::wstring section, std::wstri
 }
 
 
-bool Settings::ReadBoolFromSettings(std::wstring section, std::wstring name, bool defaultValue)
+bool Settings::ReadBoolFromSettings(std::wstring section, std::wstring name, bool default_value)
 {
     if (Custom.SettingsSaveLocation == __SaveLocationConfigIni)
     {
@@ -450,6 +450,6 @@ bool Settings::ReadBoolFromSettings(std::wstring section, std::wstring name, boo
     }
     else
     {
-        return Registry::ReadRegistryBool(hKey, name, defaultValue);
+        return Registry::ReadRegistryBool(hKey, name, default_value);
     }
 }

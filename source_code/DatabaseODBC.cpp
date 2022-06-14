@@ -23,9 +23,9 @@ extern LanguageHandler* GLanguageHandler;
 extern ScanDetails* GScanDetails;
 
 
-DatabaseODBC::DatabaseODBC(std::wstring &connectionString)
+DatabaseODBC::DatabaseODBC(std::wstring & connection_string)
 {
-	dbAvailable = CreateConnection(connectionString);
+	dbAvailable = CreateConnection(connection_string);
 
 	if (dbAvailable)
 	{
@@ -47,7 +47,7 @@ DatabaseODBC::~DatabaseODBC()
 }
 
 
-bool DatabaseODBC::CreateConnection(std::wstring &connectionString)
+bool DatabaseODBC::CreateConnection(std::wstring &connection_string)
 {
 	if (SQL_SUCCESS == SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &hSqlEnv))
 	{
@@ -62,7 +62,7 @@ bool DatabaseODBC::CreateConnection(std::wstring &connectionString)
 
 				SQLRETURN sdc = SQLDriverConnectW(hSqlConnection,
 											  	  NULL,
-												  (SQLWCHAR *)connectionString.c_str(),
+												  (SQLWCHAR *)connection_string.c_str(),
 												  SQL_NTS,
 												  retconstring,
 												  1024,
@@ -99,21 +99,21 @@ bool DatabaseODBC::CreateConnection(std::wstring &connectionString)
 }
 
 
-void DatabaseODBC::ShowError(unsigned int handletype, const SQLHANDLE& handle) 
+void DatabaseODBC::ShowError(unsigned int handle_type, const SQLHANDLE& handle) 
 {
 	SQLWCHAR sqlstate[1024];
 	SQLWCHAR message[1024];
 
-	if (SQL_SUCCESS == SQLGetDiagRec(handletype, handle, 1, sqlstate, NULL, message, 1024, NULL))
+	if (SQL_SUCCESS == SQLGetDiagRec(handle_type, handle, 1, sqlstate, NULL, message, 1024, NULL))
 	{
 		std::wcout << L"    ODBC ERROR : " << message << L"\n    SQLSTATE: " << sqlstate << std::endl;
 	}
 }
 
 
-bool DatabaseODBC::CreateNewFileTable(std::wstring tableName)
+bool DatabaseODBC::CreateNewFileTable(std::wstring table_name)
 {
-	std::wstring sql = L"CREATE TABLE \"" + tableName + L"\" (ID INTEGER PRIMARY KEY, " +
+	std::wstring sql = L"CREATE TABLE \"" + table_name + L"\" (ID INTEGER PRIMARY KEY, " +
 		L"FilePath VARCHAR (1024), " +
 		L"FilePathIdx INTEGER, " +
 		L"FileName VARCHAR (255), " +
@@ -140,9 +140,9 @@ bool DatabaseODBC::CreateNewFileTable(std::wstring tableName)
 }
 
 
-bool DatabaseODBC::CreateNewFolderTable(std::wstring tableName)
+bool DatabaseODBC::CreateNewFolderTable(std::wstring table_name)
 {
-	std::wstring sql = L"CREATE TABLE \"" + tableName + L"\" (ID INTEGER PRIMARY KEY, FilePath VARCHAR (1024));";
+	std::wstring sql = L"CREATE TABLE \"" + table_name + L"\" (ID INTEGER PRIMARY KEY, FilePath VARCHAR (1024));";
 
 	if (SQL_SUCCESS == SQLExecDirect(hSqlStatement, (SQLWCHAR *)sql.c_str(), SQL_NTS))
 	{
@@ -153,11 +153,11 @@ bool DatabaseODBC::CreateNewFolderTable(std::wstring tableName)
 }
 
 
-bool DatabaseODBC::PopulateFileTable(std::wstring tableName)
+bool DatabaseODBC::PopulateFileTable(std::wstring table_name)
 {
 	std::wcout << L"Populating File table..." << std::endl;
 
-	std::wstring stem = L"INSERT INTO \"" + tableName + L"\" (FilePath, FilePathIdx, FileName, FileSize, FileSizeDisk, FileDateC, FileDateA, FileDateM, Category, Directory, Readonly, Hidden, System, Archive, Temp, Owner) VALUES (";
+	std::wstring stem = L"INSERT INTO \"" + table_name + L"\" (FilePath, FilePathIdx, FileName, FileSize, FileSizeDisk, FileDateC, FileDateA, FileDateM, Category, Directory, Readonly, Hidden, System, Archive, Temp, Owner) VALUES (";
 	std::wstring sql;
 
 	for (int t = 0; t < GScanDetails->Folders.size(); t++)
@@ -191,11 +191,11 @@ bool DatabaseODBC::PopulateFileTable(std::wstring tableName)
 }
 
 
-bool DatabaseODBC::PopulateFolderTable(std::wstring tableName)
+bool DatabaseODBC::PopulateFolderTable(std::wstring table_name)
 {
 	std::wcout << L"Populating Folder table..." << std::endl;
 
-	std::wstring stem = L"INSERT INTO \"" + tableName + L"\" (FilePath) VALUES (\"";
+	std::wstring stem = L"INSERT INTO \"" + table_name + L"\" (FilePath) VALUES (\"";
 	std::wstring sql;
 
 
@@ -218,9 +218,9 @@ bool DatabaseODBC::PopulateFolderTable(std::wstring tableName)
 // ======================================================================================================
 // ======================================================================================================
 
-bool DatabaseODBC::CreateNewDataTable(std::wstring tableName)
+bool DatabaseODBC::CreateNewDataTable(std::wstring table_name)
 {
-	std::wstring sql = L"CREATE TABLE \"" + tableName + L"\" (ID INTEGER PRIMARY KEY, " +
+	std::wstring sql = L"CREATE TABLE \"" + table_name + L"\" (ID INTEGER PRIMARY KEY, " +
 		L"FilePath VARCHAR (1024), " +
 		L"FileName VARCHAR (255), " +
 		L"FileSize BIGINT, " +
@@ -247,9 +247,9 @@ bool DatabaseODBC::CreateNewDataTable(std::wstring tableName)
 }
 
 
-bool DatabaseODBC::CreateNewSystemTable(std::wstring tableName)
+bool DatabaseODBC::CreateNewSystemTable(std::wstring table_name)
 {
-	std::wstring sql = L"CREATE TABLE \"" + tableName + L"\" (ID INTEGER PRIMARY KEY, " +
+	std::wstring sql = L"CREATE TABLE \"" + table_name + L"\" (ID INTEGER PRIMARY KEY, " +
 		L"TableName VARCHAR (255), " +
 		L"Folder VARCHAR (1024), " +
 		L"SizeString VARCHAR (100), " +
@@ -267,11 +267,11 @@ bool DatabaseODBC::CreateNewSystemTable(std::wstring tableName)
 }
 
 
-bool DatabaseODBC::PopulateDataTable(std::wstring tableName)
+bool DatabaseODBC::PopulateDataTable(std::wstring table_name)
 {
 	std::wcout << L"Populating Data table..." << "\n" << std::endl;
 
-	std::wstring stem = L"INSERT INTO \"" + tableName + L"\" (FilePath, FileName, FileSize, FileSizeDisk, FileDateC, FileDateA, FileDateM, Category, Directory, Readonly, Hidden, System, Archive, Temp, Owner, ScanDate) VALUES (";
+	std::wstring stem = L"INSERT INTO \"" + table_name + L"\" (FilePath, FileName, FileSize, FileSizeDisk, FileDateC, FileDateA, FileDateM, Category, Directory, Readonly, Hidden, System, Archive, Temp, Owner, ScanDate) VALUES (";
 	std::wstring sql;
 
 
@@ -307,17 +307,17 @@ bool DatabaseODBC::PopulateDataTable(std::wstring tableName)
 }
 
 
-bool DatabaseODBC::PopulateSystemTable(std::wstring tableName, std::wstring dataTableName)
+bool DatabaseODBC::PopulateSystemTable(std::wstring table_name, std::wstring data_table_name)
 {
 	std::wcout << L"Populating System table..." << "\n" << std::endl;
 
-	std::wstring stem = L"INSERT INTO \"" + tableName + L"\" (TableName, Folder, SizeString, Size, Files, Folders, ScanDate) VALUES (\"";
+	std::wstring stem = L"INSERT INTO \"" + table_name + L"\" (TableName, Folder, SizeString, Size, Files, Folders, ScanDate) VALUES (\"";
 	std::wstring sql;
 
 
 	for (int t = 0; t < GScanDetails->Folders.size(); t++)
 	{
-		sql = stem + L"\"" + dataTableName + L"\", " +
+		sql = stem + L"\"" + data_table_name + L"\", " +
 			L"\"" + GScanDetails->ScanPath + L"\", " +
 			L"\"" + Convert::ConvertToUsefulUnit(GScanDetails->TotalSize) + L"\", " +
 			std::to_wstring(GScanDetails->TotalSize) + L", " +

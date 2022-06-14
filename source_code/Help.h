@@ -22,7 +22,7 @@ const static int __HelpCat    = 4;
 
 namespace Help
 {
-	void OutputHelpOption(int option);
+	void OutputHelpOption(int);
 
     void OutputSimple();
     void OutputHelp();

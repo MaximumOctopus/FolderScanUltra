@@ -19,14 +19,14 @@
 
 namespace WindowsUtility
 {
-	int CreateWFolder(const std::wstring& dirName_in);
+	int CreateWFolder(const std::wstring&);
 	
-	bool DirectoryExists(LPCTSTR szPath);
-	bool DirectoryExistsWString(const std::wstring& dirName_in);
+	bool DirectoryExists(LPCTSTR);
+	bool DirectoryExistsWString(const std::wstring&);
 
-	bool FileExists(const std::wstring& aFileName);
+	bool FileExists(const std::wstring&);
 	
-	std::wstring GetFileOwner(std::wstring aFileName);
+	std::wstring GetFileOwner(std::wstring);
 
 	std::wstring GetComputerNetName();
 	std::wstring GetUserFromWindows();
@@ -34,5 +34,5 @@ namespace WindowsUtility
 	std::wstring GetExePath();
 	std::wstring GetDataFolder();
 
-	std::wstring GetEnvVariable(std::wstring aName);
+	std::wstring GetEnvVariable(std::wstring);
 }

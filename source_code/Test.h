@@ -25,8 +25,8 @@ namespace Test
 	bool Database();
 	bool Scan();
 
-	std::wstring CSVOptions(int option, wchar_t value);
-	std::wstring HTMLOptions(int option, wchar_t value);
-	std::wstring TextOptions(int option, wchar_t value);
-	std::wstring XMLOptions(int option, wchar_t value);
+	std::wstring CSVOptions(int, wchar_t);
+	std::wstring HTMLOptions(int, wchar_t);
+	std::wstring TextOptions(int, wchar_t);
+	std::wstring XMLOptions(int, wchar_t);
 }

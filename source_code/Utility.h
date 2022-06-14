@@ -21,19 +21,19 @@ namespace Utility
     std::wstring CurrentYear();
 	int CurrentYearI();
 
-	std::wstring DateTime(int aMode);
-	std::wstring GetDate(int aDateFormat);
-	std::wstring GetTime(int aTimeFormat);	
+	std::wstring DateTime(int);
+	std::wstring GetDate(int);
+	std::wstring GetTime(int);	
 	int TodayAsInteger();
 	
-	std::wstring GetMD5(std::wstring input);
-	std::wstring GetFileExtension(const std::wstring &FileName);
-	std::wstring ProcessFileName(const std::wstring& FileName);
-	std::wstring ReplaceString(std::wstring subject, const std::wstring& search, const std::wstring& replace);
-	std::wstring SplitFilename(const std::wstring& str);
-	std::wstring WebFileLink(std::wstring &str);
+	std::wstring GetMD5(std::wstring);
+	std::wstring GetFileExtension(const std::wstring &);
+	std::wstring ProcessFileName(const std::wstring &);
+	std::wstring ReplaceString(std::wstring, const std::wstring&, const std::wstring&);
+	std::wstring SplitFilename(const std::wstring&);
+	std::wstring WebFileLink(const std::wstring);
 
-	std::wstring BoolToString(bool aInput);
-	bool StringToBool(wchar_t aInput);
-	int OptionToInt(wchar_t aInput);
+	std::wstring BoolToString(bool);
+	bool StringToBool(wchar_t);
+	int OptionToInt(wchar_t);
 }

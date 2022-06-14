@@ -119,11 +119,11 @@ void SystemGlobal::UpdateDriveDetails(std::wstring folder)
 }
 
 
-std::wstring SystemGlobal::GetUsersPath(std::wstring appPath)
+std::wstring SystemGlobal::GetUsersPath(std::wstring app_path)
 {
-	if (WindowsUtility::FileExists(appPath + L"custom.ini"))
+	if (WindowsUtility::FileExists(app_path + L"custom.ini"))
 	{
-		Ini* config = new Ini(appPath + L"custom.ini");
+		Ini* config = new Ini(app_path + L"custom.ini");
 
 		std::wstring lDataPath = config->ReadString(L"FolderScanUltra", L"DataPath", L"");
 
@@ -145,12 +145,12 @@ std::wstring SystemGlobal::GetUsersPath(std::wstring appPath)
 			// lets check for special variables
 			if (lDataPath.find(L"$xdrive") != std::wstring::npos)
 			{
-				lDataPath = Utility::ReplaceString(lDataPath, L"$xdrive", appPath[0] + L":");
+				lDataPath = Utility::ReplaceString(lDataPath, L"$xdrive", app_path[0] + L":");
 			}
 
 			if (lDataPath.find(L"$xfolder") != std::wstring::npos)
 			{
-				lDataPath = Utility::ReplaceString(lDataPath, L"$xfolder", appPath.substr(0, appPath.length() - 1));
+				lDataPath = Utility::ReplaceString(lDataPath, L"$xfolder", app_path.substr(0, app_path.length() - 1));
 			}
 
 			// handle enviromental variable

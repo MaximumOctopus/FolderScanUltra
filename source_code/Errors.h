@@ -18,7 +18,7 @@
 
 namespace ErrorHandler
 {
-	std::wstring GetErrorString(int errorID);
+	std::wstring GetErrorString(int);
 
-	void OutputErrorConsole(int errorID);
+	void OutputErrorConsole(int);
 }

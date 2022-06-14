@@ -37,6 +37,8 @@ namespace ReportHandler
 	{
 		int reportCount = 0;
 
+		std::wcout << "\n";
+
 		for (int t = 1; t < GParameterHandler->Count(); t++)
 		{
 			int lReportType = GParameterHandler->IsReport(t);
@@ -53,11 +55,11 @@ namespace ReportHandler
 				{
 					CSVReportOptions trOptions;
 
-					trOptions.Filename  = lParameterDetails.Value;
-					trOptions.Category  = -1;
+					trOptions.Filename = lParameterDetails.Value;
+					trOptions.Category = -1;
 					trOptions.Separator = 0; // comma
-					trOptions.Titles    = Utility::StringToBool(lParameterDetails.Options[1]);
-					trOptions.Units     = Utility::OptionToInt(lParameterDetails.Options[2]);
+					trOptions.Titles = Utility::StringToBool(lParameterDetails.Options[1]);
+					trOptions.Units = Utility::OptionToInt(lParameterDetails.Options[2]);
 
 					if (lParameterDetails.Options[0] == L'0')
 					{
@@ -76,12 +78,12 @@ namespace ReportHandler
 				{
 					HTMLReportOptions trOptions;
 
-					trOptions.Filename   = lParameterDetails.Value;
-					trOptions.Align      = L"right";
+					trOptions.Filename = lParameterDetails.Value;
+					trOptions.Align = L"right";
 					trOptions.LayoutSize = Utility::OptionToInt(lParameterDetails.Options[10]);
-					trOptions.Units      = Utility::OptionToInt(lParameterDetails.Options[11]);
+					trOptions.Units = Utility::OptionToInt(lParameterDetails.Options[11]);
 
-					trOptions.Layout[0]  = true; // header always visible
+					trOptions.Layout[0] = true; // header always visible
 
 					for (int t = 1; t < __HTMLLayoutOptionsCount; t++)
 					{
@@ -213,6 +215,24 @@ namespace ReportHandler
 
 				case __ReportTypeTextDeep:
 				{
+					TextReportOptions trOptions;
+
+					trOptions.Filename = lParameterDetails.Value;
+
+					for (int t = 0; t < __TextReportOptionsCount; t++)
+					{
+						trOptions.Layout[t] = Utility::StringToBool(lParameterDetails.Options[t]);
+					}
+
+					for (int t = 0; t < __FileCategoriesCount; t++)
+					{
+						trOptions.CategoryList[t] = true;
+					}
+
+					trOptions.DeepScan = true;
+
+					ReportText::FullList(trOptions);
+
 					reportCount++;
 
 					break;

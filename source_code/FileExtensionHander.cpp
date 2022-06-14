@@ -68,9 +68,9 @@ bool FileExtensionHandler::LoadDefaultFileExtensions()
 }
 
 
-int FileExtensionHandler::GetExtensionCategoryIDFromName(const std::wstring fileName)
+int FileExtensionHandler::GetExtensionCategoryIDFromName(const std::wstring file_name)
 {
-	std::wstring ext = Utility::GetFileExtension(fileName);
+	std::wstring ext = Utility::GetFileExtension(file_name);
 
 	ExtensionSearch exi = GetExtensionCategoryID(ext);
 

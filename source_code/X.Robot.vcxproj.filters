@@ -103,7 +103,7 @@
     <ClCompile Include="Test.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="ReportHTMLDeep.cpp">
+    <ClCompile Include="ReportDeep.cpp">
       <Filter>Source Files\Reports</Filter>
     </ClCompile>
     <ClCompile Include="ReportHandler.cpp">
@@ -240,9 +240,6 @@
     <ClInclude Include="Registry.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Utility.h">
-      <Filter>Header Files\Settings</Filter>
-    </ClInclude>
     <ClInclude Include="WindowsUtility.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
@@ -252,7 +249,7 @@
     <ClInclude Include="Test.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="ReportHTMLDeep.h">
+    <ClInclude Include="ReportDeep.h">
       <Filter>Header Files\Reports</Filter>
     </ClInclude>
     <ClInclude Include="ReportConstants.h">
@@ -260,6 +257,12 @@
     </ClInclude>
     <ClInclude Include="ReportHandler.h">
       <Filter>Header Files\Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="SizeOfFolder.h">
+      <Filter>Header Files\Data Classes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

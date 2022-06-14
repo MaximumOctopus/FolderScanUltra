@@ -27,9 +27,9 @@ extern Settings* GSettings;
 
 namespace Convert
 {
-	std::wstring AttributeToIntAsString(int aAttributeData, int aAttributeValue)
+	std::wstring AttributeToIntAsString(int attribute_data, int attribute_value)
 	{
-		if (aAttributeData & aAttributeValue)
+		if (attribute_data & attribute_value)
 		{
 			return L"1";
 		}
@@ -40,9 +40,9 @@ namespace Convert
 	}
 
 
-	std::wstring BoolToString(bool aInput)
+	std::wstring BoolToString(bool input)
 	{
-		if (aInput)
+		if (input)
 		{
 			return L"1";
 		}
@@ -53,19 +53,19 @@ namespace Convert
 	}
 
 
-	std::wstring ConvertToUsefulUnit(unsigned __int64 aValue)
+	std::wstring ConvertToUsefulUnit(__int64 value)
 	{
-		if (aValue < 0)
+		if (value < 0)
 		{	
 			return L"0";
 		}
-		else if ((aValue >= 0) && (aValue < 1024))
+		else if ((value >= 0) && (value < 1024))
 		{
-			return std::to_wstring(aValue) + L" " + GLanguageHandler->XText[rsBytes];
+			return std::to_wstring(value) + L" " + GLanguageHandler->XText[rsBytes];
 		}
-		else if (aValue < 1048576)
+		else if (value < 1048576)
 		{
-			double lSize = (double)aValue / (double)1024;
+			double lSize = (double)value / (double)1024;
 
 			std::wstring s(7, '\0');
 			int i = swprintf(&s[0], L"%.2f", lSize);
@@ -73,9 +73,9 @@ namespace Convert
 
 			return s + L" KB";
 		}
-		else if (aValue < 1073741824)
+		else if (value < 1073741824)
 		{
-			double lSize = (double)aValue / (double)1048576;
+			double lSize = (double)value / (double)1048576;
 
 			std::wstring s(7, '\0');
 			int i = swprintf(&s[0], L"%.2f", lSize);
@@ -83,9 +83,9 @@ namespace Convert
 
 			return s + L" MB";
 		}
-		else if (aValue < 1099511627776)
+		else if (value < 1099511627776)
 		{
-			double lSize = (double)aValue / (double)1073741824;
+			double lSize = (double)value / (double)1073741824;
 				
 			std::wstring s(7, '\0');
 			int i = swprintf(&s[0], L"%.2f", lSize);
@@ -95,7 +95,7 @@ namespace Convert
 		}
 		else
 		{
-			double lSize = (double)aValue / (double)1099511627776;
+			double lSize = (double)value / (double)1099511627776;
 
 			std::wstring s(7, '\0');
 			int i = swprintf(&s[0], L"%.2f", lSize);
@@ -106,26 +106,26 @@ namespace Convert
 	}
 
 
-	std::wstring DoubleToPercent(double aValue)
+	std::wstring DoubleToPercent(double value)
 	{
-		if (aValue != 0)
+		if (value != 0)
 		{
-			if (aValue < 0.001)
+			if (value < 0.001)
 			{
 				return L"<0.1%";
 			}
-			else if (aValue < 0.01)
+			else if (value < 0.01)
 			{
 				return L"<1%";
 			}
 
-			if ((aValue * 100 == 100) && (aValue < 1.0))
+			if ((value * 100 == 100) && (value < 1.0))
 			{
 				return L">99%";
 			}
 
 			std::wstring s(100, '\0');
-			int i = swprintf(&s[0], L"%.0f", aValue * 100);
+			int i = swprintf(&s[0], L"%.0f", value * 100);
 			s.resize(i);
 
 			return s + L"%";
@@ -137,13 +137,13 @@ namespace Convert
 	}
 
 
-	int FileTimeToDateInt(FILETIME* lFileTime)
+	int FileTimeToDateInt(FILETIME* file_time)
 	{
-		if ((lFileTime->dwLowDateTime != 0) && (lFileTime->dwHighDateTime != 0))
+		if ((file_time->dwLowDateTime != 0) && (file_time->dwHighDateTime != 0))
 		{
 			SYSTEMTIME lpSystemTime;
 
-			FileTimeToSystemTime(lFileTime, &lpSystemTime);
+			FileTimeToSystemTime(file_time, &lpSystemTime);
 
 			int lDate = 0;
 
@@ -162,13 +162,13 @@ namespace Convert
 	}
 
 
-	int FileTimeToTimeInt(FILETIME* lFileTime)
+	int FileTimeToTimeInt(FILETIME* file_time)
 	{
-		if ((lFileTime->dwLowDateTime != 0) && (lFileTime->dwHighDateTime != 0))
+		if ((file_time->dwLowDateTime != 0) && (file_time->dwHighDateTime != 0))
 		{
 			SYSTEMTIME lpSystemTime;
 
-			FileTimeToSystemTime(lFileTime, &lpSystemTime);
+			FileTimeToSystemTime(file_time, &lpSystemTime);
 
 			int lTime = 0;
 
@@ -185,18 +185,18 @@ namespace Convert
 	}
 
 
-	std::wstring GetSizeString(int aUnits, unsigned long long aSize)
+	std::wstring GetSizeString(int units, unsigned long long size)
 	{
-		switch (aUnits)
+		switch (units)
 		{
 			case 0:
-				return ConvertToUsefulUnit(aSize);
+				return ConvertToUsefulUnit(size);
 			case 1:
-				return std::to_wstring(aSize);
+				return std::to_wstring(size);
 			case 2:
 			{
 				std::wstring s(9, ' ');
-				int i = swprintf(&s[0], L"%.2f", double(aSize / 1024));
+				int i = swprintf(&s[0], L"%.2f", double(size / 1024));
 				s.resize(i);
 
 				return s + L"KB";
@@ -204,7 +204,7 @@ namespace Convert
 			case 3:
 			{
 				std::wstring s(9, ' ');
-				int i = swprintf(&s[0], L"%.2f", double(aSize / (1024 * 1024)));
+				int i = swprintf(&s[0], L"%.2f", double(size / (1024 * 1024)));
 				s.resize(i);
 
 				return s + L"MB";
@@ -212,14 +212,14 @@ namespace Convert
 			case 4:
 			{
 				std::wstring s(9, ' ');
-				int i = swprintf(&s[0], L"%.2f", double(aSize / (1024 * 1024 * 1024)));
+				int i = swprintf(&s[0], L"%.2f", double(size / (1024 * 1024 * 1024)));
 				s.resize(i);
 
 				return s + L"GB";
 			}
 			
 			default:
-				return ConvertToUsefulUnit(aSize);
+				return ConvertToUsefulUnit(size);
 		}
 	}
 
@@ -255,11 +255,11 @@ namespace Convert
 	}
 
 
-	std::wstring IntToHex(int aValue, int aSize)
+	std::wstring IntToHex(int value, int size)
 	{
 		std::wstringstream stream;
 
-		stream << std::setfill(L'0') << std::setw(aSize) << std::hex << aValue;
+		stream << std::setfill(L'0') << std::setw(size) << std::hex << value;
 
 		return stream.str();
 	}
@@ -282,11 +282,11 @@ namespace Convert
 	}
 
 	// RGB -> BGR
-	std::wstring WebColour(int aColour)
+	std::wstring WebColour(int colour)
 	{
-		std::wstring red   = IntToHex((aColour & 0xFF0000) >> 16, 2);
-		std::wstring green = IntToHex((aColour & 0x00FF00) >> 8, 2);
-		std::wstring blue  = IntToHex((aColour & 0x0000FF), 2);
+		std::wstring red   = IntToHex((colour & 0xFF0000) >> 16, 2);
+		std::wstring green = IntToHex((colour & 0x00FF00) >> 8, 2);
+		std::wstring blue  = IntToHex((colour & 0x0000FF), 2);
 
 		return blue + green + red;
 	}

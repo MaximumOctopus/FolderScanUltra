@@ -10,19 +10,21 @@
 // 
 
 
+#include <codecvt>
+#include <fstream>
+#include <iostream>
+#include <string>
+
 #include "Constants.h"
 #include "Convert.h"
 #include "FileExtensionHandler.h"
 #include "Formatting.h"
 #include "LanguageHandler.h"
+#include "ReportDeep.h"
 #include "ReportText.h"
 #include "ReportTextReportOptions.h"
 #include "ScanDetails.h"
 #include "Utility.h"
-#include <codecvt>
-#include <fstream>
-#include <iostream>
-#include <string>
 
 
 extern FileExtensionHandler *GFileExtensionHandler;
@@ -51,6 +53,7 @@ namespace ReportText
 					{
 						case 0:
 							ReportHeader(ofile);
+							ReportSummary(ofile);
 							break;
 						case 1:
 							ReportAttributes(ofile);
@@ -88,6 +91,11 @@ namespace ReportText
 				}
 			}
 
+			if (options.DeepScan)
+			{
+				CreateDeepReport(ofile);
+			}
+
 			ofile << "\n";
 			ofile << GLanguageHandler->TextReport[0] << "\n";
 			ofile << L"======== FolderScanUltra Text Report = (c) Paul A Freshney 2022 ==" << std::endl;                         
@@ -96,6 +104,73 @@ namespace ReportText
 		{
 			std::wcout << GLanguageHandler->XText[rsErrorSaving] + L" (Text):" << "\n";
 			std::wcout << L"    " << options.Filename << "\n" << std::endl;
+		}
+	}
+
+
+	void CreateDeepReport(std::wofstream& ofile)
+	{
+		ReportDeep deep;
+
+		int anchor = 50;
+
+		for (int r = 0; r < GScanDetails->RootFolders.size(); r++)
+		{
+			std::wstring folder = GScanDetails->ScanPath;
+
+			if (GScanDetails->RootFolders[r].Name != L"root")
+			{
+				folder += GScanDetails->RootFolders[r].Name + L"\\";
+			}
+
+			int folderIndex = GScanDetails->GetFolderIndex(folder);
+
+			if (folderIndex != -1)
+			{
+				deep.ProcessFolder(folderIndex);
+
+				if (deep.FolderData.size() != 0)
+				{
+					TitleBlock5Row(ofile, 5, 6);
+					ofile << folder << "\n\n";
+
+					if (GScanDetails->FileCount != 0)
+					{
+						for (int s = 0; s < deep.FolderData.size(); s++)
+						{
+							std::wstring str = Formatting::AddTrailing(L' ' + deep.FolderData[s].Folder, TRDescriptionWidth, L' ') +
+								Formatting::AddLeading(std::to_wstring(deep.FolderData[s].FileCount), TRQuantityWidth, L' ') + L"  " +
+								Formatting::AddLeading(Convert::DoubleToPercent((double)deep.FolderData[s].FileCount / (double)GScanDetails->FileCount), TRAsPercentWidth, L' ') + L"  " +
+								Formatting::AddLeading(Convert::ConvertToUsefulUnit(deep.FolderData[s].Size), TRSizeWidth, L' ');
+
+							if (GScanDetails->TotalSize != 0)
+							{
+								str += Formatting::AddLeading(Convert::DoubleToPercent((double)deep.FolderData[s].Size / (double)GScanDetails->TotalSize), TRAsPercentWidth, L' ');
+							}
+							else
+							{
+								str += Formatting::AddLeading(L"100%", TRAsPercentWidth, L' ');
+							}
+
+							//      str := str + '  ' + TXFormatting.GetAttributesAsString(GScanDetails.RootFolders[t].Attributes);
+
+							ofile << str << "\n";
+						}					
+					}
+					else
+					{
+						ofile << "No data\n";
+					}
+
+					ofile << GLanguageHandler->TextReport[0] << "\n\n";
+
+					anchor++;
+				}
+			}
+			else
+			{
+				std::wcout << " Error cannot find folder \"" << folder << "\"" << std::endl;
+			}
 		}
 	}
 
@@ -139,11 +214,7 @@ namespace ReportText
 
 	void ReportAttributes(std::wofstream &ofile)
 	{
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << GLanguageHandler->TextReport[3] << "\n";
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << GLanguageHandler->TextReport[4] << "\n";
-		ofile << GLanguageHandler->TextReport[0] << "\n";
+		TitleBlock5Row(ofile, 3, 4);
 
 		if (GScanDetails->FileCount != 0)
 		{
@@ -174,11 +245,7 @@ namespace ReportText
 
 	void ReportCategories(std::wofstream &ofile)
 	{
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << GLanguageHandler->TextReport[1] << "\n";
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << GLanguageHandler->TextReport[2] << "\n";
-		ofile << GLanguageHandler->TextReport[0] << "\n";
+		TitleBlock5Row(ofile, 1, 2);
 
 		if (GScanDetails->FileCount != 0)
 		{
@@ -227,11 +294,7 @@ namespace ReportText
 
 	void ReportDirectoryList(std::wofstream &ofile)
 	{
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << GLanguageHandler->TextReport[5] << "\n";
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << GLanguageHandler->TextReport[6] << "\n";
-		ofile << GLanguageHandler->TextReport[0] << "\n";
+		TitleBlock5Row(ofile, 5, 6);
 
 		if (GScanDetails->FileCount != 0)
 		{
@@ -266,11 +329,7 @@ namespace ReportText
 
 	void ReportFileDates(std::wofstream &ofile)
 	{
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << GLanguageHandler->TextReport[17] << "\n";
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << GLanguageHandler->TextReport[18] << "\n";
-		ofile << GLanguageHandler->TextReport[0] << "\n";
+		TitleBlock5Row(ofile, 17, 18);
 
 		if (GScanDetails->FileCount != 0)
 		{
@@ -306,11 +365,7 @@ namespace ReportText
 	
 	void ReportMagnitude(std::wofstream &ofile)
 	{
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << GLanguageHandler->TextReport[7] << "\n";
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << GLanguageHandler->TextReport[2] << "\n";
-		ofile << GLanguageHandler->TextReport[0] << "\n";
+		TitleBlock5Row(ofile, 7, 2);
 
 		if (GScanDetails->FileCount != 0)
 		{
@@ -341,9 +396,7 @@ namespace ReportText
 
 	void ReportExtensions(std::wofstream &ofile, TextReportOptions options)
 	{
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << GLanguageHandler->TextReport[8] << "\n";
-		ofile << GLanguageHandler->TextReport[0] << "\n";
+		TitleBlock3Row(ofile, 8);
 
 		if (GScanDetails->FileCount != 0)
 		{
@@ -433,9 +486,7 @@ namespace ReportText
 
 	void ReportNullFiles(std::wofstream &ofile)
 	{
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << GLanguageHandler->TextReport[9] << "\n";
-		ofile << GLanguageHandler->TextReport[0] << "\n";
+		TitleBlock3Row(ofile, 9);
 
 		if (GScanDetails->NullFiles.size() != 0)
 		{
@@ -451,9 +502,7 @@ namespace ReportText
 
 		ofile << "\n";
 
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << GLanguageHandler->TextReport[10] << "\n";
-		ofile << GLanguageHandler->TextReport[0] << "\n";
+		TitleBlock3Row(ofile, 10);
 
 		if (GScanDetails->NullFolders.size() != 0)
 		{
@@ -473,11 +522,7 @@ namespace ReportText
 
 	void ReportUsers(std::wofstream &ofile)
 	{
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << GLanguageHandler->TextReport[11] << "\n";
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << GLanguageHandler->TextReport[12] << "\n";
-		ofile << GLanguageHandler->TextReport[0] << "\n";
+		TitleBlock5Row(ofile, 11, 12);
 
 		if (GScanDetails->FileCount != 0)
 		{
@@ -508,9 +553,7 @@ namespace ReportText
 	
 	void ReportLargestFiles(std::wofstream &ofile)
 	{
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << GLanguageHandler->TextReport[13] << "\n";
-		ofile << GLanguageHandler->TextReport[0] << "\n";
+		TitleBlock3Row(ofile, 13);
 
 		for (int t = 0; t < GScanDetails->Top100Large.size(); t++)
 		{
@@ -525,9 +568,7 @@ namespace ReportText
 
 	void ReportSmallestFiles(std::wofstream &ofile)
 	{
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << GLanguageHandler->TextReport[14] << "\n";
-		ofile << GLanguageHandler->TextReport[0] << "\n";
+		TitleBlock3Row(ofile, 14);
 
 		for (int t = 0; t < GScanDetails->Top100Large.size(); t++)
 		{
@@ -542,9 +583,7 @@ namespace ReportText
 
 	void ReportNewestFiles(std::wofstream &ofile)
 	{
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << GLanguageHandler->TextReport[15] << "\n";
-		ofile << GLanguageHandler->TextReport[0] << "\n";
+		TitleBlock3Row(ofile, 15);
 
 		for (int t = 0; t < GScanDetails->Top100Newest.size(); t++)
 		{
@@ -559,9 +598,7 @@ namespace ReportText
 
 	void ReportOldestFiles(std::wofstream &ofile)
 	{
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << GLanguageHandler->TextReport[16] << "\n";
-		ofile << GLanguageHandler->TextReport[0] << "\n";
+		TitleBlock3Row(ofile, 16);
 
 		for (int t = 0; t < GScanDetails->Top100Oldest.size(); t++)
 		{
@@ -571,5 +608,23 @@ namespace ReportText
 		}
 
 		ofile << "\n";
+	}
+
+
+	void TitleBlock5Row(std::wofstream& ofile, int language_id_1, int language_id_2)
+	{
+		ofile << GLanguageHandler->TextReport[0] << "\n";
+		ofile << GLanguageHandler->TextReport[language_id_1] << "\n";
+		ofile << GLanguageHandler->TextReport[0] << "\n";
+		ofile << GLanguageHandler->TextReport[language_id_2] << "\n";
+		ofile << GLanguageHandler->TextReport[0] << "\n";
+	}
+
+
+	void TitleBlock3Row(std::wofstream& ofile, int language_id)
+	{
+		ofile << GLanguageHandler->TextReport[0] << "\n";
+		ofile << GLanguageHandler->TextReport[language_id] << "\n";
+		ofile << GLanguageHandler->TextReport[0] << "\n";
 	}
 }

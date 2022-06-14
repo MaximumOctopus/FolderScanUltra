@@ -28,6 +28,6 @@ public:
 
 	bool LoadDefaultFileExtensions();
 
-	int GetExtensionCategoryIDFromName(const std::wstring name);
-	ExtensionSearch GetExtensionCategoryID(std::wstring extension);
+	int GetExtensionCategoryIDFromName(const std::wstring);
+	ExtensionSearch GetExtensionCategoryID(std::wstring);
 };

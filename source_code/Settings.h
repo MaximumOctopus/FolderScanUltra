@@ -24,46 +24,46 @@
 
 struct CustomSettings
 {
-    bool SettingsSaveLocation;
-    bool CopyPreferences;
+    bool SettingsSaveLocation = false;
+    bool CopyPreferences = false;
 };
 
 
 struct DatabaseSettings
 {
-	bool UpdateFolderHistory;
+	bool UpdateFolderHistory = false;
 
-	bool UpdateScanHistory;
+	bool UpdateScanHistory = false;
 	
 	int DatabaseMode; // __dbSQLite or __dbODBC
 
-	bool DBStructured;
-	bool SystemTable;
-	bool DataTable;
+	bool DBStructured = false;
+	bool SystemTable = false;
+	bool DataTable = false;
 
-	std::wstring ODBCConnectionString;
+	std::wstring ODBCConnectionString = L"";
 
-	std::wstring SystemTableName;
-	std::wstring DataTableName;
+	std::wstring SystemTableName = L"";
+	std::wstring DataTableName = L"";
 };
 
 
 struct GeneralSettings
 {
-    int DateFormat; // 0: dd/mm/yyyy 1: mm/dd/yyyy 2: yyyy/mm/dd
+    int DateFormat = 2; // 0: dd/mm/yyyy 1: mm/dd/yyyy 2: yyyy/mm/dd
 
-    bool ShowStatusOutput;
-    bool ShowProgress;
+    bool ShowStatusOutput = true;
+    bool ShowProgress = true;
 };
 
 
 struct OptimisationSettings
 {
-	bool ProcessData;
-	bool GetTempFiles;
-	bool GetUserDetails;
+	bool ProcessData = false;
+	bool GetTempFiles = false;
+	bool GetUserDetails = false;
 	
-    int ProgressUpdate;
+    int ProgressUpdate = 0;
 };
 
 
@@ -81,18 +81,14 @@ struct ReportSettings
 
 struct SystemSettings
 {
-	bool Loaded;
+	bool Loaded = false;
 
-    std::wstring ActivatedName;
-    std::wstring ActivatedEmail;
-    std::wstring ActivatedCode;
+    bool Processed = false;
 
-    bool Processed;
+    int CurrentLanguage = 0;
+    int HandleMultipleExt = 0;
 
-    int CurrentLanguage;
-    int HandleMultipleExt;
-
-    bool Debug;
+    bool Debug = false;
 };
 
 
@@ -103,17 +99,17 @@ private:
 
 	Ini* __iniFile;
 
-    bool OpenSettings(bool readOnly);
+    bool OpenSettings(bool);
     bool CloseSettings();
 
     bool LoadBasic();
 	bool LoadCustomSettings();
     bool LoadLanguage();
 
-    std::wstring ReadStringFromSettings(std::wstring section, std::wstring name, std::wstring defaultValue);
-    int ReadIntegerFromSettings(std::wstring section, std::wstring name, int defaultValue, int ifZero);
-    int ReadIntegerFromSettingsInputCheck(std::wstring section, std::wstring name, int defaultValue, int min, int max);
-    bool ReadBoolFromSettings(std::wstring section, std::wstring name, bool defaultValue);
+    std::wstring ReadStringFromSettings(std::wstring, std::wstring, std::wstring);
+    int ReadIntegerFromSettings(std::wstring, std::wstring, int, int);
+    int ReadIntegerFromSettingsInputCheck(std::wstring, std::wstring, int, int, int);
+    bool ReadBoolFromSettings(std::wstring, std::wstring, bool);
 
 public:
     CustomSettings Custom;
@@ -125,8 +121,8 @@ public:
 
 	int FileCategoryColors[__FileCategoriesCount]; // 0 is a hack for "folders"
 
-	void ProcessProcessingSetting(int pps);
-	void ProcessDatabaseSetting(int pds, std::wstring value);
+	void ProcessProcessingSetting(int);
+	void ProcessDatabaseSetting(int, std::wstring);
 
 	void SetDefaults();
 

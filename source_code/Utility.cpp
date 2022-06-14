@@ -10,16 +10,17 @@
 // 
 
 
+#include <algorithm>
+#include <ctime>
+#include <iostream>
+#include <string>
+
 #include "Constants.h"
 #include "LanguageHandler.h"
 #include "MD5.h"
 #include "SystemGlobal.h"
 #include "Utility.h"
 #include "WindowsUtility.h"
-#include <algorithm>
-#include <ctime>
-#include <iostream>
-#include <string>
 
 
 extern LanguageHandler* GLanguageHandler;
@@ -49,7 +50,7 @@ namespace Utility
 
 
 
-	std::wstring GetDate(int aDateFormat)
+	std::wstring GetDate(int date_format)
 	{
 		time_t now = time(nullptr);
 
@@ -57,7 +58,7 @@ namespace Utility
 
 		wchar_t buffer[10];
 
-		switch (aDateFormat)
+		switch (date_format)
 		{
 		case __GETTIMEFORMAT_DISPLAY:
 			return GLanguageHandler->Months[ltm->tm_mon] + L" " + std::to_wstring(ltm->tm_mday) + L" " + std::to_wstring(ltm->tm_year + 1900);
@@ -86,7 +87,7 @@ namespace Utility
 	}
 
 
-	std::wstring GetTime(int aTimeFormat)
+	std::wstring GetTime(int time_format)
 	{
 		time_t now = time(nullptr);
 
@@ -94,7 +95,7 @@ namespace Utility
 
 		wchar_t buffer[10];
 
-		switch (aTimeFormat)
+		switch (time_format)
 		{
 		case __GETTIMEFORMAT_DISPLAY:
 			wcsftime(buffer, 10, L"%H:%M.%S", localtime(&now));
@@ -133,7 +134,7 @@ namespace Utility
 	}
 
 
-	std::wstring DateTime(int aMode)
+	std::wstring DateTime(int mode)
 	{
 		time_t now = time(0);
 
@@ -171,7 +172,7 @@ namespace Utility
 			sec = L"0" + sec;
 		}
 
-		if (aMode == 0)
+		if (mode == 0)
 		{
 			return year + L"/" + month + L"/" + day + L" " + hour + L":" + min + L":" + sec;
 		}
@@ -200,13 +201,13 @@ namespace Utility
 	}
 
 
-	std::wstring GetFileExtension(const std::wstring &FileName)
+	std::wstring GetFileExtension(const std::wstring& file_name)
 	{
-		size_t index = FileName.find_last_of(L".");
+		size_t index = file_name.find_last_of(L".");
 
 		if (index != std::wstring::npos)
 		{
-			std::wstring ext = FileName.substr(index + 1);
+			std::wstring ext = file_name.substr(index + 1);
 
 			std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 
@@ -219,11 +220,11 @@ namespace Utility
 	}
 
 
-	std::wstring ProcessFileName(const std::wstring &FileName)
+	std::wstring ProcessFileName(const std::wstring& file_name)
 	{
-		if (FileName.find(L"$") != std::wstring::npos)
+		if (file_name.find(L"$") != std::wstring::npos)
 		{
-			std::wstring pfn = FileName;
+			std::wstring pfn = file_name;
 
 			time_t now = time(nullptr);
 
@@ -236,12 +237,12 @@ namespace Utility
 			// == Folder { processed ===============================================
 			// =========================================================================
 
-			if (FileName.find(L"$XD") != std::wstring::npos)
+			if (file_name.find(L"$XD") != std::wstring::npos)
 			{
 				pfn = ReplaceString(pfn, L"$XD", GSystemGlobal->AppPath[1] + L":");
 			}
 
-			if (FileName.find(L"$XF") != std::wstring::npos)
+			if (file_name.find(L"$XF") != std::wstring::npos)
 			{
 
 				std::wstring path = GSystemGlobal->AppPath.substr(0, GSystemGlobal->AppPath.length() - 1);
@@ -253,12 +254,12 @@ namespace Utility
 			// == System ===============================================================
 			// =========================================================================
 
-			if (FileName.find(L"$PC") != std::wstring::npos)
+			if (file_name.find(L"$PC") != std::wstring::npos)
 			{
 				pfn = ReplaceString(pfn, L"$PC", WindowsUtility::GetComputerNetName());
 			}
 
-			if (FileName.find(L"$User") != std::wstring::npos)
+			if (file_name.find(L"$User") != std::wstring::npos)
 			{
 				pfn = ReplaceString(pfn, L"$User", WindowsUtility::GetUserFromWindows());
 			}
@@ -267,12 +268,12 @@ namespace Utility
 			// == Date =================================================================
 			// =========================================================================
 
-			if (FileName.find(L"$yyyy") != std::wstring::npos)
+			if (file_name.find(L"$yyyy") != std::wstring::npos)
 			{
 				pfn = ReplaceString(pfn, L"$yyyy", std::to_wstring(ltm->tm_year + 1900));
 			}
 
-			if (FileName.find(L"$YY") != std::wstring::npos)
+			if (file_name.find(L"$YY") != std::wstring::npos)
 			{ 
 				std::wstring yy = std::to_wstring(ltm->tm_year + 1900);
 
@@ -281,7 +282,7 @@ namespace Utility
 
 			// =========================================================================
 
-			if (FileName.find(L"$mm") != std::wstring::npos)
+			if (file_name.find(L"$mm") != std::wstring::npos)
 			{
 				std::wstring mmm = std::to_wstring(mm);
 
@@ -293,14 +294,14 @@ namespace Utility
 				pfn = ReplaceString(pfn, L"$mm", mmm);
 			}
 
-			if (FileName.find(L"$MM") != std::wstring::npos)
+			if (file_name.find(L"$MM") != std::wstring::npos)
 			{
 				pfn = ReplaceString(pfn, L"$MM", GLanguageHandler->Months[mm]);
 			}
 
 			// =========================================================================
 
-			if (FileName.find(L"$dd") != std::wstring::npos)
+			if (file_name.find(L"$dd") != std::wstring::npos)
 			{
 				std::wstring ddd = std::to_wstring(dd);
 
@@ -312,7 +313,7 @@ namespace Utility
 				pfn = ReplaceString(pfn, L"$dd", ddd);
 			}
 
-			if (FileName.find(L"$DD") != std::wstring::npos)
+			if (file_name.find(L"$DD") != std::wstring::npos)
 			{
 				pfn = ReplaceString(pfn, L"$DD", GLanguageHandler->ShortDays[ltm->tm_wday]);
 			}
@@ -321,7 +322,7 @@ namespace Utility
 			// == Time =================================================================
 			// =========================================================================
 
-			if (FileName.find(L"$Th") != std::wstring::npos)
+			if (file_name.find(L"$Th") != std::wstring::npos)
 			{
 				std::wstring hhh = std::to_wstring(ltm->tm_hour);
 
@@ -335,7 +336,7 @@ namespace Utility
 
 			// =========================================================================
 
-			if (FileName.find(L"Tm") != std::wstring::npos)
+			if (file_name.find(L"Tm") != std::wstring::npos)
 			{
 				std::wstring mmm = std::to_wstring(ltm->tm_min);
 			
@@ -349,7 +350,7 @@ namespace Utility
 
 			// =========================================================================
 
-			if (FileName.find(L"Ts") != std::wstring::npos)
+			if (file_name.find(L"Ts") != std::wstring::npos)
 			{
 				std::wstring sss = std::to_wstring(ltm->tm_sec);
 
@@ -366,7 +367,7 @@ namespace Utility
 			return pfn;
 		}
 
-		return FileName;
+		return file_name;
 	}
 
 
@@ -395,9 +396,9 @@ namespace Utility
     }
 
 
-	std::wstring BoolToString(bool aInput)
+	std::wstring BoolToString(bool input)
 	{
-		if (aInput)
+		if (input)
 		{
 			return L"1";
 		}
@@ -408,9 +409,9 @@ namespace Utility
 	}
 
 
-	bool StringToBool(wchar_t aInput)
+	bool StringToBool(wchar_t input)
 	{
-		if (aInput == L'0')
+		if (input == L'0')
 		{
 			return false;
 		}
@@ -421,9 +422,9 @@ namespace Utility
 	}
 
 
-	int OptionToInt(wchar_t aInput)
+	int OptionToInt(wchar_t input)
 	{
-		switch (aInput)
+		switch (input)
 		{
 		case L'0':
 			return 0;
@@ -440,11 +441,13 @@ namespace Utility
 	}
 
 
-	std::wstring WebFileLink(std::wstring &str)
+	std::wstring WebFileLink(const std::wstring input)
 	{
-		std::replace(str.begin(), str.end(), ':', '|');
-		std::replace(str.begin(), str.end(), '\\', '/');
+		std::wstring wfl = input;
 
-		return L"file:///" + str;
+		std::replace(wfl.begin(), wfl.end(), ':', '|');
+		std::replace(wfl.begin(), wfl.end(), '\\', '/');
+
+		return L"file:///" + wfl;
 	}
 }

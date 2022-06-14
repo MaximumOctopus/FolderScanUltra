@@ -33,8 +33,8 @@ const static int __parameterReportBottom20 = 0x18;
 const static int __parameterReportNewest20 = 0x19;
 const static int __parameterReportOldest20 = 0x1A;
 
-const static int __parameterReportTextDeep = 0x20;
-const static int __parameterReportHTMLDeep = 0x21;
+const static int __parameterReportTextDeep = 0x1B;
+const static int __parameterReportHTMLDeep = 0x1C;
 
 const static int __parameterDBUpdateScanHistory = 0x06;
 const static int __parameterDBODBC = 0x07;
@@ -61,29 +61,29 @@ private:
     std::vector<std::wstring> parameters;
 	std::vector<std::wstring> tokens;
 
-	void ParameterHandler::CreateTokens(std::wstring parameter);
+	void ParameterHandler::CreateTokens(std::wstring);
 
 public:
     ParameterHandler(int argc, wchar_t *argv[]);
 
-	bool FindParameter(std::wstring parameter);
-	std::wstring GetParameter(int index);
-	std::wstring GetParameterValue(int parameter);
+	bool FindParameter(std::wstring);
+	std::wstring GetParameter(int);
+	std::wstring GetParameterValue(int);
 	int Count();
-	int IsReport(int aIndex);
-	ParameterDetails ParameterInformation(int type);
-	ParameterDetails ParametersForReport(int report, int reportType);
+	int IsReport(int);
+	ParameterDetails ParameterInformation(int);
+	ParameterDetails ParametersForReport(int, int);
 
-	int GetParameterType(std::wstring parameter);
+	int GetParameterType(std::wstring);
 
-	int IsProcessingSwitch(int parameter);
-	int IsDatabaseSwitch(int parameter);
+	int IsProcessingSwitch(int);
+	int IsDatabaseSwitch(int);
 
-	std::wstring ReportSwitch(int report);
-	int HelpSwitch(std::wstring& help);
+	std::wstring ReportSwitch(int);
+	int HelpSwitch(std::wstring&);
 
-	std::wstring DefaultFileName(int report);
-	std::wstring DefaultOptions(int report);
+	std::wstring DefaultFileName(int);
+	std::wstring DefaultOptions(int);
 
 	bool NeedToProcessTopSizeLists();
 	bool NeedToProcessTopDateLists();

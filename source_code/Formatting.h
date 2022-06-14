@@ -15,10 +15,10 @@
 
 namespace Formatting
 {
-	std::wstring AddLeading(std::wstring aInput, int aLength, char aCharacter);
-	std::wstring AddTrailing(std::wstring aInput, int aLength, char aCharacter);
-	std::wstring MakeItalic(std::wstring aInput, bool aCondition);
-	std::wstring InsertElement(std::wstring aName, std::wstring aContents, int aLevel);
-	std::wstring ReplaceEntitiesForXML(std::wstring aContent);
-	std::wstring TrimFileNameForOutput(std::wstring aFileName);
+	std::wstring AddLeading(std::wstring, int, char);
+	std::wstring AddTrailing(std::wstring, int, char);
+	std::wstring MakeItalic(std::wstring, bool);
+	std::wstring InsertElement(std::wstring, std::wstring, int);
+	std::wstring ReplaceEntitiesForXML(std::wstring);
+	std::wstring TrimFileNameForOutput(std::wstring);
 }

@@ -19,19 +19,19 @@
 
 namespace Convert
 {
-	std::wstring AttributeToIntAsString(int aAttributeData, int aAttributeValue);
-	std::wstring ConvertToUsefulUnit(unsigned __int64 aValue);
-	std::wstring DoubleToPercent(double aValue);
-	std::wstring GetSizeString(int aUnits, unsigned long long aSize);
+	std::wstring AttributeToIntAsString(int, int);
+	std::wstring ConvertToUsefulUnit(__int64);
+	std::wstring DoubleToPercent(double);
+	std::wstring GetSizeString(int, unsigned long long);
 
-	std::wstring BoolToString(bool aInput);
+	std::wstring BoolToString(bool);
 
-	int FileTimeToDateInt(FILETIME* lFileTime);
-	int FileTimeToTimeInt(FILETIME* lFileTime);
-	std::wstring IntDateToString(int dx);
-	std::wstring IntToHex(int aValue, int aSize);
+	int FileTimeToDateInt(FILETIME*);
+	int FileTimeToTimeInt(FILETIME*);
+	std::wstring IntDateToString(int);
+	std::wstring IntToHex(int, int);
 
-	std::wstring WebColour(int aColour);
+	std::wstring WebColour(int);
 
-	int StrToIntDef(std::wstring input, int default);
+	int StrToIntDef(std::wstring, int);
 };

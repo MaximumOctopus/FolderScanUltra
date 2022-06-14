@@ -24,9 +24,9 @@ extern LanguageHandler* GLanguageHandler;
 extern ScanDetails* GScanDetails;
 
 
-DatabaseSQlite::DatabaseSQlite(std::wstring fileName)
+DatabaseSQlite::DatabaseSQlite(std::wstring file_name)
 {
-	dbFileName  = fileName;
+	dbFileName  = file_name;
 
 	dbAvailable = CreateConnection();
 
@@ -62,9 +62,9 @@ bool DatabaseSQlite::CreateConnection(void)
 }
 
 
-bool DatabaseSQlite::CreateNewFileTable(std::wstring tableName)
+bool DatabaseSQlite::CreateNewFileTable(std::wstring table_name)
 {
-	std::wstring sql = L"CREATE TABLE \"" + tableName + L"\" (ID INTEGER PRIMARY KEY, " +
+	std::wstring sql = L"CREATE TABLE \"" + table_name + L"\" (ID INTEGER PRIMARY KEY, " +
 									                  L"FilePath VARCHAR (1024), " +
 													  L"FilePathIdx INTEGER, " +
 													  L"FileName VARCHAR (255), " +
@@ -110,9 +110,9 @@ bool DatabaseSQlite::CreateNewFileTable(std::wstring tableName)
 }
 
 
-bool DatabaseSQlite::CreateNewFolderTable(std::wstring tableName)
+bool DatabaseSQlite::CreateNewFolderTable(std::wstring table_name)
 {
-	std::wstring sql = L"CREATE TABLE \"" + tableName + L"\" (ID INTEGER PRIMARY KEY, FilePath VARCHAR (1024));";
+	std::wstring sql = L"CREATE TABLE \"" + table_name + L"\" (ID INTEGER PRIMARY KEY, FilePath VARCHAR (1024));";
 
 	sqlite3_stmt* stmt;
 
@@ -142,11 +142,11 @@ bool DatabaseSQlite::CreateNewFolderTable(std::wstring tableName)
 }
 
 
-bool DatabaseSQlite::PopulateFileTable(std::wstring tableName)
+bool DatabaseSQlite::PopulateFileTable(std::wstring table_name)
 {
 	std::wcout << L"Populating File table..." << std::endl;
 
-	std::wstring stem = L"INSERT INTO \"" + tableName + L"\" (FilePath, FilePathIdx, FileName, FileSize, FileSizeDisk, FileDateC, FileDateA, FileDateM, Category, Directory, Readonly, Hidden, System, Archive, Temp, Owner) VALUES (";
+	std::wstring stem = L"INSERT INTO \"" + table_name + L"\" (FilePath, FilePathIdx, FileName, FileSize, FileSizeDisk, FileDateC, FileDateA, FileDateM, Category, Directory, Readonly, Hidden, System, Archive, Temp, Owner) VALUES (";
 	std::wstring sql;
 
 	sqlite3_stmt* stmt;
@@ -196,11 +196,11 @@ bool DatabaseSQlite::PopulateFileTable(std::wstring tableName)
 }
 
 
-bool DatabaseSQlite::PopulateFolderTable(std::wstring tableName)
+bool DatabaseSQlite::PopulateFolderTable(std::wstring table_name)
 {
 	std::wcout << L"Populating Folder table..." << std::endl;
 
-	std::wstring stem = L"INSERT INTO \"" + tableName + L"\" (FilePath) VALUES (\"";
+	std::wstring stem = L"INSERT INTO \"" + table_name + L"\" (FilePath) VALUES (\"";
 	std::wstring sql;
 
 	sqlite3_stmt* stmt;
@@ -238,9 +238,9 @@ bool DatabaseSQlite::PopulateFolderTable(std::wstring tableName)
 // ======================================================================================================
 // ======================================================================================================
 
-bool DatabaseSQlite::CreateNewDataTable(std::wstring tableName)
+bool DatabaseSQlite::CreateNewDataTable(std::wstring table_name)
 {
-	std::wstring sql = L"CREATE TABLE \"" + tableName + L"\" (ID INTEGER PRIMARY KEY, " +
+	std::wstring sql = L"CREATE TABLE \"" + table_name + L"\" (ID INTEGER PRIMARY KEY, " +
 		L"FilePath VARCHAR (1024), " +
 		L"FileName VARCHAR (255), " +
 		L"FileSize BIGINT, " +
@@ -286,16 +286,16 @@ bool DatabaseSQlite::CreateNewDataTable(std::wstring tableName)
 }
 
 
-bool DatabaseSQlite::CreateNewSystemTable(std::wstring tableName)
+bool DatabaseSQlite::CreateNewSystemTable(std::wstring table_name)
 {
-	std::wstring sql = L"CREATE TABLE \"" + tableName + L"\" (ID INTEGER PRIMARY KEY, " +
-														L"TableName VARCHAR (255), " +
-														L"Folder VARCHAR (1024), " +
-														L"SizeString VARCHAR (100), " +
-														L"Size BIGINT, " +
-														L"Files INT, " +
-														L"Folders INT, " +
-														L"ScanData BIGINT);";
+	std::wstring sql = L"CREATE TABLE \"" + table_name + L"\" (ID INTEGER PRIMARY KEY, " +
+													 	 L"TableName VARCHAR (255), " +
+													 	 L"Folder VARCHAR (1024), " +
+														 L"SizeString VARCHAR (100), " +
+														 L"Size BIGINT, " +
+														 L"Files INT, " +
+														 L"Folders INT, " +
+														 L"ScanData BIGINT);";
 
 	sqlite3_stmt* stmt;
 
@@ -325,11 +325,11 @@ bool DatabaseSQlite::CreateNewSystemTable(std::wstring tableName)
 }
 
 
-bool DatabaseSQlite::PopulateDataTable(std::wstring tableName)
+bool DatabaseSQlite::PopulateDataTable(std::wstring table_name)
 {
 	std::wcout << L"Populating Data table..." << "\n" << std::endl;
 
-	std::wstring stem = L"INSERT INTO \"" + tableName + L"\" (FilePath, FileName, FileSize, FileSizeDisk, FileDateC, FileDateA, FileDateM, Category, Directory, Readonly, Hidden, System, Archive, Temp, Owner, ScanDate) VALUES (";
+	std::wstring stem = L"INSERT INTO \"" + table_name + L"\" (FilePath, FileName, FileSize, FileSizeDisk, FileDateC, FileDateA, FileDateM, Category, Directory, Readonly, Hidden, System, Archive, Temp, Owner, ScanDate) VALUES (";
 	std::wstring sql;
 
 	sqlite3_stmt* stmt;
@@ -379,18 +379,18 @@ bool DatabaseSQlite::PopulateDataTable(std::wstring tableName)
 }
 
 
-bool DatabaseSQlite::PopulateSystemTable(std::wstring tableName, std::wstring dataTableName)
+bool DatabaseSQlite::PopulateSystemTable(std::wstring table_name, std::wstring data_table_name)
 {
 	std::wcout << L"Populating System table..." << "\n" << std::endl;
 
-	std::wstring stem = L"INSERT INTO \"" + tableName + L"\" (TableName, Folder, SizeString, Size, Files, Folders, ScanDate) VALUES (\"";
+	std::wstring stem = L"INSERT INTO \"" + table_name + L"\" (TableName, Folder, SizeString, Size, Files, Folders, ScanDate) VALUES (\"";
 	std::wstring sql;
 
 	sqlite3_stmt* stmt;
 
 	for (int t = 0; t < GScanDetails->Folders.size(); t++)
 	{
-		sql = stem + L"\"" + dataTableName + L"\", " +
+		sql = stem + L"\"" + data_table_name + L"\", " +
 			L"\"" + GScanDetails->ScanPath + L"\", " +
 			L"\"" + Convert::ConvertToUsefulUnit(GScanDetails->TotalSize) + L"\", " +
 			std::to_wstring(GScanDetails->TotalSize) + L", " +

@@ -26,8 +26,8 @@
 #include "Formatting.h"
 #include "LanguageHandler.h"
 #include "ReportConstants.h"
+#include "ReportDeep.h"
 #include "ReportHTML.h"
-#include "ReportHTMLDeep.h"
 #include "ReportHTMLReportOptions.h"
 #include "ScanDetails.h"
 #include "Settings.h"
@@ -49,14 +49,22 @@ namespace ReportHTML
 
 	void GenerateReport(HTMLReportOptions options)
 	{
-		std::wcout << GLanguageHandler->XText[rsSavingReports] + L" (HTML): " + Formatting::TrimFileNameForOutput(options.Filename) << "\n";
+		if (options.DeepScan)
+		{ 
+			std::wcout << GLanguageHandler->XText[rsSavingReports] + L" (HTML Deep): " + Formatting::TrimFileNameForOutput(options.Filename) << "\n";
+		}
+		else
+		{
+			std::wcout << GLanguageHandler->XText[rsSavingReports] + L" (HTML): " + Formatting::TrimFileNameForOutput(options.Filename) << "\n";
+		}
+
 		std::wcout << "\n";
 
 		// ============================================================================
 		// == before we create the page, we need to create the graphs..... ============
 		// ============================================================================
 
-		std::wstring menu     = BuildMenuList(options);
+		std::wstring menu = BuildMenuList(options);
 
 		// ============================================================================
 		// == Lets write the file =====================================================
@@ -146,7 +154,7 @@ namespace ReportHTML
 
 			if (options.DeepScan)
 			{
-				CreateDeepReport(file);
+				CreateDeepReport(file, options);
 			}
 
 			// ===========================================================================
@@ -171,27 +179,69 @@ namespace ReportHTML
 	}
 
 
-	void CreateDeepReport(std::wofstream& ofile)
+	void CreateDeepReport(std::wofstream& ofile, HTMLReportOptions options)
 	{
-		ReportHTMLDeep deep;
+		ReportDeep deep;
+
+		int anchor = 50;
 
 		for (int r = 0; r < GScanDetails->RootFolders.size(); r++)
 		{
-			std::wcout << GScanDetails->ScanPath + GScanDetails->RootFolders[r].Name << L"\\" << "\n";
+			std::wstring folder = GScanDetails->ScanPath;
 
-			deep.ProcessFolder(GScanDetails->GetFolderIndex(GScanDetails->ScanPath + GScanDetails->RootFolders[r].Name + L"\\"));
-
-			for (int s = 0; s < deep.FolderData.size(); s++)
+			if (GScanDetails->RootFolders[r].Name != L"root")
 			{
-				DeepReportFrom(ofile, deep.FolderData[s]);
+				folder += GScanDetails->RootFolders[r].Name + L"\\";
+			}
+
+			int folderIndex = GScanDetails->GetFolderIndex(folder);
+
+			if (folderIndex != -1)
+			{
+				deep.ProcessFolder(folderIndex);
+
+				if (deep.FolderData.size() != 0)
+				{
+					SevenColumnTableDoubleTitleHeader(ofile, L"op" + std::to_wstring(anchor), folder, GLanguageHandler->XText[rsFolder]);
+
+					int largeSize = 0;
+					int largeCount = 0;
+
+					largeCount = std::round(((double)deep.largestCount / (double)GScanDetails->FileCount) * 100);
+					largeSize = std::round(((double)deep.largestSize / (double)GScanDetails->TotalSize) * 100);
+
+					if (largeCount <= 0) largeCount = __ReportSizes[__rsBarGraph];
+					if (largeSize <= 0) largeSize = __ReportSizes[__rsBarGraph];
+
+					for (int s = 0; s < deep.FolderData.size(); s++)
+					{
+						SevenColumnTableRow(ofile, s, deep.FolderData[s].Folder,
+							std::to_wstring(deep.FolderData[s].FileCount),
+							Convert::DoubleToPercent((double)deep.FolderData[s].FileCount / (double)GScanDetails->FileCount),
+							Convert::GetSizeString(options.Units, deep.FolderData[s].Size),
+							Convert::DoubleToPercent((double)deep.FolderData[s].Size / (double)GScanDetails->TotalSize),
+							GSettings->Report.HTMLColours[4],
+							(((double)deep.FolderData[s].FileCount / (double)GScanDetails->FileCount) * 100) * ((double)__ReportSizes[__rsBarGraph] / (double)largeCount),
+							(((double)deep.FolderData[s].Size / (double)GScanDetails->TotalSize) * 100) * ((double)__ReportSizes[__rsBarGraph] / (double)largeSize)
+						);
+					}
+
+					ofile << L"</table>" << std::endl;
+
+					anchor++;
+
+					InsertSpacingTable(ofile);
+				}
+			}
+			else
+			{
+				std::wcout << " Error cannot find folder \"" << folder << "\"" << std::endl;
 			}
 		}
-
-		InsertSpacingTable(ofile);
 	}
 
 
-	void ReportHeader(std::wofstream &ofile, HTMLReportOptions options, std::wstring menuString)
+	void ReportHeader(std::wofstream &ofile, HTMLReportOptions options, std::wstring menu_string)
 	{
 		// ============================================================================
 		// == header table ============================================================
@@ -259,7 +309,7 @@ namespace ReportHTML
 
 		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[9]) + L"\">" +
 			L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\"><td class=\"C7G\"><strong>Menu</strong></td></tr>" +
-			L"<tr class=\"C4C\"><td>" + menuString + L"</td></tr></table>" << std::endl;
+			L"<tr class=\"C4C\"><td>" + menu_string + L"</td></tr></table>" << std::endl;
 
 		InsertSpacingTable(ofile);
 	}
@@ -289,8 +339,8 @@ namespace ReportHTML
 					if (std::round(((double)GScanDetails->ExtensionSpread[t][__esCount] / (double)GScanDetails->FileCount) * 100) > large1) { large1 = std::round(((double)GScanDetails->ExtensionSpread[t][__esCount] / (double)GScanDetails->FileCount) * 100); }
 				}
 
-				if (large1 <= 0) { large1 = __ReportSizes[__rsBarGraph]; }
-				if (large2 <= 0) { large2 = __ReportSizes[__rsBarGraph]; }
+				if (large1 <= 0) large1 = __ReportSizes[__rsBarGraph]; 
+				if (large2 <= 0) large2 = __ReportSizes[__rsBarGraph]; 
 								
 				//build the file category table
 				for (int t = 1; t < __FileCategoriesCount; t++)
@@ -324,8 +374,8 @@ namespace ReportHTML
 				Convert::GetSizeString(options.Units, GScanDetails->ExtensionSpread[0][1]),
 				Convert::DoubleToPercent((double)GScanDetails->ExtensionSpread[0][1] / (double)GScanDetails->TotalSize),
 				0x000000,
-				(((double)GScanDetails->ExtensionSpread[0][1] / (double)GScanDetails->FileCount) * 100)* ((double)__ReportSizes[__rsBarGraph] / (double)large1),
-				(((double)GScanDetails->ExtensionSpread[0][2] / (double)GScanDetails->TotalSize) * 100)* ((double)__ReportSizes[__rsBarGraph] / (double)large2)
+				(((double)GScanDetails->ExtensionSpread[0][__esCount] / (double)GScanDetails->FileCount) * 100)* ((double)__ReportSizes[__rsBarGraph] / (double)large1),
+				(((double)GScanDetails->ExtensionSpread[0][__esSize] / (double)GScanDetails->TotalSize) * 100)* ((double)__ReportSizes[__rsBarGraph] / (double)large2)
 				);
 
 			ofile << L"</table>" << std::endl;
@@ -366,8 +416,8 @@ namespace ReportHTML
 					if (std::round(((double)GScanDetails->FileAttributes[t][__faSize] / (double)GScanDetails->TotalSize) * 100) > large2) { large2 = std::round(((double)GScanDetails->FileAttributes[t][__faSize] / (double)GScanDetails->TotalSize) * 100); };
 				}
 
-				if (large1 <= 0) { large1 = __ReportSizes[__rsBarGraph]; }
-				if (large2 <= 0) { large2 = __ReportSizes[__rsBarGraph]; }
+				if (large1 <= 0) large1 = __ReportSizes[__rsBarGraph];
+				if (large2 <= 0) large2 = __ReportSizes[__rsBarGraph];
 
 				//build the file category table
 				for (int t  = 0; t < __AttributesToDisplayCount; t++)
@@ -413,8 +463,8 @@ namespace ReportHTML
 					if (std::round(((double)GScanDetails->Users[i].Data[__UserSize] / (double)GScanDetails->TotalSize) * 100) > large2) { large2 = std::round(((double)GScanDetails->Users[i].Data[__UserSize] / (double)GScanDetails->TotalSize) * 100); }
 				}
 				
-				if (large1 <= 0) { large1 = __ReportSizes[__rsBarGraph]; }
-				if (large2 <= 0) { large2 = __ReportSizes[__rsBarGraph]; }
+				if (large1 <= 0) large1 = __ReportSizes[__rsBarGraph];
+				if (large2 <= 0) large2 = __ReportSizes[__rsBarGraph];
 
 				// ============================================================
 
@@ -465,8 +515,8 @@ namespace ReportHTML
 					if (std::round(((double)GFileExtensionHandler->Extensions[i].Size / (double)GScanDetails->TotalSize) * 100) > large2) { large2 = std::round(((double)GFileExtensionHandler->Extensions[i].Size / (double)GScanDetails->TotalSize) * 100); }
 				}
 
-				if (large1 <= 0) { large1 = __ReportSizes[__rsBarGraph]; }
-				if (large2 <= 0) { large2 = __ReportSizes[__rsBarGraph]; }
+				if (large1 <= 0) large1 = __ReportSizes[__rsBarGraph];
+				if (large2 <= 0) large2 = __ReportSizes[__rsBarGraph];
 
 				for (int t = 1; t < __FileCategoriesCount; t++)
 				{
@@ -523,8 +573,8 @@ namespace ReportHTML
 								}
 							}
 
-							if (large1 <= 0) { large1 = __ReportSizes[__rsBarGraph]; }
-							if (large2 <= 0) { large2 = __ReportSizes[__rsBarGraph]; }
+							if (large1 <= 0) large1 = __ReportSizes[__rsBarGraph];
+							if (large2 <= 0) large2 = __ReportSizes[__rsBarGraph];
 
 							rowidx = 1;
 
@@ -640,8 +690,8 @@ namespace ReportHTML
 					if (std::round(((double)GScanDetails->Magnitude[t][__mSize] / (double)GScanDetails->TotalSize) * 100) > large2) { large2 = std::round(((double)GScanDetails->Magnitude[t][__mSize] / (double)GScanDetails->TotalSize) * 100); }
 				}
 
-				if (large1 <= 0) { large1 = __ReportSizes[__rsBarGraph]; }
-				if (large2 <= 0) { large2 = __ReportSizes[__rsBarGraph]; }
+				if (large1 <= 0) large1 = __ReportSizes[__rsBarGraph];
+				if (large2 <= 0) large2 = __ReportSizes[__rsBarGraph];
 
 				//build the file category table
 				for (int t = 0; t < __MagnitudesCount; t++)
@@ -903,9 +953,9 @@ namespace ReportHTML
 	}
 
 
-	void DeepReportFrom(std::wofstream& ofile, SizeOfFolder sof)
+	void DeepReportFrom(std::wofstream& ofile, std::wstring folder, SizeOfFolder sof, __int64 largestSize, int largestCount)
 	{
-
+		SevenColumnTableDoubleTitleHeader(ofile, L"op9", GLanguageHandler->XText[rsFileAttributes] + L" (Created)", GLanguageHandler->XText[rsYear]);
 	}
 
 
@@ -918,7 +968,7 @@ namespace ReportHTML
 		FourColumnTableDoubleTitleHeader(ofile, L"op9", GLanguageHandler->XText[rsTop101] + L"(" + GLanguageHandler->XText[rsLargest] + L")", GLanguageHandler->XText[rsFileTypes],
 			GLanguageHandler->XText[rsSize],
 			GLanguageHandler->XText[rsOwner]
-			);
+		);
 
 		for (int t = 0; t < GScanDetails->Top100Large.size(); t++)
 		{
@@ -1056,8 +1106,8 @@ namespace ReportHTML
 				}
 			}
 	
-			if (large1 == 0) { large1 = __ReportSizes[__rsBarGraph]; }
-			if (large2 == 0) { large2 = __ReportSizes[__rsBarGraph]; }
+			if (large1 == 0) large1 = __ReportSizes[__rsBarGraph];
+			if (large2 == 0) large2 = __ReportSizes[__rsBarGraph];
 
 			int rowidx = 1;
 
@@ -1147,17 +1197,19 @@ namespace ReportHTML
 
 	std::wstring BuildMenuList(HTMLReportOptions options)
 	{
-		std::wstring menu;
+		std::wstring menu = L"||";
 
-		if (options.Layout[1]) { menu += L"<a href=\"#op2\">" + GLanguageHandler->XText[rsFileAttributes] + L"</a> || "; }
-		if (options.Layout[2]) { menu += L"<a href=\"#op3\">" + GLanguageHandler->XText[rsCombineDrivesFolders] + L"</a> || "; }
-		if (options.Layout[3]) { menu += L"<a href=\"#op4\">" + GLanguageHandler->XText[rsFolders] + L"</a> || "; }
-		if (options.Layout[4]) { menu += L"<a href=\"#op5\">" + GLanguageHandler->XText[rsMagnitude] + L"</a> || "; }
-		if (options.Layout[5]) { menu += L"<a href=\"#op6\">" + GLanguageHandler->XText[rsFileExtensions] + L"</a> || "; }
-		if (options.Layout[6]) { menu += L"<a href=\"#op7\">" + GLanguageHandler->XText[rsNullFiles] + L"</a> / <a href=\"#op7a\">" + GLanguageHandler->XText[rsEmptyFolders] + L"</a> || "; }
-		if (options.Layout[7]) { menu += L"<a href=\"#op8\">" + GLanguageHandler->XText[rsFileDates] + L"</a> || "; }
-		if (options.Layout[8]) { menu += L"<a href=\"#op9\">" + GLanguageHandler->XText[rsTop101] + L" (" + GLanguageHandler->XText[rsLargest] + L")</a> || "; }
-		if (options.Layout[9]) { menu += L"<a href=\"#op10\">" + GLanguageHandler->XText[rsUsers] + L"</a> || "; }
+		if (options.Layout[1]) menu += L"<a href=\"#op2\">" + GLanguageHandler->XText[rsFileAttributes] + L"</a> || ";
+		if (options.Layout[2]) menu += L"<a href=\"#op3\">" + GLanguageHandler->XText[rsCombineDrivesFolders] + L"</a> || ";
+		if (options.Layout[3]) menu += L"<a href=\"#op4\">" + GLanguageHandler->XText[rsFolders] + L"</a> || ";
+		if (options.Layout[4]) menu += L"<a href=\"#op5\">" + GLanguageHandler->XText[rsMagnitude] + L"</a> || ";
+		if (options.Layout[5]) menu += L"<a href=\"#op6\">" + GLanguageHandler->XText[rsFileExtensions] + L"</a> || ";
+		if (options.Layout[6]) menu += L"<a href=\"#op7\">" + GLanguageHandler->XText[rsNullFiles] + L"</a> / <a href=\"#op7a\">" + GLanguageHandler->XText[rsEmptyFolders] + L"</a> || ";
+		if (options.Layout[7]) menu += L"<a href=\"#op8\">" + GLanguageHandler->XText[rsFileDates] + L"</a> || ";
+		if (options.Layout[8]) menu += L"<a href=\"#op9\">" + GLanguageHandler->XText[rsTop101] + L" (" + GLanguageHandler->XText[rsLargest] + L")</a> || ";
+		if (options.Layout[9]) menu += L"<a href=\"#op10\">" + GLanguageHandler->XText[rsUsers] + L"</a> || ";
+
+		if (options.DeepScan)  menu += L"<a href=\"#op50\">" + GLanguageHandler->XText[rsDeepScan] + L"</a> || ";
 
 		return menu;
 	}
@@ -1434,6 +1486,7 @@ namespace ReportHTML
 		ofile << L"]);" << "\n";
 	}
 
+
 	void FourColumnTableDoubleTitleHeader(std::wofstream& ofile, std::wstring anchor, std::wstring title_top, std::wstring title_bottom, std::wstring col1, std::wstring col2)
 	{
 		ofile << L"<table align=\"center\" width=\"" << std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" +
@@ -1445,6 +1498,7 @@ namespace ReportHTML
 			L"<td height=\"13\" width=\"90\" class=\"XCB\">" + col2 + L"</td>" +
 			L"</tr>" << "\n";
 	}
+
 
 	void FourColumnTableRow(std::wofstream& ofile, int row, std::wstring col1, std::wstring col3, std::wstring col4, int graph_colour, float graph)
 	{
@@ -1468,6 +1522,7 @@ namespace ReportHTML
 		ofile << L"</tr>" << "\n";
 	}
 
+
 	void FourColumnTableDoubleTitleHeaderNoGraph(std::wofstream& ofile, std::wstring anchor, std::wstring title_top, std::wstring title_bottom, std::wstring col1, std::wstring col2, std::wstring col3)
 	{
 		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" << "\n";
@@ -1480,6 +1535,7 @@ namespace ReportHTML
 		ofile << L"<td height=\"13\" width=\"90\" align=\"center\"><b>" + col2 + L"</b></td>" << "\n";
 		ofile << L"<td height=\"13\" width=\"90\" align=\"center\"><b>" + col3 + L"</b></td>" << "\n";
 	}
+
 
 	void FourColumnTableDoubleTitleNoGraphRow(std::wofstream& ofile, int row, std::wstring col1, std::wstring col2, std::wstring col3, std::wstring col4)
 	{
@@ -1499,6 +1555,7 @@ namespace ReportHTML
 		ofile << L"</tr>" << "\n";
 	}
 
+
 	void SevenColumnTableHeader(std::wofstream& ofile, std::wstring anchor, std::wstring title)
 	{
 		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" << "\n";
@@ -1512,6 +1569,7 @@ namespace ReportHTML
 			L"<td width=\"380\" height=\"20\">&nbsp;</td>" +
 			L"</tr>" << "\n";
 	}
+
 
 	void SevenColumnTableRow(std::wofstream& ofile, int row, std::wstring caption, std::wstring col1, std::wstring col2, std::wstring col3, std::wstring col4, int graph_colour, float graph_left, float graph_right)
 	{
@@ -1542,6 +1600,7 @@ namespace ReportHTML
 		ofile << L"</tr>" << "\n";
 	}
 
+
 	void SevenColumnTableRowBlank(std::wofstream& ofile, int row, std::wstring caption)
 	{
 		if (row % 2 != 0)
@@ -1562,16 +1621,18 @@ namespace ReportHTML
 		ofile << L"<td>&nbsp;</td></tr>" << "\n";
 	}
 
+
 	void SevenColumnTableEnd(std::wofstream& ofile)
 	{
 		ofile << L"</table>" << std::endl;
 	}
 
+
 	void SevenColumnTableDoubleTitleHeader(std::wofstream& ofile, std::wstring anchor, std::wstring title_top, std::wstring title_bottom)
 	{
 		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" << "\n";
 		ofile << L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" << "\n";
-		ofile << L"<td colspan=\"7\" width=\"387\" height=\"20\"><a name=\"" + anchor + L"\" /><b>" + title_top + L"</b></td>" << "\n";
+		ofile << L"<td colspan=\"7\" width=\"387\" height=\"20\"><a name=\"" + anchor + L"\"</a><b>" + title_top + L"</b></td>" << "\n";
 		ofile << L"</tr>" << "\n";
 		ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Report.HTMLColours[5]) + L"\">" << "\n";
 		ofile << L"<td width=\"150\" height=\"13\" class=\"C7G\"><a name=\"op3\" /><b>" + GLanguageHandler->XText[rsYear] + L"</b></td>" << "\n";

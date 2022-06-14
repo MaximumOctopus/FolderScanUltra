@@ -21,15 +21,15 @@
 
 
 
-Ini::Ini(std::wstring fileName)
+Ini::Ini(std::wstring file_name)
 {
-	Loaded = LoadFile(fileName);
+	Loaded = LoadFile(file_name);
 }
 
 
-bool Ini::LoadFile(std::wstring fileName)
+bool Ini::LoadFile(std::wstring file_name)
 {
-	std::wifstream file(fileName);
+	std::wifstream file(file_name);
 
 	file.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
 

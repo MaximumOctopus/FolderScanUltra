@@ -68,6 +68,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>fsu</TargetName>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <TargetName>fsu</TargetName>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <AdditionalOptions>-DUNICODE %(AdditionalOptions)</AdditionalOptions>
@@ -101,7 +104,7 @@
     <ClInclude Include="ReportConstants.h" />
     <ClInclude Include="ReportCSVReportOptions.h" />
     <ClInclude Include="ReportHTML.h" />
-    <ClInclude Include="ReportHTMLDeep.h" />
+    <ClInclude Include="ReportDeep.h" />
     <ClInclude Include="ReportHTMLReportOptions.h" />
     <ClInclude Include="ReportTextReportOptions.h" />
     <ClInclude Include="Help.h" />
@@ -120,6 +123,7 @@
     <ClInclude Include="ScanDetails.h" />
     <ClInclude Include="ScanHistoryObject.h" />
     <ClInclude Include="Settings.h" />
+    <ClInclude Include="SizeOfFolder.h" />
     <ClInclude Include="sqlite3.h" />
     <ClInclude Include="SystemGlobal.h" />
     <ClInclude Include="Test.h" />
@@ -151,7 +155,7 @@
     <ClCompile Include="ReportCSV.cpp" />
     <ClCompile Include="ReportHandler.cpp" />
     <ClCompile Include="ReportHTML.cpp" />
-    <ClCompile Include="ReportHTMLDeep.cpp" />
+    <ClCompile Include="ReportDeep.cpp" />
     <ClCompile Include="ReportSummary.cpp" />
     <ClCompile Include="ReportText.cpp" />
     <ClCompile Include="ReportXinorbis.cpp" />

@@ -20,10 +20,10 @@
 class FileDateObject
 {
 public:
-	int Year;
+	int Year = 0;
 	
-	int Count;
-	unsigned __int64 Size;
+	int Count = 0;
+	unsigned __int64 Size = 0;
 
 	FileDateObject(int oYear);
 };

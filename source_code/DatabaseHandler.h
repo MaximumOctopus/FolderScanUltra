@@ -23,27 +23,27 @@ class DatabaseHandler
 {
 private:
 
-	int dbMode;
+	int dbMode = 0;
 
 	DatabaseODBC* dbODBC;
 	DatabaseSQlite* dbSQlite;
 
-	bool InitSQlite(std::wstring SQliteFileName);
-	bool InitODBC(std::wstring connectionString);
+	bool InitSQlite(std::wstring);
+	bool InitODBC(std::wstring);
 
-	bool UpdateFolderScanUltraScanHistoryIni(std::wstring folder, std::wstring usersPath);
-	bool UpdateFolderScanUltraScanHistoryRegistry(std::wstring folder, std::wstring usersPath);
+	bool UpdateFolderScanUltraScanHistoryIni(std::wstring, std::wstring);
+	bool UpdateFolderScanUltraScanHistoryRegistry(std::wstring, std::wstring);
 
 public:
 
-	bool initOK;
+	bool initOK = false;
 
-	bool UpdateFolderHistory(std::wstring tableFolder, std::wstring tableFile);
+	bool UpdateFolderHistory(std::wstring, std::wstring);
 	bool UpdateFolderHistoryFile(void);
-	bool UpdateFolderScanUltraScanHistory(int saveLocation, std::wstring folder, std::wstring usersPath);
+	bool UpdateFolderScanUltraScanHistory(int, std::wstring, std::wstring);
 
-	bool UpdateFolderHistoryStructured(std::wstring tableSystem, std::wstring tableData);
+	bool UpdateFolderHistoryStructured(std::wstring, std::wstring);
 
-	DatabaseHandler(int mode, std::wstring SQliteFileName);
+	DatabaseHandler(int, std::wstring);
 	~DatabaseHandler();
 };

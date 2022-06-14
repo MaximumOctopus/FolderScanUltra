@@ -37,8 +37,11 @@ extern LanguageHandler* GLanguageHandler;
 
 // dbparameter : file name for sqlite mode
 //             : connectionString from ODBC mode 
-DatabaseHandler::DatabaseHandler(int mode, std::wstring dbParameter)
+DatabaseHandler::DatabaseHandler(int mode, std::wstring db_parameter)
 {
+	dbODBC = NULL;
+	dbSQlite = NULL;
+
 	dbMode = mode;
 
 	initOK = false;
@@ -51,13 +54,13 @@ DatabaseHandler::DatabaseHandler(int mode, std::wstring dbParameter)
 		break;
 	case __dbSQLite:
 	{
-		initOK = InitSQlite(dbParameter);
+		initOK = InitSQlite(db_parameter);
 
 		break;
 	}
 	case __dbODBC:
 	{
-		initOK = InitODBC(dbParameter);
+		initOK = InitODBC(db_parameter);
 
 		break;
 	}
@@ -82,18 +85,18 @@ DatabaseHandler::~DatabaseHandler()
 }
 
 
-bool DatabaseHandler::InitSQlite(std::wstring SQliteFileName)
+bool DatabaseHandler::InitSQlite(std::wstring SQlite_file_name)
 {
 	try
 	{
-		if (WindowsUtility::FileExists(SQliteFileName))
+		if (WindowsUtility::FileExists(SQlite_file_name))
 		{
 			// file not found, will create, should show message?!
 		}
 
 		std::wcout << L"Initialising SQlite..." << std::endl;
 
-		dbSQlite = new DatabaseSQlite(SQliteFileName);
+		dbSQlite = new DatabaseSQlite(SQlite_file_name);
 
 		return dbSQlite->dbAvailable;
 	}
@@ -108,11 +111,11 @@ bool DatabaseHandler::InitSQlite(std::wstring SQliteFileName)
 }
 
 
-bool DatabaseHandler::InitODBC(std::wstring connectionString)
+bool DatabaseHandler::InitODBC(std::wstring connection_string)
 {
 	try
 	{
-		dbODBC = new DatabaseODBC(connectionString);
+		dbODBC = new DatabaseODBC(connection_string);
 	}
 	catch (...)
 	{
@@ -125,18 +128,18 @@ bool DatabaseHandler::InitODBC(std::wstring connectionString)
 }
 
 
-bool DatabaseHandler::UpdateFolderHistory(std::wstring tableFolder, std::wstring tableFile)
+bool DatabaseHandler::UpdateFolderHistory(std::wstring table_folder, std::wstring table_file)
 {
 	if (dbMode == __dbSQLite)
 	{
-		if (dbSQlite->CreateNewFolderTable(tableFolder))
+		if (dbSQlite->CreateNewFolderTable(table_folder))
 		{
 
-			if (dbSQlite->CreateNewFileTable(tableFile))
+			if (dbSQlite->CreateNewFileTable(table_file))
 			{
-				dbSQlite->PopulateFolderTable(tableFolder);
+				dbSQlite->PopulateFolderTable(table_folder);
 
-				dbSQlite->PopulateFileTable(tableFile);
+				dbSQlite->PopulateFileTable(table_file);
 
 				std::wcout << "\n" << GLanguageHandler->XText[rsUpdatingFolderHistory] << L"..." << std::endl;
 
@@ -144,14 +147,14 @@ bool DatabaseHandler::UpdateFolderHistory(std::wstring tableFolder, std::wstring
 			}
 			else
 			{
-				std::wcout << L"SQlite File Table Creation Failed \"" + tableFile + L"\"" << std::endl;
+				std::wcout << L"SQlite File Table Creation Failed \"" + table_file + L"\"" << std::endl;
 
 				return false;
 			}
 		}
 		else
 		{
-			std::wcout << L"SQlite Folder Table Creation Failed \"" + tableFolder + L"\"" << std::endl;
+			std::wcout << L"SQlite Folder Table Creation Failed \"" + table_folder + L"\"" << std::endl;
 
 			return false;
 		}
@@ -160,14 +163,14 @@ bool DatabaseHandler::UpdateFolderHistory(std::wstring tableFolder, std::wstring
 	}
 	else if (dbMode == __dbODBC)
 	{
-		if (dbODBC->CreateNewFolderTable(tableFolder))
+		if (dbODBC->CreateNewFolderTable(table_folder))
 		{
 
-			if (dbODBC->CreateNewFileTable(tableFile))
+			if (dbODBC->CreateNewFileTable(table_file))
 			{
-				dbODBC->PopulateFolderTable(tableFolder);
+				dbODBC->PopulateFolderTable(table_folder);
 
-				dbODBC->PopulateFileTable(tableFile);
+				dbODBC->PopulateFileTable(table_file);
 
 				std::wcout << "\n" << GLanguageHandler->XText[rsUpdatingFolderHistory] << L"..." << std::endl;
 
@@ -175,14 +178,14 @@ bool DatabaseHandler::UpdateFolderHistory(std::wstring tableFolder, std::wstring
 			}
 			else
 			{
-				std::wcout << L"ODBC File Table Creation Failed \"" + tableFile + L"\"" << std::endl;
+				std::wcout << L"ODBC File Table Creation Failed \"" + table_file + L"\"" << std::endl;
 
 				return false;
 			}
 		}
 		else
 		{
-			std::wcout << L"ODBC Folder Table Creation Failed \"" + tableFolder + L"\"" << std::endl;
+			std::wcout << L"ODBC Folder Table Creation Failed \"" + table_folder + L"\"" << std::endl;
 
 			return false;
 		}
@@ -194,34 +197,34 @@ bool DatabaseHandler::UpdateFolderHistory(std::wstring tableFolder, std::wstring
 }
 
 
-bool DatabaseHandler::UpdateFolderHistoryStructured(std::wstring tableSystem, std::wstring tableData)
+bool DatabaseHandler::UpdateFolderHistoryStructured(std::wstring table_system, std::wstring table_data)
 {
 	if (dbMode == __dbSQLite)
 	{
-		if (dbSQlite->CreateNewSystemTable(tableSystem))
+		if (dbSQlite->CreateNewSystemTable(table_system))
 		{
 
-			if (dbSQlite->CreateNewDataTable(tableData))
+			if (dbSQlite->CreateNewDataTable(table_data))
 			{
 				std::wcout << L"Populating structured folder table..." << "\n";
-				dbSQlite->PopulateSystemTable(tableSystem, tableData);
+				dbSQlite->PopulateSystemTable(table_system, table_data);
 
 				std::wcout << L"Populating structured file table..." << "\n";
-				dbSQlite->PopulateDataTable(tableData);
+				dbSQlite->PopulateDataTable(table_data);
 
 				std::wcout << GLanguageHandler->XText[rsUpdatingFolderHistory] << std::endl;
 				UpdateFolderHistoryFile();
 			}
 			else
 			{
-				std::wcout << L"SQlite structured File Table Creation Failed \"" + tableData + L"\"" << std::endl;
+				std::wcout << L"SQlite structured File Table Creation Failed \"" + table_data + L"\"" << std::endl;
 
 				return false;
 			}
 		}
 		else
 		{
-			std::wcout << L"SQlite structured Folder Table Creation Failed \"" + tableSystem + L"\"" << std::endl;
+			std::wcout << L"SQlite structured Folder Table Creation Failed \"" + table_system + L"\"" << std::endl;
 
 			return false;
 		}
@@ -230,30 +233,30 @@ bool DatabaseHandler::UpdateFolderHistoryStructured(std::wstring tableSystem, st
 	}
 	else if (dbMode == __dbODBC)
 	{
-		if (dbODBC->CreateNewSystemTable(tableSystem))
+		if (dbODBC->CreateNewSystemTable(table_system))
 		{
 
-			if (dbODBC->CreateNewDataTable(tableData))
+			if (dbODBC->CreateNewDataTable(table_data))
 			{
 				std::wcout << L"Populating structured folder table..." << "\n";
-				dbODBC->PopulateSystemTable(tableSystem, tableData);
+				dbODBC->PopulateSystemTable(table_system, table_data);
 
 				std::wcout << L"Populating structured file table..." << "\n";
-				dbODBC->PopulateDataTable(tableData);
+				dbODBC->PopulateDataTable(table_data);
 
 				std::wcout << GLanguageHandler->XText[rsUpdatingFolderHistory] << std::endl;
 				UpdateFolderHistoryFile();
 			}
 			else
 			{
-				std::wcout << L"ODBC structured File Table Creation Failed \"" + tableData + L"\"" << std::endl;
+				std::wcout << L"ODBC structured File Table Creation Failed \"" + table_data + L"\"" << std::endl;
 
 				return false;
 			}
 		}
 		else
 		{
-			std::wcout << L"ODBC structured Folder Table Creation Failed \"" + tableSystem + L"\"" << std::endl;
+			std::wcout << L"ODBC structured Folder Table Creation Failed \"" + table_system + L"\"" << std::endl;
 
 			return false;
 		}
@@ -277,29 +280,29 @@ bool DatabaseHandler::UpdateFolderHistoryFile(void)
 }
 
 
-bool DatabaseHandler::UpdateFolderScanUltraScanHistory(int saveLocation, std::wstring folder, std::wstring usersPath)
+bool DatabaseHandler::UpdateFolderScanUltraScanHistory(int save_location, std::wstring folder, std::wstring users_path)
 {
-	if (saveLocation == __SaveLocationRegistry)
+	if (save_location == __SaveLocationRegistry)
 	{
-		return UpdateFolderScanUltraScanHistoryRegistry(folder, usersPath);
+		return UpdateFolderScanUltraScanHistoryRegistry(folder, users_path);
 	}
 	else
 	{
-		return UpdateFolderScanUltraScanHistoryIni(folder, usersPath);
+		return UpdateFolderScanUltraScanHistoryIni(folder, users_path);
 	}
 }
 
 
 // updates the xinorbis file containing a list of the previous 100 scan paths
-bool DatabaseHandler::UpdateFolderScanUltraScanHistoryIni(std::wstring folder, std::wstring usersPath)
+bool DatabaseHandler::UpdateFolderScanUltraScanHistoryIni(std::wstring folder, std::wstring users_path)
 {
-	if (WindowsUtility::FileExists(usersPath + L"scanhistory.dat"))
+	if (WindowsUtility::FileExists(users_path + L"scanhistory.dat"))
 	{
 		std::vector<ScanHistoryObject> ScanHistory;
 
 		try
 		{
-			std::wifstream file(usersPath + L"scanhistory.dat");
+			std::wifstream file(users_path + L"scanhistory.dat");
 
 			file.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
 
@@ -337,7 +340,7 @@ bool DatabaseHandler::UpdateFolderScanUltraScanHistoryIni(std::wstring folder, s
 		}
 		catch(...)
 		{
-			std::wcout << L"Error reading \"" << usersPath + L"scanhistory.dat" << L"\"" << std::endl;
+			std::wcout << L"Error reading \"" << users_path + L"scanhistory.dat" << L"\"" << std::endl;
 
 			return false;
 		}
@@ -366,7 +369,7 @@ bool DatabaseHandler::UpdateFolderScanUltraScanHistoryIni(std::wstring folder, s
 		{
 			if (ScanHistory.size() != 0)
 			{
-				std::wofstream ofile(usersPath + L"scanhistory.dat");
+				std::wofstream ofile(users_path + L"scanhistory.dat");
 
 				ofile.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
 
@@ -408,7 +411,7 @@ bool DatabaseHandler::UpdateFolderScanUltraScanHistoryIni(std::wstring folder, s
 }
 
 
-bool DatabaseHandler::UpdateFolderScanUltraScanHistoryRegistry(std::wstring folder, std::wstring usersPath)
+bool DatabaseHandler::UpdateFolderScanUltraScanHistoryRegistry(std::wstring folder, std::wstring users_path)
 {
 	std::vector<ScanHistoryObject> ScanHistory;
 

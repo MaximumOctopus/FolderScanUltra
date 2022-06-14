@@ -19,12 +19,11 @@
 
 namespace Registry
 {
-	std::wstring ReadRegistryString(HKEY hKey, std::wstring aKeyname, std::wstring aDefaultValue);
+	std::wstring ReadRegistryString(HKEY, std::wstring, std::wstring);
 
-	int ReadRegistryInteger(HKEY hKey, std::wstring aKeyname, int aDefaultValue);
+	int ReadRegistryInteger(HKEY, std::wstring, int);
 
-	bool ReadRegistryBool(HKEY hKey, std::wstring aKeyname, bool aDefaultValue);
+	bool ReadRegistryBool(HKEY, std::wstring, bool);
 
-
-	bool WriteRegistryString(HKEY hKey, const std::wstring& aKeyName, const std::wstring& value);
+	bool WriteRegistryString(HKEY, const std::wstring&, const std::wstring&);
 }
