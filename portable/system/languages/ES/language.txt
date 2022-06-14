@@ -775,10 +775,11 @@ Todas las demás pantallas de la tabla
 Log
 Length
 File Name Length (chars)
--- File Path Length ----------------------------------------------
-Length (chars) --------------- Qty --- As % ----- Size --- As % --
+-- File Path Length ------------------------------------------------------------
+Length (chars) ----------------------------- Qty --- As % ----- Size --- As % --
 No data to export to report.
 (This report can be imported in to Xinorbis at a later date)
 Warning, this scan contains virtual or offline files!
 Warning, scan was stopped before it completed
 Ignore virtual or offline folders
+Deep scan

@@ -595,17 +595,17 @@ Tekst overzicht
 -- Null Files ------------------------------------------------------------------
 -- Lege mappen -----------------------------------------------------------------
 -- Gebruikers ------------------------------------------------------------------
-Naam ------------------------------- Aantal ---- Als% ----- Maat ----- Als% ---- 
+Naam --------------------------------- Aantal ---- Als% ----- Maat ----- Als% --
 -- Top 101 grootste bestanden --------------------------------------------------
 -- Top 101 kleinste bestanden --------------------------------------------------
 -- Top 101 Nieuwste Bestanden --------------------------------------------------
 -- Top 101 oudste bestanden ----------------------------------------------------
 -- Bestandstypen ---------------------------------------------------------------
-Categorie -------------------------- Aantal ---- Als% ----- Maat ----- Als% ----
+Categorie ---------------------------- Aantal ---- Als% ----- Maat ----- Als% --
 -- Kenmerken -------------------------------------------------------------------
-Attributen ------------------------- Aantal ---- Als% ----- Maat ----- Als% ----
+Attributen --------------------------- Aantal ---- Als% ----- Maat ----- Als% --
 -- Mappenlijst -----------------------------------------------------------------
-Map -------------------------------- Aantal ---- Als% ----- Maat ----- Als% ---- 
+Map ---------------------------------- Aantal ---- Als% ----- Maat ----- Als% --
 -- Magnitudes ------------------------------------------------------------------
 -- Uitbreiding Details ---------------------------------------------------------
 Tekst verslag bestandsnaam
@@ -775,10 +775,11 @@ Alle andere tabeldisplays
 Logboek
 Length
 File Name Length (chars)
--- File Path Length ----------------------------------------------
-Length (chars) --------------- Qty --- As % ----- Size --- As % --
+-- File Path Length ------------------------------------------------------------
+Length (chars) ----------------------------- Qty --- As % ----- Size --- As % --
 No data to export to report.
 (This report can be imported in to Xinorbis at a later date)
 Warning, this scan contains virtual or offline files!
 Warning, scan was stopped before it completed
 Ignore virtual or offline folders
+Deep scan
