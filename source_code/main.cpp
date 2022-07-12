@@ -24,6 +24,7 @@
 #include "GlobalObjects.h"
 #include "Help.h"
 #include "ParameterHandler.h"
+#include "ReportConsole.h"
 #include "ReportHandler.h"
 #include "ScanDetails.h"
 #include "Settings.h"
@@ -115,6 +116,19 @@ void ProcessSettingsFromCommandLine()
 }
 
 
+void ProcessConsoleReport()
+{
+	if (GParameterHandler->FindParameter(L"/top20folders"))
+	{
+		ReportConsole::TopFolders(20);
+	}
+	else if (GParameterHandler->FindParameter(L"/allfolders"))
+	{
+		ReportConsole::TopFolders(999);
+	}
+}
+
+
 int wmain(int argc, wchar_t* argv[])
 {
 	_setmode(_fileno(stdout), _O_U16TEXT);
@@ -180,6 +194,8 @@ int wmain(int argc, wchar_t* argv[])
 									{
 										ReportHandler::ShowDefaultOutput();
 									}
+
+									ProcessConsoleReport();
 
 									Database();
 								}

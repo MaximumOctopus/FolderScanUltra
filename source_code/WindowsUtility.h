@@ -16,6 +16,8 @@
 #include <string>
 #include <windows.h>
 
+#include "DriveDetails.h"
+
 
 namespace WindowsUtility
 {
@@ -30,6 +32,9 @@ namespace WindowsUtility
 
 	std::wstring GetComputerNetName();
 	std::wstring GetUserFromWindows();
+
+	std::wstring GetDiskTypeString(const std::wstring&);
+	DriveDetails GetDriveDetails(const std::wstring&);
 
 	std::wstring GetExePath();
 	std::wstring GetDataFolder();

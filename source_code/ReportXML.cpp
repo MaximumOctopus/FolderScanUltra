@@ -25,6 +25,7 @@
 #include "ReportXMLReportOptions.h"
 #include "ScanDetails.h"
 #include "Utility.h"
+#include "WindowsUtility.h"
 
 
 extern FileExtensionHandler *GFileExtensionHandler;
@@ -111,12 +112,12 @@ namespace ReportXML
 		ofile << L"<information>" << "\n";
 
 		ofile << Formatting::InsertElement(L"folder", Formatting::ReplaceEntitiesForXML(GScanDetails->ScanPath), 1) << "\n";
-		ofile << Formatting::InsertElement(L"date", Utility::GetDate(__GETTIMEFORMAT_DISPLAY), 1) << "\n";
-		ofile << Formatting::InsertElement(L"time", Utility::GetTime(__GETTIMEFORMAT_DISPLAY), 1) << "\n";
+		ofile << Formatting::InsertElement(L"date", Utility::GetDate(DateTimeFormat::Display), 1) << "\n";
+		ofile << Formatting::InsertElement(L"time", Utility::GetTime(DateTimeFormat::Display), 1) << "\n";
 		ofile << Formatting::InsertElement(L"numberfiles", std::to_wstring(GScanDetails->FileCount), 1) << "\n";
 		ofile << Formatting::InsertElement(L"numberfolders", std::to_wstring(GScanDetails->FolderCount), 1) << "\n";
 		ofile << Formatting::InsertElement(L"sizeoffiles", Convert::ConvertToUsefulUnit(GScanDetails->TotalSize), 1) << "\n";
-		//ofile << Formatting::InsertElement(L"drivetype", TXWindows.GetDiskTypeString(GScanDetails->ScanPath + ':'), 1) << "\n";
+		ofile << Formatting::InsertElement(L"drivetype", WindowsUtility::GetDiskTypeString(GScanDetails->GetDrive()), 1) << "\n";
 		//ofile << Formatting::InsertElement(L"sectorspercluster", std::to_wstring(Tmp_SectorsPerCluster), 1) << "\n";
 		//ofile << Formatting::InsertElement(L"bytespersector", std::to_wstring(Tmp_BytesPerSector), 1) << "\n";
 		//ofile << Formatting::InsertElement(L"freeclusters", std::to_wstring(Tmp_FreeClusters), 1) << "\n";

@@ -37,9 +37,6 @@
     <ClCompile Include="Help.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GlobalObjects.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ScanDetails.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -109,6 +106,9 @@
     <ClCompile Include="ReportHandler.cpp">
       <Filter>Source Files\Handlers</Filter>
     </ClCompile>
+    <ClCompile Include="GlobalObjects.cpp">
+      <Filter>Source Files\Data Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DatabaseHandler.h">
@@ -160,9 +160,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ErrorConstants.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GlobalObjects.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Help.h">
@@ -262,6 +259,12 @@
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="SizeOfFolder.h">
+      <Filter>Header Files\Data Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalObjects.h">
+      <Filter>Header Files\Data Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="DriveDetails.h">
       <Filter>Header Files\Data Classes</Filter>
     </ClInclude>
   </ItemGroup>

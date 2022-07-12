@@ -46,7 +46,7 @@ namespace ReportXinorbis
 			ofile << GScanDetails->FolderCount << "\n";
 			ofile << GScanDetails->FileCount << "\n";
 			ofile << Convert::ConvertToUsefulUnit(GScanDetails->TotalSize) << "\n";
-			ofile << Utility::GetDate(__GETTIMEFORMAT_DISPLAY) + L", " + Utility::GetTime(__GETTIMEFORMAT_DISPLAY) << std::endl;
+			ofile << Utility::GetDate(DateTimeFormat::Display) + L", " + Utility::GetTime(DateTimeFormat::Display) << std::endl;
 			ofile << 0 << "\n";
 
 			ofile << L"}" << std::endl;

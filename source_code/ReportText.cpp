@@ -17,6 +17,7 @@
 
 #include "Constants.h"
 #include "Convert.h"
+#include "DriveDetails.h"
 #include "FileExtensionHandler.h"
 #include "Formatting.h"
 #include "LanguageHandler.h"
@@ -25,6 +26,7 @@
 #include "ReportTextReportOptions.h"
 #include "ScanDetails.h"
 #include "Utility.h"
+#include "WindowsUtility.h"
 
 
 extern FileExtensionHandler *GFileExtensionHandler;
@@ -98,7 +100,7 @@ namespace ReportText
 
 			ofile << "\n";
 			ofile << GLanguageHandler->TextReport[0] << "\n";
-			ofile << L"======== FolderScanUltra Text Report = (c) Paul A Freshney 2022 ==" << std::endl;                         
+			ofile << L"======== FolderScanUltra Text Report = (c) Paul A Freshney " << Utility::CurrentYear() << " ==" << std::endl;                         
 		}
 		else
 		{
@@ -127,7 +129,11 @@ namespace ReportText
 
 			if (folderIndex != -1)
 			{
-				deep.ProcessFolder(folderIndex);
+				if (!deep.ProcessFolder(folderIndex))
+				{
+					// if there are no sub-folders then use the root folder's data
+					deep.Add(L"\"", GScanDetails->RootFolders[r].Data[__RootSize], GScanDetails->RootFolders[r].Data[__RootCount]);
+				}
 
 				if (deep.FolderData.size() != 0)
 				{
@@ -178,9 +184,9 @@ namespace ReportText
 	void ReportHeader(std::wofstream &ofile)
 	{
 		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << L"------------------------------------------------------------------" << "\n";
-		ofile << L"-- FolderScanUltra -----------------------------------------------" << "\n";
-		ofile << L"------------------------------------------------------------------" << "\n";
+		ofile << L"--------------------------------------------------------------------------------" << "\n";
+		ofile << L"-- FolderScanUltra -------------------------------------------------------------" << "\n";
+		ofile << L"--------------------------------------------------------------------------------" << "\n";
 		ofile << GLanguageHandler->TextReport[0] << "\n";
 		ofile << L"" << "\n";
 	}
@@ -189,12 +195,26 @@ namespace ReportText
 	void ReportSummary(std::wofstream &ofile)
 	{
 		ofile << GLanguageHandler->SummaryReport[0] + L" \"" + GScanDetails->ScanPath + L"\"" << "\n";
-
-		ofile << Formatting::AddLeading(L"", GLanguageHandler->SummaryReport[0].size(), L' ') + Utility::GetDate(__GETTIMEFORMAT_DISPLAY) + L", " + Utility::GetTime(__GETTIMEFORMAT_DISPLAY) << "\n";
-		ofile << "\n";
+		ofile << Formatting::AddLeading(L"", GLanguageHandler->SummaryReport[0].size() + 1, L' ') + Utility::GetDate(DateTimeFormat::Display) + L", " + Utility::GetTime(DateTimeFormat::Display) << "\n\n";
 		ofile << GLanguageHandler->SummaryReport[1] + L" " << GScanDetails->FileCount << "\n";
 		ofile << GLanguageHandler->SummaryReport[2] + L" " << GScanDetails->FolderCount << "\n";
-		ofile << GLanguageHandler->SummaryReport[3] + L" " << Convert::ConvertToUsefulUnit(GScanDetails->TotalSize) << "\n";
+		ofile << GLanguageHandler->SummaryReport[3] + L" " << Convert::ConvertToUsefulUnit(GScanDetails->TotalSize) << "\n\n";
+		ofile << GLanguageHandler->DriveReport[0]   + L" " << WindowsUtility::GetDiskTypeString(GScanDetails->GetDrive()) << "\n";
+		
+		DriveDetails dd = WindowsUtility::GetDriveDetails(GScanDetails->GetDrive());
+
+		if (dd.Valid)
+		{
+			ofile << "\n";
+
+			ofile << GLanguageHandler->DriveReport[1] + L" " << dd.FileSystem << "\n";
+			ofile << GLanguageHandler->DriveReport[5] + L" " << dd.SectorsPerCluster << "\n";
+			ofile << GLanguageHandler->DriveReport[6] + L" " << dd.BytesPerSector << "\n";
+			ofile << GLanguageHandler->DriveReport[7] + L" " << dd.FreeClusters << "\n";
+			ofile << GLanguageHandler->DriveReport[8] + L" " << dd.Clusters << "\n";
+			ofile << GLanguageHandler->DriveReport[9] + L" " << dd.VolumeName << "\n";
+			ofile << GLanguageHandler->DriveReport[10] + L" " << dd.SerialNumber << " (" << dd.SerialNumberHex << ")" << "\n";
+		}
 
 		ofile << "\n";
 

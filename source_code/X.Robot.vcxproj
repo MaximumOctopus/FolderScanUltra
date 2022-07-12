@@ -96,6 +96,7 @@
     <ClInclude Include="FolderHistoryHandler.h" />
     <ClInclude Include="Formatting.h" />
     <ClInclude Include="GlobalObjects.h" />
+    <ClInclude Include="DriveDetails.h" />
     <ClInclude Include="Ini.h" />
     <ClInclude Include="MD5.h" />
     <ClInclude Include="ParameterDetails.h" />

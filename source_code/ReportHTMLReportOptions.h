@@ -25,9 +25,9 @@ struct HTMLReportOptions
 	std::wstring Filename = L"";
 	int Units = 0;
 	std::wstring Align = L"";
-	bool Layout[__HTMLLayoutOptionsCount];
+	bool Layout[__HTMLLayoutOptionsCount] = { false };
 	int LayoutSize = 2;						 // 0 = 800x600, 1 = 1024x768, 2 = 1280x960
-	bool CategoryList[20];
+	bool CategoryList[20] = { 0 };
 	bool AutoOpen = false;
 
 	bool DeepScan = false;

@@ -96,25 +96,25 @@ ParameterDetails ParameterHandler::ParameterInformation(int type)
 }
 
 
-int ParameterHandler::IsReport(int index)
+ReportType ParameterHandler::IsReport(int index)
 {
 	std::wstring lParameter(parameters[index]);
 
 	std::transform(lParameter.begin(), lParameter.end(), lParameter.begin(), ::tolower);
 
-	for (int t = __ReportFirst; t <= __ReportLast; t++)
+	for (int r = 0; r < __reportParametersCount; r++)
 	{
-		if (lParameter.find(ReportSwitch(t)) == 0)
+		if (lParameter.find(__reportParameters[r]) == 0)
 		{
-			return t;
+			return __reportParameterTypes[r];
 		}
 	}
 
-	return -1;
+	return ReportType::Error;
 }
 
 
-ParameterDetails ParameterHandler::ParametersForReport(int index, int reportType)
+ParameterDetails ParameterHandler::ParametersForReport(int index, ReportType reportType)
 {
 	ParameterDetails lParameterDetails;
 
@@ -160,7 +160,7 @@ ParameterDetails ParameterHandler::ParametersForReport(int index, int reportType
 	}
 	else
 	{
-		lParameterDetails.Type = __ReportTypeError;
+		lParameterDetails.Type = ReportType::Error;
 	}
 
 	return lParameterDetails;
@@ -252,52 +252,52 @@ int ParameterHandler::IsDatabaseSwitch(int parameter)
 }
 
 
-std::wstring ParameterHandler::ReportSwitch(int report)
+std::wstring ParameterHandler::ReportSwitch(ReportType report)
 {
 	switch (report)
 	{
-		case __ReportTypeCSV:
+		case ReportType::CSV:
 			return L"/csv";
 			break;
-		case __ReportTypeHTML:
+		case ReportType::HTML:
 			return L"/html";
 			break;
-		case __ReportTypeSummary:
+		case ReportType::Summary:
 			return L"/sum";
 			break;
-		case __ReportTypeText:
+		case ReportType::Text:
 			return L"/txt";
 			break;
-		case __ReportTypeXML:
+		case ReportType::XML:
 			return L"/xml";
 			break;
-		case __ReportTypeXMLFullList:
+		case ReportType::XMLFullList:
 			return L"/xfl";
 			break;
-		case __ReportTypeXinorbis:
+		case ReportType::Xinorbis:
 			return L"/xin";
 			break;
 
-		case __ReportTypeTop20:
+		case ReportType::Top20:
 			return L"/top20";
 			break;
-		case __ReportTypeBottom20:
+		case ReportType::Bottom20:
 			return L"/bottom20";
 			break;
-		case __ReportTypeNew20:
+		case ReportType::New20:
 			return L"/new20";
 			break;
-		case __ReportTypeOld20:
+		case ReportType::Old20:
 			return L"/old20";
 			break;
-		case __ReportAll20:
+		case ReportType::All20:
 			return L"/all20";
 			break;
 
-		case __ReportTypeTextDeep:
+		case ReportType::TextDeep:
 			return L"/deeptext";
 			break;
-		case __ReportTypeHTMLDeep:
+		case ReportType::HTMLDeep:
 			return L"/deephtml";
 			break;
 
@@ -365,40 +365,40 @@ void ParameterHandler::CreateTokens(std::wstring parameter)
 }
 
 
-std::wstring ParameterHandler::DefaultFileName(int report)
+std::wstring ParameterHandler::DefaultFileName(ReportType report)
 {
 	switch (report)
 	{
-		case __ReportTypeCSV:
+		case ReportType::CSV:
 			return GSystemGlobal->DataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\CSV\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.csv";
 			break;
-		case __ReportTypeHTML:
+		case ReportType::HTML:
 			return GSystemGlobal->DataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\HTML\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.html";
 			break;
-		case __ReportTypeSummary:
+		case ReportType::Summary:
 			return GSystemGlobal->DataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\Text\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.txt";
 			break;
-		case __ReportTypeText:
+		case ReportType::Text:
 			return GSystemGlobal->DataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\Text\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.txt";
 			break;
-		case __ReportTypeXinorbis:
+		case ReportType::Xinorbis:
 			return GSystemGlobal->DataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\Text\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.zsr2";
 			break;
-		case __ReportTypeXML:
-		case __ReportTypeXMLFullList:
+		case ReportType::XML:
+		case ReportType::XMLFullList:
 			return GSystemGlobal->DataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\XML\\"  + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.xml";
 			break;
-		case __ReportTypeTop20:
-		case __ReportTypeBottom20:
-		case __ReportTypeNew20:
-		case __ReportTypeOld20:
+		case ReportType::Top20:
+		case ReportType::Bottom20:
+		case ReportType::New20:
+		case ReportType::Old20:
 			return GSystemGlobal->DataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\Text\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.txt";
 			break;
 
-		case __ReportTypeTextDeep:
+		case ReportType::TextDeep:
 			return GSystemGlobal->DataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\Text\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.txt";
 			break;
-		case __ReportTypeHTMLDeep:
+		case ReportType::HTMLDeep:
 			return GSystemGlobal->DataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\HTML\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.html";
 			break;
 
@@ -408,35 +408,35 @@ std::wstring ParameterHandler::DefaultFileName(int report)
 }
 
 
-std::wstring ParameterHandler::DefaultOptions(int report)
+std::wstring ParameterHandler::DefaultOptions(ReportType report)
 {
 	switch (report)
 	{
-	case __ReportTypeCSV:
+	case ReportType::CSV:
 		return L"110";
 		break;
-	case __ReportTypeHTML:
-	case __ReportTypeHTMLDeep:
+	case ReportType::HTML:
+	case ReportType::HTMLDeep:
 		return L"111111111120";
 		break;
-	case __ReportTypeSummary:
+	case ReportType::Summary:
 		return L"1";
 		break;
-	case __ReportTypeText:
-	case __ReportTypeTextDeep:
+	case ReportType::Text:
+	case ReportType::TextDeep:
 		return L"11111111111";
 		break;
-	case __ReportTypeXML:
+	case ReportType::XML:
 		return L"0111111111";
 		break;
-	case __ReportTypeXMLFullList:
+	case ReportType::XMLFullList:
 		return L"1";
 		break;
 
-	case __ReportTypeTop20:
-	case __ReportTypeBottom20:
-	case __ReportTypeNew20:
-	case __ReportTypeOld20:
+	case ReportType::Top20:
+	case ReportType::Bottom20:
+	case ReportType::New20:
+	case ReportType::Old20:
 		return L"1";
 		break;
 
@@ -473,9 +473,9 @@ bool ParameterHandler::NeedToProcessTopSizeLists()
 {
 	for (int t = 1; t < parameters.size(); t++)
 	{
-		int lReportType = GParameterHandler->IsReport(t);
+		ReportType report_type = GParameterHandler->IsReport(t);
 		
-		if (__IsSizeReport[lReportType])
+		if (IsSizeReport(report_type))
 		{
 			return true;
 		}
@@ -489,9 +489,9 @@ bool ParameterHandler::NeedToProcessTopDateLists()
 {
 	for (int t = 1; t < parameters.size(); t++)
 	{
-		int lReportType = GParameterHandler->IsReport(t);
+		ReportType report_type = GParameterHandler->IsReport(t);
 
-		if (__IsDateReport[lReportType])
+		if (IsDateReport(report_type))
 		{
 			return true;
 		}
@@ -505,13 +505,57 @@ bool ParameterHandler::NeedToProcessFileDates()
 {
 	for (int t = 1; t < parameters.size(); t++)
 	{
-		int lReportType = GParameterHandler->IsReport(t);
+		ReportType report_type = GParameterHandler->IsReport(t);
 
-		if (__IsFileDateReport[lReportType])
+		if (IsFileDateReport(report_type))
 		{
 			return true;
 		}
 	}
 
 	return false;
+}
+
+
+bool ParameterHandler::IsDateReport(ReportType report_type)
+{
+	switch (report_type)
+	{
+	case ReportType::XMLFullList:
+	case ReportType::Top20:
+	case ReportType::Bottom20:
+		return false;
+	}
+
+	return true;
+}
+
+
+bool ParameterHandler::IsFileDateReport(ReportType report_type)
+{
+	switch (report_type)
+	{
+	case ReportType::HTML:
+	case ReportType::Text:
+	case ReportType::XML:
+	case ReportType::Xinorbis:
+	case ReportType::TextDeep:
+	case ReportType::HTMLDeep:
+		return true;
+	}
+
+	return false;
+}
+
+bool ParameterHandler::IsSizeReport(ReportType report_type)
+{
+	switch (report_type)
+	{
+	case ReportType::XMLFullList:
+	case ReportType::New20:
+	case ReportType::Old20:
+		return false;
+	}
+
+	return true;
 }

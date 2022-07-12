@@ -20,9 +20,9 @@
 namespace Convert
 {
 	std::wstring AttributeToIntAsString(int, int);
-	std::wstring ConvertToUsefulUnit(__int64);
+	std::wstring ConvertToUsefulUnit(unsigned __int64);
 	std::wstring DoubleToPercent(double);
-	std::wstring GetSizeString(int, unsigned long long);
+	std::wstring GetSizeString(int, unsigned __int64);
 
 	std::wstring BoolToString(bool);
 

@@ -35,7 +35,7 @@ namespace ReportSummary
 
 		std::wcout << GLanguageHandler->SummaryReport[0] + L" \"" << GScanDetails->ScanPath << L"\"\n";
 
-		std::wcout << Formatting::AddLeading(L"", GLanguageHandler->SummaryReport[0].size(), L' ') + Utility::GetDate(__GETTIMEFORMAT_DISPLAY) + L", " + Utility::GetTime(__GETTIMEFORMAT_DISPLAY) << "\n";
+		std::wcout << Formatting::AddLeading(L"", GLanguageHandler->SummaryReport[0].size(), L' ') + Utility::GetDate(DateTimeFormat::Display) + L", " + Utility::GetTime(DateTimeFormat::Display) << "\n";
 		std::wcout << "\n";
 		std::wcout << GLanguageHandler->SummaryReport[1] + L" " << GScanDetails->FileCount << "\n";
 		std::wcout << GLanguageHandler->SummaryReport[2] + L" " << GScanDetails->FolderCount << "\n";

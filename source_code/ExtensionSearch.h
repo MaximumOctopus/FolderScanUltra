@@ -19,6 +19,6 @@
 struct ExtensionSearch
 {
 	bool Found = false;
-	int Category[__FileCategoriesCount];
+	int Category[__FileCategoriesCount] = { 0 };
 	int RawCategory = 0;
 };

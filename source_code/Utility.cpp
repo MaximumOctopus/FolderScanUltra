@@ -50,7 +50,7 @@ namespace Utility
 
 
 
-	std::wstring GetDate(int date_format)
+	std::wstring GetDate(DateTimeFormat date_format)
 	{
 		time_t now = time(nullptr);
 
@@ -60,22 +60,22 @@ namespace Utility
 
 		switch (date_format)
 		{
-		case __GETTIMEFORMAT_DISPLAY:
+		case DateTimeFormat::Display:
 			return GLanguageHandler->Months[ltm->tm_mon] + L" " + std::to_wstring(ltm->tm_mday) + L" " + std::to_wstring(ltm->tm_year + 1900);
 
-		case __GETTIMEFORMAT_FILE:
+		case DateTimeFormat::File:
 
 			wcsftime(buffer, 10, L"%d%m%Y", ltm);
 
 			return buffer;
 
-		case __GETTIMEFORMAT_YYYYMMDD:
+		case DateTimeFormat::YYYYMMDD:
 
 			wcsftime(buffer, 10, L"%Y%m%d", ltm);
 
 			return buffer;
 
-		case __GETTIMEFORMAT_SLASH:
+		case DateTimeFormat::Slash:
 
 			wcsftime(buffer, 10, L"%Y/%m/%d", ltm);
 
@@ -87,7 +87,7 @@ namespace Utility
 	}
 
 
-	std::wstring GetTime(int time_format)
+	std::wstring GetTime(DateTimeFormat time_format)
 	{
 		time_t now = time(nullptr);
 
@@ -97,22 +97,22 @@ namespace Utility
 
 		switch (time_format)
 		{
-		case __GETTIMEFORMAT_DISPLAY:
+		case DateTimeFormat::Display:
 			wcsftime(buffer, 10, L"%H:%M.%S", localtime(&now));
 
 			return buffer;
 
-		case __GETTIMEFORMAT_FILE:
+		case DateTimeFormat::File:
 			wcsftime(buffer, 10, L"%H%M%S", localtime(&now));
 
 			return buffer;
 
-		case __GETTIMEFORMAT_SLASH:
+		case DateTimeFormat::Slash:
 			wcsftime(buffer, 10, L"%H:%M.%S", localtime(&now));
 
 			return buffer;
 
-		case __GETTIMEFORMAT_HHMM:
+		case DateTimeFormat::HHMM:
 
 			wcsftime(buffer, 10, L"%H:%M", localtime(&now));
 

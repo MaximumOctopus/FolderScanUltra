@@ -53,7 +53,7 @@ namespace Convert
 	}
 
 
-	std::wstring ConvertToUsefulUnit(__int64 value)
+	std::wstring ConvertToUsefulUnit(unsigned __int64 value)
 	{
 		if (value < 0)
 		{	
@@ -145,15 +145,15 @@ namespace Convert
 
 			FileTimeToSystemTime(file_time, &lpSystemTime);
 
-			int lDate = 0;
+			int date = 0;
 
-			lDate += lpSystemTime.wDay;
+			date += lpSystemTime.wDay;
 
-			lDate += lpSystemTime.wMonth * 100;
+			date += lpSystemTime.wMonth * 100;
 
-			lDate += lpSystemTime.wYear * 10000;
+			date += lpSystemTime.wYear * 10000;
 
-			return lDate;
+			return date;
 		}
 		else
 		{
@@ -170,13 +170,13 @@ namespace Convert
 
 			FileTimeToSystemTime(file_time, &lpSystemTime);
 
-			int lTime = 0;
+			int time = 0;
 
-			lTime += lpSystemTime.wMinute;
+			time += lpSystemTime.wMinute;
 
-			lTime += lpSystemTime.wHour * 100;
+			time += lpSystemTime.wHour * 100;
 
-			return lTime;
+			return time;
 		}
 		else
 		{
@@ -185,7 +185,7 @@ namespace Convert
 	}
 
 
-	std::wstring GetSizeString(int units, unsigned long long size)
+	std::wstring GetSizeString(int units, unsigned __int64 size)
 	{
 		switch (units)
 		{
@@ -204,7 +204,7 @@ namespace Convert
 			case 3:
 			{
 				std::wstring s(9, ' ');
-				int i = swprintf(&s[0], L"%.2f", double(size / (1024 * 1024)));
+				int i = swprintf(&s[0], L"%.2f", double(size / 1048576)); // 1024^2
 				s.resize(i);
 
 				return s + L"MB";
@@ -212,7 +212,7 @@ namespace Convert
 			case 4:
 			{
 				std::wstring s(9, ' ');
-				int i = swprintf(&s[0], L"%.2f", double(size / (1024 * 1024 * 1024)));
+				int i = swprintf(&s[0], L"%.2f", double(size / 1073741824)); // 1024^3
 				s.resize(i);
 
 				return s + L"GB";

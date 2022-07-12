@@ -10,20 +10,27 @@
 // 
 
 
+#include "accctrl.h"
+#include "aclapi.h"
 #include <filesystem>
-#include "Utility.h"
-#include "WindowsUtility.h"
 #include <iostream>
+#include <Lmcons.h>
 #include <ShlObj.h>  
 #include <string>
 #include <windows.h>
-#include <Lmcons.h>
-#include <windows.h>
-#include "accctrl.h"
-#include "aclapi.h"
+
+#include "Constants.h"
+#include "Convert.h"
+#include "DriveDetails.h"
+#include "LanguageHandler.h"
+#include "Utility.h"
+#include "WindowsUtility.h"
 
 
 #pragma comment(lib, "advapi32.lib")
+
+
+extern LanguageHandler* GLanguageHandler;
 
 
 // returns 0 on success, 1 on fail
@@ -220,3 +227,77 @@ std::wstring WindowsUtility::GetUserFromWindows()
 		return L"Unknown";
 	}
 } 
+
+
+// drive_root shoud be in the format n:
+std::wstring WindowsUtility::GetDiskTypeString(const std::wstring& drive_root)
+{
+	if (drive_root != L"" && drive_root != L"\\\\")
+	{
+		LPCWSTR cname;
+		cname = drive_root.c_str() + '\\';
+
+		int ret = GetDriveTypeW(cname);
+
+		switch (ret)
+		{
+			case 0:               return GLanguageHandler->XText[rsDriveCannotDetermind];
+			case 1:               return GLanguageHandler->XText[rsTheRootNotExist];
+			case DRIVE_REMOVABLE: return GLanguageHandler->XText[rsRemovable];
+			case DRIVE_FIXED:     return GLanguageHandler->XText[rsHardDisk];
+			case DRIVE_REMOTE:    return GLanguageHandler->XText[rsRemoteDrive];
+			case DRIVE_CDROM:     return GLanguageHandler->XText[rsCDROM];
+			case DRIVE_RAMDISK:   return GLanguageHandler->XText[rsRAMDisk];
+		}
+	}
+
+	return GLanguageHandler->XText[rsDriveCannotDetermind];
+}
+
+
+// drive_root shoud be in the format n:
+DriveDetails WindowsUtility::GetDriveDetails(const std::wstring& drive_root)
+{
+	DriveDetails dd;
+
+	if (drive_root != L"" && drive_root != L"\\\\")
+	{
+		DWORD SectorsPerCluster, BytesPerSector, NumberOfFreeClusters, TotalNumberOfClusters;
+
+		LPCWSTR cname;
+		cname = drive_root.c_str() + '\\';
+
+		if (GetDiskFreeSpace(cname,
+			&SectorsPerCluster,
+			&BytesPerSector,
+			&NumberOfFreeClusters,
+			&TotalNumberOfClusters))
+		{
+			dd.SectorsPerCluster = SectorsPerCluster;
+			dd.BytesPerSector = BytesPerSector;
+			dd.FreeClusters = NumberOfFreeClusters;
+			dd.Clusters = TotalNumberOfClusters;
+
+			dd.SectorSize = SectorsPerCluster * BytesPerSector;
+		}
+
+		auto constexpr maxLength = MAX_PATH + 1u;
+		wchar_t volumeName[maxLength] = { 0 };
+		DWORD maximumComponentLength = 0;
+		DWORD SerialNumber = 0;
+		DWORD fileSystemFlags = 0;
+		wchar_t fileSystemNameBuffer[maxLength] = { 0 };
+
+		if (GetVolumeInformationW(cname, volumeName, maxLength, &SerialNumber, &maximumComponentLength, &fileSystemFlags, fileSystemNameBuffer, maxLength))
+		{
+			dd.VolumeName = volumeName;
+			dd.FileSystem = fileSystemNameBuffer;
+			dd.SerialNumber = SerialNumber;
+			dd.SerialNumberHex = Convert::IntToHex(SerialNumber, 8);
+		}
+
+		dd.Valid = true;
+	}
+
+	return dd;
+}

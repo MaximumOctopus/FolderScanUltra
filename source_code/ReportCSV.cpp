@@ -10,17 +10,18 @@
 // 
 
 
+#include <algorithm>
+#include <codecvt>
+#include <fstream>
+#include <iostream>
+#include <string>
+
 #include "Constants.h"
 #include "Convert.h"
 #include "LanguageHandler.h"
 #include "ReportCSV.h"
 #include "ReportCSVReportOptions.h"
 #include "ScanDetails.h"
-#include <algorithm>
-#include <codecvt>
-#include <fstream>
-#include <iostream>
-#include <string>
 
 
 extern LanguageHandler* GLanguageHandler;

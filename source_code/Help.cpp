@@ -91,10 +91,8 @@ namespace Help
 
     void OutputUsage()
     {
-        std::wcout << "\n" << L"  FolderScanUltra " << __FSUVersion << "\n";
-        std::wcout << L"    " << __FSUDate << "\n";
-        std::wcout << L"    (c) Paul Alan Freshney 2011-" << Utility::CurrentYear() << "\n";
-        std::wcout << "\n";
+        std::wcout << "\n" << L"  FolderScanUltra " << __FSUVersion << " / " << __FSUDate << "\n\n";
+        std::wcout << L"    (c) Paul Alan Freshney 2011-" << Utility::CurrentYear() << "\n\n";
 		std::wcout << L"      https://github.com/MaximumOctopus/FolderScanUltra" << "\n";
 		std::wcout << L"      paul@freshney.org" << "\n";
         std::wcout << "\n";
@@ -114,8 +112,10 @@ namespace Help
 		std::wcout << L"    /xin;options;filename      : output xinorbis report to <filename>" << "\n";
 		std::wcout << "\n";
 		std::wcout << L"    /deephtml;options;filename : output HTML with extra information to <filename>" << "\n";
+		std::wcout << L"    /deeptext;options;filename : output Text with extra information to <filename>" << "\n";
 		std::wcout << "\n";
-		std::wcout << "         deepscan includes information on the second level of folders (and heirarchy) \n";
+		std::wcout << "       deepscan includes information on the second level of folders (and heirarchy) \n";
+		std::wcout << "       this is likely to be more use than just a root folder listing. \n";
 		std::wcout << "\n";
 		std::wcout << L"    /updatefolderhistory       : update the folder history database" << "\n";
 		std::wcout << L"    /ODBC                      : folder history is via ODBC" << "\n";
@@ -131,6 +131,9 @@ namespace Help
 		std::wcout << L"    /bottom20                  : output bottom 20 smallest files to console" << "\n";
 		std::wcout << L"    /new20                     : output top 20 newest files to console" << "\n";
 		std::wcout << L"    /old20                     : output top 20 oldest files to console" << "\n";
+		std::wcout << L"    /top20folders              : output top 20 folders in root, ordered by size" << "\n";
+		std::wcout << "\n";
+		std::wcout << L"    /allfolders                : output all folders in root, ordered by size" << "\n";
 		std::wcout << "\n";
 		std::wcout << L"    /allowvirtual              : enable processing of virtual files" << "\n";
 		std::wcout << "\n";
@@ -163,13 +166,13 @@ namespace Help
 	void Cat()
 	{
 		std::wcout << "\n";
-		std::wcout << L"               *     ,MMM8&&&.            *" << "\n";
-		std::wcout << L"                    MMMM88&&&&&    ." << "\n";
-		std::wcout << L"                   MMMM88&&&&&&&" << "\n";
-		std::wcout << L"       *           MMM88&&&&&&&&" << "\n";
-		std::wcout << L"                   MMM88&&&&&&&&" << "\n";
-		std::wcout << L"                   'MMM88&&&&&&'" << "\n";
-		std::wcout << L"                     'MMM8&&&'      *" << "\n";
+		std::wcout << L"               *        ,MMM8&&&.            *" << "\n";
+		std::wcout << L"                       MMMM88&&&&&    ." << "\n";
+		std::wcout << L"                      MMMM88&&&&&&&" << "\n";
+		std::wcout << L"       *              MMM88&&&&&&&&" << "\n";
+		std::wcout << L"                      MMM88&&&&&&&&" << "\n";
+		std::wcout << L"                      'MMM88&&&&&&'" << "\n";
+		std::wcout << L"                        'MMM8&&&'      *" << "\n";
 		std::wcout << L"            |\\___/|" << "\n";
 		std::wcout << L"            )     (             .              " << "\n";
 		std::wcout << L"           =\\     /=" << "\n";
@@ -185,7 +188,9 @@ namespace Help
 		std::wcout << L"    |  |  |  |  |  |  |  |  |  |  |  |  |  |  |" << "\n";
 		std::wcout << L"    |  |  |  |  |  |  |  |  |  |  |  |  |  |  |" << "\n";
 		std::wcout << "\n";
+		std::wcout << L"please donate to your local cat charity or shelter.\n\n";
 		std::wcout << L"A big thanks to my cats, Rutherford, Freeman, and Maxwell" << "\n";
+		std::wcout << "\n";
 		std::wcout << L"        www.maximumoctopus.com/developmentcats.htm" << "\n";
 		std::wcout << std::endl;
 	}

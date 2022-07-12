@@ -15,5 +15,5 @@
 
 namespace ReportConsole
 {
-	void Top10Folders();
+	void TopFolders(int);
 }

@@ -36,6 +36,10 @@ ScanDetails* GScanDetails;
 bool sortBySize(const FileObject &lhs, const FileObject &rhs) { return lhs.Size < rhs.Size; }
 bool sortByDate(const FileObject &lhs, const FileObject &rhs) { return lhs.FileDateC < rhs.FileDateC; }
 
+bool sortRootBySize(const RootFolder& lhs, const RootFolder& rhs) { return lhs.Data[__RootSize] > rhs.Data[__RootSize]; }
+
+bool sortRootByLength(const RootFolder& lhs, const RootFolder& rhs) { return lhs.Name.length() > rhs.Name.length(); }
+
 
 ScanDetails::ScanDetails(std::wstring folder)
 {
@@ -94,10 +98,11 @@ void ScanDetails::ClearData()
 
 	RootFolder rfd;
 
-	rfd.Name       = L"root";
-	rfd.Attributes = 0;
-	rfd.Data[0]	   = 0;
-	rfd.Data[1]    = 0;
+	rfd.Name        = L"\ (root)";
+	rfd.Attributes  = 0;
+	rfd.Data[0]	    = 0;
+	rfd.Data[1]     = 0;
+	rfd.FilesInRoot = true;
 
 	RootFolders.push_back(rfd);
 }
@@ -565,10 +570,29 @@ bool ScanDetails::Analyse()
 }
 
 
+int ScanDetails::RootIndex()
+{
+	for (int r = 0; r < RootFolders.size(); r++)
+	{
+		if (RootFolders[r].FilesInRoot)
+		{
+			return r;
+		}
+	}
+
+	return 0;
+}
+
+
 void ScanDetails::AnalyseRootFolders()
 {
 	if (RootFolders.size() != 0)
 	{
+		std::sort(RootFolders.begin(), RootFolders.end(), sortRootByLength);
+
+		int SpecialRoot = RootIndex();
+
+		RootFolders[SpecialRoot].Name = L""; // enables correct sorting and folder size attribution
 
 		for (int t = 0; t < Files.size(); t++)
 		{
@@ -579,33 +603,34 @@ void ScanDetails::AnalyseRootFolders()
 			if (!(Files[t].Attributes & FILE_ATTRIBUTE_DIRECTORY))
 			{
 				// == IS THIS FILE IN A ROOT FOLDER? ===================================
-				int lucy = -1;
-				int i    = 1;
+				int louise = -1;
+				int i    = 0;
 
 				std::wstring filepath = Folders[Files[t].FilePathIndex] + Files[t].FileName;
 
-				while ((lucy == -1) && (i < RootFolders.size()))
+				while ((louise == -1) && (i < RootFolders.size()))
 				{
-					//---------------------------------------------------------------------------------------------+'\'
 					if (filepath.find(ScanPath + RootFolders[i].Name) != std::wstring::npos)
 					{
 						RootFolders[i].Data[__RootCount]++;
 						RootFolders[i].Data[__RootSize] += Files[t].Size;
 
-						lucy = i;
+						louise = i;
 					}
 
 					i++;
 				}
 
 				//must be in root directory
-				if (lucy == -1)
+				if (louise == -1)
 				{
-					RootFolders[0].Data[__RootCount]++;
-					RootFolders[0].Data[__RootSize] += Files[t].Size;
+					RootFolders[SpecialRoot].Data[__RootCount]++;
+					RootFolders[SpecialRoot].Data[__RootSize] += Files[t].Size;
 				}
 			}
 		}
+
+		RootFolders[SpecialRoot].Name = L"\ (root)";	// back to normal
 	}
 }
 
@@ -631,27 +656,28 @@ void ScanDetails::ScanFolder(const std::wstring &folder)
 	{
 		do
 		{
-			FileObject lFileObject;
+			FileObject file_object;
 
-			lFileObject.FileName      = std::wstring(file.cFileName);
-			lFileObject.FilePathIndex = CurrentFolderIndex;
-			lFileObject.FileDateC = Convert::FileTimeToDateInt(&file.ftCreationTime);
-			lFileObject.FileDateA = Convert::FileTimeToDateInt(&file.ftLastAccessTime);
-			lFileObject.FileDateM = Convert::FileTimeToDateInt(&file.ftLastWriteTime);
-			lFileObject.FileTimeC = Convert::FileTimeToTimeInt(&file.ftCreationTime);
-			lFileObject.FileTimeA = Convert::FileTimeToTimeInt(&file.ftLastAccessTime);
-			lFileObject.FileTimeM = Convert::FileTimeToTimeInt(&file.ftLastWriteTime);
-			lFileObject.Attributes = file.dwFileAttributes;
+			file_object.FileName      = std::wstring(file.cFileName);
+			file_object.FilePathIndex = CurrentFolderIndex;
+			file_object.FileDateC = Convert::FileTimeToDateInt(&file.ftCreationTime);
+			file_object.FileDateA = Convert::FileTimeToDateInt(&file.ftLastAccessTime);
+			file_object.FileDateM = Convert::FileTimeToDateInt(&file.ftLastWriteTime);
+			file_object.FileTimeC = Convert::FileTimeToTimeInt(&file.ftCreationTime);
+			file_object.FileTimeA = Convert::FileTimeToTimeInt(&file.ftLastAccessTime);
+			file_object.FileTimeM = Convert::FileTimeToTimeInt(&file.ftLastWriteTime);
+			file_object.Attributes = file.dwFileAttributes;
 
 			// =======================================================================================================
 			// Folder
 			// =======================================================================================================
+
 			if (file.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 			{
 				if ((!lstrcmpW(file.cFileName, L".")) || (!lstrcmpW(file.cFileName, L"..")))
 					continue;
 
-				Files.push_back(lFileObject);
+				Files.push_back(file_object);
 
 				FolderCount++;
 			}
@@ -661,13 +687,13 @@ void ScanDetails::ScanFolder(const std::wstring &folder)
 			// Files
 			// =======================================================================================================
 			{
-                lFileObject.Size = file.nFileSizeHigh;
-				lFileObject.Size <<= sizeof(file.nFileSizeHigh) * 8;
-				lFileObject.Size |= file.nFileSizeLow;
+				file_object.Size = file.nFileSizeHigh;
+				file_object.Size <<= sizeof(file.nFileSizeHigh) * 8;
+				file_object.Size |= file.nFileSizeLow;
 
 				if (GSettings->Optimisations.GetUserDetails)
 				{
-					std::wstring owner = WindowsUtility::GetFileOwner(CurrentFolder + lFileObject.FileName);
+					std::wstring owner = WindowsUtility::GetFileOwner(CurrentFolder + file_object.FileName);
 
 					if (owner == L"")
 					{
@@ -687,16 +713,16 @@ void ScanDetails::ScanFolder(const std::wstring &folder)
 						z = Users.size() - 1;
 					}
 					
-					lFileObject.Owner = z;
+					file_object.Owner = z;
 				}
 				else
 				{
-					lFileObject.Owner = 0;
+					file_object.Owner = 0;
 				}
 
-				Files.push_back(lFileObject);
+				Files.push_back(file_object);
 
-				sizeOfFolder += lFileObject.Size;
+				sizeOfFolder += file_object.Size;
 			}
 			
 		} while (FindNextFileW(search_handle, &file));
@@ -898,6 +924,12 @@ SizeOfFolder ScanDetails::GetSizeOfFolder(std::wstring full_folder_name, std::ws
 }
 
 
+std::wstring ScanDetails::GetDrive()
+{
+	return ScanPath.substr(0, 2);
+}
+
+
 int ScanDetails::GetFolderIndex(std::wstring folder_name)
 {
 	for (int t = 0; t < Folders.size(); t++)
@@ -909,4 +941,10 @@ int ScanDetails::GetFolderIndex(std::wstring folder_name)
 	}
 
 	return -1;
+}
+
+
+void ScanDetails::SortRootBySize()
+{
+	std::sort(RootFolders.begin(), RootFolders.end(), sortRootBySize);
 }

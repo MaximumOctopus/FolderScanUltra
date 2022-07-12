@@ -29,7 +29,7 @@
 bool VersionCheck::IsNewVersion(std::wstring current_version)
 {
     // avoid caching issues by adding time as a parameter
-    std::wstring url = L"http://maximumoctopus.com/versions/folderscanultra.php?" + Utility::GetTime(__GETTIMEFORMAT_FILE);
+    std::wstring url = L"http://maximumoctopus.com/versions/folderscanultra.php?" + Utility::GetTime(DateTimeFormat::File);
 
     LPSTR lpResult = NULL; // download buffer
     LPSTREAM lpStream;

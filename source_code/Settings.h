@@ -35,7 +35,7 @@ struct DatabaseSettings
 
 	bool UpdateScanHistory = false;
 	
-	int DatabaseMode; // __dbSQLite or __dbODBC
+	int DatabaseMode = -1; // __dbSQLite or __dbODBC
 
 	bool DBStructured = false;
 	bool SystemTable = false;
@@ -69,13 +69,13 @@ struct OptimisationSettings
 
 struct ReportSettings
 {
-	int HTMLColours[__HTMLColoursCount];
-	bool HTMLMonoBargraph;
+	int HTMLColours[__HTMLColoursCount] = { 0 };
+	bool HTMLMonoBargraph = false;
 
-	std::wstring HTMLOutput;
+	std::wstring HTMLOutput = L"";
 	HTMLReportOptions HTMLOptions;
 
-	std::wstring HTMLCompareOutput;
+	std::wstring HTMLCompareOutput = L"";
 };
 
 
@@ -85,7 +85,7 @@ struct SystemSettings
 
     bool Processed = false;
 
-    int CurrentLanguage = 0;
+    LanguageType CurrentLanguage = LanguageType::Undefined;
     int HandleMultipleExt = 0;
 
     bool Debug = false;

@@ -63,6 +63,8 @@ private:
 	void BuildTop100SizeLists();
 	void BuildTop100DateLists();
 
+	int RootIndex();
+
 public:
 	std::wstring ScanPath = L"";
 	std::wstring ScanDateStr = L"";
@@ -123,5 +125,9 @@ public:
 
 	SizeOfFolder GetSizeOfFolder(std::wstring, std::wstring);
 
+	std::wstring GetDrive();
+
 	int GetFolderIndex(std::wstring);
+
+	void SortRootBySize();
 };

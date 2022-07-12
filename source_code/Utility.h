@@ -22,8 +22,8 @@ namespace Utility
 	int CurrentYearI();
 
 	std::wstring DateTime(int);
-	std::wstring GetDate(int);
-	std::wstring GetTime(int);	
+	std::wstring GetDate(DateTimeFormat);
+	std::wstring GetTime(DateTimeFormat);
 	int TodayAsInteger();
 	
 	std::wstring GetMD5(std::wstring);

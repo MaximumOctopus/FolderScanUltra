@@ -355,7 +355,7 @@ bool DatabaseHandler::UpdateFolderScanUltraScanHistoryIni(std::wstring folder, s
 
 		ho.Path           = folder;
 		ho.DateI          = Utility::TodayAsInteger();
-		ho.TimeI          = Utility::GetTime(__GETTIMEFORMAT_HHMM);
+		ho.TimeI          = Utility::GetTime(DateTimeFormat::HHMM);
 		ho.ExcludeFiles   = L"";
 		ho.ExcludeFolders = L"";
 
@@ -459,7 +459,7 @@ bool DatabaseHandler::UpdateFolderScanUltraScanHistoryRegistry(std::wstring fold
 
 	ho.Path		      = folder;
 	ho.DateI          = Utility::TodayAsInteger();
-	ho.TimeI          = Utility::GetTime(__GETTIMEFORMAT_HHMM);
+	ho.TimeI          = Utility::GetTime(DateTimeFormat::HHMM);
 	ho.ExcludeFiles   = L"";
 	ho.ExcludeFolders = L"";
 

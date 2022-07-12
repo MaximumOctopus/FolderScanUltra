@@ -25,12 +25,14 @@ class ReportDeep
 public:
 	std::vector<SizeOfFolder> FolderData;
 
-	__int64 largestSize = 0;
-	__int64 largestCount = 0;
+	unsigned __int64 largestSize = 0;
+	unsigned __int64 largestCount = 0;
 
 	// ======================================================================
 
 	ReportDeep();
 
-	void ProcessFolder(int);
+	void ReportDeep::Add(std::wstring folder, unsigned __int64 size, int file_count);
+
+	bool ProcessFolder(int);
 };

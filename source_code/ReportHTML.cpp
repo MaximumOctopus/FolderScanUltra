@@ -198,7 +198,11 @@ namespace ReportHTML
 
 			if (folderIndex != -1)
 			{
-				deep.ProcessFolder(folderIndex);
+				if (!deep.ProcessFolder(folderIndex))
+				{
+					// if there are no sub-folders then use the root folder's data
+					deep.Add(L"\"", GScanDetails->RootFolders[r].Data[__RootSize], GScanDetails->RootFolders[r].Data[__RootCount]);
+				}
 
 				if (deep.FolderData.size() != 0)
 				{
@@ -255,7 +259,7 @@ namespace ReportHTML
 
 		ofile << L"</tr>" << "\n";
 		ofile << L"<tr class=\"C4C\">" << "\n";
-		ofile << L"<td>" + GLanguageHandler->XText[rsAnalysedAt] + L" <b>" + Utility::GetTime(__GETTIMEFORMAT_DISPLAY) + L"</b>, <b>" + Utility::GetDate(__GETTIMEFORMAT_DISPLAY) + L"</b>.</td>" << "\n";
+		ofile << L"<td>" + GLanguageHandler->XText[rsAnalysedAt] + L" <b>" + Utility::GetTime(DateTimeFormat::Display) + L"</b>, <b>" + Utility::GetDate(DateTimeFormat::Display) + L"</b>.</td>" << "\n";
 		ofile << L"</tr>" << "\n";
 		ofile << L"</table>" << "\n";
 
@@ -953,7 +957,7 @@ namespace ReportHTML
 	}
 
 
-	void DeepReportFrom(std::wofstream& ofile, std::wstring folder, SizeOfFolder sof, __int64 largestSize, int largestCount)
+	void DeepReportFrom(std::wofstream& ofile, std::wstring folder, SizeOfFolder sof, unsigned __int64 largestSize, int largestCount)
 	{
 		SevenColumnTableDoubleTitleHeader(ofile, L"op9", GLanguageHandler->XText[rsFileAttributes] + L" (Created)", GLanguageHandler->XText[rsYear]);
 	}

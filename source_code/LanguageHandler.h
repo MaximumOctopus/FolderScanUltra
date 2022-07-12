@@ -16,19 +16,21 @@
 #include <string>
 #include <vector>
 
+#include "Constants.h"
+
 
 class LanguageHandler
 {
 private:
 
-	int currentLanguage = 0;
+	LanguageType currentLanguage = LanguageType::Undefined;
 
     bool LoadLanguage(std::wstring);
 
 	void SetReportText();
 	void SetXDates();
 
-    std::wstring GetLanguageSymbol(int);
+    std::wstring GetLanguageSymbol(LanguageType);
 
 public:
 	std::wstring ShortDays[7] = { L"Sun", L"Mon", L"Tue", L"Wed", L"Thu", L"Fri", L"Sat" };
@@ -52,5 +54,5 @@ public:
 
 	std::wstring GetLanguageSymbol(void);
 
-    LanguageHandler(std::wstring, int);
+    LanguageHandler(std::wstring, LanguageType);
 };

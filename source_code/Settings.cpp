@@ -341,7 +341,52 @@ bool Settings::LoadLanguage()
     // ===========================================================================
     // ===========================================================================
 
-    System.CurrentLanguage = ReadIntegerFromSettings(L"Prefs", L"Language", __LanguageUNDEFINED, 0);
+    int language = ReadIntegerFromSettings(L"Prefs", L"Language", -1, 0);
+
+	switch (language)
+	{
+	case 1:
+		System.CurrentLanguage = LanguageType::UK;
+		break;
+	case 2:
+		System.CurrentLanguage = LanguageType::NL;
+		break;
+	case 3:
+		System.CurrentLanguage = LanguageType::FR;
+		break;
+	case 4:
+		System.CurrentLanguage = LanguageType::DE;
+		break;
+	case 5:
+		System.CurrentLanguage = LanguageType::IT;
+		break;
+	case 6:
+		System.CurrentLanguage = LanguageType::PT;
+		break;
+	case 7:
+		System.CurrentLanguage = LanguageType::ES;
+		break;
+	case 8:
+		System.CurrentLanguage = LanguageType::SW;
+		break;
+	case 9:
+		System.CurrentLanguage = LanguageType::CZ;
+		break;
+	case 10:
+		System.CurrentLanguage = LanguageType::HU;
+		break;
+	case 11:
+		System.CurrentLanguage = LanguageType::US;
+		break;
+	case 12:
+		System.CurrentLanguage = LanguageType::RU;
+		break;
+	case 13:
+		System.CurrentLanguage = LanguageType::CAT;
+		break;
+	default:
+		System.CurrentLanguage = LanguageType::Undefined;
+	}
 
     // ===========================================================================
     // == Close                                                                 ==
@@ -349,9 +394,9 @@ bool Settings::LoadLanguage()
 
     CloseSettings();
 
-	if (System.CurrentLanguage == __LanguageUNDEFINED)
+	if (System.CurrentLanguage == LanguageType::Undefined)
 	{
-		System.CurrentLanguage = __LanguageUK;
+		System.CurrentLanguage = LanguageType::UK;
 	}
 
     return true;
@@ -375,7 +420,7 @@ std::wstring Settings::ReadStringFromSettings(std::wstring section, std::wstring
 
 int Settings::ReadIntegerFromSettings(std::wstring section, std::wstring name, int default_value, int ifZero)
 {
-    int lResult;
+    int setting;
 
     if (Custom.SettingsSaveLocation == __SaveLocationConfigIni)
     {
@@ -390,10 +435,10 @@ int Settings::ReadIntegerFromSettings(std::wstring section, std::wstring name, i
     }
     else
     {
-        lResult = Registry::ReadRegistryInteger(hKey, name, default_value);
+		setting = Registry::ReadRegistryInteger(hKey, name, default_value);
     }
 
-    if (lResult == 0)
+    if (setting == 0)
     {
         if (ifZero != -1)
         {
@@ -401,12 +446,12 @@ int Settings::ReadIntegerFromSettings(std::wstring section, std::wstring name, i
         }
         else
         {
-            return lResult;
+            return setting;
         }
     }
     else
     {
-        return lResult;
+        return setting;
     }
 }
 
@@ -428,15 +473,15 @@ int Settings::ReadIntegerFromSettingsInputCheck(std::wstring section, std::wstri
 	}
 	else
 	{
-		int lResult = Registry::ReadRegistryInteger(hKey, name, default_value);
+		int setting = Registry::ReadRegistryInteger(hKey, name, default_value);
 	
-		if ((lResult < min) || (lResult > max))
+		if ((setting < min) || (setting > max))
 		{
 			return  default_value;
 		}
 		else
 		{
-			return lResult;
+			return setting;
 		}
 	}
 }

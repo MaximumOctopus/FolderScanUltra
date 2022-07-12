@@ -17,7 +17,7 @@ struct SizeOfFolder
 {
 	std::wstring Folder = L"";
 
-	__int64 Size = 0;
-	__int64 SizeOnDisk = 0;
+	unsigned __int64 Size = 0;
+	unsigned __int64 SizeOnDisk = 0;
 	int FileCount = 0;
 };

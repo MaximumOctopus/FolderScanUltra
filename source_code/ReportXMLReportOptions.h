@@ -21,5 +21,5 @@ static const int XMLReportOptionsCount = 10;
 struct XMLReportOptions
 {
 	std::wstring Filename = L"";
-	bool Layout[XMLReportOptionsCount];
+	bool Layout[XMLReportOptionsCount] = { false };
 };

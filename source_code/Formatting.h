@@ -17,6 +17,7 @@ namespace Formatting
 {
 	std::wstring AddLeading(std::wstring, int, char);
 	std::wstring AddTrailing(std::wstring, int, char);
+
 	std::wstring MakeItalic(std::wstring, bool);
 	std::wstring InsertElement(std::wstring, std::wstring, int);
 	std::wstring ReplaceEntitiesForXML(std::wstring);

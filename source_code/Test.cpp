@@ -153,15 +153,15 @@ namespace Test
 
 			for (int t = 0; t < GParameterHandler->Count(); t++)
 			{
-				int rt = GParameterHandler->IsReport(t);
+				ReportType rt = GParameterHandler->IsReport(t);
 
-				if (rt != -1)
+				if (rt != ReportType::Error)
 				{
 					ParameterDetails pd = GParameterHandler->ParametersForReport(t, rt);
 
 					switch (rt)
 					{
-					case __ReportTypeCSV:
+					case ReportType::CSV:
 						std::wcout << L"      CSV     : " << pd.Value << "\n";
 
 						for (int x = 0; x < pd.Options.size(); x++)
@@ -170,7 +170,7 @@ namespace Test
 						}
 
 						break;
-					case __ReportTypeHTML:
+					case ReportType::HTML:
 						std::wcout << L"      HTM     : " << pd.Value << "\n";
 
 						for (int x = 0; x < pd.Options.size(); x++)
@@ -179,10 +179,10 @@ namespace Test
 						}
 
 						break;
-					case __ReportTypeSummary:
+					case ReportType::Summary:
 						std::wcout << L"      Summary : output to console" << std::endl;
 						break;
-					case __ReportTypeText:
+					case ReportType::Text:
 						std::wcout << L"      Text    : " << pd.Value << "\n";
 
 						for (int x = 0; x < pd.Options.size(); x++)
@@ -191,7 +191,7 @@ namespace Test
 						}
 
 						break;
-					case __ReportTypeXML:
+					case ReportType::XML:
 						std::wcout << L"      XML     : " << pd.Value << "\n";
 
 						for (int x = 0; x < pd.Options.size(); x++)
@@ -200,24 +200,24 @@ namespace Test
 						}
 
 						break;
-					case __ReportTypeXMLFullList:
+					case ReportType::XMLFullList:
 						std::wcout << L"      XML     : (file list)" << pd.Value << std::endl;
 						break;
 
-					case __ReportTypeTop20:
+					case ReportType::Top20:
 						std::wcout << L"      Top 20  : output to console" << std::endl;
 						break;
-					case __ReportTypeBottom20:
+					case ReportType::Bottom20:
 						std::wcout << L"      Bot 20  : output to console" << std::endl;
 						break;
-					case __ReportTypeNew20:
+					case ReportType::New20:
 						std::wcout << L"      New 20  : output to console" << std::endl;
 						break;
-					case __ReportTypeOld20:
+					case ReportType::Old20:
 						std::wcout << L"      Old 20  : output to console" << std::endl;
 						break;
 
-					case __ReportAll20:
+					case ReportType::All20:
 						std::wcout << L"      All 20  : outputs all 20 lists console" << std::endl;
 						break;
 					}

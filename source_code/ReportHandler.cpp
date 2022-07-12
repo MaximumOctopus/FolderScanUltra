@@ -41,17 +41,17 @@ namespace ReportHandler
 
 		for (int t = 1; t < GParameterHandler->Count(); t++)
 		{
-			int lReportType = GParameterHandler->IsReport(t);
+			ReportType report_type = GParameterHandler->IsReport(t);
 
-			if (lReportType != -1)
+			if (report_type != ReportType::Error)
 			{
-				ParameterDetails lParameterDetails = GParameterHandler->ParametersForReport(t, lReportType);
+				ParameterDetails lParameterDetails = GParameterHandler->ParametersForReport(t, report_type);
 
 				lParameterDetails.Value = Utility::ProcessFileName(lParameterDetails.Value);
 
 				switch (lParameterDetails.Type)
 				{
-				case __ReportTypeCSV:
+				case ReportType::CSV:
 				{
 					CSVReportOptions trOptions;
 
@@ -74,7 +74,7 @@ namespace ReportHandler
 
 					break;
 				}
-				case __ReportTypeHTML:
+				case ReportType::HTML:
 				{
 					HTMLReportOptions trOptions;
 
@@ -96,7 +96,7 @@ namespace ReportHandler
 
 					break;
 				}
-				case __ReportTypeSummary:
+				case ReportType::Summary:
 				{
 					ReportSummary::Generate();
 
@@ -104,7 +104,7 @@ namespace ReportHandler
 
 					break;
 				}
-				case __ReportTypeText:
+				case ReportType::Text:
 				{
 					TextReportOptions trOptions;
 
@@ -126,7 +126,7 @@ namespace ReportHandler
 
 					break;
 				}
-				case __ReportTypeXML:
+				case ReportType::XML:
 				{
 					XMLReportOptions trOptions;
 
@@ -143,7 +143,7 @@ namespace ReportHandler
 
 					break;
 				}
-				case __ReportTypeXMLFullList:
+				case ReportType::XMLFullList:
 				{
 					XMLReportOptions trOptions;
 
@@ -155,7 +155,7 @@ namespace ReportHandler
 
 					break;
 				}
-				case __ReportTypeXinorbis:
+				case ReportType::Xinorbis:
 				{
 					XinorbisReportOptions xrOptions;
 
@@ -168,7 +168,7 @@ namespace ReportHandler
 					break;
 				}
 
-				case __ReportTypeTop20:
+				case ReportType::Top20:
 				{
 					ReportSummary::Top20();
 
@@ -176,7 +176,7 @@ namespace ReportHandler
 
 					break;
 				}
-				case __ReportTypeBottom20:
+				case ReportType::Bottom20:
 				{
 					ReportSummary::Bottom20();
 
@@ -184,7 +184,7 @@ namespace ReportHandler
 
 					break;
 				}
-				case __ReportTypeNew20:
+				case ReportType::New20:
 				{
 					ReportSummary::New20();
 
@@ -192,7 +192,7 @@ namespace ReportHandler
 
 					break;
 				}
-				case __ReportTypeOld20:
+				case ReportType::Old20:
 				{
 					ReportSummary::Old20();
 
@@ -201,7 +201,7 @@ namespace ReportHandler
 					break;
 				}
 
-				case __ReportAll20:
+				case ReportType::All20:
 				{
 					ReportSummary::Top20();
 					ReportSummary::Bottom20();
@@ -213,7 +213,7 @@ namespace ReportHandler
 					break;
 				}
 
-				case __ReportTypeTextDeep:
+				case ReportType::TextDeep:
 				{
 					TextReportOptions trOptions;
 
@@ -238,7 +238,7 @@ namespace ReportHandler
 					break;
 				}
 
-				case __ReportTypeHTMLDeep:
+				case ReportType::HTMLDeep:
 				{
 					HTMLReportOptions trOptions;
 
@@ -263,7 +263,7 @@ namespace ReportHandler
 				}
 
 				default:
-					std::wcout << L"Unknown report type: " << lParameterDetails.Type << "\n" << std::endl;
+					std::wcout << L"Unknown report type \n\n";
 				}
 			}
 		}

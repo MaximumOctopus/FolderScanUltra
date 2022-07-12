@@ -44,9 +44,9 @@ bool FolderHistoryHandler::UpdateFolderHistoryFile()
 
 	std::wcout << L"    \\" + MD5 + L".xfh" << "\n";
 
-	std::wstring lFileName = GSystemGlobal->DataPath + L"FolderHistory\\" + WindowsUtility::GetComputerNetName() + L"\\" + MD5 + L".xfh";
+	std::wstring fileName = GSystemGlobal->DataPath + L"FolderHistory\\" + WindowsUtility::GetComputerNetName() + L"\\" + MD5 + L".xfh";
 
-	std::wofstream file(lFileName, std::ofstream::app);
+	std::wofstream file(fileName, std::ofstream::app);
 
 	file.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
 

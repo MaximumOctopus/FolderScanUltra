@@ -24,11 +24,11 @@
 LanguageHandler* GLanguageHandler;
 
 
-LanguageHandler::LanguageHandler(std::wstring folder, int language_index)
+LanguageHandler::LanguageHandler(std::wstring folder, LanguageType language_type)
 {
-	currentLanguage = language_index;
+	currentLanguage = language_type;
 
-    std::wstring fileName = folder + L"system\\languages\\" + GetLanguageSymbol(language_index) + L"\\language.txt";
+    std::wstring fileName = folder + L"system\\languages\\" + GetLanguageSymbol(language_type) + L"\\language.txt";
 
 	if (LoadLanguage(fileName))
 	{
@@ -209,35 +209,35 @@ void LanguageHandler::SetXDates()
 }
 
 
-std::wstring LanguageHandler::GetLanguageSymbol(int language_index)
+std::wstring LanguageHandler::GetLanguageSymbol(LanguageType language_type)
 {
-    switch (language_index)
+    switch (language_type)
     {
-        case __LanguageUK:
+		case LanguageType::UK:
             return L"uk";
-        case __LanguageNL:
+        case LanguageType::NL:
             return L"nl";
-        case __LanguageFR:
+        case LanguageType::FR:
             return L"fr";
-        case __LanguageDE:
+        case LanguageType::DE:
             return L"de";
-        case __LanguageIT:
+        case LanguageType::IT:
             return L"it";
-        case __LanguagePT:
+        case LanguageType::PT:
             return L"pt";
-        case __LanguageES:
+        case LanguageType::ES:
             return L"es";
-        case __LanguageSW:
+        case LanguageType::SW:
             return L"sw";
-        case __LanguageCZ:
+        case LanguageType::CZ:
             return L"cz";
-        case __LanguageHU:
+        case LanguageType::HU:
             return L"hu";
-        case __LanguageUS:
+        case LanguageType::US:
             return L"us";
-        case __LanguageRU:
+        case LanguageType::RU:
             return L"ru";
-        case __LanguageCAT:
+        case LanguageType::CAT:
             return L"cat";
 
         default:
@@ -250,31 +250,31 @@ std::wstring LanguageHandler::GetLanguageSymbol(void)
 {
 	switch (currentLanguage)
 	{
-	case 0:
+	case LanguageType::UK:
 		return L"English (UK)";
-	case 1:
+	case LanguageType::NL:
 		return L"Dutch";
-	case 2:
+	case LanguageType::FR:
 		return L"French";
-	case 3:
+	case LanguageType::DE:
 		return L"German";
-	case 4:
+	case LanguageType::IT:
 		return L"Italian";
-	case 5:
+	case LanguageType::PT:
 		return L"Portugese";
-	case 6:
+	case LanguageType::ES:
 		return L"Spanish";
-	case 7:
+	case LanguageType::SW:
 		return L"Swedish";
-	case 8:
+	case LanguageType::CZ:
 		return L"Czech";
-	case 9:
+	case LanguageType::HU:
 		return L"Hungarian";
-	case 10:
+	case LanguageType::US:
 		return L"English (US)";
-	case 11:
+	case LanguageType::RU:
 		return L"Russian";
-	case 12:
+	case LanguageType::CAT:
 		return L"lolcat";
 	
 	default:

@@ -17,12 +17,12 @@
 
 
 #ifdef _DEBUG
-static const std::wstring __FSUVersion = L"5.1.0 (debug)";
+static const std::wstring __FSUVersion = L"5.2.0 (debug)";
 #else
-static const std::wstring __FSUVersion = L"5.1.0";
+static const std::wstring __FSUVersion = L"5.2.0";
 #endif
 
-static const std::wstring __FSUDate    = L"June 14th 2022";
+static const std::wstring __FSUDate    = L"July 12th 2022";
 
 // ===========================================================================
 // == Scanning ===============================================================
@@ -101,20 +101,11 @@ static const int __FileType_Virtual = 20;
 // == Language ===============================================================
 // ===========================================================================
 
-static const int __LanguageUK        =  0;
-static const int __LanguageNL        =  1;
-static const int __LanguageFR        =  2;
-static const int __LanguageDE        =  3;
-static const int __LanguageIT        =  4;
-static const int __LanguagePT        =  5;
-static const int __LanguageES        =  6;
-static const int __LanguageSW        =  7;
-static const int __LanguageCZ        =  8;
-static const int __LanguageHU        =  9;
-static const int __LanguageUS        = 10;
-static const int __LanguageRU        = 11;
-static const int __LanguageCAT       = 12;
-static const int __LanguageUNDEFINED = 99;
+enum class LanguageType {
+	Undefined = 0, UK = 1, NL = 2, FR = 3, DE = 4, IT = 5, PT = 6,
+	ES = 7, SW = 8, CZ = 9, HU = 10, US = 11, RU = 12, CAT = 13
+};
+
 
 #pragma region languagetextconstants
 static const int  rsJan = 0;
@@ -906,49 +897,19 @@ static const int  rsDeepScan = 784;
 static const int  rsLanguageConstantsCount = 785;
 #pragma endregion
 
-static const int  __rsDateDD = 0;
-static const int  __rsDateMM = 1;
-static const int  __rsDateYYYY = 2;
-
 // ===========================================================================
 // == Parameter Types ========================================================
 // ===========================================================================
 
-static const int __ReportTypeCSV = 0;
-static const int __ReportTypeHTML = 1;
-static const int __ReportTypeSummary = 2;
-static const int __ReportTypeText = 3;
-static const int __ReportTypeXML = 4;
-static const int __ReportTypeXMLFullList = 5;
+enum class ReportType { Error = 0, CSV = 1, HTML = 2, Summary = 3, Text = 4, XML = 5, XMLFullList = 6, Top20 = 7, Bottom20 = 8, New20 = 9, Old20 = 10, All20 = 11, Xinorbis = 12, TextDeep = 13, HTMLDeep = 14 };
 
-static const int __ReportTypeTop20 = 6;
-static const int __ReportTypeBottom20 = 7;
-static const int __ReportTypeNew20 = 8;
-static const int __ReportTypeOld20 = 9;
-static const int __ReportAll20 = 10;
-static const int __ReportTypeXinorbis = 11;
-
-static const int __ReportTypeTextDeep = 12;
-static const int __ReportTypeHTMLDeep = 13;
-
-static const int __ReportFirst = __ReportTypeCSV;
-static const int __ReportLast  = __ReportTypeHTMLDeep;
-
-static const int __ReportTypeError = 99;
-
-static const bool __IsDateReport[14]     = { true, true, true, true, true, false, false, false, true, true, true, true, true, true };
-static const bool __IsFileDateReport[14] = { false, true, false, true, true, false, false, false, false, false, false, true, true, true };
-static const bool __IsSizeReport[14]     = { true, true, true, true, true, false, true, true, false, false, true, true, true, true };
+enum class ConsoleReport { None = 0, ListRoot = 1, Top10Folders = 2};
 
 // ===========================================================================
 // == System =================================================================
 // ===========================================================================
 
-static const int __GETTIMEFORMAT_DISPLAY  = 0;
-static const int __GETTIMEFORMAT_FILE     = 1;
-static const int __GETTIMEFORMAT_YYYYMMDD = 2;
-static const int __GETTIMEFORMAT_SLASH    = 3;
-static const int __GETTIMEFORMAT_HHMM	  = 4;
+enum class DateTimeFormat { Display = 0, File = 1, YYYYMMDD = 2, Slash = 3, HHMM = 4};
 
 static const int __RootCount = 0;
 static const int __RootSize  = 1;

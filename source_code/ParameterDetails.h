@@ -15,10 +15,13 @@
 
 #include <string>
 
+#include "Constants.h"
+
 
 struct ParameterDetails
 {
-	int Type = 0;
+	ReportType Type = ReportType::Error;
+
 	std::wstring Value = L"";
 	std::wstring Options = L"";
 };

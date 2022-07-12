@@ -24,7 +24,15 @@ ReportDeep::ReportDeep()
 }
 
 
-void ReportDeep::ProcessFolder(int folder_index)
+void ReportDeep::Add(std::wstring folder, unsigned __int64 size, int file_count)
+{
+    SizeOfFolder sof = { folder, size, 0, file_count };
+
+    FolderData.push_back(sof);
+}
+
+
+bool ReportDeep::ProcessFolder(int folder_index)
 {
     FolderData.clear();
 
@@ -56,4 +64,11 @@ void ReportDeep::ProcessFolder(int folder_index)
             }
         }
 	}
+
+    if (FolderData.size() == 0)
+    {
+        return false;
+    }
+
+    return true;
 }
