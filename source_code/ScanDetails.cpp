@@ -588,11 +588,11 @@ void ScanDetails::AnalyseRootFolders()
 {
 	if (RootFolders.size() != 0)
 	{
-		std::sort(RootFolders.begin(), RootFolders.end(), sortRootByLength);
-
 		int SpecialRoot = RootIndex();
 
 		RootFolders[SpecialRoot].Name = L""; // enables correct sorting and folder size attribution
+
+		std::sort(RootFolders.begin(), RootFolders.end(), sortRootByLength);
 
 		for (int t = 0; t < Files.size(); t++)
 		{
