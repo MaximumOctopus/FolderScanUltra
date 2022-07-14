@@ -783,3 +783,4 @@ Warnin, dis scan haz contain virtual or offline filez
 Warnin, scan waz stopped before it haz completez
 Ignore virtual or offline folders
 Deep scan
+-- Temporary Files -------------------------------------------------------------
