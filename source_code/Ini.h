@@ -19,6 +19,7 @@
 class Ini
 {
 private:
+
 	bool LoadFile(std::wstring);
 
 public:

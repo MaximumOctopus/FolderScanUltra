@@ -85,7 +85,7 @@
     <ClInclude Include="DatabaseHandler.h" />
     <ClInclude Include="DatabaseODBC.h" />
     <ClInclude Include="DatabaseSQlite.h" />
-    <ClInclude Include="ErrorConstants.h" />
+    <ClInclude Include="StatusConstants.h" />
     <ClInclude Include="Errors.h" />
     <ClInclude Include="ExtensionSearch.h" />
     <ClInclude Include="FileDateObject.h" />

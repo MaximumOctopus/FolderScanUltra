@@ -38,6 +38,7 @@ namespace ReportHTML
 	void ReportTop101Oldest(std::wofstream &, HTMLReportOptions);
 	void ReportFileDates(std::wofstream &, HTMLReportOptions);
 	void ReportNullFiles(std::wofstream &, HTMLReportOptions);
+	void ReportTemporary(std::wofstream&);
 
 	std::wstring BuildMenuList(HTMLReportOptions);
 	void InsertSpacingTable(std::wofstream &);

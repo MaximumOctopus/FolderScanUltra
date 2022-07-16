@@ -9,21 +9,23 @@
 // 
 // 
 
+#include <algorithm>
+#include <iostream>
 
 #include "Constants.h"
 #include "help.h"
 #include "ParameterDetails.h"
 #include "ParameterHandler.h"
+#include "Settings.h"
 #include "SystemGlobal.h"
 #include "WindowsUtility.h"
-#include <algorithm>
-#include <iostream>
 
 
 ParameterHandler* GParameterHandler;
 
 
 extern SystemGlobal* GSystemGlobal;
+extern Settings* GSettings;
 
 
 ParameterHandler::ParameterHandler(int argc, wchar_t *argv[])
@@ -32,6 +34,8 @@ ParameterHandler::ParameterHandler(int argc, wchar_t *argv[])
     {
         parameters.push_back(argv[t]);
     } 
+
+	ProcessForOptimisations();
 }
 
 
@@ -90,21 +94,21 @@ bool ParameterHandler::FindParameter(std::wstring parameter)
 
 ParameterDetails ParameterHandler::ParameterInformation(int type)
 {
-	ParameterDetails lParameterDetails;
+	ParameterDetails parameter_details;
 
-	return lParameterDetails;
+	return parameter_details;
 }
 
 
 ReportType ParameterHandler::IsReport(int index)
 {
-	std::wstring lParameter(parameters[index]);
+	std::wstring parameter(parameters[index]);
 
-	std::transform(lParameter.begin(), lParameter.end(), lParameter.begin(), ::tolower);
+	std::transform(parameter.begin(), parameter.end(), parameter.begin(), ::tolower);
 
 	for (int r = 0; r < __reportParametersCount; r++)
 	{
-		if (lParameter.find(__reportParameters[r]) == 0)
+		if (parameter.find(__reportParameters[r]) == 0)
 		{
 			return __reportParameterTypes[r];
 		}
@@ -116,18 +120,18 @@ ReportType ParameterHandler::IsReport(int index)
 
 ParameterDetails ParameterHandler::ParametersForReport(int index, ReportType reportType)
 {
-	ParameterDetails lParameterDetails;
+	ParameterDetails parameter_details;
 
 	CreateTokens(parameters[index]);
 
-	lParameterDetails.Type  = reportType;
-	lParameterDetails.Value = DefaultFileName(reportType);
+	parameter_details.Type  = reportType;
+	parameter_details.Value = DefaultFileName(reportType);
 
-	if (lParameterDetails.Value != L"")
+	if (parameter_details.Value != L"")
 	{
 		std::wstring options = DefaultOptions(reportType);
 
-		lParameterDetails.Options = options;
+		parameter_details.Options = options;
 
 		switch (tokens.size())
 		{
@@ -135,13 +139,13 @@ ParameterDetails ParameterHandler::ParametersForReport(int index, ReportType rep
 		{
 			if (tokens[1].find(L"\\") != std::wstring::npos)
 			{
-				lParameterDetails.Value = tokens[1];
+				parameter_details.Value = tokens[1];
 			}
 			else
 			{
 				for (int t = 0; t < tokens[1].length(); t++)
 				{
-					lParameterDetails.Options[t] = tokens[1][t];
+					parameter_details.Options[t] = tokens[1][t];
 				}
 			}
 
@@ -150,20 +154,20 @@ ParameterDetails ParameterHandler::ParametersForReport(int index, ReportType rep
 		case 3:
 			for (int t = 0; t < tokens[1].length(); t++)
 			{
-				lParameterDetails.Options[t] = tokens[1][t];
+				parameter_details.Options[t] = tokens[1][t];
 			}
 
-			lParameterDetails.Value = tokens[2];
+			parameter_details.Value = tokens[2];
 
 			break;
 		}
 	}
 	else
 	{
-		lParameterDetails.Type = ReportType::Error;
+		parameter_details.Type = ReportType::Error;
 	}
 
-	return lParameterDetails;
+	return parameter_details;
 }
 
 
@@ -182,7 +186,6 @@ int ParameterHandler::GetParameterType(std::wstring parameter)
 
 	if (parameter.find(L"/deeptext") != std::wstring::npos) { return __parameterReportTextDeep; }
 	if (parameter.find(L"/deephtml") != std::wstring::npos) { return __parameterReportHTMLDeep; }
-
 
 	if (parameter.find(L"/sum") != std::wstring::npos) { return __parameterReportSummary; }
 	if (parameter.find(L"/top20") != std::wstring::npos) { return __parameterReportTop20; }
@@ -215,6 +218,30 @@ int ParameterHandler::GetParameterType(std::wstring parameter)
 	if (parameter.find(L"/o") != std::wstring::npos) { return 0x02; }
 
 	return __parameterInvalid;
+}
+
+
+void ParameterHandler::ProcessForOptimisations()
+{
+	for (int p = 0; p < parameters.size(); p++)
+	{
+		switch (GetParameterType(parameters[p]))
+		{
+		case __parameterReportCSV:
+		case __parameterReportText:
+		case __parameterReportHTML:
+		case __parameterReportXinorbis:
+		case __parameterReportXML:
+		case __parameterReportXMLFileList:
+		case __parameterReportTextDeep:
+		case __parameterReportHTMLDeep:
+		case __parameterDBUpdateScanHistory:
+			GSettings->Optimisations.UseFastAnalysis = false;
+			GSettings->Optimisations.GetUserDetails = true;
+
+			return;
+		}
+	}
 }
 
 
@@ -417,7 +444,7 @@ std::wstring ParameterHandler::DefaultOptions(ReportType report)
 		break;
 	case ReportType::HTML:
 	case ReportType::HTMLDeep:
-		return L"111111111120";
+		return L"1111111111120";
 		break;
 	case ReportType::Summary:
 		return L"1";
@@ -427,7 +454,7 @@ std::wstring ParameterHandler::DefaultOptions(ReportType report)
 		return L"11111111111";
 		break;
 	case ReportType::XML:
-		return L"0111111111";
+		return L"01111111111";
 		break;
 	case ReportType::XMLFullList:
 		return L"1";

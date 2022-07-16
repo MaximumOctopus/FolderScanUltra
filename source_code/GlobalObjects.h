@@ -13,9 +13,12 @@
 #pragma once
 
 
+#include "StatusConstants.h"
+
+
 namespace GlobalObjects
 {
-    int CreateGlobalObjects();
+    InitStatus CreateGlobalObjects();
 
     void FreeGlobalObjects();
 }

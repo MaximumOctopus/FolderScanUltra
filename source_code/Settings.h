@@ -64,6 +64,9 @@ struct OptimisationSettings
 	bool GetUserDetails = false;
 	
     int ProgressUpdate = 0;
+
+	// calculated optimisation settings based on user parameters
+	bool UseFastAnalysis = true;
 };
 
 
@@ -95,6 +98,7 @@ struct SystemSettings
 class Settings
 {
 private:
+
     HKEY hKey;
 
 	Ini* __iniFile;
@@ -112,11 +116,12 @@ private:
     bool ReadBoolFromSettings(std::wstring, std::wstring, bool);
 
 public:
+
     CustomSettings Custom;
     DatabaseSettings Database;
     GeneralSettings General;
     OptimisationSettings Optimisations;
-    ReportSettings Report;
+    ReportSettings Reports;
     SystemSettings System;
 
 	int FileCategoryColors[__FileCategoriesCount]; // 0 is a hack for "folders"

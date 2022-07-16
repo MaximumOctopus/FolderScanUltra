@@ -12,14 +12,5 @@
 
 #pragma once
 
-#include <string>
 
-
-static const int XMLReportOptionsCount = 11;
-
-
-struct XMLReportOptions
-{
-	std::wstring Filename = L"";
-	bool Layout[XMLReportOptionsCount] = { false };
-};
+enum class InitStatus { None = 0, Success = 1, InstallationCheckFailed = 1, ScanFolderDoesNotExist = 2, LanguageLoadFail = 3, SettingsLoadFail = 4 };

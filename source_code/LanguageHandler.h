@@ -33,6 +33,7 @@ private:
     std::wstring GetLanguageSymbol(LanguageType);
 
 public:
+
 	std::wstring ShortDays[7] = { L"Sun", L"Mon", L"Tue", L"Wed", L"Thu", L"Fri", L"Sat" };
 
 	bool LanguageLoadOK = false;
@@ -46,7 +47,7 @@ public:
 
 	std::wstring LanguageTypes[13];
 
-	std::wstring TextReport[19];
+	std::wstring TextReport[20];
 	std::wstring SummaryReport[15];
 	std::wstring DriveReport[11];
 	std::wstring GenericReportItems[17];

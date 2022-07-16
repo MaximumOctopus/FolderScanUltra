@@ -43,6 +43,7 @@ namespace ReportText
 	void ReportMagnitude(std::wofstream &);
 	void ReportExtensions(std::wofstream &, TextReportOptions);
 	void ReportNullFiles(std::wofstream &);
+	void ReportTemporaryFiles(std::wofstream&);
 	void ReportUsers(std::wofstream &);
 
 	void ReportLargestFiles(std::wofstream &);

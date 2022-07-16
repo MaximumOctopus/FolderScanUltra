@@ -65,16 +65,20 @@ const static ReportType __reportParameterTypes[__reportParametersCount] = { Repo
 class ParameterHandler
 {
 private:
+
     std::vector<std::wstring> parameters;
 	std::vector<std::wstring> tokens;
 
-	void ParameterHandler::CreateTokens(std::wstring);
+	void CreateTokens(std::wstring);
+
+	void ProcessForOptimisations();
 
 	bool IsDateReport(ReportType);
 	bool IsFileDateReport(ReportType);
 	bool IsSizeReport(ReportType);
 
 public:
+
     ParameterHandler(int argc, wchar_t *argv[]);
 
 	bool FindParameter(std::wstring);
@@ -99,8 +103,6 @@ public:
 	bool NeedToProcessTopSizeLists();
 	bool NeedToProcessTopDateLists();
 	bool NeedToProcessFileDates();
-
-	ConsoleReport IsConsoleReport();
 
 	bool HasScanFolder();
 };

@@ -31,4 +31,6 @@ namespace Help
 	void Stats();
 
 	void Cat();
+
+	void Header();
 }

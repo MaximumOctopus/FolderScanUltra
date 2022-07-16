@@ -15,11 +15,14 @@
 
 #include <string>
 
+#include "StatusConstants.h"
+
 
 class SystemGlobal
 {
 public:
-    int InitOkay = 0;
+
+    InitStatus Status = InitStatus::None;
 
     int DriveSpaceMax;
     int DriveSpaceFree;

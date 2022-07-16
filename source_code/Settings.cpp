@@ -249,17 +249,17 @@ bool Settings::LoadBasic()
 		// ===========================================================================
 		// ===========================================================================
 
-		Report.HTMLColours[0]  = ReadIntegerFromSettings(L"Prefs", L"Prefs_HTMLColour1" , 0x990000, -1);  // link normal
-		Report.HTMLColours[1]  = ReadIntegerFromSettings(L"Prefs", L"Prefs_HTMLColour2" , 0x000000, -1);  // link hover
-		Report.HTMLColours[2]  = ReadIntegerFromSettings(L"Prefs", L"Prefs_HTMLColour3",  0xFFFFFF, -1);  // background colour
-		Report.HTMLColours[3]  = ReadIntegerFromSettings(L"Prefs", L"Prefs_HTMLColour4",  0x990000, -1);  // text colour
-		Report.HTMLColours[4]  = ReadIntegerFromSettings(L"Prefs", L"Prefs_HTMLColour5",  0x0000FF, -1);  // bargraph colour
-		Report.HTMLColours[5]  = ReadIntegerFromSettings(L"Prefs", L"Prefs_HTMLColour6",  0xFF9900, -1);  // table background
-		Report.HTMLColours[6]  = ReadIntegerFromSettings(L"Prefs", L"Prefs_HTMLColour7",  0xFFFFFF, -1);  // table colour1
-		Report.HTMLColours[7]  = ReadIntegerFromSettings(L"Prefs", L"Prefs_HTMLColour8",  0x000000, -1);  // table colour2
-		Report.HTMLColours[8]  = ReadIntegerFromSettings(L"Prefs", L"Prefs_HTMLColour9",  0xFFFFFF, -1);  // graph background
-		Report.HTMLColours[9]  = ReadIntegerFromSettings(L"Prefs", L"Prefs_HTMLColour10", 0xDDDDDD, -1);  // table body background
-		Report.HTMLColours[10] = ReadIntegerFromSettings(L"Prefs", L"Prefs_HTMLColour11", 0xCCCCCC, -1);  // table body background II
+		Reports.HTMLColours[0]  = ReadIntegerFromSettings(L"Prefs", L"Prefs_HTMLColour1" , 0x990000, -1);  // link normal
+		Reports.HTMLColours[1]  = ReadIntegerFromSettings(L"Prefs", L"Prefs_HTMLColour2" , 0x000000, -1);  // link hover
+		Reports.HTMLColours[2]  = ReadIntegerFromSettings(L"Prefs", L"Prefs_HTMLColour3",  0xFFFFFF, -1);  // background colour
+		Reports.HTMLColours[3]  = ReadIntegerFromSettings(L"Prefs", L"Prefs_HTMLColour4",  0x990000, -1);  // text colour
+		Reports.HTMLColours[4]  = ReadIntegerFromSettings(L"Prefs", L"Prefs_HTMLColour5",  0x0000FF, -1);  // bargraph colour
+		Reports.HTMLColours[5]  = ReadIntegerFromSettings(L"Prefs", L"Prefs_HTMLColour6",  0xFF9900, -1);  // table background
+		Reports.HTMLColours[6]  = ReadIntegerFromSettings(L"Prefs", L"Prefs_HTMLColour7",  0xFFFFFF, -1);  // table colour1
+		Reports.HTMLColours[7]  = ReadIntegerFromSettings(L"Prefs", L"Prefs_HTMLColour8",  0x000000, -1);  // table colour2
+		Reports.HTMLColours[8]  = ReadIntegerFromSettings(L"Prefs", L"Prefs_HTMLColour9",  0xFFFFFF, -1);  // graph background
+		Reports.HTMLColours[9]  = ReadIntegerFromSettings(L"Prefs", L"Prefs_HTMLColour10", 0xDDDDDD, -1);  // table body background
+		Reports.HTMLColours[10] = ReadIntegerFromSettings(L"Prefs", L"Prefs_HTMLColour11", 0xCCCCCC, -1);  // table body background II
 
 		// ===========================================================================
 		// ==                                                                       ==
@@ -267,7 +267,7 @@ bool Settings::LoadBasic()
 
 		Optimisations.ProgressUpdate = ReadIntegerFromSettingsInputCheck(L"Prefs", L"ProgressUpdate", 1, 0, 5);
 
-		Optimisations.GetUserDetails = true;// ReadBoolFromSettings(L"Prefs", L"GetUserDetails", true);
+		Optimisations.GetUserDetails = ReadBoolFromSettings(L"Prefs", L"GetUserDetails", false);
 
 		// ===========================================================================
 		// ==                                                                       ==
@@ -290,17 +290,17 @@ bool Settings::LoadBasic()
 	{
 		// ===========================================================================
 
-		Report.HTMLColours[0]  = 0x990000;  // link normal
-		Report.HTMLColours[1]  = 0x000000;  // link hover
-		Report.HTMLColours[2]  = 0xFFFFFF;  // background colour
-		Report.HTMLColours[3]  = 0x990000;  // text colour
-		Report.HTMLColours[4]  = 0x0000FF;  // bargraph colour
-		Report.HTMLColours[5]  = 0xFF9900;  // table background
-		Report.HTMLColours[6]  = 0xFFFFFF;  // table colour1
-		Report.HTMLColours[7]  = 0x000000;  // table colour2
-		Report.HTMLColours[8]  = 0xFFFFFF;  // graph background
-		Report.HTMLColours[9]  = 0xDDDDDD;  // table body background
-		Report.HTMLColours[10] = 0xCCCCCC;  // table body background II
+		Reports.HTMLColours[0]  = 0x990000;  // link normal
+		Reports.HTMLColours[1]  = 0x000000;  // link hover
+		Reports.HTMLColours[2]  = 0xFFFFFF;  // background colour
+		Reports.HTMLColours[3]  = 0x990000;  // text colour
+		Reports.HTMLColours[4]  = 0x0000FF;  // bargraph colour
+		Reports.HTMLColours[5]  = 0xFF9900;  // table background
+		Reports.HTMLColours[6]  = 0xFFFFFF;  // table colour1
+		Reports.HTMLColours[7]  = 0x000000;  // table colour2
+		Reports.HTMLColours[8]  = 0xFFFFFF;  // graph background
+		Reports.HTMLColours[9]  = 0xDDDDDD;  // table body background
+		Reports.HTMLColours[10] = 0xCCCCCC;  // table body background II
 
 		FileCategoryColors[0]  = 0x00FFFFFF; // for folders
 
@@ -313,7 +313,7 @@ bool Settings::LoadBasic()
 
 		Optimisations.ProgressUpdate = 1;
 
-		Optimisations.GetUserDetails = true;
+		Optimisations.GetUserDetails = false;
 
 		// ===========================================================================
 

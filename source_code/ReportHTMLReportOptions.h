@@ -17,7 +17,7 @@
 #include <string>
 
 
-static const int __HTMLLayoutOptionsCount = 10;
+static const int __HTMLLayoutOptionsCount = 11;
 
 
 struct HTMLReportOptions

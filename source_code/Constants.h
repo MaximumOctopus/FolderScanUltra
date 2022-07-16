@@ -17,12 +17,12 @@
 
 
 #ifdef _DEBUG
-static const std::wstring __FSUVersion = L"5.2.0 (debug)";
+static const std::wstring __FSUVersion = L"5.3.0 (debug)";
 #else
-static const std::wstring __FSUVersion = L"5.2.0";
+static const std::wstring __FSUVersion = L"5.3.0";
 #endif
 
-static const std::wstring __FSUDate    = L"July 12th 2022";
+static const std::wstring __FSUDate    = L"July 16th 2022";
 
 // ===========================================================================
 // == Scanning ===============================================================
@@ -893,8 +893,9 @@ static const int  rsReportContainsVirtualFiles = 781;
 static const int  rsScanStoppedBeforeComplete = 782;
 static const int  rsIgnoreVirtualFolders = 783;
 static const int  rsDeepScan = 784;
+static const int  rsTextReport20 = 785;
 
-static const int  rsLanguageConstantsCount = 785;
+static const int  rsLanguageConstantsCount = 786;
 #pragma endregion
 
 // ===========================================================================

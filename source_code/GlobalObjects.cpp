@@ -10,15 +10,16 @@
 // 
 
 
-#include "ErrorConstants.h"
+#include <iostream>
+
 #include "FileExtensionHandler.h"
 #include "LanguageHandler.h"
 #include "ParameterHandler.h"
 #include "ScanDetails.h"
+#include "StatusConstants.h"
 #include "SystemGlobal.h"
 #include "Settings.h"
 #include "WindowsUtility.h"
-#include <iostream>
 
 
 extern FileExtensionHandler* GFileExtensionHandler;
@@ -31,9 +32,9 @@ extern SystemGlobal* GSystemGlobal;
 
 namespace GlobalObjects
 {
-    int CreateGlobalObjects()
+    InitStatus CreateGlobalObjects()
     {
-		int errorStatus;
+		InitStatus errorStatus;
 
 		GSettings = new Settings();
 
@@ -52,16 +53,16 @@ namespace GlobalObjects
 					std::cout.setstate(std::ios_base::failbit);
 				}
 
-				return __ErrorSuccess;
+				return InitStatus::Success;
 			}
 			else
 			{
-				errorStatus = __ErrorLanguageLoadFail;
+				errorStatus = InitStatus::LanguageLoadFail;
 			}
 		}
 		else
 		{
-			errorStatus = __ErrorSettingsLoadFail;
+			errorStatus = InitStatus::SettingsLoadFail;
 		}
 
 		return errorStatus;

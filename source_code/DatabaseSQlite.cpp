@@ -151,24 +151,24 @@ bool DatabaseSQlite::PopulateFileTable(std::wstring table_name)
 
 	sqlite3_stmt* stmt;
 
-	for (int t = 0; t < GScanDetails->Folders.size(); t++)
+	for (int t = 0; t < GScanDetails->Data.Folders.size(); t++)
 	{
-		sql = stem +	L"\"" + GScanDetails->Folders[GScanDetails->Files[t].FilePathIndex] + L"\", " +
-						std::to_wstring(GScanDetails->Files[t].FilePathIndex) + L", " +
-						L"\"" + GScanDetails->Files[t].FileName + L"\", " +
-						std::to_wstring(GScanDetails->Files[t].Size) + L", " +
-						std::to_wstring(GScanDetails->Files[t].SizeOnDisk) + L", " +
-						std::to_wstring(GScanDetails->Files[t].FileDateC) + L", " +
-						std::to_wstring(GScanDetails->Files[t].FileDateA) + L", " +
-						std::to_wstring(GScanDetails->Files[t].FileDateM) + L", " +
-						std::to_wstring(GScanDetails->Files[t].Category) + L", " +
-						Convert::AttributeToIntAsString(GScanDetails->Files[t].Attributes, FILE_ATTRIBUTE_DIRECTORY) + L", " +
-						Convert::AttributeToIntAsString(GScanDetails->Files[t].Attributes, FILE_ATTRIBUTE_READONLY) + L", " +
-						Convert::AttributeToIntAsString(GScanDetails->Files[t].Attributes, FILE_ATTRIBUTE_HIDDEN) + L", " +
-						Convert::AttributeToIntAsString(GScanDetails->Files[t].Attributes, FILE_ATTRIBUTE_SYSTEM) + L", " +
-						Convert::AttributeToIntAsString(GScanDetails->Files[t].Attributes, FILE_ATTRIBUTE_ARCHIVE) + L", " +
-						Convert::BoolToString(GScanDetails->Files[t].Temp) + L", " +
-						L"\"" + GScanDetails->Users[GScanDetails->Files[t].Owner].Name + L"\");";
+		sql = stem +	L"\"" + GScanDetails->Data.Folders[GScanDetails->Data.Files[t].FilePathIndex] + L"\", " +
+						std::to_wstring(GScanDetails->Data.Files[t].FilePathIndex) + L", " +
+						L"\"" + GScanDetails->Data.Files[t].FileName + L"\", " +
+						std::to_wstring(GScanDetails->Data.Files[t].Size) + L", " +
+						std::to_wstring(GScanDetails->Data.Files[t].SizeOnDisk) + L", " +
+						std::to_wstring(GScanDetails->Data.Files[t].FileDateC) + L", " +
+						std::to_wstring(GScanDetails->Data.Files[t].FileDateA) + L", " +
+						std::to_wstring(GScanDetails->Data.Files[t].FileDateM) + L", " +
+						std::to_wstring(GScanDetails->Data.Files[t].Category) + L", " +
+						Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_DIRECTORY) + L", " +
+						Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_READONLY) + L", " +
+						Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_HIDDEN) + L", " +
+						Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_SYSTEM) + L", " +
+						Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_ARCHIVE) + L", " +
+						Convert::BoolToString(GScanDetails->Data.Files[t].Temp) + L", " +
+						L"\"" + GScanDetails->Data.Users[GScanDetails->Data.Files[t].Owner].Name + L"\");";
 
 		int rc = sqlite3_prepare16_v2(db, sql.c_str(), -1, &stmt, NULL);
 
@@ -205,9 +205,9 @@ bool DatabaseSQlite::PopulateFolderTable(std::wstring table_name)
 
 	sqlite3_stmt* stmt;
 
-	for (int t = 0; t < GScanDetails->Folders.size(); t++)
+	for (int t = 0; t < GScanDetails->Data.Folders.size(); t++)
 	{
-		sql = stem + GScanDetails->Folders[t] + L"\");";
+		sql = stem + GScanDetails->Data.Folders[t] + L"\");";
 
 		int rc = sqlite3_prepare16_v2(db, sql.c_str(), -1, &stmt, NULL);
 
@@ -334,24 +334,24 @@ bool DatabaseSQlite::PopulateDataTable(std::wstring table_name)
 
 	sqlite3_stmt* stmt;
 
-	for (int t = 0; t < GScanDetails->Folders.size(); t++)
+	for (int t = 0; t < GScanDetails->Data.Folders.size(); t++)
 	{
-		sql = stem + L"\"" + GScanDetails->Folders[GScanDetails->Files[t].FilePathIndex] + L"\", " +
-			L"\"" + GScanDetails->Files[t].FileName + L"\", " +
-			std::to_wstring(GScanDetails->Files[t].Size) + L", " +
-			std::to_wstring(GScanDetails->Files[t].SizeOnDisk) + L", " +
-			std::to_wstring(GScanDetails->Files[t].FileDateC) + L", " +
-			std::to_wstring(GScanDetails->Files[t].FileDateA) + L", " +
-			std::to_wstring(GScanDetails->Files[t].FileDateM) + L", " +
-			std::to_wstring(GScanDetails->Files[t].Category) + L", " +
-			Convert::AttributeToIntAsString(GScanDetails->Files[t].Attributes, FILE_ATTRIBUTE_DIRECTORY) + L", " +
-			Convert::AttributeToIntAsString(GScanDetails->Files[t].Attributes, FILE_ATTRIBUTE_READONLY) + L", " +
-			Convert::AttributeToIntAsString(GScanDetails->Files[t].Attributes, FILE_ATTRIBUTE_HIDDEN) + L", " +
-			Convert::AttributeToIntAsString(GScanDetails->Files[t].Attributes, FILE_ATTRIBUTE_SYSTEM) + L", " +
-			Convert::AttributeToIntAsString(GScanDetails->Files[t].Attributes, FILE_ATTRIBUTE_ARCHIVE) + L", " +
-			Convert::BoolToString(GScanDetails->Files[t].Temp) + L", " +
-			L"\"" + GScanDetails->Users[GScanDetails->Files[t].Owner].Name + L"\", " +
-			GScanDetails->ScanDateInt + L");";
+		sql = stem + L"\"" + GScanDetails->Data.Folders[GScanDetails->Data.Files[t].FilePathIndex] + L"\", " +
+			L"\"" + GScanDetails->Data.Files[t].FileName + L"\", " +
+			std::to_wstring(GScanDetails->Data.Files[t].Size) + L", " +
+			std::to_wstring(GScanDetails->Data.Files[t].SizeOnDisk) + L", " +
+			std::to_wstring(GScanDetails->Data.Files[t].FileDateC) + L", " +
+			std::to_wstring(GScanDetails->Data.Files[t].FileDateA) + L", " +
+			std::to_wstring(GScanDetails->Data.Files[t].FileDateM) + L", " +
+			std::to_wstring(GScanDetails->Data.Files[t].Category) + L", " +
+			Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_DIRECTORY) + L", " +
+			Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_READONLY) + L", " +
+			Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_HIDDEN) + L", " +
+			Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_SYSTEM) + L", " +
+			Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_ARCHIVE) + L", " +
+			Convert::BoolToString(GScanDetails->Data.Files[t].Temp) + L", " +
+			L"\"" + GScanDetails->Data.Users[GScanDetails->Data.Files[t].Owner].Name + L"\", " +
+			GScanDetails->Path.DateInt + L");";
 
 		int rc = sqlite3_prepare16_v2(db, sql.c_str(), -1, &stmt, NULL);
 
@@ -388,15 +388,15 @@ bool DatabaseSQlite::PopulateSystemTable(std::wstring table_name, std::wstring d
 
 	sqlite3_stmt* stmt;
 
-	for (int t = 0; t < GScanDetails->Folders.size(); t++)
+	for (int t = 0; t < GScanDetails->Data.Folders.size(); t++)
 	{
 		sql = stem + L"\"" + data_table_name + L"\", " +
-			L"\"" + GScanDetails->ScanPath + L"\", " +
-			L"\"" + Convert::ConvertToUsefulUnit(GScanDetails->TotalSize) + L"\", " +
-			std::to_wstring(GScanDetails->TotalSize) + L", " +
-			std::to_wstring(GScanDetails->FileCount) + L", " +
-			std::to_wstring(GScanDetails->FolderCount) + L", " +
-			GScanDetails->ScanDateInt + L");";
+			L"\"" + GScanDetails->Path.String + L"\", " +
+			L"\"" + Convert::ConvertToUsefulUnit(GScanDetails->Data.TotalSize) + L"\", " +
+			std::to_wstring(GScanDetails->Data.TotalSize) + L", " +
+			std::to_wstring(GScanDetails->Data.FileCount) + L", " +
+			std::to_wstring(GScanDetails->Data.FolderCount) + L", " +
+			GScanDetails->Path.DateInt + L");";
 			
 		int rc = sqlite3_prepare16_v2(db, sql.c_str(), -1, &stmt, NULL);
 

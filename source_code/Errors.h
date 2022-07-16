@@ -15,10 +15,12 @@
 
 #include <string>
 
+#include "StatusConstants.h"
+
 
 namespace ErrorHandler
 {
-	std::wstring GetErrorString(int);
+	std::wstring GetErrorString(InitStatus);
 
-	void OutputErrorConsole(int);
+	void OutputErrorConsole(InitStatus);
 }

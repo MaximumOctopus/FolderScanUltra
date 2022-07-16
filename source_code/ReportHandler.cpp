@@ -45,23 +45,23 @@ namespace ReportHandler
 
 			if (report_type != ReportType::Error)
 			{
-				ParameterDetails lParameterDetails = GParameterHandler->ParametersForReport(t, report_type);
+				ParameterDetails parameter_details = GParameterHandler->ParametersForReport(t, report_type);
 
-				lParameterDetails.Value = Utility::ProcessFileName(lParameterDetails.Value);
+				parameter_details.Value = Utility::ProcessFileName(parameter_details.Value);
 
-				switch (lParameterDetails.Type)
+				switch (parameter_details.Type)
 				{
 				case ReportType::CSV:
 				{
 					CSVReportOptions trOptions;
 
-					trOptions.Filename = lParameterDetails.Value;
+					trOptions.Filename = parameter_details.Value;
 					trOptions.Category = -1;
 					trOptions.Separator = 0; // comma
-					trOptions.Titles = Utility::StringToBool(lParameterDetails.Options[1]);
-					trOptions.Units = Utility::OptionToInt(lParameterDetails.Options[2]);
+					trOptions.Titles = Utility::StringToBool(parameter_details.Options[1]);
+					trOptions.Units = Utility::OptionToInt(parameter_details.Options[2]);
 
-					if (lParameterDetails.Options[0] == L'0')
+					if (parameter_details.Options[0] == L'0')
 					{
 						ReportCSV::Summary(trOptions);
 					}
@@ -78,16 +78,16 @@ namespace ReportHandler
 				{
 					HTMLReportOptions trOptions;
 
-					trOptions.Filename = lParameterDetails.Value;
+					trOptions.Filename = parameter_details.Value;
 					trOptions.Align = L"right";
-					trOptions.LayoutSize = Utility::OptionToInt(lParameterDetails.Options[10]);
-					trOptions.Units = Utility::OptionToInt(lParameterDetails.Options[11]);
+					trOptions.LayoutSize = Utility::OptionToInt(parameter_details.Options[11]);
+					trOptions.Units = Utility::OptionToInt(parameter_details.Options[12]);
 
 					trOptions.Layout[0] = true; // header always visible
 
 					for (int t = 1; t < __HTMLLayoutOptionsCount; t++)
 					{
-						trOptions.Layout[t] = Utility::StringToBool(lParameterDetails.Options[t]);
+						trOptions.Layout[t] = Utility::StringToBool(parameter_details.Options[t]);
 					}
 
 					ReportHTML::GenerateReport(trOptions);
@@ -108,11 +108,11 @@ namespace ReportHandler
 				{
 					TextReportOptions trOptions;
 
-					trOptions.Filename = lParameterDetails.Value;
+					trOptions.Filename = parameter_details.Value;
 
 					for (int t = 0; t < __TextReportOptionsCount; t++)
 					{
-						trOptions.Layout[t] = Utility::StringToBool(lParameterDetails.Options[t]);
+						trOptions.Layout[t] = Utility::StringToBool(parameter_details.Options[t]);
 					}
 
 					for (int t = 0; t < __FileCategoriesCount; t++)
@@ -130,11 +130,11 @@ namespace ReportHandler
 				{
 					XMLReportOptions trOptions;
 
-					trOptions.Filename = lParameterDetails.Value;
+					trOptions.Filename = parameter_details.Value;
 
 					for (int t = 0; t < XMLReportOptionsCount; t++)
 					{
-						trOptions.Layout[t] = Utility::StringToBool(lParameterDetails.Options[t]);
+						trOptions.Layout[t] = Utility::StringToBool(parameter_details.Options[t]);
 					}
 
 					ReportXML::Summary(trOptions);
@@ -147,7 +147,7 @@ namespace ReportHandler
 				{
 					XMLReportOptions trOptions;
 
-					trOptions.Filename = lParameterDetails.Value;
+					trOptions.Filename = parameter_details.Value;
 
 					ReportXML::FullList(trOptions);
 
@@ -159,7 +159,7 @@ namespace ReportHandler
 				{
 					XinorbisReportOptions xrOptions;
 
-					xrOptions.Filename = lParameterDetails.Value;
+					xrOptions.Filename = parameter_details.Value;
 
 					ReportXinorbis::GenerateXinorbisReport(xrOptions);
 
@@ -217,11 +217,11 @@ namespace ReportHandler
 				{
 					TextReportOptions trOptions;
 
-					trOptions.Filename = lParameterDetails.Value;
+					trOptions.Filename = parameter_details.Value;
 
 					for (int t = 0; t < __TextReportOptionsCount; t++)
 					{
-						trOptions.Layout[t] = Utility::StringToBool(lParameterDetails.Options[t]);
+						trOptions.Layout[t] = Utility::StringToBool(parameter_details.Options[t]);
 					}
 
 					for (int t = 0; t < __FileCategoriesCount; t++)
@@ -242,17 +242,17 @@ namespace ReportHandler
 				{
 					HTMLReportOptions trOptions;
 
-					trOptions.Filename = lParameterDetails.Value;
+					trOptions.Filename = parameter_details.Value;
 					trOptions.Align = L"right";
-					trOptions.LayoutSize = Utility::OptionToInt(lParameterDetails.Options[10]);
-					trOptions.Units = Utility::OptionToInt(lParameterDetails.Options[11]);
+					trOptions.LayoutSize = Utility::OptionToInt(parameter_details.Options[11]);
+					trOptions.Units = Utility::OptionToInt(parameter_details.Options[12]);
 					trOptions.DeepScan = true;
 
 					trOptions.Layout[0] = true;
 
 					for (int t = 1; t < __HTMLLayoutOptionsCount; t++)
 					{
-						trOptions.Layout[t] = Utility::StringToBool(lParameterDetails.Options[t]);
+						trOptions.Layout[t] = Utility::StringToBool(parameter_details.Options[t]);
 					}
 
 					ReportHTML::GenerateReport(trOptions);

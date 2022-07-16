@@ -10,28 +10,28 @@
 // 
 
 
-#include "Errors.h"
-#include "ErrorConstants.h"
 #include <string>
 #include <iostream>
+
+#include "StatusConstants.h"
 
 
 namespace ErrorHandler
 {
-	std::wstring GetErrorString(int error_ID)
+	std::wstring GetErrorString(InitStatus status)
 	{
-		switch (error_ID)
+		switch (status)
 		{
-		case __ErrorScanFolderDoesNotExist:
-			return L"Folder does not exist.";
-			break;
-		case __ErrorInstallationCheckFailed:
+		case InitStatus::InstallationCheckFailed:
 			return L"Installation check failed.";
 			break;
-		case __ErrorLanguageLoadFail:
+		case InitStatus::ScanFolderDoesNotExist:
+			return L"Folder does not exist.";
+			break;
+		case InitStatus::LanguageLoadFail:
 			return L"LanguageHandler failed to load language file!";
 			break;
-		case __ErrorSettingsLoadFail:
+		case InitStatus::SettingsLoadFail:
 			return L"Settings load failed";
 			break;
 
@@ -42,10 +42,10 @@ namespace ErrorHandler
 	}
 
 
-	void OutputErrorConsole(int error_ID)
+	void OutputErrorConsole(InitStatus status)
 	{
 		std::wcout << L"" << "\n";
-		std::wcout << GetErrorString(error_ID) << "\n";
+		std::wcout << GetErrorString(status) << "\n";
 		std::wcout << L"" << std::endl;
 	}
 }

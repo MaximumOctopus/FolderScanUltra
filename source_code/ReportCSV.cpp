@@ -64,17 +64,17 @@ namespace ReportCSV
 			{
 				lOutput = GLanguageHandler->TypeDescriptions[t] + separator +
 
-						  std::to_wstring(GScanDetails->ExtensionSpread[t][0]) + separator +
+						  std::to_wstring(GScanDetails->Data.ExtensionSpread[t][0]) + separator +
 
-						  std::to_wstring(std::round(((double)GScanDetails->ExtensionSpread[t][0] / (double)GScanDetails->FileCount) * 100)) + L"\"" + separator +
+						  std::to_wstring(std::round(((double)GScanDetails->Data.ExtensionSpread[t][0] / (double)GScanDetails->Data.FileCount) * 100)) + L"\"" + separator +
 
-						  Convert::GetSizeString(options.Units, GScanDetails->ExtensionSpread[t][__esSize]) + L"\"" + separator +
+						  Convert::GetSizeString(options.Units, GScanDetails->Data.ExtensionSpread[t][__esSize]) + L"\"" + separator +
 
-						  std::to_wstring(GScanDetails->ExtensionSpread[t][__esSize]) + L"\"" + separator;
+						  std::to_wstring(GScanDetails->Data.ExtensionSpread[t][__esSize]) + L"\"" + separator;
 
-				if (GScanDetails->TotalSize != 0)
+				if (GScanDetails->Data.TotalSize != 0)
 				{
-					lOutput += L"\"" + std::to_wstring(std::round(((double)GScanDetails->ExtensionSpread[t][__esSize] / (double)GScanDetails->TotalSize) * 100)) + L"\"";
+					lOutput += L"\"" + std::to_wstring(std::round(((double)GScanDetails->Data.ExtensionSpread[t][__esSize] / (double)GScanDetails->Data.TotalSize) * 100)) + L"\"";
 				}
 				else
 				{
@@ -136,7 +136,7 @@ namespace ReportCSV
 			
 			std::transform(ucFolder.begin(), ucFolder.end(), ucFolder.begin(), ::towupper);
 
-			for (int t = 0; t < GScanDetails->Files.size(); t++)
+			for (int t = 0; t < GScanDetails->Data.Files.size(); t++)
 			{
 				bool AddToFile = false;
 
@@ -146,7 +146,7 @@ namespace ReportCSV
 				}
 				else
 				{
-					if (GScanDetails->Files[t].Category == options.Category)
+					if (GScanDetails->Data.Files[t].Category == options.Category)
 					{
 						AddToFile = true;
 					}
@@ -156,64 +156,64 @@ namespace ReportCSV
 				{ 
 					std::wstring lOutput;
 					
-					if (GScanDetails->Files[t].Attributes & FILE_ATTRIBUTE_DIRECTORY)
+					if (GScanDetails->Data.Files[t].Attributes & FILE_ATTRIBUTE_DIRECTORY)
 					{
 					
-						lOutput =	L"\"" + GScanDetails->Files[t].FileName + L"\"" + separator +
-									L"\"" + GScanDetails->Folders[GScanDetails->Files[t].FilePathIndex] +  GScanDetails->Files[t].FileName + L"\"" + separator +
+						lOutput =	L"\"" + GScanDetails->Data.Files[t].FileName + L"\"" + separator +
+									L"\"" + GScanDetails->Data.Folders[GScanDetails->Data.Files[t].FilePathIndex] +  GScanDetails->Data.Files[t].FileName + L"\"" + separator +
 
 									ucFolder + separator +
 									L"-1" + separator +
 									L"-1" + separator +
 
-									Convert::IntDateToString(GScanDetails->Files[t].FileDateC) + separator +
-									Convert::IntDateToString(GScanDetails->Files[t].FileDateA) + separator +
-									Convert::IntDateToString(GScanDetails->Files[t].FileDateM) + separator +
+									Convert::IntDateToString(GScanDetails->Data.Files[t].FileDateC) + separator +
+									Convert::IntDateToString(GScanDetails->Data.Files[t].FileDateA) + separator +
+									Convert::IntDateToString(GScanDetails->Data.Files[t].FileDateM) + separator +
 
-									std::to_wstring(GScanDetails->Files[t].FileTimeC) + separator +
-									std::to_wstring(GScanDetails->Files[t].FileTimeA) + separator +
-									std::to_wstring(GScanDetails->Files[t].FileTimeM) + separator +
+									std::to_wstring(GScanDetails->Data.Files[t].FileTimeC) + separator +
+									std::to_wstring(GScanDetails->Data.Files[t].FileTimeA) + separator +
+									std::to_wstring(GScanDetails->Data.Files[t].FileTimeM) + separator +
 
 									ucFolder + separator +
 
 									L"99" + separator +
 
-									GScanDetails->Users[GScanDetails->Files[t].Owner].Name + separator +
+									GScanDetails->Data.Users[GScanDetails->Data.Files[t].Owner].Name + separator +
 
-									Convert::AttributeToIntAsString(GScanDetails->Files[t].Attributes, FILE_ATTRIBUTE_READONLY) + separator +
-									Convert::AttributeToIntAsString(GScanDetails->Files[t].Attributes, FILE_ATTRIBUTE_HIDDEN) + separator +
-									Convert::AttributeToIntAsString(GScanDetails->Files[t].Attributes, FILE_ATTRIBUTE_SYSTEM) + separator +
-									Convert::AttributeToIntAsString(GScanDetails->Files[t].Attributes, FILE_ATTRIBUTE_ARCHIVE) + separator +
-									Convert::BoolToString(GScanDetails->Files[t].Temp);
+									Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_READONLY) + separator +
+									Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_HIDDEN) + separator +
+									Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_SYSTEM) + separator +
+									Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_ARCHIVE) + separator +
+									Convert::BoolToString(GScanDetails->Data.Files[t].Temp);
 					}
 					else
 					{
-						lOutput   = L"\"" + GScanDetails->Files[t].FileName + L"\"" + separator +
-									L"\"" + GScanDetails->Folders[GScanDetails->Files[t].FilePathIndex] + GScanDetails->Files[t].FileName + L"\"" + separator +
+						lOutput   = L"\"" + GScanDetails->Data.Files[t].FileName + L"\"" + separator +
+									L"\"" + GScanDetails->Data.Folders[GScanDetails->Data.Files[t].FilePathIndex] + GScanDetails->Data.Files[t].FileName + L"\"" + separator +
 
-									L"\"" + Convert::GetSizeString(options.Units, GScanDetails->Files[t].Size) + L"\"" + separator +
-									L"\"" + std::to_wstring(GScanDetails->Files[t].Size) + L"\"" + separator +
-									L"\"" + std::to_wstring(GScanDetails->Files[t].SizeOnDisk) + L"\"" + separator +
+									L"\"" + Convert::GetSizeString(options.Units, GScanDetails->Data.Files[t].Size) + L"\"" + separator +
+									L"\"" + std::to_wstring(GScanDetails->Data.Files[t].Size) + L"\"" + separator +
+									L"\"" + std::to_wstring(GScanDetails->Data.Files[t].SizeOnDisk) + L"\"" + separator +
 
-									Convert::IntDateToString(GScanDetails->Files[t].FileDateC) + separator +
-									Convert::IntDateToString(GScanDetails->Files[t].FileDateA) + separator +
-									Convert::IntDateToString(GScanDetails->Files[t].FileDateM) + separator +
+									Convert::IntDateToString(GScanDetails->Data.Files[t].FileDateC) + separator +
+									Convert::IntDateToString(GScanDetails->Data.Files[t].FileDateA) + separator +
+									Convert::IntDateToString(GScanDetails->Data.Files[t].FileDateM) + separator +
 
-									std::to_wstring(GScanDetails->Files[t].FileTimeC) + separator +
-									std::to_wstring(GScanDetails->Files[t].FileTimeA) + separator +
-									std::to_wstring(GScanDetails->Files[t].FileTimeM) + separator +
+									std::to_wstring(GScanDetails->Data.Files[t].FileTimeC) + separator +
+									std::to_wstring(GScanDetails->Data.Files[t].FileTimeA) + separator +
+									std::to_wstring(GScanDetails->Data.Files[t].FileTimeM) + separator +
 
-									GLanguageHandler->TypeDescriptions[GScanDetails->Files[t].Category] + separator +
+									GLanguageHandler->TypeDescriptions[GScanDetails->Data.Files[t].Category] + separator +
 
-									std::to_wstring(GScanDetails->Files[t].Category) + separator +
+									std::to_wstring(GScanDetails->Data.Files[t].Category) + separator +
 
-									GScanDetails->Users[GScanDetails->Files[t].Owner].Name + separator +
+									GScanDetails->Data.Users[GScanDetails->Data.Files[t].Owner].Name + separator +
 
-									Convert::AttributeToIntAsString(GScanDetails->Files[t].Attributes, FILE_ATTRIBUTE_READONLY) + separator +
-									Convert::AttributeToIntAsString(GScanDetails->Files[t].Attributes, FILE_ATTRIBUTE_HIDDEN) + separator +
-									Convert::AttributeToIntAsString(GScanDetails->Files[t].Attributes, FILE_ATTRIBUTE_SYSTEM) + separator +
-									Convert::AttributeToIntAsString(GScanDetails->Files[t].Attributes, FILE_ATTRIBUTE_ARCHIVE) + separator +
-									Convert::BoolToString(GScanDetails->Files[t].Temp);
+									Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_READONLY) + separator +
+									Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_HIDDEN) + separator +
+									Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_SYSTEM) + separator +
+									Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_ARCHIVE) + separator +
+									Convert::BoolToString(GScanDetails->Data.Files[t].Temp);
 					}
 
 					ofile << lOutput << std::endl;

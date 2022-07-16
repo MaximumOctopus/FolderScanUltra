@@ -42,10 +42,10 @@ namespace ReportXinorbis
 			ofile << L"{info" << "\n";
 			ofile << L"XReport2" << "\n";
 
-			ofile << GScanDetails->ScanPath << "\n";
-			ofile << GScanDetails->FolderCount << "\n";
-			ofile << GScanDetails->FileCount << "\n";
-			ofile << Convert::ConvertToUsefulUnit(GScanDetails->TotalSize) << "\n";
+			ofile << GScanDetails->Path.String << "\n";
+			ofile << GScanDetails->Data.FolderCount << "\n";
+			ofile << GScanDetails->Data.FileCount << "\n";
+			ofile << Convert::ConvertToUsefulUnit(GScanDetails->Data.TotalSize) << "\n";
 			ofile << Utility::GetDate(DateTimeFormat::Display) + L", " + Utility::GetTime(DateTimeFormat::Display) << std::endl;
 			ofile << 0 << "\n";
 
@@ -53,42 +53,42 @@ namespace ReportXinorbis
 
 			// ======================================================================================================================
 
-			if (GScanDetails->FolderCount != 0)
+			if (GScanDetails->Data.FolderCount != 0)
 			{
 				ofile << L"{folderlist" << "\n";
 
-				for (int t = 0; t < GScanDetails->Folders.size(); t++)
+				for (int t = 0; t < GScanDetails->Data.Folders.size(); t++)
 				{
-					ofile << GScanDetails->Folders[t] << "\n";
+					ofile << GScanDetails->Data.Folders[t] << "\n";
 				}
 
 				ofile << L"}" << std::endl;
 			}
 
-			if (GScanDetails->FileCount != 0)
+			if (GScanDetails->Data.FileCount != 0)
 			{
-				for (int t = 0; t < GScanDetails->Files.size(); t++)
+				for (int t = 0; t < GScanDetails->Data.Files.size(); t++)
 				{
 					ofile << L"{file" << "\n";
 
-					ofile << GScanDetails->Files[t].FileName << "\n";
-					ofile << GScanDetails->Files[t].FilePathIndex << "\n";
-					ofile << GScanDetails->Files[t].Size << "\n";
-					ofile << GScanDetails->Files[t].SizeOnDisk << "\n";
-					ofile << GScanDetails->Files[t].FileDateC << "\n";
-					ofile << GScanDetails->Files[t].FileDateA << "\n";
-					ofile << GScanDetails->Files[t].FileDateM << "\n";
-					ofile << GScanDetails->Files[t].FileTimeC << "\n";
-					ofile << GScanDetails->Files[t].FileTimeA << "\n";
-					ofile << GScanDetails->Files[t].FileTimeM << "\n";
-					ofile << GScanDetails->Files[t].Category << "\n";
-					ofile << (GScanDetails->Files[t].Attributes & FILE_ATTRIBUTE_READONLY) << "\n";
-					ofile << (GScanDetails->Files[t].Attributes & FILE_ATTRIBUTE_HIDDEN) << "\n";
-					ofile << (GScanDetails->Files[t].Attributes & FILE_ATTRIBUTE_SYSTEM) << "\n";
-					ofile << (GScanDetails->Files[t].Attributes & FILE_ATTRIBUTE_ARCHIVE) << "\n";
-					ofile << GScanDetails->Files[t].Temp << "\n";
-					ofile << GScanDetails->Users[GScanDetails->Files[t].Owner].Name << "\n";
-					ofile << GScanDetails->Files[t].Attributes << "\n";
+					ofile << GScanDetails->Data.Files[t].FileName << "\n";
+					ofile << GScanDetails->Data.Files[t].FilePathIndex << "\n";
+					ofile << GScanDetails->Data.Files[t].Size << "\n";
+					ofile << GScanDetails->Data.Files[t].SizeOnDisk << "\n";
+					ofile << GScanDetails->Data.Files[t].FileDateC << "\n";
+					ofile << GScanDetails->Data.Files[t].FileDateA << "\n";
+					ofile << GScanDetails->Data.Files[t].FileDateM << "\n";
+					ofile << GScanDetails->Data.Files[t].FileTimeC << "\n";
+					ofile << GScanDetails->Data.Files[t].FileTimeA << "\n";
+					ofile << GScanDetails->Data.Files[t].FileTimeM << "\n";
+					ofile << GScanDetails->Data.Files[t].Category << "\n";
+					ofile << (GScanDetails->Data.Files[t].Attributes & FILE_ATTRIBUTE_READONLY) << "\n";
+					ofile << (GScanDetails->Data.Files[t].Attributes & FILE_ATTRIBUTE_HIDDEN) << "\n";
+					ofile << (GScanDetails->Data.Files[t].Attributes & FILE_ATTRIBUTE_SYSTEM) << "\n";
+					ofile << (GScanDetails->Data.Files[t].Attributes & FILE_ATTRIBUTE_ARCHIVE) << "\n";
+					ofile << GScanDetails->Data.Files[t].Temp << "\n";
+					ofile << GScanDetails->Data.Users[GScanDetails->Data.Files[t].Owner].Name << "\n";
+					ofile << GScanDetails->Data.Files[t].Attributes << "\n";
 
 					ofile << L"}" << std::endl;
 				}

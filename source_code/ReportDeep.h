@@ -23,6 +23,7 @@
 class ReportDeep
 {
 public:
+
 	std::vector<SizeOfFolder> FolderData;
 
 	unsigned __int64 largestSize = 0;

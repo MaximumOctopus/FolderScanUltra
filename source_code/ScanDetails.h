@@ -45,48 +45,23 @@ struct Disk
 };
 
 
-class ScanDetails
+struct ScanData
 {
-private:
-	int CurrentFolderIndex;
-	std::wstring CurrentFolder;
-
-	int TodayAsInteger;
-
-	void PopulateDiskStat();
-
-	bool Analyse();
-	void AnalyseRootFolders();
-
-	void BuildFileDates();
-
-	void BuildTop100SizeLists();
-	void BuildTop100DateLists();
-
-	int RootIndex();
-
-public:
-	std::wstring ScanPath = L"";
-	std::wstring ScanDateStr = L"";
-	std::wstring ScanDateInt = L"";
-	
-	bool ScanPathSet = false;
-
-	bool AllowVirtualFiles = false;
-
-	std::chrono::system_clock::time_point StartTime;
-
 	int FileCount = 0;
 	int FolderCount = 0;
 	unsigned __int64 TotalSize = 0;
 	unsigned __int64 TotalSizeOD = 0;
 	unsigned __int64 AverageFileSize = 0;
 	float AverageFilesPerFolder = 0;
-	
-	Disk DiskStats;
+
+	unsigned __int64 Magnitude[__MagnitudesCount][2];
+	unsigned __int64 FileAttributes[__AttributesCount][2];
+	unsigned __int64 ExtensionSpread[__FileCategoriesCount][2];
 
 	std::vector<FileObject> Files;
 	std::vector<std::wstring> Folders;
+
+	std::vector<std::wstring> TemporaryFiles;
 
 	std::vector<std::wstring> NullFiles;
 	std::vector<std::wstring> NullFolders;
@@ -97,15 +72,57 @@ public:
 	std::vector<FileObject> Top100Oldest;
 
 	std::vector<FileDateObject> FileDates;
-		
+
 	std::vector<UserData> Users;
 
 	std::vector<FileObject> RootFiles;
 	std::vector<RootFolder> RootFolders;
+};
 
-	unsigned __int64 Magnitude[__MagnitudesCount][2];
-	unsigned __int64 FileAttributes[__AttributesCount][2];
-	unsigned __int64 ExtensionSpread[__FileCategoriesCount][2];
+
+struct ScanPath
+{
+	std::wstring String = L"";
+	std::wstring DateStr = L"";
+	std::wstring DateInt = L"";
+
+	bool Set = false;
+};
+
+
+class ScanDetails
+{
+private:
+
+	int CurrentFolderIndex = 0;
+	std::wstring CurrentFolder = L"";
+
+	int TodayAsInteger;
+
+	void PopulateDiskStat();
+
+	bool Analyse();
+	bool AnalyseFast();
+	void AnalyseRootFolders();
+
+	void BuildFileDates();
+
+	void BuildTop100SizeLists();
+	void BuildTop100DateLists();
+
+	int RootIndex();
+
+public:
+
+	ScanData Data;
+
+	ScanPath Path;
+
+	Disk DiskStats;
+
+	bool AllowVirtualFiles = false;
+
+	std::chrono::system_clock::time_point StartTime;	
 	
 	// ======================================================================
 
@@ -113,7 +130,7 @@ public:
 
 	void ClearData();
 
-	int ScanDetails::FindUser(std::wstring);
+	int FindUser(std::wstring);
 
 	bool Scan(bool, bool, bool, bool);
 

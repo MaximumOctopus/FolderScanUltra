@@ -10,14 +10,15 @@
 // 
 
 
-#include "ErrorConstants.h"
+#include <iostream>
+#include <string>
+
 #include "Ini.h"
 #include "ParameterHandler.h"
+#include "StatusConstants.h"
 #include "SystemGlobal.h"
 #include "Utility.h"
 #include "WindowsUtility.h"
-#include <iostream>
-#include <string>
 
 
 extern ParameterHandler* GParameterHandler;
@@ -42,7 +43,7 @@ void SystemGlobal::InitialiseXinorbis()
 
 	if (!InstallationCheck())
 	{
-		InitOkay = __ErrorInstallationCheckFailed;
+		Status = InitStatus::InstallationCheckFailed;
 	}
 } 
 

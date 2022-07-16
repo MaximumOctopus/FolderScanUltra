@@ -35,7 +35,7 @@ namespace ReportConsole
 	{
 		GScanDetails->SortRootBySize();
 
-		int count = GScanDetails->RootFolders.size();
+		int count = GScanDetails->Data.RootFolders.size();
 
 		if (count > max_rows)
 		{
@@ -51,14 +51,14 @@ namespace ReportConsole
 
 		for (int r = 0; r < count; r++)
 		{
-			std::wstring str = Formatting::AddTrailing(L' ' + GScanDetails->RootFolders[r].Name, TRDescriptionWidth, L' ') +
-				Formatting::AddLeading(std::to_wstring(GScanDetails->RootFolders[r].Data[__RootCount]), TRQuantityWidth, L' ') + L"  " +
-				Formatting::AddLeading(Convert::DoubleToPercent((double)GScanDetails->RootFolders[r].Data[__RootCount] / (double)GScanDetails->FileCount), TRAsPercentWidth, L' ') + L"  " +
-				Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->RootFolders[r].Data[__RootSize]), TRSizeWidth, L' ');
+			std::wstring str = Formatting::AddTrailing(L' ' + GScanDetails->Data.RootFolders[r].Name, TRDescriptionWidth, L' ') +
+				Formatting::AddLeading(std::to_wstring(GScanDetails->Data.RootFolders[r].Data[__RootCount]), TRQuantityWidth, L' ') + L"  " +
+				Formatting::AddLeading(Convert::DoubleToPercent((double)GScanDetails->Data.RootFolders[r].Data[__RootCount] / (double)GScanDetails->Data.FileCount), TRAsPercentWidth, L' ') + L"  " +
+				Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.RootFolders[r].Data[__RootSize]), TRSizeWidth, L' ');
 
-			if (GScanDetails->TotalSize != 0)
+			if (GScanDetails->Data.TotalSize != 0)
 			{
-				str += Formatting::AddLeading(Convert::DoubleToPercent((double)GScanDetails->RootFolders[r].Data[__RootSize] / (double)GScanDetails->TotalSize), TRAsPercentWidth, L' ');
+				str += Formatting::AddLeading(Convert::DoubleToPercent((double)GScanDetails->Data.RootFolders[r].Data[__RootSize] / (double)GScanDetails->Data.TotalSize), TRAsPercentWidth, L' ');
 			}
 			else
 			{

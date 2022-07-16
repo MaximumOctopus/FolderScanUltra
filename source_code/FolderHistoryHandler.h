@@ -19,6 +19,7 @@
 class FolderHistoryHandler
 {
 public:
+
 	std::vector<FolderHistory> FolderHistoryScans;
 
 	FolderHistoryHandler();

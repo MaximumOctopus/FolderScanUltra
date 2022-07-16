@@ -20,7 +20,6 @@
 
 #include "DatabaseHandler.h"
 #include "Errors.h"
-#include "ErrorConstants.h"
 #include "GlobalObjects.h"
 #include "Help.h"
 #include "ParameterHandler.h"
@@ -77,14 +76,14 @@ void Database()
 				}
 				else
 				{
-					std::wstring tableFile   = Utility::GetMD5(GScanDetails->ScanPath) + GScanDetails->ScanDateInt + WindowsUtility::GetComputerNetName();
-					std::wstring tableFolder = Utility::GetMD5(GScanDetails->ScanPath) + GScanDetails->ScanDateInt + WindowsUtility::GetComputerNetName() + L"F";
+					std::wstring tableFile   = Utility::GetMD5(GScanDetails->Path.String) + GScanDetails->Path.DateInt + WindowsUtility::GetComputerNetName();
+					std::wstring tableFolder = Utility::GetMD5(GScanDetails->Path.String) + GScanDetails->Path.DateInt + WindowsUtility::GetComputerNetName() + L"F";
 
 					GDatabaseHandler->UpdateFolderHistory(tableFolder, tableFile);
 
 					if (GSettings->Database.UpdateScanHistory)
 					{
-						GDatabaseHandler->UpdateFolderScanUltraScanHistory(GSettings->Custom.SettingsSaveLocation, GScanDetails->ScanPath, GSystemGlobal->DataPath);
+						GDatabaseHandler->UpdateFolderScanUltraScanHistory(GSettings->Custom.SettingsSaveLocation, GScanDetails->Path.String, GSystemGlobal->DataPath);
 					}
 				}
 			}
@@ -154,7 +153,7 @@ int wmain(int argc, wchar_t* argv[])
 
 	GSystemGlobal = new SystemGlobal(argc, argv);
 
-	if (GSystemGlobal->InitOkay == 0)
+	if (GSystemGlobal->Status == InitStatus::Success)
 	{
 		if (GParameterHandler->HasScanFolder())
 		{
@@ -171,13 +170,13 @@ int wmain(int argc, wchar_t* argv[])
 			{
 				if (WindowsUtility::DirectoryExistsWString(GParameterHandler->GetParameter(0)))
 				{
-					int cgoResult = GlobalObjects::CreateGlobalObjects();
+					InitStatus cgoResult = GlobalObjects::CreateGlobalObjects();
 
-					if (cgoResult == 0)
+					if (cgoResult == InitStatus::Success)
 					{
 						ProcessSettingsFromCommandLine();
 
-						if (GScanDetails->ScanPathSet)
+						if (GScanDetails->Path.Set)
 						{
 							if (GParameterHandler->FindParameter(L"/listroot"))
 							{
@@ -203,14 +202,14 @@ int wmain(int argc, wchar_t* argv[])
 						}
 					}
 
-					if (cgoResult != 0)
+					if (cgoResult != InitStatus::Success)
 					{
 						ErrorHandler::OutputErrorConsole(cgoResult);
 					}
 				}
 				else
 				{
-					ErrorHandler::OutputErrorConsole(__ErrorScanFolderDoesNotExist);
+					ErrorHandler::OutputErrorConsole(InitStatus::ScanFolderDoesNotExist);
 				}
 			}
 		}
@@ -232,8 +231,29 @@ int wmain(int argc, wchar_t* argv[])
 	}
 	else
 	{
-		ErrorHandler::OutputErrorConsole(GSystemGlobal->InitOkay);
+		ErrorHandler::OutputErrorConsole(GSystemGlobal->Status);
 	}
+
+	// ==========================================================================================
+	// == Debug stuff ===========================================================================
+	// ==========================================================================================
+
+	#ifdef _DEBUG
+	std::wstring ufa = L"Used standard analysis";
+	std::wstring gud = L"No processing of user details";
+
+	if (GSettings->Optimisations.UseFastAnalysis)
+	{
+		ufa = L"Used fast analysis";
+	}
+
+	if (GSettings->Optimisations.GetUserDetails)
+	{
+		gud = L"Processed user details";
+	}
+
+	std::wcout << L"\n (" << ufa << ", " << gud << ")\n";
+	#endif	
 
 	// ==========================================================================================
 	// ==========================================================================================

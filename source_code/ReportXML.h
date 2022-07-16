@@ -36,4 +36,5 @@ namespace ReportXML
 	void ReportTopNewest(std::wofstream &);
 	void ReportTopOldest(std::wofstream &);
 	void ReportUsers(std::wofstream &);
+	void ReportTemporaryFiles(std::wofstream&);
 };
