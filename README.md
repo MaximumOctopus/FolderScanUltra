@@ -1,4 +1,4 @@
-# FolderScanUltra 5.2.0
+# FolderScanUltra 5.3.0
 
 (c) Paul Alan Freshney 2019-2022
 
@@ -21,6 +21,12 @@ This was originally a Delphi application, released as part of the Xinorbis tools
 In 2022 I decided to rename it and add it to my pool of applications receiving regular updates (two applications now, so maybe a puddle, not a pool). It'll be distanced somewhat from xinorbis and become better for it. Many updates are planned.
 
 # Release History
+
+5.3.0 / July 16th 2022
+
+Added temporary file processing, added it to reports.
+
+A few tweaks and automatic optimisations which should speed-up processing when not needing report output.
 
 5.2.0 / July 12th 2022
 
