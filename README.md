@@ -26,7 +26,7 @@ In 2022 I decided to rename it and add it to my pool of applications receiving r
 
 Added temporary file processing, added it to reports.
 
-A few tweaks and automatic optimisations which should speed-up processing when not needing report output.
+A few tweaks and automatic optimisations which should speed up processing when not needing report output.
 
 5.2.0 / July 12th 2022
 
