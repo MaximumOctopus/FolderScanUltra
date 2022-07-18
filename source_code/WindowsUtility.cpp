@@ -23,6 +23,7 @@
 #include "Convert.h"
 #include "DriveDetails.h"
 #include "LanguageHandler.h"
+#include "Registry.h"
 #include "Utility.h"
 #include "WindowsUtility.h"
 
@@ -31,6 +32,38 @@
 
 
 extern LanguageHandler* GLanguageHandler;
+
+
+bool WindowsUtility::AddToContextMenu(std::wstring path)
+{
+	try
+	{
+		HKEY hKey;
+
+		LONG dwRet = RegOpenKeyEx(HKEY_CLASSES_ROOT,
+			L"\\software\\maximumoctopus\\FolderScanUltra",
+			NULL,
+			KEY_SET_VALUE,
+			&hKey);
+
+		if (dwRet != ERROR_SUCCESS)
+		{
+			return false;
+		}
+
+		Registry::WriteRegistryString(hKey, L"\\directory\\shell\\FolderScanUltra", L"Examine this folder with FolderScanUltra");
+
+		Registry::WriteRegistryString(hKey, L"\\directory\\shell\\Xinorbis8\\Command", L"\"" + path + L"\" \"%1\" \"/pause\"");
+
+		Registry::WriteRegistryString(hKey, L"\\directory\\shell\\FolderScanUltra\\DefaultIcon", L"\"" + path + L", 0\""); 
+	}
+	catch(...)
+	{
+		return false;
+	}
+
+	return true;
+}
 
 
 // returns 0 on success, 1 on fail

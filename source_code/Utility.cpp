@@ -220,6 +220,40 @@ namespace Utility
 	}
 
 
+	std::wstring LastFolder(const std::wstring& input)
+	{
+		std::wstring output = L"";
+
+		if (input.size() > 0)
+		{
+			if (input[input.size() - 1] == L'\\')
+			{
+				int t = input.size() - 2;
+
+				while (t >= 0 && input[t] != L'\\')
+				{
+					output = input[t] + output;
+
+					t--;
+				}
+			}
+			else
+			{
+				int t = input.size() - 1;
+
+				while (t >= 0 && input[t] != L'\\')
+				{
+					output = input[t] + output;
+
+					t--;
+				}
+			}
+		}
+
+		return output;
+	}
+
+
 	std::wstring ProcessFileName(const std::wstring& file_name)
 	{
 		if (file_name.find(L"$") != std::wstring::npos)

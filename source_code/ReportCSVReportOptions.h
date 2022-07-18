@@ -18,7 +18,7 @@
 
 struct CSVReportOptions
 {
-	std::wstring Filename = L"";
+	std::wstring FileName = L"";
 
 	int Separator = 0;
 	int Units = 0;

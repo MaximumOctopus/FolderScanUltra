@@ -10,6 +10,7 @@
 // 
 
 #include <string>
+#include <windows.h>
 
 
 namespace Formatting
@@ -100,5 +101,34 @@ namespace Formatting
 	std::wstring TrimFileNameForOutput(std::wstring file_name)
 	{
 		return file_name;
+	}
+
+
+	std::wstring GetAttributeAsString(int attributes)
+	{
+		std::wstring output = L"....";
+
+		if (FILE_ATTRIBUTE_ARCHIVE & attributes) output[0] = L'A';
+		if (FILE_ATTRIBUTE_READONLY & attributes) output[1] = L'R';
+		if (FILE_ATTRIBUTE_SYSTEM & attributes) output[2] = L'S';
+		if (FILE_ATTRIBUTE_HIDDEN & attributes) output[3] = L'H';
+
+		return output;
+	}
+
+
+	std::wstring StringOfCharacters(int count, std::wstring fill)
+	{
+		std::wstring output = L"";
+
+		if (count != 0)
+		{
+			for (int t = 0; t < count; t++)
+			{
+				output += fill;
+			}
+		}
+
+		return output;
 	}
 }

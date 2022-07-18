@@ -18,7 +18,7 @@
 
 struct TextReportOptions
 {
-	std::wstring Filename = L"";
+	std::wstring FileName = L"";
 
 	bool Layout[__TextReportOptionsCount] = { false };
 	bool CategoryList[__FileCategoriesCount] = { false };

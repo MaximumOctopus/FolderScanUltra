@@ -20,6 +20,8 @@
 #include "ReportSummary.h"
 #include "ReportText.h"
 #include "ReportTextReportOptions.h"
+#include "ReportTree.h"
+#include "ReportTreeOptions.h"
 #include "ReportXML.h"
 #include "ReportXMLReportOptions.h"
 #include "ReportXinorbis.h"
@@ -55,7 +57,7 @@ namespace ReportHandler
 				{
 					CSVReportOptions trOptions;
 
-					trOptions.Filename = parameter_details.Value;
+					trOptions.FileName = parameter_details.Value;
 					trOptions.Category = -1;
 					trOptions.Separator = 0; // comma
 					trOptions.Titles = Utility::StringToBool(parameter_details.Options[1]);
@@ -78,7 +80,7 @@ namespace ReportHandler
 				{
 					HTMLReportOptions trOptions;
 
-					trOptions.Filename = parameter_details.Value;
+					trOptions.FileName = parameter_details.Value;
 					trOptions.Align = L"right";
 					trOptions.LayoutSize = Utility::OptionToInt(parameter_details.Options[11]);
 					trOptions.Units = Utility::OptionToInt(parameter_details.Options[12]);
@@ -108,7 +110,7 @@ namespace ReportHandler
 				{
 					TextReportOptions trOptions;
 
-					trOptions.Filename = parameter_details.Value;
+					trOptions.FileName = parameter_details.Value;
 
 					for (int t = 0; t < __TextReportOptionsCount; t++)
 					{
@@ -126,11 +128,26 @@ namespace ReportHandler
 
 					break;
 				}
+				case ReportType::Tree:
+				{
+					TreeReportOptions treeOptions;
+
+					treeOptions.FileName = parameter_details.Value;
+
+					treeOptions.IncludeAttributes = Utility::StringToBool(parameter_details.Options[0]);
+					treeOptions.IncludeSize = Utility::StringToBool(parameter_details.Options[1]);
+
+					ReportTree::Generate(treeOptions);
+
+					reportCount++;
+
+					break;
+				}
 				case ReportType::XML:
 				{
 					XMLReportOptions trOptions;
 
-					trOptions.Filename = parameter_details.Value;
+					trOptions.FileName = parameter_details.Value;
 
 					for (int t = 0; t < XMLReportOptionsCount; t++)
 					{
@@ -147,7 +164,7 @@ namespace ReportHandler
 				{
 					XMLReportOptions trOptions;
 
-					trOptions.Filename = parameter_details.Value;
+					trOptions.FileName = parameter_details.Value;
 
 					ReportXML::FullList(trOptions);
 
@@ -159,7 +176,7 @@ namespace ReportHandler
 				{
 					XinorbisReportOptions xrOptions;
 
-					xrOptions.Filename = parameter_details.Value;
+					xrOptions.FileName = parameter_details.Value;
 
 					ReportXinorbis::GenerateXinorbisReport(xrOptions);
 
@@ -217,7 +234,7 @@ namespace ReportHandler
 				{
 					TextReportOptions trOptions;
 
-					trOptions.Filename = parameter_details.Value;
+					trOptions.FileName = parameter_details.Value;
 
 					for (int t = 0; t < __TextReportOptionsCount; t++)
 					{
@@ -242,7 +259,7 @@ namespace ReportHandler
 				{
 					HTMLReportOptions trOptions;
 
-					trOptions.Filename = parameter_details.Value;
+					trOptions.FileName = parameter_details.Value;
 					trOptions.Align = L"right";
 					trOptions.LayoutSize = Utility::OptionToInt(parameter_details.Options[11]);
 					trOptions.Units = Utility::OptionToInt(parameter_details.Options[12]);

@@ -31,7 +31,7 @@ namespace ReportXinorbis
 {
 	void GenerateXinorbisReport(XinorbisReportOptions options)
 	{
-		std::wofstream ofile(options.Filename);
+		std::wofstream ofile(options.FileName);
 
 		ofile.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
 

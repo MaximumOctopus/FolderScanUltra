@@ -17,6 +17,7 @@ static const int __FileCategoriesCount = 20;
 static const int __FileCategoriesOther = 9;
 
 static const int __TextReportOptionsCount = 11;
+static const int __TreeReportOptionsCount = 6;
 
 static const int __MagniColours[13] = { 0x8383FF, 0x83BAFF, 0x83ECFF, 0x83FFCC, 0x92ff83, 0xD5FF83, 0xFFFE83, 0xFFCF83, 0xFF9283, 0xFF83AF, 0xFF83F5, 0xFF83F5, 0xFF83F5 };
 static const int __GraphColours[13] = { 0x8383FF, 0x83BAFF, 0x83ECFF, 0x83FFCC, 0x92ff83, 0xD5FF83, 0xFFFE83, 0xFFCF83, 0xFF9283, 0xFF83AF, 0xFF83F5, 0xD6D5DB, 0xFFFFFF };

@@ -35,6 +35,11 @@ ParameterHandler::ParameterHandler(int argc, wchar_t *argv[])
         parameters.push_back(argv[t]);
     } 
 
+	if (FindParameter(L"/setcontextmenu"))
+	{
+		WindowsUtility::AddToContextMenu(argv[0]);
+	}
+
 	ProcessForOptimisations();
 }
 
@@ -176,10 +181,11 @@ int ParameterHandler::GetParameterType(std::wstring parameter)
 	std::transform(parameter.begin(), parameter.end(), parameter.begin(), ::tolower);
 
 	if (parameter.find(L"/csv") != std::wstring::npos) { return __parameterReportCSV; }
-	if (parameter.find(L"/txt") != std::wstring::npos) { return __parameterReportText; }
-	if (parameter.find(L"/text") != std::wstring::npos) { return __parameterReportText; }
 	if (parameter.find(L"/htm") != std::wstring::npos) { return __parameterReportHTML; }
 	if (parameter.find(L"/html") != std::wstring::npos) { return __parameterReportHTML; }
+	if (parameter.find(L"/txt") != std::wstring::npos) { return __parameterReportText; }
+	if (parameter.find(L"/text") != std::wstring::npos) { return __parameterReportText; }
+	if (parameter.find(L"/tree") != std::wstring::npos) { return __parameterReportTree; }
 	if (parameter.find(L"/xin") != std::wstring::npos) { return __parameterReportXinorbis; }
 	if (parameter.find(L"/xml") != std::wstring::npos) { return __parameterReportXML; }
 	if (parameter.find(L"/xfl") != std::wstring::npos) { return __parameterReportXMLFileList; }
@@ -295,6 +301,9 @@ std::wstring ParameterHandler::ReportSwitch(ReportType report)
 		case ReportType::Text:
 			return L"/txt";
 			break;
+		case ReportType::Tree:
+			return L"/tree";
+			break;
 		case ReportType::XML:
 			return L"/xml";
 			break;
@@ -408,6 +417,9 @@ std::wstring ParameterHandler::DefaultFileName(ReportType report)
 		case ReportType::Text:
 			return GSystemGlobal->DataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\Text\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.txt";
 			break;
+		case ReportType::Tree:
+			return GSystemGlobal->DataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\Tree\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.txt";
+			break;
 		case ReportType::Xinorbis:
 			return GSystemGlobal->DataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\Text\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.zsr2";
 			break;
@@ -452,6 +464,9 @@ std::wstring ParameterHandler::DefaultOptions(ReportType report)
 	case ReportType::Text:
 	case ReportType::TextDeep:
 		return L"11111111111";
+		break;
+	case ReportType::Tree:
+		return L"11";
 		break;
 	case ReportType::XML:
 		return L"01111111111";
@@ -548,6 +563,7 @@ bool ParameterHandler::IsDateReport(ReportType report_type)
 {
 	switch (report_type)
 	{
+	case ReportType::Tree:
 	case ReportType::XMLFullList:
 	case ReportType::Top20:
 	case ReportType::Bottom20:
@@ -578,6 +594,7 @@ bool ParameterHandler::IsSizeReport(ReportType report_type)
 {
 	switch (report_type)
 	{
+	case ReportType::Tree:
 	case ReportType::XMLFullList:
 	case ReportType::New20:
 	case ReportType::Old20:

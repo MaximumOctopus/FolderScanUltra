@@ -37,14 +37,14 @@ namespace ReportXML
 {
 	void Summary(XMLReportOptions options)
 	{
-		std::wofstream ofile(options.Filename);
+		std::wofstream ofile(options.FileName);
 
 		ofile.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
 
 		if (ofile)
 		{
 			std::wcout << GLanguageHandler->XText[rsSavingReports] + L" (XML):" << "\n";
-			std::wcout << options.Filename << "\n" << "\n";
+			std::wcout << options.FileName << "\n" << "\n";
 
 			ofile << L"<?xml version=\"1.0\"?>" << "\n";
 			ofile << L"<!-- generated with FolderScanUltra " + __FSUVersion + L" - " + __FSUDate + L" -->" << "\n";
@@ -104,7 +104,7 @@ namespace ReportXML
 		else
 		{
 			std::wcout << "\n";
-			std::wcout << GLanguageHandler->XText[rsErrorSaving] + L" \"" + options.Filename + L"\"." << "\n";
+			std::wcout << GLanguageHandler->XText[rsErrorSaving] + L" \"" + options.FileName + L"\"." << "\n";
 			std::wcout << std::endl;
 		}
 	}
@@ -537,7 +537,7 @@ namespace ReportXML
 	
 	void FullList(XMLReportOptions options)
 	{
-		std::wofstream ofile(options.Filename);
+		std::wofstream ofile(options.FileName);
 
 		ofile.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
 

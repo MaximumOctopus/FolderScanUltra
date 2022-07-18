@@ -109,6 +109,9 @@
     <ClCompile Include="GlobalObjects.cpp">
       <Filter>Source Files\Data Classes</Filter>
     </ClCompile>
+    <ClCompile Include="ReportTree.cpp">
+      <Filter>Source Files\Reports</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DatabaseHandler.h">
@@ -266,6 +269,12 @@
     </ClInclude>
     <ClInclude Include="StatusConstants.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ReportTree.h">
+      <Filter>Header Files\Reports</Filter>
+    </ClInclude>
+    <ClInclude Include="ReportTreeOptions.h">
+      <Filter>Header Files\Reports</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

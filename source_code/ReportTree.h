@@ -12,14 +12,13 @@
 
 #pragma once
 
-#include <string>
+
+#include "ReportTreeOptions.h"
 
 
-static const int XMLReportOptionsCount = 11;
-
-
-struct XMLReportOptions
+namespace ReportTree
 {
-	std::wstring FileName = L"";
-	bool Layout[XMLReportOptionsCount] = { false };
-};
+	void Generate(TreeReportOptions);
+
+	int GetIndent(const std::wstring);
+}

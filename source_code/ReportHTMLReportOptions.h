@@ -22,7 +22,7 @@ static const int __HTMLLayoutOptionsCount = 11;
 
 struct HTMLReportOptions
 {
-	std::wstring Filename = L"";
+	std::wstring FileName = L"";
 	int Units = 0;
 	std::wstring Align = L"";
 	bool Layout[__HTMLLayoutOptionsCount] = { false };

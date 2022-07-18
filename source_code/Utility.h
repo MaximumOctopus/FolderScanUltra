@@ -36,4 +36,6 @@ namespace Utility
 	std::wstring BoolToString(bool);
 	bool StringToBool(wchar_t);
 	int OptionToInt(wchar_t);
+
+	std::wstring LastFolder(const std::wstring&);
 }

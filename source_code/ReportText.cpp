@@ -38,14 +38,14 @@ namespace ReportText
 {
 	void FullList(TextReportOptions options)
 	{
-		std::wofstream ofile(options.Filename);
+		std::wofstream ofile(options.FileName);
 
 		ofile.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
 
 		if (ofile)
 		{
 			std::wcout << GLanguageHandler->XText[rsSavingReports] + L" (Text): " << "\n";
-			std::wcout << L"    " << options.Filename << "\n" << "\n";
+			std::wcout << L"    " << options.FileName << "\n" << "\n";
 
 			for (int t = 0; t < __TextReportOptionsCount; t++)
 			{
@@ -106,7 +106,7 @@ namespace ReportText
 		else
 		{
 			std::wcout << GLanguageHandler->XText[rsErrorSaving] + L" (Text):" << "\n";
-			std::wcout << L"    " << options.Filename << "\n" << std::endl;
+			std::wcout << L"    " << options.FileName << "\n" << std::endl;
 		}
 	}
 

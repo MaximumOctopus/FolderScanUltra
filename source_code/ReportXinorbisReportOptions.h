@@ -18,6 +18,6 @@
 
 struct XinorbisReportOptions
 {
-	std::wstring Filename = L"";
+	std::wstring FileName = L"";
 	int Layout = 0;
 };

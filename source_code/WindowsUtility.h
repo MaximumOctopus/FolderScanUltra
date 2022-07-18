@@ -21,6 +21,8 @@
 
 namespace WindowsUtility
 {
+	bool AddToContextMenu(std::wstring path);
+	
 	int CreateWFolder(const std::wstring&);
 	
 	bool DirectoryExists(LPCTSTR);

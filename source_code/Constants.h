@@ -17,12 +17,12 @@
 
 
 #ifdef _DEBUG
-static const std::wstring __FSUVersion = L"5.3.0 (debug)";
+static const std::wstring __FSUVersion = L"5.4.0 (debug)";
 #else
-static const std::wstring __FSUVersion = L"5.3.0";
+static const std::wstring __FSUVersion = L"5.4.0";
 #endif
 
-static const std::wstring __FSUDate    = L"July 16th 2022";
+static const std::wstring __FSUDate    = L"July 18th 2022";
 
 // ===========================================================================
 // == Scanning ===============================================================
@@ -902,7 +902,7 @@ static const int  rsLanguageConstantsCount = 786;
 // == Parameter Types ========================================================
 // ===========================================================================
 
-enum class ReportType { Error = 0, CSV = 1, HTML = 2, Summary = 3, Text = 4, XML = 5, XMLFullList = 6, Top20 = 7, Bottom20 = 8, New20 = 9, Old20 = 10, All20 = 11, Xinorbis = 12, TextDeep = 13, HTMLDeep = 14 };
+enum class ReportType { Error = 0, CSV = 1, HTML = 2, Summary = 3, Text = 4, Tree = 5, XML = 6, XMLFullList = 7, Top20 = 8, Bottom20 = 9, New20 = 10, Old20 = 11, All20 = 12, Xinorbis = 13, TextDeep = 14, HTMLDeep = 15 };
 
 enum class ConsoleReport { None = 0, ListRoot = 1, Top10Folders = 2};
 

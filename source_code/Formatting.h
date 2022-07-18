@@ -22,4 +22,8 @@ namespace Formatting
 	std::wstring InsertElement(std::wstring, std::wstring, int);
 	std::wstring ReplaceEntitiesForXML(std::wstring);
 	std::wstring TrimFileNameForOutput(std::wstring);
+
+	std::wstring GetAttributeAsString(int attributes);
+
+	std::wstring StringOfCharacters(int, std::wstring);
 }

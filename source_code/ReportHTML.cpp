@@ -51,11 +51,11 @@ namespace ReportHTML
 	{
 		if (options.DeepScan)
 		{
-			std::wcout << GLanguageHandler->XText[rsSavingReports] + L" (HTML Deep): " + Formatting::TrimFileNameForOutput(options.Filename) << "\n";
+			std::wcout << GLanguageHandler->XText[rsSavingReports] + L" (HTML Deep): " + Formatting::TrimFileNameForOutput(options.FileName) << "\n";
 		}
 		else
 		{
-			std::wcout << GLanguageHandler->XText[rsSavingReports] + L" (HTML): " + Formatting::TrimFileNameForOutput(options.Filename) << "\n";
+			std::wcout << GLanguageHandler->XText[rsSavingReports] + L" (HTML): " + Formatting::TrimFileNameForOutput(options.FileName) << "\n";
 		}
 
 		std::wcout << "\n";
@@ -70,7 +70,7 @@ namespace ReportHTML
 		// == Lets write the file =====================================================
 		// ============================================================================
 
-		std::wofstream file(options.Filename);
+		std::wofstream file(options.FileName);
 
 		file.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
 
@@ -176,7 +176,7 @@ namespace ReportHTML
 		else
 		{
 			std::wcout << L"" << "\n";
-			std::wcout << GLanguageHandler->XText[rsErrorSaving] + L" \"" + options.Filename + L"\"." << "\n";
+			std::wcout << GLanguageHandler->XText[rsErrorSaving] + L" \"" + options.FileName + L"\"." << "\n";
 			std::wcout << L"" << std::endl;
 		}
 	}

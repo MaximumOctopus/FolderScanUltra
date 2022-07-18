@@ -13,13 +13,13 @@
 #pragma once
 
 #include <string>
+#include "ReportConstants.h"
 
 
-static const int XMLReportOptionsCount = 11;
-
-
-struct XMLReportOptions
+struct TreeReportOptions
 {
 	std::wstring FileName = L"";
-	bool Layout[XMLReportOptionsCount] = { false };
+
+	bool IncludeSize = true;
+	bool IncludeAttributes = true;
 };

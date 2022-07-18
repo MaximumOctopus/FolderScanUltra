@@ -41,7 +41,11 @@ void SystemGlobal::InitialiseXinorbis()
 	AppPath  = WindowsUtility::GetExePath();
 	DataPath = GetUsersPath(AppPath);
 
-	if (!InstallationCheck())
+	if (InstallationCheck())
+	{
+		Status = InitStatus::Success;
+	}
+	else
 	{
 		Status = InitStatus::InstallationCheckFailed;
 	}

@@ -34,7 +34,7 @@ namespace ReportCSV
 	{
 		std::wcout << GLanguageHandler->XText[rsSavingReports] + L" (CSV): " << "\n" << std::endl;
 
-		std::wofstream ofile(options.Filename);
+		std::wofstream ofile(options.FileName);
 
 		ofile.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
 
@@ -92,9 +92,9 @@ namespace ReportCSV
 	void FullList(CSVReportOptions options)
 	{
 		std::wcout << GLanguageHandler->XText[rsSavingReports] + L" (CSV): " << "\n";
-		std::wcout << L"    " << options.Filename << "\n" << std::endl;
+		std::wcout << L"    " << options.FileName << "\n" << std::endl;
 
-		std::wofstream ofile(options.Filename);
+		std::wofstream ofile(options.FileName);
 
 		ofile.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
 
