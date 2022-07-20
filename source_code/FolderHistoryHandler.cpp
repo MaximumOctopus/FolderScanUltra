@@ -63,14 +63,14 @@ bool FolderHistoryHandler::UpdateFolderHistoryFile()
 
 		for (int t = 0; t < __FileCategoriesCount; t++)
 		{
-			file << L"X" + Convert::IntToHex(t, 2) + L":" + std::to_wstring(GScanDetails->Data.ExtensionSpread[t][__esCount]) << "\n";
-			file << L"Y" + Convert::IntToHex(t, 2) + L":" + std::to_wstring(GScanDetails->Data.ExtensionSpread[t][__esSize]) << "\n";
+			file << L"X" + Convert::IntToHex(t, 2) + L":" + std::to_wstring(GScanDetails->Data.ExtensionSpread[t].Count) << "\n";
+			file << L"Y" + Convert::IntToHex(t, 2) + L":" + std::to_wstring(GScanDetails->Data.ExtensionSpread[t].Size) << "\n";
 		}
 
 		for (int t = 0; t < __MagnitudesCount; t++)
 		{
-			file << L"M" + Convert::IntToHex(t, 1) + L"C:" + std::to_wstring(GScanDetails->Data.Magnitude[t][__mCount]) << "\n";
-			file << L"M" + Convert::IntToHex(t, 1) + L"S:" + std::to_wstring(GScanDetails->Data.Magnitude[t][__mSize]) << "\n";
+			file << L"M" + Convert::IntToHex(t, 1) + L"C:" + std::to_wstring(GScanDetails->Data.Magnitude[t].Count) << "\n";
+			file << L"M" + Convert::IntToHex(t, 1) + L"S:" + std::to_wstring(GScanDetails->Data.Magnitude[t].Size) << "\n";
 		} 
 
 		file << L"}" << std::endl;

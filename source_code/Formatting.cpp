@@ -59,7 +59,7 @@ namespace Formatting
 	}
 
 
-	std::wstring MakeItalic(std::wstring input, bool condition)
+	std::wstring MakeItalic(const std::wstring input, bool condition)
 	{
 		if (condition)
 		{
@@ -72,7 +72,7 @@ namespace Formatting
 	}
 
 
-	std::wstring InsertElement(std::wstring name, std::wstring contents, int level)
+	std::wstring InsertElement(const std::wstring name, std::wstring contents, int level)
 	{
 		std::wstring output(level * 2, L' ');
 
@@ -98,7 +98,7 @@ namespace Formatting
 	}
 
 
-	std::wstring TrimFileNameForOutput(std::wstring file_name)
+	std::wstring TrimFileNameForOutput(const std::wstring file_name)
 	{
 		return file_name;
 	}

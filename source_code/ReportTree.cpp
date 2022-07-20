@@ -10,6 +10,7 @@
 // 
 
 
+#include <algorithm>
 #include <codecvt>
 #include <fstream>
 #include <iostream>
@@ -30,6 +31,26 @@ extern ScanDetails* GScanDetails;
 
 namespace ReportTree
 {
+    // this might be quite slow... will optimise!
+    bool sortByPath(const FileObject& lhs, const FileObject& rhs) 
+    { 
+        std::wstring l = GScanDetails->Data.Folders[lhs.FilePathIndex] + lhs.FileName;
+        std::wstring r = GScanDetails->Data.Folders[rhs.FilePathIndex] + rhs.FileName;
+
+        std::transform(l.begin(), l.end(), l.begin(), ::tolower);
+        std::transform(r.begin(), r.end(), r.begin(), ::tolower);
+
+        int c = l.compare(r);
+
+        if (c <= 0)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+
     void Generate(TreeReportOptions options)
     {
         std::wofstream file(options.FileName);
@@ -38,7 +59,9 @@ namespace ReportTree
 
         if (file)
         {
-            std::wcout << GLanguageHandler->XText[rsSavingReports] + L" (Tree): " << "\n";
+            std::sort(GScanDetails->Data.Files.begin(), GScanDetails->Data.Files.end(), sortByPath);
+
+            std::wcout << GLanguageHandler->Text[rsSavingReports] + L" (Tree): " << "\n";
             std::wcout << L"    " << options.FileName << "\n\n";
 
             std::wstring OldPath = L"";
@@ -92,7 +115,7 @@ namespace ReportTree
 
                     if (options.IncludeSize)
                     {
-                        Optional = Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.Files[t].Size), 8, ' ') + L" ";
+                        Optional = Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.Files[t].Size), 10, ' ') + L" ";
                     }
 
                     if (options.IncludeAttributes)
@@ -106,7 +129,7 @@ namespace ReportTree
         }
         else
         {
-            std::wcout << GLanguageHandler->XText[rsErrorSaving] + L" (Tree):" << "\n";
+            std::wcout << GLanguageHandler->Text[rsErrorSaving] + L" (Tree):" << "\n";
             std::wcout << L"    " << options.FileName << "\n" << std::endl;
         }
     }

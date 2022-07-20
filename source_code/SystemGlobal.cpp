@@ -118,13 +118,13 @@ bool SystemGlobal::CheckFolderStructure()
 }
 
 
-void SystemGlobal::UpdateDriveDetails(std::wstring folder)
+void SystemGlobal::UpdateDriveDetails(const std::wstring folder)
 {
 
 }
 
 
-std::wstring SystemGlobal::GetUsersPath(std::wstring app_path)
+std::wstring SystemGlobal::GetUsersPath(const std::wstring app_path)
 {
 	if (WindowsUtility::FileExists(app_path + L"custom.ini"))
 	{

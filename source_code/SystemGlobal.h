@@ -36,6 +36,6 @@ public:
     void InitialiseXinorbis();
     bool InstallationCheck();
 	bool CheckFolderStructure();
-	void UpdateDriveDetails(std::wstring);
-	std::wstring SystemGlobal::GetUsersPath(std::wstring);
+	void UpdateDriveDetails(const std::wstring);
+	std::wstring GetUsersPath(const std::wstring);
 };

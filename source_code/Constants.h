@@ -25,12 +25,6 @@ static const std::wstring __FSUVersion = L"5.4.0";
 static const std::wstring __FSUDate    = L"July 18th 2022";
 
 // ===========================================================================
-// == Scanning ===============================================================
-// ===========================================================================
-
-static const int __ScanSourceLive = 0;
-
-// ===========================================================================
 // == Categories =============================================================
 // ===========================================================================
 
@@ -912,21 +906,4 @@ enum class ConsoleReport { None = 0, ListRoot = 1, Top10Folders = 2};
 
 enum class DateTimeFormat { Display = 0, File = 1, YYYYMMDD = 2, Slash = 3, HHMM = 4};
 
-static const int __RootCount = 0;
-static const int __RootSize  = 1;
-
-static const int __UserCount = 0;
-static const int __UserSize  = 1;
-
-static const int __esCount = 0;
-static const int __esSize  = 1;
-
-static const int __mCount = 0;
-static const int __mSize = 1;
-
-static const int __faCount = 0;
-static const int __faSize = 1;
-
-static const int __dbNone   = 0;
-static const int __dbSQLite = 1;
-static const int __dbODBC   = 2;
+enum class SettingsSource { None = 0, ConfigIni = 1, Registry = 2 };

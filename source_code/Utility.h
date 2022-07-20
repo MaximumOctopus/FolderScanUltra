@@ -29,7 +29,7 @@ namespace Utility
 	std::wstring GetMD5(std::wstring);
 	std::wstring GetFileExtension(const std::wstring &);
 	std::wstring ProcessFileName(const std::wstring &);
-	std::wstring ReplaceString(std::wstring, const std::wstring&, const std::wstring&);
+	std::wstring ReplaceString(const std::wstring, const std::wstring&, const std::wstring&);
 	std::wstring SplitFilename(const std::wstring&);
 	std::wstring WebFileLink(const std::wstring);
 

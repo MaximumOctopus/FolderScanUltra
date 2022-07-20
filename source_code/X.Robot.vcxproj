@@ -80,6 +80,7 @@
     <Text Include="CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Consolidated.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Convert.h" />
     <ClInclude Include="DatabaseHandler.h" />

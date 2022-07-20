@@ -20,7 +20,7 @@ class Ini
 {
 private:
 
-	bool LoadFile(std::wstring);
+	bool LoadFile(const std::wstring);
 
 public:
 
@@ -28,8 +28,8 @@ public:
 
 	std::vector<std::wstring> Lines;
 
-	Ini(std::wstring);
+	Ini(const std::wstring);
 
-	std::wstring ReadString(std::wstring, std::wstring, std::wstring);
+	std::wstring ReadString(const std::wstring, std::wstring, const std::wstring);
 	int ReadInteger(std::wstring, std::wstring, int);
 };

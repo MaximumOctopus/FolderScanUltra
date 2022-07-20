@@ -35,9 +35,6 @@ static const int __SpectrumColours[__SpectrumMod] = { 0x0000FF, 0x0022FF, 0x0054
 static const int __DefaultDisplayColours[__FileCategoriesCount] = { 0xFFFF00, 0x9d9fff, 0x70b7fe, 0x72f1fc, 0x73fcb7, 0xc5fd71, 0xeefc72, 0xfccf72, 0xfc8d72, 0xfe79be,
 																	0xfe70f3, 0x99bdd5, 0x8c8c8c, 0xd1d1d1, 0xffffff, 0xffffff, 0xffffff, 0xffffff, 0xffffff, 0xffffff };
 
-static const bool __SaveLocationRegistry = false;
-static const bool __SaveLocationConfigIni = true;
-
 static const int __AttributesToDisplayCount = 13;    // attributes that are output to reports/screen etc.
 static const int __AttributesCount = 21;
 static const int __MagnitudesCount = 13;

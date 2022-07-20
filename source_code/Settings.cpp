@@ -30,7 +30,7 @@ extern SystemGlobal* GSystemGlobal;
 
 Settings::Settings()
 {
-	Custom.SettingsSaveLocation  = __SaveLocationRegistry;
+	Custom.SettingsSaveLocation  = SettingsSource::Registry;
 
 	SetDefaults();
 
@@ -51,7 +51,7 @@ void Settings::SetDefaults()
 {
 	Database.UpdateScanHistory = false;
 
-	Database.DatabaseMode = __dbSQLite;
+	Database.DatabaseMode = DBMode::SQLite;
 
 	Database.DBStructured = false;
 	Database.SystemTable = false;
@@ -89,7 +89,7 @@ void Settings::ProcessProcessingSetting(int pps)
 }
 
 
-void Settings::ProcessDatabaseSetting(int pds, std::wstring value)
+void Settings::ProcessDatabaseSetting(int pds, const std::wstring value)
 {
 	switch (pds)
 	{
@@ -97,10 +97,10 @@ void Settings::ProcessDatabaseSetting(int pds, std::wstring value)
 		Database.UpdateScanHistory = true;
 		break;
 	case 0x07:
-		Database.DatabaseMode = __dbODBC;
+		Database.DatabaseMode = DBMode::ODBC;
 		break;
 	case 0x08:
-		Database.DatabaseMode = __dbSQLite;
+		Database.DatabaseMode = DBMode::SQLite;
 		break;
 	case 0x09:
 		Database.DBStructured = true;
@@ -130,10 +130,9 @@ void Settings::ProcessDatabaseSetting(int pds, std::wstring value)
 
 bool Settings::OpenSettings(bool read_only)
 {
-    if (Custom.SettingsSaveLocation == __SaveLocationConfigIni)
+    if (Custom.SettingsSaveLocation == SettingsSource::ConfigIni)
     {
 		__iniFile = new Ini(GSystemGlobal->AppPath + L"custom.ini");
-
 
 		std::wcout << GSystemGlobal->AppPath + L"custom.ini" << std::endl;
 
@@ -175,7 +174,7 @@ bool Settings::OpenSettings(bool read_only)
 
 bool Settings::CloseSettings()
 {
-    if (Custom.SettingsSaveLocation == __SaveLocationConfigIni)
+    if (Custom.SettingsSaveLocation == SettingsSource::ConfigIni)
     {
 		delete __iniFile;
 
@@ -200,20 +199,20 @@ bool Settings::LoadCustomSettings()
 
 		if (IniFile->Loaded)
 		{
-			std::wstring pcm = IniFile->ReadString(L"Main", L"PortableMode", L"0"); // to do change to readint
+			int pcm = IniFile->ReadInteger(L"Main", L"PortableMode", 0);
 
-			if (pcm == L"1")
+			if (pcm == 1)
 			{
-				Custom.SettingsSaveLocation = __SaveLocationConfigIni;
+				Custom.SettingsSaveLocation = SettingsSource::ConfigIni;
 
 				std::wcout << L"Portable mode active (from custom.ini)." << std::endl;
 			}
 
-			pcm = IniFile->ReadString(L"Main", L"useodbc", L"0"); // to do change to readint
+			pcm = IniFile->ReadInteger(L"Main", L"useodbc", 0);
 
-			if (pcm == L"1")
+			if (pcm == 1)
 			{
-				Database.DatabaseMode = __dbODBC;
+				Database.DatabaseMode = DBMode::ODBC;
 
 				Database.ODBCConnectionString = IniFile->ReadString(L"Main", L"connectionstring", L"");
 
@@ -403,9 +402,9 @@ bool Settings::LoadLanguage()
 }
 
 
-std::wstring Settings::ReadStringFromSettings(std::wstring section, std::wstring name, std::wstring default_value)
+std::wstring Settings::ReadStringFromSettings(const std::wstring section, const std::wstring name, const std::wstring default_value)
 {
-    if (Custom.SettingsSaveLocation == __SaveLocationConfigIni)
+    if (Custom.SettingsSaveLocation == SettingsSource::ConfigIni)
     {
 		std::wstring rs = __iniFile->ReadString(section, name, default_value);
 
@@ -418,11 +417,11 @@ std::wstring Settings::ReadStringFromSettings(std::wstring section, std::wstring
 }
 
 
-int Settings::ReadIntegerFromSettings(std::wstring section, std::wstring name, int default_value, int ifZero)
+int Settings::ReadIntegerFromSettings(const std::wstring section, const std::wstring name, int default_value, int ifZero)
 {
     int setting;
 
-    if (Custom.SettingsSaveLocation == __SaveLocationConfigIni)
+    if (Custom.SettingsSaveLocation == SettingsSource::ConfigIni)
     {
 		int ri = __iniFile->ReadInteger(section, name, default_value);
 
@@ -456,9 +455,9 @@ int Settings::ReadIntegerFromSettings(std::wstring section, std::wstring name, i
 }
 
 
-int Settings::ReadIntegerFromSettingsInputCheck(std::wstring section, std::wstring name, int default_value, int min, int max)
+int Settings::ReadIntegerFromSettingsInputCheck(const std::wstring section, const std::wstring name, int default_value, int min, int max)
 {
-	if (Custom.SettingsSaveLocation == __SaveLocationConfigIni)
+	if (Custom.SettingsSaveLocation == SettingsSource::ConfigIni)
 	{
 		int ri = __iniFile->ReadInteger(section, name, default_value);
 
@@ -487,9 +486,9 @@ int Settings::ReadIntegerFromSettingsInputCheck(std::wstring section, std::wstri
 }
 
 
-bool Settings::ReadBoolFromSettings(std::wstring section, std::wstring name, bool default_value)
+bool Settings::ReadBoolFromSettings(const std::wstring section, const std::wstring name, bool default_value)
 {
-    if (Custom.SettingsSaveLocation == __SaveLocationConfigIni)
+    if (Custom.SettingsSaveLocation == SettingsSource::ConfigIni)
     {
 		return true;
     }

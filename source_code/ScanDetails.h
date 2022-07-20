@@ -17,6 +17,7 @@
 #include <string>
 #include <vector>
 
+#include "Consolidated.h"
 #include "FileObject.h"
 #include "FileDateObject.h"
 #include "ReportConstants.h"
@@ -54,9 +55,9 @@ struct ScanData
 	unsigned __int64 AverageFileSize = 0;
 	float AverageFilesPerFolder = 0;
 
-	unsigned __int64 Magnitude[__MagnitudesCount][2];
-	unsigned __int64 FileAttributes[__AttributesCount][2];
-	unsigned __int64 ExtensionSpread[__FileCategoriesCount][2];
+	ConsolidatedData Magnitude[__MagnitudesCount];
+	ConsolidatedData FileAttributes[__AttributesCount];
+	ConsolidatedData ExtensionSpread[__FileCategoriesCount];
 
 	std::vector<FileObject> Files;
 	std::vector<std::wstring> Folders;
@@ -140,11 +141,11 @@ public:
 
 	void AddUserNotSpecified();
 
-	SizeOfFolder GetSizeOfFolder(std::wstring, std::wstring);
+	SizeOfFolder GetSizeOfFolder(const std::wstring, const std::wstring);
 
 	std::wstring GetDrive();
 
-	int GetFolderIndex(std::wstring);
+	int GetFolderIndex(const std::wstring);
 
 	void SortRootBySize();
 };

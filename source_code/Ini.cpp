@@ -21,13 +21,13 @@
 
 
 
-Ini::Ini(std::wstring file_name)
+Ini::Ini(const std::wstring file_name)
 {
 	Loaded = LoadFile(file_name);
 }
 
 
-bool Ini::LoadFile(std::wstring file_name)
+bool Ini::LoadFile(const std::wstring file_name)
 {
 	std::wifstream file(file_name);
 
@@ -57,7 +57,7 @@ bool Ini::LoadFile(std::wstring file_name)
 }
 
 
-int Ini::ReadInteger(std::wstring section, std::wstring key, int default)
+int Ini::ReadInteger(const std::wstring section, std::wstring key, int default)
 {
 	std::wstring::size_type sz;   // alias of size_t
 
@@ -79,7 +79,7 @@ int Ini::ReadInteger(std::wstring section, std::wstring key, int default)
 }
 
 
-std::wstring Ini::ReadString(std::wstring section, std::wstring key, std::wstring default)
+std::wstring Ini::ReadString(std::wstring section, std::wstring key, const std::wstring default)
 {
 	bool inSection = false;
 	std::wstring sectionName = L"";

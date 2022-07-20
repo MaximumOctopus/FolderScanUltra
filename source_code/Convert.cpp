@@ -61,7 +61,7 @@ namespace Convert
 		}
 		else if ((value >= 0) && (value < 1024))
 		{
-			return std::to_wstring(value) + L" " + GLanguageHandler->XText[rsBytes];
+			return std::to_wstring(value) + L" " + GLanguageHandler->Text[rsBytes];
 		}
 		else if (value < 1048576)
 		{

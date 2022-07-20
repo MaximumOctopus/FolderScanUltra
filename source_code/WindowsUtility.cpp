@@ -246,7 +246,7 @@ std::wstring WindowsUtility::GetFileOwner(std::wstring file_name)
 
 std::wstring WindowsUtility::GetUserFromWindows()
 {
-	wchar_t name[UNLEN + 1];
+	wchar_t name[UNLEN + 1] = L"";
 	DWORD size = UNLEN + 1;
 
 	if (GetUserNameW((LPWSTR)name, &size))
@@ -274,17 +274,17 @@ std::wstring WindowsUtility::GetDiskTypeString(const std::wstring& drive_root)
 
 		switch (ret)
 		{
-			case 0:               return GLanguageHandler->XText[rsDriveCannotDetermind];
-			case 1:               return GLanguageHandler->XText[rsTheRootNotExist];
-			case DRIVE_REMOVABLE: return GLanguageHandler->XText[rsRemovable];
-			case DRIVE_FIXED:     return GLanguageHandler->XText[rsHardDisk];
-			case DRIVE_REMOTE:    return GLanguageHandler->XText[rsRemoteDrive];
-			case DRIVE_CDROM:     return GLanguageHandler->XText[rsCDROM];
-			case DRIVE_RAMDISK:   return GLanguageHandler->XText[rsRAMDisk];
+			case 0:               return GLanguageHandler->Text[rsDriveCannotDetermind];
+			case 1:               return GLanguageHandler->Text[rsTheRootNotExist];
+			case DRIVE_REMOVABLE: return GLanguageHandler->Text[rsRemovable];
+			case DRIVE_FIXED:     return GLanguageHandler->Text[rsHardDisk];
+			case DRIVE_REMOTE:    return GLanguageHandler->Text[rsRemoteDrive];
+			case DRIVE_CDROM:     return GLanguageHandler->Text[rsCDROM];
+			case DRIVE_RAMDISK:   return GLanguageHandler->Text[rsRAMDisk];
 		}
 	}
 
-	return GLanguageHandler->XText[rsDriveCannotDetermind];
+	return GLanguageHandler->Text[rsDriveCannotDetermind];
 }
 
 

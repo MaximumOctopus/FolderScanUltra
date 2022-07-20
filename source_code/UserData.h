@@ -22,8 +22,8 @@ class UserData
 public:
     std::wstring Name = L"";
     
-	unsigned __int64 Data[2] = { 0, 0 };    // [0] count
-								            // [1] size
+    int Count = 0;
+    unsigned __int64 Size = 0;
 
     int CategoryDataQty[__FileCategoriesCount] = { 0 };
 	unsigned __int64 CategoryDataSize[__FileCategoriesCount] = { 0 };

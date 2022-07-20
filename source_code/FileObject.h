@@ -21,8 +21,10 @@ class FileObject
 {
 public:
     int FilePathIndex = 0;
+    
     std::wstring FileName = L"";
 	unsigned __int64 Size = 0;
+
     int SizeOnDisk = 0;
     int FileDateC = 0;	// yyyymmdd
     int FileDateA = 0;	// yyyymmdd

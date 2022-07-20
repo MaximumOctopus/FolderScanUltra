@@ -15,15 +15,19 @@
 
 #include <string>
 
+#include "Constants.h"
 #include "DatabaseODBC.h"
 #include "DatabaseSQlite.h"
+
+
+enum class DBMode { None = 0, SQLite = 1, ODBC = 2 };
 
 
 class DatabaseHandler
 {
 private:
 
-	int dbMode = 0;
+	DBMode dbMode = DBMode::None;
 
 	DatabaseODBC* dbODBC;
 	DatabaseSQlite* dbSQlite;
@@ -31,19 +35,19 @@ private:
 	bool InitSQlite(std::wstring);
 	bool InitODBC(std::wstring);
 
-	bool UpdateFolderScanUltraScanHistoryIni(std::wstring, std::wstring);
-	bool UpdateFolderScanUltraScanHistoryRegistry(std::wstring, std::wstring);
+	bool UpdateFolderScanUltraScanHistoryIni(const std::wstring, const std::wstring);
+	bool UpdateFolderScanUltraScanHistoryRegistry(const std::wstring, const std::wstring);
 
 public:
 
 	bool initOK = false;
 
-	bool UpdateFolderHistory(std::wstring, std::wstring);
+	bool UpdateFolderHistory(const std::wstring, const std::wstring);
 	bool UpdateFolderHistoryFile(void);
-	bool UpdateFolderScanUltraScanHistory(int, std::wstring, std::wstring);
+	bool UpdateFolderScanUltraScanHistory(SettingsSource, const std::wstring, const std::wstring);
 
-	bool UpdateFolderHistoryStructured(std::wstring, std::wstring);
+	bool UpdateFolderHistoryStructured(const std::wstring, const std::wstring);
 
-	DatabaseHandler(int, std::wstring);
+	DatabaseHandler(DBMode, const std::wstring);
 	~DatabaseHandler();
 };

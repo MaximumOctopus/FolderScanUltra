@@ -62,7 +62,7 @@ bool DatabaseSQlite::CreateConnection(void)
 }
 
 
-bool DatabaseSQlite::CreateNewFileTable(std::wstring table_name)
+bool DatabaseSQlite::CreateNewFileTable(const std::wstring table_name)
 {
 	std::wstring sql = L"CREATE TABLE \"" + table_name + L"\" (ID INTEGER PRIMARY KEY, " +
 									                  L"FilePath VARCHAR (1024), " +
@@ -110,7 +110,7 @@ bool DatabaseSQlite::CreateNewFileTable(std::wstring table_name)
 }
 
 
-bool DatabaseSQlite::CreateNewFolderTable(std::wstring table_name)
+bool DatabaseSQlite::CreateNewFolderTable(const std::wstring table_name)
 {
 	std::wstring sql = L"CREATE TABLE \"" + table_name + L"\" (ID INTEGER PRIMARY KEY, FilePath VARCHAR (1024));";
 
@@ -142,7 +142,7 @@ bool DatabaseSQlite::CreateNewFolderTable(std::wstring table_name)
 }
 
 
-bool DatabaseSQlite::PopulateFileTable(std::wstring table_name)
+bool DatabaseSQlite::PopulateFileTable(const std::wstring table_name)
 {
 	std::wcout << L"Populating File table..." << std::endl;
 
@@ -196,7 +196,7 @@ bool DatabaseSQlite::PopulateFileTable(std::wstring table_name)
 }
 
 
-bool DatabaseSQlite::PopulateFolderTable(std::wstring table_name)
+bool DatabaseSQlite::PopulateFolderTable(const std::wstring table_name)
 {
 	std::wcout << L"Populating Folder table..." << std::endl;
 
@@ -238,7 +238,7 @@ bool DatabaseSQlite::PopulateFolderTable(std::wstring table_name)
 // ======================================================================================================
 // ======================================================================================================
 
-bool DatabaseSQlite::CreateNewDataTable(std::wstring table_name)
+bool DatabaseSQlite::CreateNewDataTable(const std::wstring table_name)
 {
 	std::wstring sql = L"CREATE TABLE \"" + table_name + L"\" (ID INTEGER PRIMARY KEY, " +
 		L"FilePath VARCHAR (1024), " +
@@ -286,7 +286,7 @@ bool DatabaseSQlite::CreateNewDataTable(std::wstring table_name)
 }
 
 
-bool DatabaseSQlite::CreateNewSystemTable(std::wstring table_name)
+bool DatabaseSQlite::CreateNewSystemTable(const std::wstring table_name)
 {
 	std::wstring sql = L"CREATE TABLE \"" + table_name + L"\" (ID INTEGER PRIMARY KEY, " +
 													 	 L"TableName VARCHAR (255), " +
@@ -325,7 +325,7 @@ bool DatabaseSQlite::CreateNewSystemTable(std::wstring table_name)
 }
 
 
-bool DatabaseSQlite::PopulateDataTable(std::wstring table_name)
+bool DatabaseSQlite::PopulateDataTable(const std::wstring table_name)
 {
 	std::wcout << L"Populating Data table..." << "\n" << std::endl;
 
@@ -379,7 +379,7 @@ bool DatabaseSQlite::PopulateDataTable(std::wstring table_name)
 }
 
 
-bool DatabaseSQlite::PopulateSystemTable(std::wstring table_name, std::wstring data_table_name)
+bool DatabaseSQlite::PopulateSystemTable(const std::wstring table_name, const std::wstring data_table_name)
 {
 	std::wcout << L"Populating System table..." << "\n" << std::endl;
 

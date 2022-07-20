@@ -46,17 +46,17 @@ void Database()
 	{
 		std::wstring dbParameter;
 
-		if (GSettings->Database.DatabaseMode == __dbSQLite)
+		if (GSettings->Database.DatabaseMode == DBMode::SQLite)
 		{
 			dbParameter = GSystemGlobal->DataPath + L"FolderHistory\\Database\\FolderScanUltra.db";
 		}
-		else if (GSettings->Database.DatabaseMode == __dbODBC)
+		else if (GSettings->Database.DatabaseMode == DBMode::ODBC)
 		{
 			dbParameter = GSettings->Database.ODBCConnectionString;
 		}
 		else
 		{
-			std::wcout << L"Invalid ODBC mode: " << GSettings->Database.DatabaseMode << std::endl;
+			std::wcout << L"Invalid mode." << std::endl;
 
 			return;
 		}

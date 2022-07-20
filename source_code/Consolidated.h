@@ -13,13 +13,9 @@
 #pragma once
 
 
-#include <string>
-
-#include "ReportCSVReportOptions.h"
-
-
-namespace ReportCSV
+// used when an analysis category requires file count and file size.
+struct ConsolidatedData
 {
-	void Summary(CSVReportOptions);
-	void FullList(CSVReportOptions);
+	int Count = 0;
+	unsigned __int64 Size = 0;
 };

@@ -52,13 +52,13 @@ namespace ReportConsole
 		for (int r = 0; r < count; r++)
 		{
 			std::wstring str = Formatting::AddTrailing(L' ' + GScanDetails->Data.RootFolders[r].Name, TRDescriptionWidth, L' ') +
-				Formatting::AddLeading(std::to_wstring(GScanDetails->Data.RootFolders[r].Data[__RootCount]), TRQuantityWidth, L' ') + L"  " +
-				Formatting::AddLeading(Convert::DoubleToPercent((double)GScanDetails->Data.RootFolders[r].Data[__RootCount] / (double)GScanDetails->Data.FileCount), TRAsPercentWidth, L' ') + L"  " +
-				Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.RootFolders[r].Data[__RootSize]), TRSizeWidth, L' ');
+				Formatting::AddLeading(std::to_wstring(GScanDetails->Data.RootFolders[r].Count), TRQuantityWidth, L' ') + L"  " +
+				Formatting::AddLeading(Convert::DoubleToPercent((double)GScanDetails->Data.RootFolders[r].Count / (double)GScanDetails->Data.FileCount), TRAsPercentWidth, L' ') + L"  " +
+				Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.RootFolders[r].Size), TRSizeWidth, L' ');
 
 			if (GScanDetails->Data.TotalSize != 0)
 			{
-				str += Formatting::AddLeading(Convert::DoubleToPercent((double)GScanDetails->Data.RootFolders[r].Data[__RootSize] / (double)GScanDetails->Data.TotalSize), TRAsPercentWidth, L' ');
+				str += Formatting::AddLeading(Convert::DoubleToPercent((double)GScanDetails->Data.RootFolders[r].Size / (double)GScanDetails->Data.TotalSize), TRAsPercentWidth, L' ');
 			}
 			else
 			{

@@ -111,7 +111,7 @@ void DatabaseODBC::ShowError(unsigned int handle_type, const SQLHANDLE& handle)
 }
 
 
-bool DatabaseODBC::CreateNewFileTable(std::wstring table_name)
+bool DatabaseODBC::CreateNewFileTable(const std::wstring table_name)
 {
 	std::wstring sql = L"CREATE TABLE \"" + table_name + L"\" (ID INTEGER PRIMARY KEY, " +
 		L"FilePath VARCHAR (1024), " +
@@ -140,7 +140,7 @@ bool DatabaseODBC::CreateNewFileTable(std::wstring table_name)
 }
 
 
-bool DatabaseODBC::CreateNewFolderTable(std::wstring table_name)
+bool DatabaseODBC::CreateNewFolderTable(const std::wstring table_name)
 {
 	std::wstring sql = L"CREATE TABLE \"" + table_name + L"\" (ID INTEGER PRIMARY KEY, FilePath VARCHAR (1024));";
 
@@ -153,7 +153,7 @@ bool DatabaseODBC::CreateNewFolderTable(std::wstring table_name)
 }
 
 
-bool DatabaseODBC::PopulateFileTable(std::wstring table_name)
+bool DatabaseODBC::PopulateFileTable(const std::wstring table_name)
 {
 	std::wcout << L"Populating File table..." << std::endl;
 
@@ -191,7 +191,7 @@ bool DatabaseODBC::PopulateFileTable(std::wstring table_name)
 }
 
 
-bool DatabaseODBC::PopulateFolderTable(std::wstring table_name)
+bool DatabaseODBC::PopulateFolderTable(const std::wstring table_name)
 {
 	std::wcout << L"Populating Folder table..." << std::endl;
 
@@ -218,7 +218,7 @@ bool DatabaseODBC::PopulateFolderTable(std::wstring table_name)
 // ======================================================================================================
 // ======================================================================================================
 
-bool DatabaseODBC::CreateNewDataTable(std::wstring table_name)
+bool DatabaseODBC::CreateNewDataTable(const std::wstring table_name)
 {
 	std::wstring sql = L"CREATE TABLE \"" + table_name + L"\" (ID INTEGER PRIMARY KEY, " +
 		L"FilePath VARCHAR (1024), " +
@@ -247,7 +247,7 @@ bool DatabaseODBC::CreateNewDataTable(std::wstring table_name)
 }
 
 
-bool DatabaseODBC::CreateNewSystemTable(std::wstring table_name)
+bool DatabaseODBC::CreateNewSystemTable(const std::wstring table_name)
 {
 	std::wstring sql = L"CREATE TABLE \"" + table_name + L"\" (ID INTEGER PRIMARY KEY, " +
 		L"TableName VARCHAR (255), " +
@@ -267,7 +267,7 @@ bool DatabaseODBC::CreateNewSystemTable(std::wstring table_name)
 }
 
 
-bool DatabaseODBC::PopulateDataTable(std::wstring table_name)
+bool DatabaseODBC::PopulateDataTable(const std::wstring table_name)
 {
 	std::wcout << L"Populating Data table..." << "\n" << std::endl;
 
@@ -307,7 +307,7 @@ bool DatabaseODBC::PopulateDataTable(std::wstring table_name)
 }
 
 
-bool DatabaseODBC::PopulateSystemTable(std::wstring table_name, std::wstring data_table_name)
+bool DatabaseODBC::PopulateSystemTable(const std::wstring table_name, const std::wstring data_table_name)
 {
 	std::wcout << L"Populating System table..." << "\n" << std::endl;
 

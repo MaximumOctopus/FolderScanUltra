@@ -15,9 +15,9 @@
 
 UserData::UserData(void)
 {
-    Name    = L"";
-    Data[0] = 0;
-    Data[1] = 0;
+    Name = L"";
+    Count = 0;
+    Size = 0;
 
     for (int t = 0; t < __FileCategoriesCount; t++)
     {

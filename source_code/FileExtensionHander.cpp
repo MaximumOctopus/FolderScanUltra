@@ -83,7 +83,7 @@ int FileExtensionHandler::GetExtensionCategoryIDFromName(const std::wstring file
 }
 
 
-ExtensionSearch FileExtensionHandler::GetExtensionCategoryID(std::wstring extension)
+ExtensionSearch FileExtensionHandler::GetExtensionCategoryID(const std::wstring extension)
 {
 	ExtensionSearch extension_search;
 

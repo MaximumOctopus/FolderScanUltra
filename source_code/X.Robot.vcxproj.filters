@@ -276,6 +276,9 @@
     <ClInclude Include="ReportTreeOptions.h">
       <Filter>Header Files\Reports</Filter>
     </ClInclude>
+    <ClInclude Include="Consolidated.h">
+      <Filter>Header Files\Data Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="X.Robot.rc" />

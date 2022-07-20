@@ -43,7 +43,7 @@ namespace ReportXML
 
 		if (ofile)
 		{
-			std::wcout << GLanguageHandler->XText[rsSavingReports] + L" (XML):" << "\n";
+			std::wcout << GLanguageHandler->Text[rsSavingReports] + L" (XML):" << "\n";
 			std::wcout << options.FileName << "\n" << "\n";
 
 			ofile << L"<?xml version=\"1.0\"?>" << "\n";
@@ -104,7 +104,7 @@ namespace ReportXML
 		else
 		{
 			std::wcout << "\n";
-			std::wcout << GLanguageHandler->XText[rsErrorSaving] + L" \"" + options.FileName + L"\"." << "\n";
+			std::wcout << GLanguageHandler->Text[rsErrorSaving] + L" \"" + options.FileName + L"\"." << "\n";
 			std::wcout << std::endl;
 		}
 	}
@@ -153,13 +153,13 @@ namespace ReportXML
 			for (int t = 0; t < __AttributesToDisplayCount; t++)
 			{
 				ofile << L"  <attribute name=\"" + GLanguageHandler->LanguageTypes[t] + L"\">" << "\n";
-				ofile << Formatting::InsertElement(L"numberfiles", std::to_wstring(GScanDetails->Data.FileAttributes[t][__faCount]), 2) << "\n";
-				ofile << Formatting::InsertElement(L"numberfilesaspercent", Convert::DoubleToPercent((double)GScanDetails->Data.FileAttributes[t][__faCount] / (double)GScanDetails->Data.FileCount), 2) << "\n";
-				ofile << Formatting::InsertElement(L"sizeoffiles", Convert::ConvertToUsefulUnit(GScanDetails->Data.FileAttributes[t][__faSize]), 2) << "\n";
+				ofile << Formatting::InsertElement(L"numberfiles", std::to_wstring(GScanDetails->Data.FileAttributes[t].Count), 2) << "\n";
+				ofile << Formatting::InsertElement(L"numberfilesaspercent", Convert::DoubleToPercent((double)GScanDetails->Data.FileAttributes[t].Count / (double)GScanDetails->Data.FileCount), 2) << "\n";
+				ofile << Formatting::InsertElement(L"sizeoffiles", Convert::ConvertToUsefulUnit(GScanDetails->Data.FileAttributes[t].Size), 2) << "\n";
 
 				if (GScanDetails->Data.TotalSize != 0)
 				{
-					ofile << Formatting::InsertElement(L"sizeoffilesaspercent", Convert::DoubleToPercent((double)GScanDetails->Data.FileAttributes[t][__faSize] / (double)GScanDetails->Data.TotalSize), 2) << "\n";
+					ofile << Formatting::InsertElement(L"sizeoffilesaspercent", Convert::DoubleToPercent((double)GScanDetails->Data.FileAttributes[t].Size / (double)GScanDetails->Data.TotalSize), 2) << "\n";
 				}
 				else
 				{
@@ -183,14 +183,14 @@ namespace ReportXML
 			for (int t = 0; t < __FileCategoriesCount; t++)
 			{
 				ofile << L"  <category name=\"" + GLanguageHandler->TypeDescriptions[t] + L"\" >" << "\n";
-				ofile << Formatting::InsertElement(L"umberfiles", std::to_wstring(GScanDetails->Data.ExtensionSpread[t][__esCount]), 2) << "\n";
-				ofile << Formatting::InsertElement(L"numberfilesaspercent", std::to_wstring(std::round(((double)GScanDetails->Data.ExtensionSpread[t][__esCount] / (double)GScanDetails->Data.FileCount) * 100)), 2) << "\n";
+				ofile << Formatting::InsertElement(L"umberfiles", std::to_wstring(GScanDetails->Data.ExtensionSpread[t].Count), 2) << "\n";
+				ofile << Formatting::InsertElement(L"numberfilesaspercent", std::to_wstring(std::round(((double)GScanDetails->Data.ExtensionSpread[t].Count / (double)GScanDetails->Data.FileCount) * 100)), 2) << "\n";
 
-				ofile << Formatting::InsertElement(L"sizeoffiles", Convert::ConvertToUsefulUnit(GScanDetails->Data.ExtensionSpread[t][__esSize]), 2) << "\n";
+				ofile << Formatting::InsertElement(L"sizeoffiles", Convert::ConvertToUsefulUnit(GScanDetails->Data.ExtensionSpread[t].Size), 2) << "\n";
 
 				if (GScanDetails->Data.TotalSize != 0)
 				{
-					ofile << Formatting::InsertElement(L"sizeoffilesaspercent", std::to_wstring(std::round(((double)GScanDetails->Data.ExtensionSpread[t][__esSize] / (double)GScanDetails->Data.TotalSize) * 100)), 2) << "\n";
+					ofile << Formatting::InsertElement(L"sizeoffilesaspercent", std::to_wstring(std::round(((double)GScanDetails->Data.ExtensionSpread[t].Size / (double)GScanDetails->Data.TotalSize) * 100)), 2) << "\n";
 				}
 				else
 				{
@@ -215,13 +215,13 @@ namespace ReportXML
 			{
 				ofile << L"  <folder name=\"" + GScanDetails->Data.RootFolders[t].Name + L"\" hidden=\"" + Utility::BoolToString((GScanDetails->Data.RootFolders[t].Attributes & FILE_ATTRIBUTE_HIDDEN) == FILE_ATTRIBUTE_HIDDEN) + L"\">" << "\n";
 
-				ofile << Formatting::InsertElement(L"numberoffiles", std::to_wstring(GScanDetails->Data.RootFolders[t].Data[__RootCount]), 2) << "\n";
-				ofile << Formatting::InsertElement(L"numberoffilesaspercent", std::to_wstring(std::round(((double)GScanDetails->Data.RootFolders[t].Data[__RootCount] / (double)GScanDetails->Data.FileCount) * 100)), 2) << "\n";
-				ofile << Formatting::InsertElement(L"sizeoffiles", Convert::ConvertToUsefulUnit(GScanDetails->Data.RootFolders[t].Data[__RootSize]), 2) << "\n";
+				ofile << Formatting::InsertElement(L"numberoffiles", std::to_wstring(GScanDetails->Data.RootFolders[t].Count), 2) << "\n";
+				ofile << Formatting::InsertElement(L"numberoffilesaspercent", std::to_wstring(std::round(((double)GScanDetails->Data.RootFolders[t].Count / (double)GScanDetails->Data.FileCount) * 100)), 2) << "\n";
+				ofile << Formatting::InsertElement(L"sizeoffiles", Convert::ConvertToUsefulUnit(GScanDetails->Data.RootFolders[t].Size), 2) << "\n";
 
 				if (GScanDetails->Data.TotalSize != 0)
 				{
-					ofile << Formatting::InsertElement(L"sizeoffilesaspercent", std::to_wstring(std::round(((double)GScanDetails->Data.RootFolders[t].Data[__RootSize] / (double)GScanDetails->Data.TotalSize) * 100)), 2) << "\n";
+					ofile << Formatting::InsertElement(L"sizeoffilesaspercent", std::to_wstring(std::round(((double)GScanDetails->Data.RootFolders[t].Size / (double)GScanDetails->Data.TotalSize) * 100)), 2) << "\n";
 				}
 				else
 				{
@@ -245,13 +245,13 @@ namespace ReportXML
 			for (int t = 0; t < __MagnitudesCount; t++)
 			{
 				ofile << L"  <magnitude name=\"" + __MagniLabels3[t] + L"\">" << "\n";
-				ofile << Formatting::InsertElement(L"numberoffiles", std::to_wstring(GScanDetails->Data.Magnitude[t][__mCount]), 2) << "\n";
-				ofile << Formatting::InsertElement(L"numberoffilesaspercent", std::to_wstring(std::round(((double)GScanDetails->Data.Magnitude[t][__mCount] / (double)GScanDetails->Data.FileCount) * 100)), 2) << "\n";
-				ofile << Formatting::InsertElement(L"sizeoffiles", Convert::ConvertToUsefulUnit(GScanDetails->Data.Magnitude[t][__mSize]), 2) << "\n";
+				ofile << Formatting::InsertElement(L"numberoffiles", std::to_wstring(GScanDetails->Data.Magnitude[t].Count), 2) << "\n";
+				ofile << Formatting::InsertElement(L"numberoffilesaspercent", std::to_wstring(std::round(((double)GScanDetails->Data.Magnitude[t].Count / (double)GScanDetails->Data.FileCount) * 100)), 2) << "\n";
+				ofile << Formatting::InsertElement(L"sizeoffiles", Convert::ConvertToUsefulUnit(GScanDetails->Data.Magnitude[t].Size), 2) << "\n";
 
 				if (GScanDetails->Data.TotalSize != 0)
 				{
-					ofile << Formatting::InsertElement(L"sizeoffilesaspercent", std::to_wstring(std::round(((double)GScanDetails->Data.Magnitude[t][__mSize] / (double)GScanDetails->Data.TotalSize) * 100)), 2) << "\n";
+					ofile << Formatting::InsertElement(L"sizeoffilesaspercent", std::to_wstring(std::round(((double)GScanDetails->Data.Magnitude[t].Size / (double)GScanDetails->Data.TotalSize) * 100)), 2) << "\n";
 				}
 				else
 				{
@@ -275,13 +275,13 @@ namespace ReportXML
 			if (GScanDetails->Data.FileCount != 0)
 			{
 				ofile << L"  <extensioncategory name=\"" + GLanguageHandler->TypeDescriptions[t] + L"\">" << "\n";
-				ofile << Formatting::InsertElement(L"numberoffiles", std::to_wstring(GScanDetails->Data.ExtensionSpread[t][__esCount]), 2) << "\n";
-				ofile << Formatting::InsertElement(L"numberoffilesaspercent", std::to_wstring(std::round(((double)GScanDetails->Data.ExtensionSpread[t][__esCount] / (double)GScanDetails->Data.FileCount) * 100)), 2) << "\n";
-				ofile << Formatting::InsertElement(L"sizoffiles", Convert::ConvertToUsefulUnit(GScanDetails->Data.ExtensionSpread[t][__esSize]), 2) << "\n";
+				ofile << Formatting::InsertElement(L"numberoffiles", std::to_wstring(GScanDetails->Data.ExtensionSpread[t].Count), 2) << "\n";
+				ofile << Formatting::InsertElement(L"numberoffilesaspercent", std::to_wstring(std::round(((double)GScanDetails->Data.ExtensionSpread[t].Count / (double)GScanDetails->Data.FileCount) * 100)), 2) << "\n";
+				ofile << Formatting::InsertElement(L"sizoffiles", Convert::ConvertToUsefulUnit(GScanDetails->Data.ExtensionSpread[t].Size), 2) << "\n";
 
 				if (GScanDetails->Data.TotalSize != 0)
 				{
-					ofile << Formatting::InsertElement(L"sizeoffilesaspercent", std::to_wstring(std::round(((double)GScanDetails->Data.ExtensionSpread[t][__esSize] / (double)GScanDetails->Data.TotalSize) * 100)), 2) << "\n";
+					ofile << Formatting::InsertElement(L"sizeoffilesaspercent", std::to_wstring(std::round(((double)GScanDetails->Data.ExtensionSpread[t].Size / (double)GScanDetails->Data.TotalSize) * 100)), 2) << "\n";
 				}
 				else
 				{
@@ -448,13 +448,13 @@ namespace ReportXML
 			for (int t = 0; t < GScanDetails->Data.Users.size(); t++)
 			{
 				ofile << L"<user name=\"" + GScanDetails->Data.Users[t].Name + L"\">" << "\n";
-				ofile << Formatting::InsertElement(L"numberfiles", std::to_wstring(GScanDetails->Data.Users[t].Data[__UserCount]), 2) << "\n";
-				ofile << Formatting::InsertElement(L"numberfilesaspercent", Convert::DoubleToPercent((double)GScanDetails->Data.Users[t].Data[__UserCount] / (double)GScanDetails->Data.FileCount), 2) << "\n";
-				ofile << Formatting::InsertElement(L"sizeoffiles", Convert::ConvertToUsefulUnit(GScanDetails->Data.Users[t].Data[__UserSize]), 2) << "\n";
+				ofile << Formatting::InsertElement(L"numberfiles", std::to_wstring(GScanDetails->Data.Users[t].Count), 2) << "\n";
+				ofile << Formatting::InsertElement(L"numberfilesaspercent", Convert::DoubleToPercent((double)GScanDetails->Data.Users[t].Count / (double)GScanDetails->Data.FileCount), 2) << "\n";
+				ofile << Formatting::InsertElement(L"sizeoffiles", Convert::ConvertToUsefulUnit(GScanDetails->Data.Users[t].Size), 2) << "\n";
 
 				if (GScanDetails->Data.TotalSize != 0)
 				{
-					ofile << Formatting::InsertElement(L"sizeoffilesaspercent", Convert::DoubleToPercent((double)GScanDetails->Data.Users[t].Data[__UserSize] / (double)GScanDetails->Data.TotalSize), 2) << "\n";
+					ofile << Formatting::InsertElement(L"sizeoffilesaspercent", Convert::DoubleToPercent((double)GScanDetails->Data.Users[t].Size / (double)GScanDetails->Data.TotalSize), 2) << "\n";
 				}
 				else
 				{
@@ -543,7 +543,7 @@ namespace ReportXML
 
 		if (ofile)
 		{
-			std::wcout << GLanguageHandler->XText[rsSavingReports] + L" (XML Full List): " << "\n";
+			std::wcout << GLanguageHandler->Text[rsSavingReports] + L" (XML Full List): " << "\n";
 			std::wcout << "\n";
 
 			ofile << L"<?xml version=\"1.0\"?>" << "\n";

@@ -24,7 +24,6 @@ private:
 	sqlite3 *db;
 
 	std::wstring dbFileName = L"";
-	int dbMode = 0;
 
 	bool CreateConnection(void);
 
@@ -32,17 +31,17 @@ public:
 
 	bool dbAvailable = false;
 
-	bool CreateNewFileTable(std::wstring);
-	bool CreateNewFolderTable(std::wstring);
+	bool CreateNewFileTable(const std::wstring);
+	bool CreateNewFolderTable(const std::wstring);
 
-	bool PopulateFileTable(std::wstring);
-	bool PopulateFolderTable(std::wstring);
+	bool PopulateFileTable(const std::wstring);
+	bool PopulateFolderTable(const std::wstring);
 
-	bool CreateNewDataTable(std::wstring);
-	bool CreateNewSystemTable(std::wstring);
+	bool CreateNewDataTable(const std::wstring);
+	bool CreateNewSystemTable(const std::wstring);
 
-	bool PopulateDataTable(std::wstring);
-	bool PopulateSystemTable(std::wstring, std::wstring);
+	bool PopulateDataTable(const std::wstring);
+	bool PopulateSystemTable(const std::wstring, const std::wstring);
 
 	DatabaseSQlite(std::wstring);
 	~DatabaseSQlite();

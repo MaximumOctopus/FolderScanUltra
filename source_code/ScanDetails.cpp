@@ -36,7 +36,7 @@ ScanDetails* GScanDetails;
 bool sortBySize(const FileObject &lhs, const FileObject &rhs) { return lhs.Size < rhs.Size; }
 bool sortByDate(const FileObject &lhs, const FileObject &rhs) { return lhs.FileDateC < rhs.FileDateC; }
 
-bool sortRootBySize(const RootFolder& lhs, const RootFolder& rhs) { return lhs.Data[__RootSize] > rhs.Data[__RootSize]; }
+bool sortRootBySize(const RootFolder& lhs, const RootFolder& rhs) { return lhs.Size > rhs.Size; }
 
 bool sortRootByLength(const RootFolder& lhs, const RootFolder& rhs) { return lhs.Name.length() > rhs.Name.length(); }
 
@@ -80,28 +80,28 @@ void ScanDetails::ClearData()
 
 	for (int t = 0; t < __MagnitudesCount; t++)
 	{
-		Data.Magnitude[t][__mCount] = 0;
-		Data.Magnitude[t][__mSize]  = 0;
+		Data.Magnitude[t].Count = 0;
+		Data.Magnitude[t].Size = 0;
 	}
 
 	for (int t = 0; t < __AttributesCount; t++)
 	{
-		Data.FileAttributes[t][__faCount] = 0;
-		Data.FileAttributes[t][__faSize]  = 0;
+		Data.FileAttributes[t].Count = 0;
+		Data.FileAttributes[t].Size = 0;
 	}
 
 	for (int t = 0; t < __FileCategoriesCount; t++)
 	{
-		Data.ExtensionSpread[t][__esCount] = 0;
-		Data.ExtensionSpread[t][__esSize]  = 0;
+		Data.ExtensionSpread[t].Count = 0;
+		Data.ExtensionSpread[t].Size = 0;
 	}
 
 	RootFolder rfd;
 
 	rfd.Name        = L"\\ (root)";
 	rfd.Attributes  = 0;
-	rfd.Data[0]	    = 0;
-	rfd.Data[1]     = 0;
+	rfd.Size        = 0;
+	rfd.Count       = 0;
 	rfd.FilesInRoot = true;
 
 	Data.RootFolders.push_back(rfd);
@@ -112,9 +112,9 @@ void ScanDetails::AddUserNotSpecified()
 {
 	UserData ud;
 	
-	ud.Name    = GLanguageHandler->XText[rsNOT_SPECIFIED];
-	ud.Data[0] = Data.FileCount;
-	ud.Data[1] = Data.TotalSize;
+	ud.Name    = GLanguageHandler->Text[rsNOT_SPECIFIED];
+	ud.Count = Data.FileCount;
+	ud.Size = Data.TotalSize;
 
 	Data.Users.push_back(ud);
 }
@@ -234,8 +234,8 @@ bool ScanDetails::Analyse()
 			
 					rfd.Name       = s.substr(idx + 1);
 					rfd.Attributes = Data.Files[t].Attributes;
-					rfd.Data[0]    = 0;
-					rfd.Data[1]    = 0;
+					rfd.Size       = 0;
+					rfd.Count      = 0;
 					
 					Data.RootFolders.push_back(rfd);
 				}
@@ -252,74 +252,74 @@ bool ScanDetails::Analyse()
 
 			if (Data.Files[t].Attributes & FILE_ATTRIBUTE_HIDDEN)
 			{
-				Data.FileAttributes[__FileType_Hidden][0]++;
-				Data.FileAttributes[__FileType_Hidden][1] += Data.Files[t].Size;
+				Data.FileAttributes[__FileType_Hidden].Count++;
+				Data.FileAttributes[__FileType_Hidden].Size += Data.Files[t].Size;
 			}
 
 			if (Data.Files[t].Attributes & FILE_ATTRIBUTE_SYSTEM)
 			{
-				Data.FileAttributes[__FileType_System][0]++;
-				Data.FileAttributes[__FileType_System][1] += Data.Files[t].Size;
+				Data.FileAttributes[__FileType_System].Count++;
+				Data.FileAttributes[__FileType_System].Size += Data.Files[t].Size;
 			}
 
 			if (Data.Files[t].Attributes & FILE_ATTRIBUTE_ARCHIVE)
 			{
-				Data.FileAttributes[__FileType_Archive][0]++;
-				Data.FileAttributes[__FileType_Archive][1] += Data.Files[t].Size;
+				Data.FileAttributes[__FileType_Archive].Count++;
+				Data.FileAttributes[__FileType_Archive].Size += Data.Files[t].Size;
 			}
 
 			if (Data.Files[t].Attributes & FILE_ATTRIBUTE_READONLY)
 			{
-				Data.FileAttributes[__FileType_ReadOnly][0]++;
-				Data.FileAttributes[__FileType_ReadOnly][1] += Data.Files[t].Size;
+				Data.FileAttributes[__FileType_ReadOnly].Count++;
+				Data.FileAttributes[__FileType_ReadOnly].Size += Data.Files[t].Size;
 			}
 
 			if (Data.Files[t].Attributes & FILE_ATTRIBUTE_COMPRESSED)
 			{
-				Data.FileAttributes[__FileType_Compressed][0]++;
-				Data.FileAttributes[__FileType_Compressed][1] += Data.Files[t].Size;
+				Data.FileAttributes[__FileType_Compressed].Count++;
+				Data.FileAttributes[__FileType_Compressed].Size += Data.Files[t].Size;
 			}
 
 			if (Data.Files[t].Attributes & FILE_ATTRIBUTE_ENCRYPTED)
 			{
-				Data.FileAttributes[__FileType_Encrypted][0]++;
-				Data.FileAttributes[__FileType_Encrypted][1] += Data.Files[t].Size;
+				Data.FileAttributes[__FileType_Encrypted].Count++;
+				Data.FileAttributes[__FileType_Encrypted].Size += Data.Files[t].Size;
 			}
 
 			if (Data.Files[t].Attributes & FILE_ATTRIBUTE_RECALL_ON_OPEN)
 			{
-				Data.FileAttributes[__FileType_RecallOnOpen][0]++;
-				Data.FileAttributes[__FileType_RecallOnOpen][1] += Data.Files[t].Size;
+				Data.FileAttributes[__FileType_RecallOnOpen].Count++;
+				Data.FileAttributes[__FileType_RecallOnOpen].Size += Data.Files[t].Size;
 			}
 
 			if (Data.Files[t].Attributes & FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS)
 			{
-				Data.FileAttributes[__FileType_RecallOnDataAccess][0]++;
-				Data.FileAttributes[__FileType_RecallOnDataAccess][1] += Data.Files[t].Size;
+				Data.FileAttributes[__FileType_RecallOnDataAccess].Count++;
+				Data.FileAttributes[__FileType_RecallOnDataAccess].Size += Data.Files[t].Size;
 			}
 
 			if (Data.Files[t].Attributes & FILE_ATTRIBUTE_OFFLINE)
 			{
-				Data.FileAttributes[__FileType_Offline][0]++;
-				Data.FileAttributes[__FileType_Offline][1] += Data.Files[t].Size;
+				Data.FileAttributes[__FileType_Offline].Count++;
+				Data.FileAttributes[__FileType_Offline].Size += Data.Files[t].Size;
 			}
 
 			if (Data.Files[t].FileDateC == TodayAsInteger)
 			{
-				Data.FileAttributes[__FileType_CreatedToday][0]++;
-				Data.FileAttributes[__FileType_CreatedToday][1] += Data.Files[t].Size;
+				Data.FileAttributes[__FileType_CreatedToday].Count++;
+				Data.FileAttributes[__FileType_CreatedToday].Size += Data.Files[t].Size;
 			}
 
 			if (Data.Files[t].FileDateA == TodayAsInteger)
 			{
-				Data.FileAttributes[__FileType_AccessedToday][0]++;
-				Data.FileAttributes[__FileType_AccessedToday][1] += Data.Files[t].Size;
+				Data.FileAttributes[__FileType_AccessedToday].Count++;
+				Data.FileAttributes[__FileType_AccessedToday].Size += Data.Files[t].Size;
 			}
 
 			if (Data.Files[t].FileDateM == TodayAsInteger)
 			{
-				Data.FileAttributes[__FileType_ModifiedToday][0]++;
-				Data.FileAttributes[__FileType_ModifiedToday][1] += Data.Files[t].Size;
+				Data.FileAttributes[__FileType_ModifiedToday].Count++;
+				Data.FileAttributes[__FileType_ModifiedToday].Size += Data.Files[t].Size;
 			}
 
 			if ((AllowVirtualFiles) ||
@@ -341,8 +341,8 @@ bool ScanDetails::Analyse()
 
 				if (!exi.Found)  // "other" extension
 				{
-					Data.ExtensionSpread[__FileCategoriesOther][0]++;
-					Data.ExtensionSpread[__FileCategoriesOther][1] += Data.Files[t].Size;
+					Data.ExtensionSpread[__FileCategoriesOther].Count++;
+					Data.ExtensionSpread[__FileCategoriesOther].Size += Data.Files[t].Size;
 
 					FileExtension tfx;
 
@@ -361,8 +361,8 @@ bool ScanDetails::Analyse()
 					{
 						if (exi.Category[i] != -1)
 						{
-							Data.ExtensionSpread[i][0]++;
-							Data.ExtensionSpread[i][1] += Data.Files[t].Size;
+							Data.ExtensionSpread[i].Count++;
+							Data.ExtensionSpread[i].Size += Data.Files[t].Size;
 
 							GFileExtensionHandler->Extensions[exi.Category[i]].Quantity++;
 							GFileExtensionHandler->Extensions[exi.Category[i]].Size += Data.Files[t].Size;
@@ -378,75 +378,75 @@ bool ScanDetails::Analyse()
 
 				if ((Data.Files[t].Size >= 0) && (Data.Files[t].Size <= 1024))
 				{
-					Data.Magnitude[0][__mCount]++;
-					Data.Magnitude[0][__mSize] += Data.Files[t].Size;
+					Data.Magnitude[0].Count++;
+					Data.Magnitude[0].Size += Data.Files[t].Size;
 
 					if (Data.Files[t].Size == 0)
 					{
-						Data.FileAttributes[__FileType_Null][__faCount]++;
+						Data.FileAttributes[__FileType_Null].Count++;
 
 						Data.NullFiles.push_back(Data.Folders[Data.Files[t].FilePathIndex] + Data.Files[t].FileName);
 					}
 				}
 				else if ((Data.Files[t].Size > 1024) && (Data.Files[t].Size <= 1048576))
 				{
-					Data.Magnitude[1][__mCount]++;
-					Data.Magnitude[1][__mSize] += Data.Files[t].Size;
+					Data.Magnitude[1].Count++;
+					Data.Magnitude[1].Size += Data.Files[t].Size;
 				}
 				else if ((Data.Files[t].Size > 1048576) && (Data.Files[t].Size <= 10485760))
 				{
-					Data.Magnitude[2][__mCount]++;
-					Data.Magnitude[2][__mSize] += Data.Files[t].Size;
+					Data.Magnitude[2].Count++;
+					Data.Magnitude[2].Size += Data.Files[t].Size;
 				}
 				else if ((Data.Files[t].Size > 10485760) && (Data.Files[t].Size <= 52428800))
 				{
-					Data.Magnitude[3][__mCount]++;
-					Data.Magnitude[3][__mSize] += Data.Files[t].Size;
+					Data.Magnitude[3].Count++;
+					Data.Magnitude[3].Size += Data.Files[t].Size;
 				}
 				else if ((Data.Files[t].Size > 52428800) && (Data.Files[t].Size <= 104857600))
 				{
-					Data.Magnitude[4][__mCount]++;
-					Data.Magnitude[4][__mSize] += Data.Files[t].Size;
+					Data.Magnitude[4].Count++;
+					Data.Magnitude[4].Size += Data.Files[t].Size;
 				}
 				else if ((Data.Files[t].Size > 104857600) && (Data.Files[t].Size <= 157286400))
 				{
-					Data.Magnitude[5][__mCount]++;
-					Data.Magnitude[5][__mSize] += Data.Files[t].Size;
+					Data.Magnitude[5].Count++;
+					Data.Magnitude[5].Size += Data.Files[t].Size;
 				}
 				else if ((Data.Files[t].Size > 157286400) && (Data.Files[t].Size <= 209715200))
 				{
-					Data.Magnitude[6][__mCount]++;
-					Data.Magnitude[6][__mSize] += Data.Files[t].Size;
+					Data.Magnitude[6].Count++;
+					Data.Magnitude[6].Size += Data.Files[t].Size;
 				}
 				else if ((Data.Files[t].Size > 209715200) && (Data.Files[t].Size <= 262144000))
 				{
-					Data.Magnitude[7][__mCount]++;
-					Data.Magnitude[7][__mSize] += Data.Files[t].Size;
+					Data.Magnitude[7].Count++;
+					Data.Magnitude[7].Size += Data.Files[t].Size;
 				}
 				else if ((Data.Files[t].Size > 262144000) && (Data.Files[t].Size <= 524288000))
 				{
-					Data.Magnitude[8][__mCount]++;
-					Data.Magnitude[8][__mSize] += Data.Files[t].Size;
+					Data.Magnitude[8].Count++;
+					Data.Magnitude[8].Size += Data.Files[t].Size;
 				}
 				else if ((Data.Files[t].Size > 524288000) && (Data.Files[t].Size <= 1048576000))
 				{
-					Data.Magnitude[9][__mCount]++;
-					Data.Magnitude[9][__mSize] += Data.Files[t].Size;
+					Data.Magnitude[9].Count++;
+					Data.Magnitude[9].Size += Data.Files[t].Size;
 				}
 				else if ((Data.Files[t].Size > 1048576000) && (Data.Files[t].Size <= 2097152000))
 				{
-					Data.Magnitude[10][__mCount]++;
-					Data.Magnitude[10][__mSize] += Data.Files[t].Size;
+					Data.Magnitude[10].Count++;
+					Data.Magnitude[10].Size += Data.Files[t].Size;
 				}
 				else if ((Data.Files[t].Size > 2097152000) && (Data.Files[t].Size <= 5242880000))
 				{
-					Data.Magnitude[11][__mCount]++;
-					Data.Magnitude[11][__mSize] += Data.Files[t].Size;
+					Data.Magnitude[11].Count++;
+					Data.Magnitude[11].Size += Data.Files[t].Size;
 				}
 				else
 				{
-					Data.Magnitude[12][__mCount]++;
-					Data.Magnitude[12][__mSize] += Data.Files[t].Size;
+					Data.Magnitude[12].Count++;
+					Data.Magnitude[12].Size += Data.Files[t].Size;
 				}
 
 				// =======================================================================
@@ -461,8 +461,8 @@ bool ScanDetails::Analyse()
 						Data.Users[Data.Files[t].Owner].CategoryDataSize[Data.Files[t].Category] += Data.Files[t].Size;
 					}
 
-					Data.Users[Data.Files[t].Owner].Data[__UserCount]++;
-					Data.Users[Data.Files[t].Owner].Data[__UserSize] += Data.Files[t].Size;
+					Data.Users[Data.Files[t].Owner].Count++;
+					Data.Users[Data.Files[t].Owner].Size += Data.Files[t].Size;
 				}
 			}
 
@@ -633,8 +633,8 @@ bool ScanDetails::AnalyseFast()
 
 					rfd.Name = s.substr(idx + 1);
 					rfd.Attributes = Data.Files[t].Attributes;
-					rfd.Data[0] = 0;
-					rfd.Data[1] = 0;
+					rfd.Size = 0;
+					rfd.Count = 0;
 
 					Data.RootFolders.push_back(rfd);
 				}
@@ -737,8 +737,8 @@ void ScanDetails::AnalyseRootFolders()
 				{
 					if (filepath.find(Path.String + Data.RootFolders[i].Name) != std::wstring::npos)
 					{
-						Data.RootFolders[i].Data[__RootCount]++;
-						Data.RootFolders[i].Data[__RootSize] += Data.Files[t].Size;
+						Data.RootFolders[i].Count++;
+						Data.RootFolders[i].Size += Data.Files[t].Size;
 
 						louise = i;
 					}
@@ -749,8 +749,8 @@ void ScanDetails::AnalyseRootFolders()
 				//must be in root directory
 				if (louise == -1)
 				{
-					Data.RootFolders[SpecialRoot].Data[__RootCount]++;
-					Data.RootFolders[SpecialRoot].Data[__RootSize] += Data.Files[t].Size;
+					Data.RootFolders[SpecialRoot].Count++;
+					Data.RootFolders[SpecialRoot].Size += Data.Files[t].Size;
 				}
 			}
 		}
@@ -825,7 +825,7 @@ void ScanDetails::ScanFolder(const std::wstring &folder)
 
 					if (owner == L"")
 					{
-						owner = GLanguageHandler->XText[rsNOT_SPECIFIED];
+						owner = GLanguageHandler->Text[rsNOT_SPECIFIED];
 					}
 
 					int z = FindUser(owner);
@@ -1028,7 +1028,7 @@ void ScanDetails::ListRoot()
 }
 
 
-SizeOfFolder ScanDetails::GetSizeOfFolder(std::wstring full_folder_name, std::wstring folder)
+SizeOfFolder ScanDetails::GetSizeOfFolder(const std::wstring full_folder_name, const std::wstring folder)
 {
 	SizeOfFolder sof;
 
@@ -1058,7 +1058,7 @@ std::wstring ScanDetails::GetDrive()
 }
 
 
-int ScanDetails::GetFolderIndex(std::wstring folder_name)
+int ScanDetails::GetFolderIndex(const std::wstring folder_name)
 {
 	for (int t = 0; t < Data.Folders.size(); t++)
 	{

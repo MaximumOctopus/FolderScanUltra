@@ -65,7 +65,7 @@ namespace Help
 		std::wcout << L"  Use \"FolderScanUltra /?\" for simple help." << "\n";
 		std::wcout << L"  Use \"FolderScanUltra /u\" to open the usage document." << "\n" << "\n";
 		std::wcout << L"  Use \"FolderScanUltra /versioncheck\" to check for a new version." << "\n";
-		std::wcout << std::endl;
+		std::wcout << "\n";
     }
 
 
@@ -79,7 +79,7 @@ namespace Help
         std::wcout << L"  Use \"FolderScanUltra /?\" for simple help." << "\n";
 		std::wcout << L"  Use \"FolderScanUltra /u\" to open the usage document." << "\n" << "\n";
 		std::wcout << L"  Use \"FolderScanUltra /versioncheck\" to check for a new version." << "\n";
-        std::wcout << std::endl;
+		std::wcout << "\n";
     }
 
 
@@ -98,6 +98,7 @@ namespace Help
         std::wcout << L"    /csv;options;filename      : output CSV to <filename>" << "\n";
         std::wcout << L"    /html;options;filename     : output HTML to <filename>" << "\n";
         std::wcout << L"    /txt;options;filename      : output Text to <filename>" << "\n";
+		std::wcout << L"    /tree;options;filename     : output Tree structure to <filename>" << "\n";
         std::wcout << L"    /xml;options;filename      : output XML to <filename>" << "\n";
 		std::wcout << L"    /xfl;options;filename      : output XML file list to <filename>" << "\n";
 		std::wcout << L"    /xin;options;filename      : output xinorbis report to <filename>" << "\n";
@@ -128,9 +129,9 @@ namespace Help
 		std::wcout << L"    /datatable;name            : use with above, set data table name" << "\n";
 		std::wcout << L"    /updatescanhistory         : update the scan history file" << "\n";
 		std::wcout << "\n";
-        std::wcout << L"  Saves to default output folder if filename not specified." << "\n";
+        std::wcout << L"  Saves to default output folder if file name not specified." << "\n";
         std::wcout << L"    <FolderScanUltra install\\data\\reports\\>" << "\n";
-        std::wcout << std::endl;
+		std::wcout << "\n";
     }
 
 
@@ -148,7 +149,7 @@ namespace Help
 		std::wcout << "\n";
 		std::wcout << L"Language          : " << GLanguageHandler->GetLanguageSymbol() << "\n";
 		std::wcout << L"File Extensions   : " << GFileExtensionHandler->Extensions.size() << "\n";
-		std::wcout << std::endl;
+		std::wcout << "\n";
 	}
 
 	
@@ -183,7 +184,7 @@ namespace Help
 		std::wcout << L"A big thanks to my cats, Rutherford, Freeman, and Maxwell" << "\n";
 		std::wcout << "\n";
 		std::wcout << L"        www.maximumoctopus.com/developmentcats.htm" << "\n";
-		std::wcout << std::endl;
+		std::wcout << "\n";
 	}
 
 

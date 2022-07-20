@@ -25,7 +25,7 @@ private:
 
 	LanguageType currentLanguage = LanguageType::Undefined;
 
-    bool LoadLanguage(std::wstring);
+    bool LoadLanguage(const std::wstring);
 
 	void SetReportText();
 	void SetXDates();
@@ -38,8 +38,8 @@ public:
 
 	bool LanguageLoadOK = false;
 	
-	std::vector<std::wstring> XText;
-	std::vector<std::wstring> XDates;
+	std::vector<std::wstring> Text;
+	std::vector<std::wstring> Dates;
 
 	std::wstring Months[12];
 	std::wstring ShortMonths[12];
@@ -55,5 +55,5 @@ public:
 
 	std::wstring GetLanguageSymbol(void);
 
-    LanguageHandler(std::wstring, LanguageType);
+    LanguageHandler(const std::wstring, LanguageType);
 };

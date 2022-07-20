@@ -32,7 +32,7 @@ namespace ReportCSV
 {
 	void Summary(CSVReportOptions options)
 	{
-		std::wcout << GLanguageHandler->XText[rsSavingReports] + L" (CSV): " << "\n" << std::endl;
+		std::wcout << GLanguageHandler->Text[rsSavingReports] + L" (CSV): " << "\n" << std::endl;
 
 		std::wofstream ofile(options.FileName);
 
@@ -49,12 +49,12 @@ namespace ReportCSV
 
 			if (options.Titles)
 			{
-				ofile << GLanguageHandler->XText[rsCategory] + separator +
-						 GLanguageHandler->XText[rsQuantity] + separator +
-						 GLanguageHandler->XText[rsQuantity] + separator + GLanguageHandler->XText[rsAsPercent] + separator +
-						 GLanguageHandler->XText[rsSize] + separator +
-						 GLanguageHandler->XText[rsSizeOfFilesBytes] + separator +
-						 GLanguageHandler->XText[rsSize] + GLanguageHandler->XText[rsAsPercent] << "\n";
+				ofile << GLanguageHandler->Text[rsCategory] + separator +
+						 GLanguageHandler->Text[rsQuantity] + separator +
+						 GLanguageHandler->Text[rsQuantity] + separator + GLanguageHandler->Text[rsAsPercent] + separator +
+						 GLanguageHandler->Text[rsSize] + separator +
+						 GLanguageHandler->Text[rsSizeOfFilesBytes] + separator +
+						 GLanguageHandler->Text[rsSize] + GLanguageHandler->Text[rsAsPercent] << "\n";
 			}
 
 			std::wstring lOutput;
@@ -64,17 +64,17 @@ namespace ReportCSV
 			{
 				lOutput = GLanguageHandler->TypeDescriptions[t] + separator +
 
-						  std::to_wstring(GScanDetails->Data.ExtensionSpread[t][0]) + separator +
+						  std::to_wstring(GScanDetails->Data.ExtensionSpread[t].Count) + separator +
 
-						  std::to_wstring(std::round(((double)GScanDetails->Data.ExtensionSpread[t][0] / (double)GScanDetails->Data.FileCount) * 100)) + L"\"" + separator +
+						  std::to_wstring(std::round(((double)GScanDetails->Data.ExtensionSpread[t].Count / (double)GScanDetails->Data.FileCount) * 100)) + L"\"" + separator +
 
-						  Convert::GetSizeString(options.Units, GScanDetails->Data.ExtensionSpread[t][__esSize]) + L"\"" + separator +
+						  Convert::GetSizeString(options.Units, GScanDetails->Data.ExtensionSpread[t].Size) + L"\"" + separator +
 
-						  std::to_wstring(GScanDetails->Data.ExtensionSpread[t][__esSize]) + L"\"" + separator;
+						  std::to_wstring(GScanDetails->Data.ExtensionSpread[t].Size) + L"\"" + separator;
 
 				if (GScanDetails->Data.TotalSize != 0)
 				{
-					lOutput += L"\"" + std::to_wstring(std::round(((double)GScanDetails->Data.ExtensionSpread[t][__esSize] / (double)GScanDetails->Data.TotalSize) * 100)) + L"\"";
+					lOutput += L"\"" + std::to_wstring(std::round(((double)GScanDetails->Data.ExtensionSpread[t].Size / (double)GScanDetails->Data.TotalSize) * 100)) + L"\"";
 				}
 				else
 				{
@@ -91,7 +91,7 @@ namespace ReportCSV
 
 	void FullList(CSVReportOptions options)
 	{
-		std::wcout << GLanguageHandler->XText[rsSavingReports] + L" (CSV): " << "\n";
+		std::wcout << GLanguageHandler->Text[rsSavingReports] + L" (CSV): " << "\n";
 		std::wcout << L"    " << options.FileName << "\n" << std::endl;
 
 		std::wofstream ofile(options.FileName);
@@ -109,30 +109,30 @@ namespace ReportCSV
 
 			if (options.Titles)
 			{
-				std::wstring s =	GLanguageHandler->XText[rsFileName] + separator +
-									GLanguageHandler->XText[rsFilePath] + separator +
-									GLanguageHandler->XText[rsSize] + separator +
-									GLanguageHandler->XText[rsSizeOfFilesBytes] + separator +
-									GLanguageHandler->XText[rsSizeOnDisk] + separator +
-									GLanguageHandler->XText[rsCreatedDate] + separator +
-									GLanguageHandler->XText[rsAccessedDate] + separator +
-									GLanguageHandler->XText[rsModifiedDate] + separator +
-									GLanguageHandler->XText[rsCreatedDate] + L" (" + GLanguageHandler->XText[rsTime] + L")" + separator +
-									GLanguageHandler->XText[rsAccessedDate] + L" (" + GLanguageHandler->XText[rsTime] + L")" + separator +
-									GLanguageHandler->XText[rsModifiedDate] + L" (" + GLanguageHandler->XText[rsTime] + L")" + separator +
-									GLanguageHandler->XText[rsCategory] + separator +
-									GLanguageHandler->XText[rsCategory] + L"ID" + separator +
-									GLanguageHandler->XText[rsOwner] + separator +
+				std::wstring s =	GLanguageHandler->Text[rsFileName] + separator +
+									GLanguageHandler->Text[rsFilePath] + separator +
+									GLanguageHandler->Text[rsSize] + separator +
+									GLanguageHandler->Text[rsSizeOfFilesBytes] + separator +
+									GLanguageHandler->Text[rsSizeOnDisk] + separator +
+									GLanguageHandler->Text[rsCreatedDate] + separator +
+									GLanguageHandler->Text[rsAccessedDate] + separator +
+									GLanguageHandler->Text[rsModifiedDate] + separator +
+									GLanguageHandler->Text[rsCreatedDate] + L" (" + GLanguageHandler->Text[rsTime] + L")" + separator +
+									GLanguageHandler->Text[rsAccessedDate] + L" (" + GLanguageHandler->Text[rsTime] + L")" + separator +
+									GLanguageHandler->Text[rsModifiedDate] + L" (" + GLanguageHandler->Text[rsTime] + L")" + separator +
+									GLanguageHandler->Text[rsCategory] + separator +
+									GLanguageHandler->Text[rsCategory] + L"ID" + separator +
+									GLanguageHandler->Text[rsOwner] + separator +
 									GLanguageHandler->LanguageTypes[__FileType_ReadOnly] + separator +
 									GLanguageHandler->LanguageTypes[__FileType_Hidden] + separator +
 									GLanguageHandler->LanguageTypes[__FileType_System] + separator +
 									GLanguageHandler->LanguageTypes[__FileType_Archive] + separator +
-									GLanguageHandler->XText[rsTemporary];
+									GLanguageHandler->Text[rsTemporary];
 
 				ofile << s << "\n";
 			}
 
-			std::wstring ucFolder = GLanguageHandler->XText[rsFolder];
+			std::wstring ucFolder = GLanguageHandler->Text[rsFolder];
 			
 			std::transform(ucFolder.begin(), ucFolder.end(), ucFolder.begin(), ::towupper);
 

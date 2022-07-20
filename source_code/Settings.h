@@ -17,6 +17,8 @@
 #include <Windows.h>
 #include <string>
 
+#include "Constants.h"
+#include "DatabaseHandler.h"
 #include "Ini.h"
 #include "ReportConstants.h"
 #include "ReportHTMLReportOptions.h"
@@ -24,7 +26,8 @@
 
 struct CustomSettings
 {
-    bool SettingsSaveLocation = false;
+	SettingsSource SettingsSaveLocation = SettingsSource::None;
+
     bool CopyPreferences = false;
 };
 
@@ -35,7 +38,7 @@ struct DatabaseSettings
 
 	bool UpdateScanHistory = false;
 	
-	int DatabaseMode = -1; // __dbSQLite or __dbODBC
+	DBMode DatabaseMode = DBMode::None; // __dbSQLite or __dbODBC
 
 	bool DBStructured = false;
 	bool SystemTable = false;
@@ -110,10 +113,10 @@ private:
 	bool LoadCustomSettings();
     bool LoadLanguage();
 
-    std::wstring ReadStringFromSettings(std::wstring, std::wstring, std::wstring);
-    int ReadIntegerFromSettings(std::wstring, std::wstring, int, int);
-    int ReadIntegerFromSettingsInputCheck(std::wstring, std::wstring, int, int, int);
-    bool ReadBoolFromSettings(std::wstring, std::wstring, bool);
+    std::wstring ReadStringFromSettings(const std::wstring, const std::wstring, std::wstring);
+    int ReadIntegerFromSettings(const std::wstring, const std::wstring, int, int);
+    int ReadIntegerFromSettingsInputCheck(const std::wstring, const std::wstring, int, int, int);
+    bool ReadBoolFromSettings(const std::wstring, const std::wstring, bool);
 
 public:
 
@@ -127,7 +130,7 @@ public:
 	int FileCategoryColors[__FileCategoriesCount]; // 0 is a hack for "folders"
 
 	void ProcessProcessingSetting(int);
-	void ProcessDatabaseSetting(int, std::wstring);
+	void ProcessDatabaseSetting(int, const std::wstring);
 
 	void SetDefaults();
 

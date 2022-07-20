@@ -37,7 +37,7 @@ extern LanguageHandler* GLanguageHandler;
 
 // dbparameter : file name for sqlite mode
 //             : connectionString from ODBC mode 
-DatabaseHandler::DatabaseHandler(int mode, std::wstring db_parameter)
+DatabaseHandler::DatabaseHandler(DBMode mode, const std::wstring db_parameter)
 {
 	dbODBC = NULL;
 	dbSQlite = NULL;
@@ -48,17 +48,17 @@ DatabaseHandler::DatabaseHandler(int mode, std::wstring db_parameter)
 
 	switch (dbMode)
 	{
-	case __dbNone:
+	case DBMode::None:
 		std::wcout << L"No database mode selected (use /odbc or /sqlite)." << std::endl;
 
 		break;
-	case __dbSQLite:
+	case DBMode::SQLite:
 	{
 		initOK = InitSQlite(db_parameter);
 
 		break;
 	}
-	case __dbODBC:
+	case DBMode::ODBC:
 	{
 		initOK = InitODBC(db_parameter);
 
@@ -66,7 +66,7 @@ DatabaseHandler::DatabaseHandler(int mode, std::wstring db_parameter)
 	}
 
 	default:
-		std::wcout << "\n" << L"Unknown database mode \"" << mode << "\"." << std::endl;
+		std::wcout << "\n" << L"Unknown database mode." << std::endl;
 	}
 }
 
@@ -85,7 +85,7 @@ DatabaseHandler::~DatabaseHandler()
 }
 
 
-bool DatabaseHandler::InitSQlite(std::wstring SQlite_file_name)
+bool DatabaseHandler::InitSQlite(const std::wstring SQlite_file_name)
 {
 	try
 	{
@@ -128,9 +128,9 @@ bool DatabaseHandler::InitODBC(std::wstring connection_string)
 }
 
 
-bool DatabaseHandler::UpdateFolderHistory(std::wstring table_folder, std::wstring table_file)
+bool DatabaseHandler::UpdateFolderHistory(const std::wstring table_folder, const std::wstring table_file)
 {
-	if (dbMode == __dbSQLite)
+	if (dbMode == DBMode::SQLite)
 	{
 		if (dbSQlite->CreateNewFolderTable(table_folder))
 		{
@@ -141,7 +141,7 @@ bool DatabaseHandler::UpdateFolderHistory(std::wstring table_folder, std::wstrin
 
 				dbSQlite->PopulateFileTable(table_file);
 
-				std::wcout << "\n" << GLanguageHandler->XText[rsUpdatingFolderHistory] << L"..." << std::endl;
+				std::wcout << "\n" << GLanguageHandler->Text[rsUpdatingFolderHistory] << L"..." << std::endl;
 
 				UpdateFolderHistoryFile();
 			}
@@ -161,7 +161,7 @@ bool DatabaseHandler::UpdateFolderHistory(std::wstring table_folder, std::wstrin
 
 		return true;
 	}
-	else if (dbMode == __dbODBC)
+	else if (dbMode == DBMode::ODBC)
 	{
 		if (dbODBC->CreateNewFolderTable(table_folder))
 		{
@@ -172,7 +172,7 @@ bool DatabaseHandler::UpdateFolderHistory(std::wstring table_folder, std::wstrin
 
 				dbODBC->PopulateFileTable(table_file);
 
-				std::wcout << "\n" << GLanguageHandler->XText[rsUpdatingFolderHistory] << L"..." << std::endl;
+				std::wcout << "\n" << GLanguageHandler->Text[rsUpdatingFolderHistory] << L"..." << std::endl;
 
 				UpdateFolderHistoryFile();
 			}
@@ -197,9 +197,9 @@ bool DatabaseHandler::UpdateFolderHistory(std::wstring table_folder, std::wstrin
 }
 
 
-bool DatabaseHandler::UpdateFolderHistoryStructured(std::wstring table_system, std::wstring table_data)
+bool DatabaseHandler::UpdateFolderHistoryStructured(const std::wstring table_system, const std::wstring table_data)
 {
-	if (dbMode == __dbSQLite)
+	if (dbMode == DBMode::SQLite)
 	{
 		if (dbSQlite->CreateNewSystemTable(table_system))
 		{
@@ -212,7 +212,7 @@ bool DatabaseHandler::UpdateFolderHistoryStructured(std::wstring table_system, s
 				std::wcout << L"Populating structured file table..." << "\n";
 				dbSQlite->PopulateDataTable(table_data);
 
-				std::wcout << GLanguageHandler->XText[rsUpdatingFolderHistory] << std::endl;
+				std::wcout << GLanguageHandler->Text[rsUpdatingFolderHistory] << std::endl;
 				UpdateFolderHistoryFile();
 			}
 			else
@@ -231,7 +231,7 @@ bool DatabaseHandler::UpdateFolderHistoryStructured(std::wstring table_system, s
 
 		return true;
 	}
-	else if (dbMode == __dbODBC)
+	else if (dbMode == DBMode::ODBC)
 	{
 		if (dbODBC->CreateNewSystemTable(table_system))
 		{
@@ -244,7 +244,7 @@ bool DatabaseHandler::UpdateFolderHistoryStructured(std::wstring table_system, s
 				std::wcout << L"Populating structured file table..." << "\n";
 				dbODBC->PopulateDataTable(table_data);
 
-				std::wcout << GLanguageHandler->XText[rsUpdatingFolderHistory] << std::endl;
+				std::wcout << GLanguageHandler->Text[rsUpdatingFolderHistory] << std::endl;
 				UpdateFolderHistoryFile();
 			}
 			else
@@ -280,9 +280,9 @@ bool DatabaseHandler::UpdateFolderHistoryFile(void)
 }
 
 
-bool DatabaseHandler::UpdateFolderScanUltraScanHistory(int save_location, std::wstring folder, std::wstring users_path)
+bool DatabaseHandler::UpdateFolderScanUltraScanHistory(SettingsSource source, const std::wstring folder, const std::wstring users_path)
 {
-	if (save_location == __SaveLocationRegistry)
+	if (source == SettingsSource::Registry)
 	{
 		return UpdateFolderScanUltraScanHistoryRegistry(folder, users_path);
 	}
@@ -294,7 +294,7 @@ bool DatabaseHandler::UpdateFolderScanUltraScanHistory(int save_location, std::w
 
 
 // updates the xinorbis file containing a list of the previous 100 scan paths
-bool DatabaseHandler::UpdateFolderScanUltraScanHistoryIni(std::wstring folder, std::wstring users_path)
+bool DatabaseHandler::UpdateFolderScanUltraScanHistoryIni(const std::wstring folder, const std::wstring users_path)
 {
 	if (WindowsUtility::FileExists(users_path + L"scanhistory.dat"))
 	{
@@ -411,7 +411,7 @@ bool DatabaseHandler::UpdateFolderScanUltraScanHistoryIni(std::wstring folder, s
 }
 
 
-bool DatabaseHandler::UpdateFolderScanUltraScanHistoryRegistry(std::wstring folder, std::wstring users_path)
+bool DatabaseHandler::UpdateFolderScanUltraScanHistoryRegistry(const std::wstring folder, const std::wstring users_path)
 {
 	std::vector<ScanHistoryObject> ScanHistory;
 
