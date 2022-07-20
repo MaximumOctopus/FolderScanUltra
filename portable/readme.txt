@@ -1,5 +1,5 @@
 ==================================================================================
-FolderScanUltra 5.3.0
+FolderScanUltra 5.4.0
 (c) Paul Alan Freshney 2019-2022
 
 paul@freshney.org
@@ -25,6 +25,12 @@ In 2022 I decided to rename it and add it to my pool of applications receiving r
 ==================================================================================
 
 Release History
+
+5.4.0 / July 20th 2022
+
+Added Tree reports, a few minor issues fixed.
+
+Sin
 
 5.3.0 / July 16th 2022
 
