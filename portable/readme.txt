@@ -30,7 +30,7 @@ Release History
 
 Added Tree reports, a few minor issues fixed.
 
-Sin
+Some code tweaks and refactors.
 
 5.3.0 / July 16th 2022
 
