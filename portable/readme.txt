@@ -1,5 +1,5 @@
 ==================================================================================
-FolderScanUltra 5.4.0
+FolderScanUltra 5.4.1
 (c) Paul Alan Freshney 2019-2022
 
 paul@freshney.org
@@ -25,6 +25,14 @@ In 2022 I decided to rename it and add it to my pool of applications receiving r
 ==================================================================================
 
 Release History
+
+5.4.1 / July 24th 2022
+
+Minor tweaks to code.
+
+Altered /top20folders to /folderstop20
+
+Added a simple "bar graph" to above console output.
 
 5.4.0 / July 20th 2022
 
