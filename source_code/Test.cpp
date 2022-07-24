@@ -55,7 +55,7 @@ namespace Test
 			std::wcout << "\n" << "    No errors found :)" << "\n";
 		}
 
-		std::wcout << std::endl;
+		std::wcout << L"\n"; 
 	}
 
 
@@ -67,20 +67,20 @@ namespace Test
 		{
 			if (WindowsUtility::DirectoryExistsWString(firstParameter))
 			{
-				std::wcout << L"      Scan folder exists \"" + firstParameter + L"\"" << "\n" << std::endl;
+				std::wcout << L"      Scan folder exists \"" + firstParameter + L"\"" << "\n\n";
 
 				return true;
 			}
 			else
 			{
-				std::wcout << L"      Scan folder does not exist \"" + firstParameter + L"\"" << "\n" << std::endl;
+				std::wcout << L"      Scan folder does not exist \"" + firstParameter + L"\"" << "\n\n";
 
 				return false;
 			}
 		}
 		else
 		{
-			std::wcout << L"      No scan folder specified." << "\n" << std::endl;
+			std::wcout << L"      No scan folder specified." << "\n\n";
 
 			return true;
 		}
@@ -97,18 +97,18 @@ namespace Test
 
 			if (WindowsUtility::DirectoryExistsWString(GSystemGlobal->AppPath + L"system\\languages\\"))
 			{
-				std::wcout << L"      \\system\\languages\\ folder found." << std::endl;
+				std::wcout << L"      \\system\\languages\\ folder found.\n";
 
 				return true;
 			}
 			else
 			{
-				std::wcout << L"      \\system\\languages\\ folder not found" << std::endl;
+				std::wcout << L"      \\system\\languages\\ folder not found.\n";
 			}
 		}
 		else
 		{
-			std::wcout << L"      \\system\\ folder not found" << std::endl;
+			std::wcout << L"      \\system\\ folder not found.\n";
 		}
 
 		
@@ -130,7 +130,7 @@ namespace Test
 				{
 					parametersOK = false;
 
-					std::wcout << L"      Unknown command \"" + GParameterHandler->GetParameter(t) + L"\"" << std::endl;
+					std::wcout << L"      Unknown command \"" + GParameterHandler->GetParameter(t) + L"\"\n";
 				}
 			}
 		}
@@ -166,7 +166,7 @@ namespace Test
 
 						for (int x = 0; x < pd.Options.size(); x++)
 						{
-							std::wcout << L"              : " << CSVOptions(x, pd.Options[x]) << std::endl;
+							std::wcout << L"              : " << CSVOptions(x, pd.Options[x]) << L"\n";
 						}
 
 						break;
@@ -175,19 +175,19 @@ namespace Test
 
 						for (int x = 0; x < pd.Options.size(); x++)
 						{
-							std::wcout << L"              : " << HTMLOptions(x, pd.Options[x]) << std::endl;
+							std::wcout << L"              : " << HTMLOptions(x, pd.Options[x]) << L"\n"; 
 						}
 
 						break;
 					case ReportType::Summary:
-						std::wcout << L"      Summary : output to console" << std::endl;
+						std::wcout << L"      Summary : output to console" << L"\n"; 
 						break;
 					case ReportType::Text:
 						std::wcout << L"      Text    : " << pd.Value << "\n";
 
 						for (int x = 0; x < pd.Options.size(); x++)
 						{
-							std::wcout << L"              : " << TextOptions(x, pd.Options[x]) << std::endl;
+							std::wcout << L"              : " << TextOptions(x, pd.Options[x]) << L"\n"; 
 						}
 
 						break;
@@ -196,29 +196,29 @@ namespace Test
 
 						for (int x = 0; x < pd.Options.size(); x++)
 						{
-							std::wcout << L"              : " << XMLOptions(x, pd.Options[x]) << std::endl;
+							std::wcout << L"              : " << XMLOptions(x, pd.Options[x]) << L"\n"; 
 						}
 
 						break;
 					case ReportType::XMLFullList:
-						std::wcout << L"      XML     : (file list)" << pd.Value << std::endl;
+						std::wcout << L"      XML     : (file list)" << pd.Value << L"\n"; 
 						break;
 
 					case ReportType::Top20:
-						std::wcout << L"      Top 20  : output to console" << std::endl;
+						std::wcout << L"      Top 20  : output to console\n"; 
 						break;
 					case ReportType::Bottom20:
-						std::wcout << L"      Bot 20  : output to console" << std::endl;
+						std::wcout << L"      Bot 20  : output to console\n";
 						break;
 					case ReportType::New20:
-						std::wcout << L"      New 20  : output to console" << std::endl;
+						std::wcout << L"      New 20  : output to console\n"; 
 						break;
 					case ReportType::Old20:
-						std::wcout << L"      Old 20  : output to console" << std::endl;
+						std::wcout << L"      Old 20  : output to console\n";
 						break;
 
 					case ReportType::All20:
-						std::wcout << L"      All 20  : outputs all 20 lists console" << std::endl;
+						std::wcout << L"      All 20  : outputs all 20 lists console\n";
 						break;
 					}
 
@@ -228,12 +228,12 @@ namespace Test
 
 			if (reportCount == 0)
 			{
-				std::wcout << L"      No reports parameters found." << std::endl;
+				std::wcout << L"      No reports parameters found.\n";
 			}
 		}
 		else
 		{
-			std::wcout << L"      No reports specified." << std::endl;
+			std::wcout << L"      No reports specified.\n";
 		}
 
 		return true;
@@ -264,25 +264,25 @@ namespace Test
 					switch (pt)
 					{
 					case __parameterDBUpdateScanHistory:
-						std::wcout << L"      Update scan history." << std::endl;
+						std::wcout << L"      Update scan history.\n";
 
 						userSetFolderHistory = true;
 
 						break;
 					case __parameterDBODBC:
-						std::wcout << L"      Use ODBC database." << std::endl;
+						std::wcout << L"      Use ODBC database.\n";
 
 						userSetODBC = true;
 
 						break;
 					case __parameterDBSQlite:
-						std::wcout << L"      Use SQlite database." << std::endl;
+						std::wcout << L"      Use SQlite database.\n";
 
 						userSetSQlite = true;
 
 						break;
 					case __parameterDBStructured:
-						std::wcout << L"      Use structured database format." << std::endl;
+						std::wcout << L"      Use structured database format.\n";
 						break;
 					case __parameterDBSystemTable:
 					{
@@ -290,11 +290,11 @@ namespace Test
 
 						if (tableName != L"")
 						{
-							std::wcout << L"      Specified system table name \"" + tableName + L"\"." << std::endl;
+							std::wcout << L"      Specified system table name \"" + tableName + L"\".\n";
 						}
 						else
 						{
-							std::wcout << L"      Specified system table name missing (will use default)." << std::endl;
+							std::wcout << L"      Specified system table name missing (will use default).\n";
 
 							errorCount++;
 						}
@@ -307,11 +307,11 @@ namespace Test
 
 						if (tableName != L"")
 						{
-							std::wcout << L"      Specified data table name \"" + tableName + L"\"." << std::endl;
+							std::wcout << L"      Specified data table name \"" + tableName + L"\".\n";
 						}
 						else
 						{
-							std::wcout << L"      Specified data table name missing (will use default)." << std::endl;
+							std::wcout << L"      Specified data table name missing (will use default).\n";
 
 							errorCount++;
 						}
@@ -319,40 +319,40 @@ namespace Test
 						break;
 					}
 					case __parameterDBUpdateFolderistory:
-						std::wcout << L"      Update folder history database." << std::endl;
+						std::wcout << L"      Update folder history database.\n";
 						break;
 
 					default:
-						std::wcout << L" unknown " << pt << std::endl;
+						std::wcout << L" unknown " << pt << L"\n"; 
 					}
 				}
 			}
 
 			if (dbpCount == 0)
 			{
-				std::wcout << L"      No database parameters found." << std::endl;
+				std::wcout << L"      No database parameters found.\n";
 			}
 		}
 		else
 		{
-			std::wcout << L"      No database parameters specified." << std::endl;
+			std::wcout << L"      No database parameters specified.\n";
 		}
 
 		if (!userSetFolderHistory)
 		{
-			std::wcout << L"      Folder history controlled via custom.ini (default is off)" << std::endl;
+			std::wcout << L"      Folder history controlled via custom.ini (default is off)\n";
 		}
 
 		if (userSetODBC && userSetSQlite)
 		{
-			std::wcout << L"      SQlite and ODBC settings are mutually exclusive!" << std::endl;
+			std::wcout << L"      SQlite and ODBC settings are mutually exclusive!\n";
 
 			errorCount++;
 		}
 
 		if (!(userSetODBC && userSetSQlite))
 		{
-			std::wcout << L"      Database source controlled via custom.ini (default is SQlite)" << std::endl;
+			std::wcout << L"      Database source controlled via custom.ini (default is SQlite)\n";
 		}
 
 		if (errorCount != 0)
@@ -368,34 +368,34 @@ namespace Test
 	{
 		if (GParameterHandler->FindParameter(L"/nouser"))
 		{
-			std::wcout << L"      Will not gather user name information (optimisation)." << std::endl;
+			std::wcout << L"      Will not gather user name information (optimisation).\n";
 		}
 		else
 		{
-			std::wcout << L"      Will gather user name information." << std::endl;
+			std::wcout << L"      Will gather user name information.\n";
 		}
 
 		if (GParameterHandler->FindParameter(L"/notemp"))
 		{
-			std::wcout << L"      Will not process temporary file stats (optimisation)." << std::endl;
+			std::wcout << L"      Will not process temporary file stats (optimisation).\n";
 		}
 		else
 		{
-			std::wcout << L"      Will process temporary file stats." << std::endl;
+			std::wcout << L"      Will process temporary file stats.\n";
 		}
 
 		if (GParameterHandler->FindParameter(L"/o"))
 		{
-			std::wcout << L"     Disabling console output." << std::endl;
+			std::wcout << L"     Disabling console output.\n";
 		}
 
 		if (GParameterHandler->FindParameter(L"/allowvirtual"))
 		{
-			std::wcout << L"     Virtual files will be processed." << std::endl;
+			std::wcout << L"     Virtual files will be processed.\n";
 		}
 		else
 		{
-			std::wcout << L"     Virtual files will not be processed." << std::endl;
+			std::wcout << L"     Virtual files will not be processed.\n";
 		}
 
 		return true;
@@ -931,40 +931,40 @@ namespace Test
 
 				if (pcm == L"")
 				{
-					std::wcout << L"      Portable mode not specified" << std::endl;
+					std::wcout << L"      Portable mode not specified\n";
 				}
 				else
 				{
-					std::wcout << L"      Portable mode set to: " << pcm << std::endl;
+					std::wcout << L"      Portable mode set to: " << pcm << L"\n"; 
 				}
 
 				pcm = iniFile->ReadString(L"Main", L"useodbc", L"");
 
 				if (pcm == L"")
 				{
-					std::wcout << L"      ODBC mode not specified" << std::endl;
+					std::wcout << L"      ODBC mode not specified\n";
 				}
 				else
 				{
-					std::wcout << L"      ODBC mode set to: " << pcm << std::endl;
+					std::wcout << L"      ODBC mode set to: " << pcm << L"\n"; 
 				}
 				
 				pcm = iniFile->ReadString(L"Main", L"connectionstring", L"");
 
 				if (pcm == L"")
 				{
-					std::wcout << L"      Connection string not specified" << std::endl;
+					std::wcout << L"      Connection string not specified\n";
 				}
 				else
 				{
-					std::wcout << L"      Connection string found" << pcm << std::endl;
+					std::wcout << L"      Connection string found" << pcm << L"\n"; 
 				}
 
 				return true;
 			}
 			else
 			{
-				std::wcout << GSystemGlobal->AppPath + L"Failure to load :(" << std::endl;
+				std::wcout << GSystemGlobal->AppPath + L"Failure to load :(\n";
 			}
 				
 			delete iniFile;
@@ -973,7 +973,7 @@ namespace Test
 		}
 		else
 		{
-			std::wcout << "\n" << L"    Custom.ini Not found" << "\n" << std::endl;
+			std::wcout << "\n" << L"    Custom.ini Not found" << "\n\n";
 		}
 
 		return true;

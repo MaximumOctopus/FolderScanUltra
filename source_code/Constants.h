@@ -17,12 +17,12 @@
 
 
 #ifdef _DEBUG
-static const std::wstring __FSUVersion = L"5.4.0 (debug)";
+static const std::wstring __FSUVersion = L"5.4.1 (debug)";
 #else
 static const std::wstring __FSUVersion = L"5.4.0";
 #endif
 
-static const std::wstring __FSUDate    = L"July 18th 2022";
+static const std::wstring __FSUDate    = L"July 24th 2022";
 
 // ===========================================================================
 // == Categories =============================================================

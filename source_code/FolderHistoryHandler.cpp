@@ -73,13 +73,13 @@ bool FolderHistoryHandler::UpdateFolderHistoryFile()
 			file << L"M" + Convert::IntToHex(t, 1) + L"S:" + std::to_wstring(GScanDetails->Data.Magnitude[t].Size) << "\n";
 		} 
 
-		file << L"}" << std::endl;
+		file << L"}\n";
 
 		return true;
 	}
 	else
 	{
-		std::wcout << L"Failed to modify File History file :(" << std::endl;
+		std::wcout << L"Failed to modify File History file :(\n";
 	}
 
 	return false;

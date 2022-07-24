@@ -22,6 +22,7 @@
 namespace WindowsUtility
 {
 	bool AddToContextMenu(std::wstring path);
+	bool RemoveFromContextMenu();
 	
 	int CreateWFolder(const std::wstring&);
 	

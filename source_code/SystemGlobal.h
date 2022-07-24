@@ -33,7 +33,7 @@ public:
 
 	SystemGlobal(int argc, wchar_t *argv[]);
 
-    void InitialiseXinorbis();
+    void InitialiseFolderScanUltra();
     bool InstallationCheck();
 	bool CheckFolderStructure();
 	void UpdateDriveDetails(const std::wstring);

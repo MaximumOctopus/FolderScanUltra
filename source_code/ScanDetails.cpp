@@ -956,14 +956,17 @@ void ScanDetails::BuildTop100SizeLists()
 
 	std::sort(Data.Files.begin(), Data.Files.end(), sortBySize);
 
-	int i = 0;
-
-	while ((i < 100) && (i < Data.Files.size()))
+	if (Data.Files.size() != 0)
 	{
-		Data.Top100Small.push_back(Data.Files[i]);
-		Data.Top100Large.push_back(Data.Files[Data.Files.size() - i - 1]);
+		int i = 0;
 
-		i++;
+		while ((i < 100) && (i < Data.Files.size()))
+		{
+			Data.Top100Small.push_back(Data.Files[i]);
+			Data.Top100Large.push_back(Data.Files[Data.Files.size() - i - 1]);
+
+			i++;
+		}
 	}
 }
 
@@ -975,21 +978,24 @@ void ScanDetails::BuildTop100DateLists()
 
 	std::sort(Data.Files.begin(), Data.Files.end(), sortByDate);
 
-	int i = 0;
-
-	while ((i < 100) && (i < Data.Files.size()))
+	if (Data.Files.size() != 0)
 	{
-		Data.Top100Oldest.push_back(Data.Files[i]);
-		Data.Top100Newest.push_back(Data.Files[Data.Files.size() - i - 1]);
+		int i = 0;
 
-		i++;
+		while ((i < 100) && (i < Data.Files.size()))
+		{
+			Data.Top100Oldest.push_back(Data.Files[i]);
+			Data.Top100Newest.push_back(Data.Files[Data.Files.size() - i - 1]);
+
+			i++;
+		}
 	}
 }
 
 
 void ScanDetails::ListRoot()
 {
-	std::wcout << "\n" << "  Listing root files/folders:" << "\n" << std::endl;
+	std::wcout << "\n" << "  Listing root files/folders:" << "\n\n";
 
 	std::wstring tmp = Path.String + L"*";
 
@@ -1009,14 +1015,14 @@ void ScanDetails::ListRoot()
 				if ((!lstrcmpW(file.cFileName, L".")) || (!lstrcmpW(file.cFileName, L"..")))
 					continue;
 
-				std::wcout << L"    " << Path.String << file.cFileName << L"\\" << std::endl;
+				std::wcout << L"    " << Path.String << file.cFileName << L"\\ \n";
 			}
 			else
 			// =======================================================================================================
 			// Files
 			// =======================================================================================================
 			{
-				std::wcout << L"    " << Path.String << file.cFileName << std::endl;
+				std::wcout << L"    " << Path.String << file.cFileName << L"\n"; 
 			}
 
 		} while (FindNextFileW(search_handle, &file));
@@ -1024,7 +1030,7 @@ void ScanDetails::ListRoot()
 		FindClose(search_handle);
 	}
 
-	std::wcout << std::endl;
+	std::wcout << L"\n"; 
 }
 
 

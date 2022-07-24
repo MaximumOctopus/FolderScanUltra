@@ -112,6 +112,9 @@
     <ClCompile Include="ReportTree.cpp">
       <Filter>Source Files\Reports</Filter>
     </ClCompile>
+    <ClCompile Include="ReportUtility.cpp">
+      <Filter>Source Files\Reports</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DatabaseHandler.h">
@@ -278,6 +281,9 @@
     </ClInclude>
     <ClInclude Include="Consolidated.h">
       <Filter>Header Files\Data Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="ReportUtility.h">
+      <Filter>Header Files\Reports</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

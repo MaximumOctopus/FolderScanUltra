@@ -46,10 +46,10 @@ namespace ReportXinorbis
 			ofile << GScanDetails->Data.FolderCount << "\n";
 			ofile << GScanDetails->Data.FileCount << "\n";
 			ofile << Convert::ConvertToUsefulUnit(GScanDetails->Data.TotalSize) << "\n";
-			ofile << Utility::GetDate(DateTimeFormat::Display) + L", " + Utility::GetTime(DateTimeFormat::Display) << std::endl;
+			ofile << Utility::GetDate(DateTimeFormat::Display) + L", " + Utility::GetTime(DateTimeFormat::Display) << L"\n";
 			ofile << 0 << "\n";
 
-			ofile << L"}" << std::endl;
+			ofile << L"}\n";
 
 			// ======================================================================================================================
 
@@ -62,7 +62,7 @@ namespace ReportXinorbis
 					ofile << GScanDetails->Data.Folders[t] << "\n";
 				}
 
-				ofile << L"}" << std::endl;
+				ofile << L"}\n";
 			}
 
 			if (GScanDetails->Data.FileCount != 0)
@@ -90,7 +90,7 @@ namespace ReportXinorbis
 					ofile << GScanDetails->Data.Users[GScanDetails->Data.Files[t].Owner].Name << "\n";
 					ofile << GScanDetails->Data.Files[t].Attributes << "\n";
 
-					ofile << L"}" << std::endl;
+					ofile << L"}\n";
 				}
 			}
 

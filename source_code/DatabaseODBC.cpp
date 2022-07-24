@@ -29,11 +29,11 @@ DatabaseODBC::DatabaseODBC(std::wstring & connection_string)
 
 	if (dbAvailable)
 	{
-		std::wcout << L"ODBC connection open!" << std::endl;
+		std::wcout << L"ODBC connection open!\n";
 	}
 	else
 	{
-		std::wcout << L"ODBC connection fail :(" << std::endl;
+		std::wcout << L"ODBC connection fail :(\n";
 	}
 }
 
@@ -106,7 +106,7 @@ void DatabaseODBC::ShowError(unsigned int handle_type, const SQLHANDLE& handle)
 
 	if (SQL_SUCCESS == SQLGetDiagRec(handle_type, handle, 1, sqlstate, NULL, message, 1024, NULL))
 	{
-		std::wcout << L"    ODBC ERROR : " << message << L"\n    SQLSTATE: " << sqlstate << std::endl;
+		std::wcout << L"    ODBC ERROR : " << message << L"\n    SQLSTATE: " << sqlstate << L"\n"; 
 	}
 }
 
@@ -155,7 +155,7 @@ bool DatabaseODBC::CreateNewFolderTable(const std::wstring table_name)
 
 bool DatabaseODBC::PopulateFileTable(const std::wstring table_name)
 {
-	std::wcout << L"Populating File table..." << std::endl;
+	std::wcout << L"Populating File table...\n";
 
 	std::wstring stem = L"INSERT INTO \"" + table_name + L"\" (FilePath, FilePathIdx, FileName, FileSize, FileSizeDisk, FileDateC, FileDateA, FileDateM, Category, Directory, Readonly, Hidden, System, Archive, Temp, Owner) VALUES (";
 	std::wstring sql;
@@ -193,7 +193,7 @@ bool DatabaseODBC::PopulateFileTable(const std::wstring table_name)
 
 bool DatabaseODBC::PopulateFolderTable(const std::wstring table_name)
 {
-	std::wcout << L"Populating Folder table..." << std::endl;
+	std::wcout << L"Populating Folder table...\n";
 
 	std::wstring stem = L"INSERT INTO \"" + table_name + L"\" (FilePath) VALUES (\"";
 	std::wstring sql;
@@ -269,7 +269,7 @@ bool DatabaseODBC::CreateNewSystemTable(const std::wstring table_name)
 
 bool DatabaseODBC::PopulateDataTable(const std::wstring table_name)
 {
-	std::wcout << L"Populating Data table..." << "\n" << std::endl;
+	std::wcout << L"Populating Data table..." << "\n\n";
 
 	std::wstring stem = L"INSERT INTO \"" + table_name + L"\" (FilePath, FileName, FileSize, FileSizeDisk, FileDateC, FileDateA, FileDateM, Category, Directory, Readonly, Hidden, System, Archive, Temp, Owner, ScanDate) VALUES (";
 	std::wstring sql;
@@ -309,7 +309,7 @@ bool DatabaseODBC::PopulateDataTable(const std::wstring table_name)
 
 bool DatabaseODBC::PopulateSystemTable(const std::wstring table_name, const std::wstring data_table_name)
 {
-	std::wcout << L"Populating System table..." << "\n" << std::endl;
+	std::wcout << L"Populating System table..." << "\n\n";
 
 	std::wstring stem = L"INSERT INTO \"" + table_name + L"\" (TableName, Folder, SizeString, Size, Files, Folders, ScanDate) VALUES (\"";
 	std::wstring sql;

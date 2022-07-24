@@ -89,7 +89,7 @@ bool VersionCheck::IsNewVersion(std::wstring current_version)
         CoUninitialize();
     }
 
-    std::wcout << std::endl;
+    std::wcout << "\n";
 
     return true;
 }

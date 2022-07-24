@@ -130,7 +130,7 @@ namespace ReportTree
         else
         {
             std::wcout << GLanguageHandler->Text[rsErrorSaving] + L" (Tree):" << "\n";
-            std::wcout << L"    " << options.FileName << "\n" << std::endl;
+            std::wcout << L"    " << options.FileName << "\n\n";
         }
     }
 

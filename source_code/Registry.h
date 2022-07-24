@@ -26,4 +26,6 @@ namespace Registry
 	bool ReadRegistryBool(HKEY, std::wstring, bool);
 
 	bool WriteRegistryString(HKEY, const std::wstring&, const std::wstring&);
+
+	bool DeleteRegistry(HKEY, const std::wstring&);
 }

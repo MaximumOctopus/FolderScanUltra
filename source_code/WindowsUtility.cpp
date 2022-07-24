@@ -53,11 +53,43 @@ bool WindowsUtility::AddToContextMenu(std::wstring path)
 
 		Registry::WriteRegistryString(hKey, L"\\directory\\shell\\FolderScanUltra", L"Examine this folder with FolderScanUltra");
 
-		Registry::WriteRegistryString(hKey, L"\\directory\\shell\\Xinorbis8\\Command", L"\"" + path + L"\" \"%1\" \"/pause\"");
+		Registry::WriteRegistryString(hKey, L"\\directory\\shell\\FolderScanUltra\\Command", L"\"" + path + L"\" \"%1\" \"/pause\"");
 
 		Registry::WriteRegistryString(hKey, L"\\directory\\shell\\FolderScanUltra\\DefaultIcon", L"\"" + path + L", 0\""); 
 	}
 	catch(...)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+
+bool WindowsUtility::RemoveFromContextMenu()
+{
+	try
+	{
+		HKEY hKey;
+
+		LONG dwRet = RegOpenKeyEx(HKEY_CLASSES_ROOT,
+			L"\\software\\maximumoctopus\\FolderScanUltra",
+			NULL,
+			KEY_SET_VALUE,
+			&hKey);
+
+		if (dwRet != ERROR_SUCCESS)
+		{
+			return false;
+		}
+
+		Registry::DeleteRegistry(hKey, L"\\directory\\shell\\FolderScanUltra");
+
+		Registry::DeleteRegistry(hKey, L"\\directory\\shell\\FolderScanUltra\\Command");
+
+		Registry::DeleteRegistry(hKey, L"\\directory\\shell\\FolderScanUltra\\DefaultIcon");
+	}
+	catch (...)
 	{
 		return false;
 	}

@@ -169,15 +169,15 @@ namespace ReportHTML
 			file << L"<a href=\"mailto:paul@freshney.org\">paul@freshney.org</a> / <a href=\"https://github.com/MaximumOctopus/FolderScanUltra\" target=\"_blank\">https://github.com/MaximumOctopus/FolderScanUltra</a></td>" << "\n";
 			file << L"</tr>" << "\n";
 			file << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\" class=\"C7G\"><td align=\"center\">(c) Paul Alan Freshney 2002-" + Utility::CurrentYear() + L"</td></tr>";
-			file << L"</table></body></html>" << std::endl;
+			file << L"</table></body></html>\n";
 
 			file.close();
 		}
 		else
 		{
-			std::wcout << L"" << "\n";
+			std::wcout << L"\n";
 			std::wcout << GLanguageHandler->Text[rsErrorSaving] + L" \"" + options.FileName + L"\"." << "\n";
-			std::wcout << L"" << std::endl;
+			std::wcout << L"\n";
 		}
 	}
 
@@ -233,7 +233,7 @@ namespace ReportHTML
 						);
 					}
 
-					ofile << L"</table>" << std::endl;
+					ofile << L"</table>\n";
 
 					anchor++;
 
@@ -242,7 +242,7 @@ namespace ReportHTML
 			}
 			else
 			{
-				std::wcout << " Error cannot find folder \"" << folder << "\"" << std::endl;
+				std::wcout << " Error cannot find folder \"" << folder << "\"\n";
 			}
 		}
 	}
@@ -316,7 +316,7 @@ namespace ReportHTML
 
 		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\">" +
 			L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\"><td class=\"C7G\"><strong>Menu</strong></td></tr>" +
-			L"<tr class=\"C4C\"><td>" + menu_string + L"</td></tr></table>" << std::endl;
+			L"<tr class=\"C4C\"><td>" + menu_string + L"</td></tr></table>\n";
 
 		InsertSpacingTable(ofile);
 	}
@@ -385,7 +385,7 @@ namespace ReportHTML
 				(((double)GScanDetails->Data.ExtensionSpread[0].Size / (double)GScanDetails->Data.TotalSize) * 100) * ((double)__ReportSizes[__rsBarGraph] / (double)large2)
 			);
 
-			ofile << L"</table>" << std::endl;
+			ofile << L"</table>\n";
 
 			InsertSpacingTable(ofile);
 
@@ -442,7 +442,7 @@ namespace ReportHTML
 			}
 		}
 
-		ofile << L"</table>" << std::endl;
+		ofile << L"</table>\n";
 
 		InsertSpacingTable(ofile);
 	}
@@ -532,7 +532,7 @@ namespace ReportHTML
 			}
 		}
 
-		ofile << L"</table>" << std::endl;
+		ofile << L"</table>\n";
 
 		InsertSpacingTable(ofile);
 	}
@@ -703,7 +703,7 @@ namespace ReportHTML
 							ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\"><td colspan=\"7\" height=\"13\" class=\"C4G\">" + GLanguageHandler->Text[rsNoneFound] + L".</td></tr>" << "\n";
 						}
 
-						ofile << L"</table>" << std::endl;
+						ofile << L"</table>\n";
 
 						InsertSpacingTable(ofile);
 					}
@@ -752,7 +752,7 @@ namespace ReportHTML
 					);
 				}
 
-				ofile << L"</table>" << std::endl;
+				ofile << L"</table>\n";
 
 				InsertSpacingTable(ofile);
 
@@ -850,7 +850,7 @@ namespace ReportHTML
 		ofile << L"</table>" << "\n";
 		ofile << L"</td>" << "\n";
 		ofile << L"</tr>" << "\n";
-		ofile << L"</table>" << std::endl;
+		ofile << L"</table>\n";
 	
 		InsertSpacingTable(ofile);
 	}
@@ -918,7 +918,7 @@ namespace ReportHTML
 				}
 			}
 				
-			ofile << L"</table>" << std::endl;
+			ofile << L"</table>\n";
 
 			if ((options.Layout[0]) && (fileDatesCount != 0))
 			{
@@ -1033,7 +1033,7 @@ namespace ReportHTML
 				);
 		}
 
-		ofile << L"</table>" << std::endl;
+		ofile << L"</table>\n";
 
 		InsertSpacingTable(ofile);
 	}
@@ -1064,7 +1064,7 @@ namespace ReportHTML
 			ofile << L"</tr>" << "\n";
 		}
 
-		ofile << L"</table>" << std::endl;
+		ofile << L"</table>\n";
 
 		InsertSpacingTable(ofile);
 	}
@@ -1087,7 +1087,7 @@ namespace ReportHTML
 			);		
 		}
 
-		ofile << L"</table>" << std::endl;
+		ofile << L"</table>\n";
 
 		InsertSpacingTable(ofile);
 	}
@@ -1110,7 +1110,7 @@ namespace ReportHTML
 			);
 		}
 
-		ofile << L"</table>" << std::endl;
+		ofile << L"</table>\n";
 
 		InsertSpacingTable(ofile);
 	}	
@@ -1230,7 +1230,7 @@ namespace ReportHTML
 			}
 		}
 		
-		ofile << L"</table>" << std::endl;
+		ofile << L"</table>\n";
 
 		InsertSpacingTable(ofile);
 	}
@@ -1259,7 +1259,7 @@ namespace ReportHTML
 
 	void InsertSpacingTable(std::wofstream &ofile)
 	{
-		ofile << L"<table align=\"center\" width=\"770\" border=\"0\"><tr><td>&nbsp;</td></tr></table>" << std::endl;
+		ofile << L"<table align=\"center\" width=\"770\" border=\"0\"><tr><td>&nbsp;</td></tr></table>\n";
 	} 
 
 
@@ -1274,7 +1274,7 @@ namespace ReportHTML
 			L"<td bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\"><div align=\"center\" id=\"" + id1 + L"\"></td>" +
 			L"<td bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\"><div align=\"center\" id=\"" + id2 + L"\"></td>" +
 			L"</tr>" +
-			L"</table>" << std::endl;
+			L"</table>\n";
 	}
 
 
@@ -1285,7 +1285,7 @@ namespace ReportHTML
 			L"<td bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\">" + GLanguageHandler->Text[title_language_id] + L"</td>" +
 			L"</tr>" +
 			L"<tr><td bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\"><div align=\"center\" id=\"" + id + L"\"></td></tr>" +
-			L"</table>" << std::endl;
+			L"</table>\n";
 	}
 
 
@@ -1304,7 +1304,7 @@ namespace ReportHTML
 
 		ofile << L"}" << "\n";
 
-		ofile << L"</script>" << std::endl;
+		ofile << L"</script>\n";
 	}
 
 
@@ -1441,7 +1441,7 @@ namespace ReportHTML
 			ofile << L"['" << GLanguageHandler->TypeDescriptions[t] << L"', " << GScanDetails->Data.ExtensionSpread[t].Size << L", '#" << Convert::WebColour(GSettings->FileCategoryColors[t]) << L"']," << "\n";
 		}
 
-		ofile << L"]);" << std::endl;
+		ofile << L"]);\n";
 	}
 
 
@@ -1469,7 +1469,7 @@ namespace ReportHTML
 			ofile << L"['" << GScanDetails->Data.RootFolders[t].Name << L"', " << GScanDetails->Data.RootFolders[t].Size << L", '#" << Convert::WebColour(colour) << L"']," << "\n";
 		}
 
-		ofile << L"]);" << std::endl;
+		ofile << L"]);\n";
 	}
 
 
@@ -1491,7 +1491,7 @@ namespace ReportHTML
 			ofile << L"['" << __MagniLabels[t] << L"', " << GScanDetails->Data.Magnitude[t].Size << L", '#" << Convert::WebColour(__MagniColours[t]) << L"']," << "\n";
 		}
 
-		ofile << L"]);" << std::endl;
+		ofile << L"]);\n";
 	}
 
 
@@ -1666,7 +1666,7 @@ namespace ReportHTML
 
 	void SevenColumnTableEnd(std::wofstream& ofile)
 	{
-		ofile << L"</table>" << std::endl;
+		ofile << L"</table>\n";
 	}
 
 
@@ -1684,6 +1684,6 @@ namespace ReportHTML
 		ofile << L"<td width=\"90\" height=\"13\" class=\"C7G\"><div align=\"center\"><b>" + GLanguageHandler->Text[rsSizeOfFiles] + L"</b></div></td>" << "\n";
 		ofile << L"<td width=\"80\" height=\"13\" class=\"C7G\"><div align=\"center\"><b>" + GLanguageHandler->Text[rsAsPercent] + L"</b></div></td>" << "\n";
 		ofile << L"<td width=\"380\" height=\"20\">&nbsp;</td>" << "\n";
-		ofile << L"</tr>" << std::endl;
+		ofile << L"</tr>\n";
 	}
 };

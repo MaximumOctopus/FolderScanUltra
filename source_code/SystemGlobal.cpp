@@ -30,13 +30,13 @@ SystemGlobal* GSystemGlobal;
 
 SystemGlobal::SystemGlobal(int argc, wchar_t *argv[])
 {
-	InitialiseXinorbis();
+	InitialiseFolderScanUltra();
 
 	GParameterHandler = new ParameterHandler(argc, argv);
 }
 
 
-void SystemGlobal::InitialiseXinorbis()
+void SystemGlobal::InitialiseFolderScanUltra()
 {
 	AppPath  = WindowsUtility::GetExePath();
 	DataPath = GetUsersPath(AppPath);
@@ -97,7 +97,7 @@ bool SystemGlobal::CheckFolderStructure()
 	if (!WindowsUtility::DirectoryExistsWString(AppPath + L"system\\"))
 	{
 		std::wcout << L"FolderScanUltra is not properly installed" << "\n";
-		std::wcout << L"Missing folder: " + AppPath + L"Data" << "\n" << std::endl;
+		std::wcout << L"Missing folder: " + AppPath + L"Data" << "\n\n";
 		
 		failCount++;
 	}
@@ -109,7 +109,7 @@ bool SystemGlobal::CheckFolderStructure()
 		// ====================================================================================
 
 		std::wcout << L"Error(s) while updating \"" + DataPath + L"\"." << "\n";
-		std::wcout << L"This folder, and all subfolders, must be read/write." << "\n" << std::endl;
+		std::wcout << L"This folder, and all subfolders, must be read/write." << "\n\n";
 		
 		return false;
 	}

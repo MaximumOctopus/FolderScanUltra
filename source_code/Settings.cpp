@@ -134,7 +134,7 @@ bool Settings::OpenSettings(bool read_only)
     {
 		__iniFile = new Ini(GSystemGlobal->AppPath + L"custom.ini");
 
-		std::wcout << GSystemGlobal->AppPath + L"custom.ini" << std::endl;
+		std::wcout << GSystemGlobal->AppPath + L"custom.ini\n";
 
 		if (__iniFile->Loaded)
 		{
@@ -205,7 +205,7 @@ bool Settings::LoadCustomSettings()
 			{
 				Custom.SettingsSaveLocation = SettingsSource::ConfigIni;
 
-				std::wcout << L"Portable mode active (from custom.ini)." << std::endl;
+				std::wcout << L"Portable mode active (from custom.ini).\n";
 			}
 
 			pcm = IniFile->ReadInteger(L"Main", L"useodbc", 0);
@@ -218,7 +218,7 @@ bool Settings::LoadCustomSettings()
 
 				if (Database.ODBCConnectionString == L"")
 				{
-					std::wcout << L"ODBC mode active, but connection string invalid (empty). Exiting." << std::endl;
+					std::wcout << L"ODBC mode active, but connection string invalid (empty). Exiting.\n";
 
 					return false;
 				}

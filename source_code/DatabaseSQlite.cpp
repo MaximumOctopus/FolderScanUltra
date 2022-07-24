@@ -33,12 +33,12 @@ DatabaseSQlite::DatabaseSQlite(std::wstring file_name)
 	if (dbAvailable)
 	{
 		std::wcout << L"SQlite connection open!" << "\n";
-		std::wcout << L"       " << dbFileName << "\n" << std::endl;
+		std::wcout << L"       " << dbFileName << "\n\n";
 	}
 	else
 	{
 		std::wcout << L"SQlite connection fail :(" << "\n";
-		std::wcout << L"       " << dbFileName << "\n" << std::endl;
+		std::wcout << L"       " << dbFileName << "\n\n";
 	}
 }
 
@@ -88,7 +88,7 @@ bool DatabaseSQlite::CreateNewFileTable(const std::wstring table_name)
 
 	if (rc)
 	{
-		std::wcout << L"SQLite create file table fail: " << sqlite3_errmsg(db) << std::endl;
+		std::wcout << L"SQLite create file table fail: " << sqlite3_errmsg(db) << L"\n"; 
 
 		return false;
 	}
@@ -97,12 +97,12 @@ bool DatabaseSQlite::CreateNewFileTable(const std::wstring table_name)
 
 	if (rc != SQLITE_DONE)
 	{
-		std::wcout << L"SQLite create file table fail: " << sqlite3_errmsg(db) << std::endl;
+		std::wcout << L"SQLite create file table fail: " << sqlite3_errmsg(db) << L"\n";
 
 		return false;
 	}
 
-	std::wcout << L"SQlite created File table" << std::endl;
+	std::wcout << L"SQlite created File table\n"; 
 
 	sqlite3_finalize(stmt);
 
@@ -120,7 +120,7 @@ bool DatabaseSQlite::CreateNewFolderTable(const std::wstring table_name)
 
 	if (rc)
 	{
-		std::wcout << L"SQLite create folder table fail: " << sqlite3_errmsg(db) << std::endl;
+		std::wcout << L"SQLite create folder table fail: " << sqlite3_errmsg(db) << L"\n"; 
 
 		return false;
 	}
@@ -129,12 +129,12 @@ bool DatabaseSQlite::CreateNewFolderTable(const std::wstring table_name)
 
 	if (rc != SQLITE_DONE)
 	{
-		std::wcout << L"SQLite create folder table fail: " << sqlite3_errmsg(db) << std::endl;
+		std::wcout << L"SQLite create folder table fail: " << sqlite3_errmsg(db) << L"\n"; 
 
 		return false;
 	}
 
-	std::wcout << L"SQlite created Folder table" << std::endl;
+	std::wcout << L"SQlite created Folder table\n";
 
 	sqlite3_finalize(stmt);
 
@@ -144,7 +144,7 @@ bool DatabaseSQlite::CreateNewFolderTable(const std::wstring table_name)
 
 bool DatabaseSQlite::PopulateFileTable(const std::wstring table_name)
 {
-	std::wcout << L"Populating File table..." << std::endl;
+	std::wcout << L"Populating File table...\n";
 
 	std::wstring stem = L"INSERT INTO \"" + table_name + L"\" (FilePath, FilePathIdx, FileName, FileSize, FileSizeDisk, FileDateC, FileDateA, FileDateM, Category, Directory, Readonly, Hidden, System, Archive, Temp, Owner) VALUES (";
 	std::wstring sql;
@@ -174,7 +174,7 @@ bool DatabaseSQlite::PopulateFileTable(const std::wstring table_name)
 
 		if (rc)
 		{
-			std::wcout << L"SQLite populate file table fail: " << sqlite3_errmsg(db) << std::endl;
+			std::wcout << L"SQLite populate file table fail: " << sqlite3_errmsg(db) << L"\n"; 
 
 			return false;
 		}
@@ -183,7 +183,7 @@ bool DatabaseSQlite::PopulateFileTable(const std::wstring table_name)
 
 		if (rc != SQLITE_DONE)
 		{
-			std::wcout << L"SQLite populate file table fail: " << sqlite3_errmsg(db) << std::endl;
+			std::wcout << L"SQLite populate file table fail: " << sqlite3_errmsg(db) << L"\n"; 
 
 			return false;
 		}
@@ -198,7 +198,7 @@ bool DatabaseSQlite::PopulateFileTable(const std::wstring table_name)
 
 bool DatabaseSQlite::PopulateFolderTable(const std::wstring table_name)
 {
-	std::wcout << L"Populating Folder table..." << std::endl;
+	std::wcout << L"Populating Folder table...\n";
 
 	std::wstring stem = L"INSERT INTO \"" + table_name + L"\" (FilePath) VALUES (\"";
 	std::wstring sql;
@@ -213,7 +213,7 @@ bool DatabaseSQlite::PopulateFolderTable(const std::wstring table_name)
 
 		if (rc)
 		{
-			std::wcout << L"SQLite populate folder table fail: " << sqlite3_errmsg(db) << std::endl;
+			std::wcout << L"SQLite populate folder table fail: " << sqlite3_errmsg(db) << L"\n"; 
 
 			return false;
 		}
@@ -222,7 +222,7 @@ bool DatabaseSQlite::PopulateFolderTable(const std::wstring table_name)
 
 		if (rc != SQLITE_DONE)
 		{
-			std::wcout << L"SQLite populate folder table fail: " << sqlite3_errmsg(db) << std::endl;
+			std::wcout << L"SQLite populate folder table fail: " << sqlite3_errmsg(db) << L"\n"; 
 
 			return false;
 		}
@@ -264,7 +264,7 @@ bool DatabaseSQlite::CreateNewDataTable(const std::wstring table_name)
 
 	if (rc)
 	{
-		std::wcout << L"SQLite create data table fail: " << sqlite3_errmsg(db) << std::endl;
+		std::wcout << L"SQLite create data table fail: " << sqlite3_errmsg(db) << L"\n"; 
 
 		return false;
 	}
@@ -273,12 +273,12 @@ bool DatabaseSQlite::CreateNewDataTable(const std::wstring table_name)
 
 	if (rc != SQLITE_DONE)
 	{
-		std::wcout << L"SQLite create data table fail: " << sqlite3_errmsg(db) << std::endl;
+		std::wcout << L"SQLite create data table fail: " << sqlite3_errmsg(db) << L"\n";
 
 		return false;
 	}
 
-	std::wcout << L"SQlite created data table" << std::endl;
+	std::wcout << L"SQlite created data table\n"; 
 
 	sqlite3_finalize(stmt);
 
@@ -303,7 +303,7 @@ bool DatabaseSQlite::CreateNewSystemTable(const std::wstring table_name)
 
 	if (rc)
 	{
-		std::wcout << L"SQLite create system table fail: " << sqlite3_errmsg(db) << std::endl;
+		std::wcout << L"SQLite create system table fail: " << sqlite3_errmsg(db) << L"\n";
 
 		return false;
 	}
@@ -312,12 +312,12 @@ bool DatabaseSQlite::CreateNewSystemTable(const std::wstring table_name)
 
 	if (rc != SQLITE_DONE)
 	{
-		std::wcout << L"SQLite create system table fail: " << sqlite3_errmsg(db) << std::endl;
+		std::wcout << L"SQLite create system table fail: " << sqlite3_errmsg(db) << L"\n";
 
 		return false;
 	}
 
-	std::wcout << L"SQlite created system table" << std::endl;
+	std::wcout << L"SQlite created system table" << L"\n"; 
 
 	sqlite3_finalize(stmt);
 
@@ -327,7 +327,7 @@ bool DatabaseSQlite::CreateNewSystemTable(const std::wstring table_name)
 
 bool DatabaseSQlite::PopulateDataTable(const std::wstring table_name)
 {
-	std::wcout << L"Populating Data table..." << "\n" << std::endl;
+	std::wcout << L"Populating Data table..." << "\n" << L"\n"; 
 
 	std::wstring stem = L"INSERT INTO \"" + table_name + L"\" (FilePath, FileName, FileSize, FileSizeDisk, FileDateC, FileDateA, FileDateM, Category, Directory, Readonly, Hidden, System, Archive, Temp, Owner, ScanDate) VALUES (";
 	std::wstring sql;
@@ -357,7 +357,7 @@ bool DatabaseSQlite::PopulateDataTable(const std::wstring table_name)
 
 		if (rc)
 		{
-			std::wcout << L"SQLite populate Data table fail: " << sqlite3_errmsg(db) << std::endl;
+			std::wcout << L"SQLite populate Data table fail: " << sqlite3_errmsg(db) << L"\n"; 
 
 			return false;
 		}
@@ -366,7 +366,7 @@ bool DatabaseSQlite::PopulateDataTable(const std::wstring table_name)
 
 		if (rc != SQLITE_DONE)
 		{
-			std::wcout << L"SQLite populate Data table fail: " << sqlite3_errmsg(db) << std::endl;
+			std::wcout << L"SQLite populate Data table fail: " << sqlite3_errmsg(db) << L"\n"; 
 
 			return false;
 		}
@@ -381,7 +381,7 @@ bool DatabaseSQlite::PopulateDataTable(const std::wstring table_name)
 
 bool DatabaseSQlite::PopulateSystemTable(const std::wstring table_name, const std::wstring data_table_name)
 {
-	std::wcout << L"Populating System table..." << "\n" << std::endl;
+	std::wcout << L"Populating System table..." << "\n" << L"\n"; 
 
 	std::wstring stem = L"INSERT INTO \"" + table_name + L"\" (TableName, Folder, SizeString, Size, Files, Folders, ScanDate) VALUES (\"";
 	std::wstring sql;
@@ -402,7 +402,7 @@ bool DatabaseSQlite::PopulateSystemTable(const std::wstring table_name, const st
 
 		if (rc)
 		{
-			std::wcout << L"SQLite populate system table fail: " << sqlite3_errmsg(db) << std::endl;
+			std::wcout << L"SQLite populate system table fail: " << sqlite3_errmsg(db) << L"\n"; 
 
 			return false;
 		}
@@ -411,7 +411,7 @@ bool DatabaseSQlite::PopulateSystemTable(const std::wstring table_name, const st
 
 		if (rc != SQLITE_DONE)
 		{
-			std::wcout << L"SQLite populate system table fail: " << sqlite3_errmsg(db) << std::endl;
+			std::wcout << L"SQLite populate system table fail: " << sqlite3_errmsg(db) << L"\n"; 
 
 			return false;
 		}

@@ -97,15 +97,15 @@ namespace ReportXML
 				}
 			}
 
-			ofile << L"</folderscanultrareport>" << std::endl;
+			ofile << L"</folderscanultrareport>\n";
 
 			ofile.close();
 		}
 		else
 		{
 			std::wcout << "\n";
-			std::wcout << GLanguageHandler->Text[rsErrorSaving] + L" \"" + options.FileName + L"\"." << "\n";
-			std::wcout << std::endl;
+			std::wcout << GLanguageHandler->Text[rsErrorSaving] + L" \"" + options.FileName + L"\".\n";
+			std::wcout << "\n";
 		}
 	}
 
@@ -140,7 +140,7 @@ namespace ReportXML
 			ofile << Formatting::InsertElement(L"diskspacemax", L"0", 1) << "\n";
 		}
 
-		ofile << L"</information>" << std::endl;
+		ofile << L"</information>\n";
 	}
 
 
@@ -170,7 +170,7 @@ namespace ReportXML
 			}
 		}
 
-		ofile << L"</categorylist>" << std::endl;
+		ofile << L"</categorylist>\n";
 	}
 
 
@@ -201,7 +201,7 @@ namespace ReportXML
 			}
 		}
 
-		ofile << L"</categorylist>" << std::endl;
+		ofile << L"</categorylist>\n";
 	}
 
 
@@ -232,7 +232,7 @@ namespace ReportXML
 			}
 		}
 
-		ofile << L"</folderlist>" << std::endl;
+		ofile << L"</folderlist>\n";
 	}
 
 
@@ -262,7 +262,7 @@ namespace ReportXML
 			}
 		}
 
-		ofile << L"</magnitudelist>" << std::endl;
+		ofile << L"</magnitudelist>\n";
 	}
 
 
@@ -345,7 +345,7 @@ namespace ReportXML
 					}
 				}
 
-				ofile << L"</extensiondata>" << std::endl;
+				ofile << L"</extensiondata>\n";
 			}
 		}
 	}
@@ -362,11 +362,11 @@ namespace ReportXML
 				ofile << L"  <nullfile name=\"" + Formatting::ReplaceEntitiesForXML(GScanDetails->Data.NullFiles[t]) + L"\" />" << "\n";
 			}
 
-			ofile << L"</nullfiles>" << std::endl;
+			ofile << L"</nullfiles>\n";
 		}
 		else
 		{
-			ofile << L"<nullfiles />" << std::endl;
+			ofile << L"<nullfiles />\n";
 		}
 
 		if (GScanDetails->Data.NullFolders.size() != 0)
@@ -378,11 +378,11 @@ namespace ReportXML
 				ofile << L"  <nullfolder name=\"" + Formatting::ReplaceEntitiesForXML(GScanDetails->Data.NullFolders[t]) + L"\" />" << "\n";
 			}
 
-			ofile << L"</nullfolders>" << std::endl;
+			ofile << L"</nullfolders>\n";
 		}
 		else
 		{
-			ofile << L"<nullfolders />" << std::endl;
+			ofile << L"<nullfolders />\n";
 		}
 	}
 
@@ -398,11 +398,11 @@ namespace ReportXML
 				ofile << L"  <tempfile name=\"" + Formatting::ReplaceEntitiesForXML(GScanDetails->Data.TemporaryFiles[t]) + L"\" />" << "\n";
 			}
 
-			ofile << L"</tempfiles>" << std::endl;
+			ofile << L"</tempfiles>\n";
 		}
 		else
 		{
-			ofile << L"<tempfiles />" << std::endl;
+			ofile << L"<tempfiles />\n";
 		}
 	}
 
@@ -435,7 +435,7 @@ namespace ReportXML
 			}
 		}
 
-		ofile << L"</filedates>" << std::endl;
+		ofile << L"</filedates>\n";
 	}
 
 
@@ -465,7 +465,7 @@ namespace ReportXML
 			}
 		}
 
-		ofile << L"</users>" << std::endl;
+		ofile << L"</users>\n";
 	}
 
 	
@@ -480,7 +480,7 @@ namespace ReportXML
 				L"</top101large>" << "\n";
 		}
 
-		ofile << L"</top101largest>" << std::endl;
+		ofile << L"</top101largest>\n";
 	}
 
 
@@ -495,7 +495,7 @@ namespace ReportXML
 				L"</top101small>" << "\n";
 		}
 
-		ofile << L"</top101smallest>" << std::endl;
+		ofile << L"</top101smallest>\n";
 	}
 
 
@@ -513,7 +513,7 @@ namespace ReportXML
 				L"</top101new>" << "\n";
 		}
 		
-		ofile << L"</top101newest>" << std::endl;
+		ofile << L"</top101newest>\n";
 	}
 
 
@@ -595,7 +595,7 @@ namespace ReportXML
 				ofile << L"</item>" << "\n";
 			}
 
-			ofile << L"</folderscanultrafilelist>" << std::endl;
+			ofile << L"</folderscanultrafilelist>\n";
 
 			ofile.close();
 		}

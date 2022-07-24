@@ -56,7 +56,7 @@ void Database()
 		}
 		else
 		{
-			std::wcout << L"Invalid mode." << std::endl;
+			std::wcout << L"Invalid mode.\n";
 
 			return;
 		}
@@ -117,7 +117,7 @@ void ProcessSettingsFromCommandLine()
 
 void ProcessConsoleReport()
 {
-	if (GParameterHandler->FindParameter(L"/top20folders"))
+	if (GParameterHandler->FindParameter(L"/folderstop20"))
 	{
 		ReportConsole::TopFolders(20);
 	}
@@ -185,8 +185,8 @@ int wmain(int argc, wchar_t* argv[])
 							else
 							{
 								if (GScanDetails->Scan(GSettings->Optimisations.ProcessData,
-									GParameterHandler->NeedToProcessTopDateLists(),
 									GParameterHandler->NeedToProcessTopSizeLists(),
+									GParameterHandler->NeedToProcessTopDateLists(),									
 									GParameterHandler->NeedToProcessFileDates()))
 								{
 									if (ReportHandler::GenerateReports() == 0)

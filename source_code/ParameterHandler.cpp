@@ -40,6 +40,11 @@ ParameterHandler::ParameterHandler(int argc, wchar_t *argv[])
 		WindowsUtility::AddToContextMenu(argv[0]);
 	}
 
+	if (FindParameter(L"/deletecontextmenu"))
+	{
+		WindowsUtility::RemoveFromContextMenu();
+	}
+
 	ProcessForOptimisations();
 }
 

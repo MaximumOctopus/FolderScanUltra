@@ -101,12 +101,12 @@ namespace ReportText
 
 			ofile << "\n";
 			ofile << GLanguageHandler->TextReport[0] << "\n";
-			ofile << L"======== FolderScanUltra Text Report = (c) Paul A Freshney " << Utility::CurrentYear() << " ==" << std::endl;                         
+			ofile << L"======== FolderScanUltra Text Report = (c) Paul A Freshney " << Utility::CurrentYear() << " ==\n";
 		}
 		else
 		{
 			std::wcout << GLanguageHandler->Text[rsErrorSaving] + L" (Text):" << "\n";
-			std::wcout << L"    " << options.FileName << "\n" << std::endl;
+			std::wcout << L"    " << options.FileName << "\n\n";
 		}
 	}
 
@@ -176,7 +176,7 @@ namespace ReportText
 			}
 			else
 			{
-				std::wcout << " Error cannot find folder \"" << folder << "\"" << std::endl;
+				std::wcout << " Error cannot find folder \"" << folder << "\"\n";
 			}
 		}
 	}

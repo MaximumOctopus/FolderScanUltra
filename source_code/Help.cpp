@@ -53,7 +53,7 @@ namespace Help
 			break;
 
 		default:
-			std::wcout << L"Unknown help type ?!?! " << option << std::endl;
+			std::wcout << L"Unknown help type ?!?! " << option << L"\n";
 		}
 	}
 
@@ -114,7 +114,7 @@ namespace Help
 		std::wcout << L"    /bottom20                  : output bottom 20 smallest files to console" << "\n";
 		std::wcout << L"    /new20                     : output top 20 newest files to console" << "\n";
 		std::wcout << L"    /old20                     : output top 20 oldest files to console" << "\n";
-		std::wcout << L"    /top20folders              : output top 20 folders in root, ordered by size" << "\n";
+		std::wcout << L"    /folderstop20              : output top 20 folders in root, ordered by size" << "\n";
 		std::wcout << "\n";
 		std::wcout << L"    /allfolders                : output all folders in root, ordered by size" << "\n";
 		std::wcout << "\n";

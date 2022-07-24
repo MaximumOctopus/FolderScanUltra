@@ -49,7 +49,7 @@ DatabaseHandler::DatabaseHandler(DBMode mode, const std::wstring db_parameter)
 	switch (dbMode)
 	{
 	case DBMode::None:
-		std::wcout << L"No database mode selected (use /odbc or /sqlite)." << std::endl;
+		std::wcout << L"No database mode selected (use /odbc or /sqlite).\n";
 
 		break;
 	case DBMode::SQLite:
@@ -66,7 +66,7 @@ DatabaseHandler::DatabaseHandler(DBMode mode, const std::wstring db_parameter)
 	}
 
 	default:
-		std::wcout << "\n" << L"Unknown database mode." << std::endl;
+		std::wcout << "\n" << L"Unknown database mode.\n";
 	}
 }
 
@@ -94,7 +94,7 @@ bool DatabaseHandler::InitSQlite(const std::wstring SQlite_file_name)
 			// file not found, will create, should show message?!
 		}
 
-		std::wcout << L"Initialising SQlite..." << std::endl;
+		std::wcout << L"Initialising SQlite...\n";
 
 		dbSQlite = new DatabaseSQlite(SQlite_file_name);
 
@@ -102,7 +102,7 @@ bool DatabaseHandler::InitSQlite(const std::wstring SQlite_file_name)
 	}
 	catch (...)
 	{
-		std::wcout << L"Error initialising SQLite :(" << "\n" << std::endl;
+		std::wcout << L"Error initialising SQLite :(" << "\n\n";
 
 		dbSQlite->dbAvailable = false;
 	}
@@ -119,7 +119,7 @@ bool DatabaseHandler::InitODBC(std::wstring connection_string)
 	}
 	catch (...)
 	{
-		std::wcout << L"Error initialising SQLite :(" << "\n" << std::endl;
+		std::wcout << L"Error initialising SQLite :(" << "\n\n";
 
 		dbODBC->dbAvailable = false;
 	}
@@ -141,20 +141,20 @@ bool DatabaseHandler::UpdateFolderHistory(const std::wstring table_folder, const
 
 				dbSQlite->PopulateFileTable(table_file);
 
-				std::wcout << "\n" << GLanguageHandler->Text[rsUpdatingFolderHistory] << L"..." << std::endl;
+				std::wcout << "\n" << GLanguageHandler->Text[rsUpdatingFolderHistory] << L"...\n";
 
 				UpdateFolderHistoryFile();
 			}
 			else
 			{
-				std::wcout << L"SQlite File Table Creation Failed \"" + table_file + L"\"" << std::endl;
+				std::wcout << L"SQlite File Table Creation Failed \"" + table_file + L"\"\n";
 
 				return false;
 			}
 		}
 		else
 		{
-			std::wcout << L"SQlite Folder Table Creation Failed \"" + table_folder + L"\"" << std::endl;
+			std::wcout << L"SQlite Folder Table Creation Failed \"" + table_folder + L"\"\n";
 
 			return false;
 		}
@@ -172,20 +172,20 @@ bool DatabaseHandler::UpdateFolderHistory(const std::wstring table_folder, const
 
 				dbODBC->PopulateFileTable(table_file);
 
-				std::wcout << "\n" << GLanguageHandler->Text[rsUpdatingFolderHistory] << L"..." << std::endl;
+				std::wcout << "\n" << GLanguageHandler->Text[rsUpdatingFolderHistory] << L"...\n";
 
 				UpdateFolderHistoryFile();
 			}
 			else
 			{
-				std::wcout << L"ODBC File Table Creation Failed \"" + table_file + L"\"" << std::endl;
+				std::wcout << L"ODBC File Table Creation Failed \"" + table_file + L"\"\n";
 
 				return false;
 			}
 		}
 		else
 		{
-			std::wcout << L"ODBC Folder Table Creation Failed \"" + table_folder + L"\"" << std::endl;
+			std::wcout << L"ODBC Folder Table Creation Failed \"" + table_folder + L"\"\n";
 
 			return false;
 		}
@@ -212,19 +212,19 @@ bool DatabaseHandler::UpdateFolderHistoryStructured(const std::wstring table_sys
 				std::wcout << L"Populating structured file table..." << "\n";
 				dbSQlite->PopulateDataTable(table_data);
 
-				std::wcout << GLanguageHandler->Text[rsUpdatingFolderHistory] << std::endl;
+				std::wcout << GLanguageHandler->Text[rsUpdatingFolderHistory] << L"\n";
 				UpdateFolderHistoryFile();
 			}
 			else
 			{
-				std::wcout << L"SQlite structured File Table Creation Failed \"" + table_data + L"\"" << std::endl;
+				std::wcout << L"SQlite structured File Table Creation Failed \"" + table_data + L"\"\n";
 
 				return false;
 			}
 		}
 		else
 		{
-			std::wcout << L"SQlite structured Folder Table Creation Failed \"" + table_system + L"\"" << std::endl;
+			std::wcout << L"SQlite structured Folder Table Creation Failed \"" + table_system + L"\"\n";
 
 			return false;
 		}
@@ -244,19 +244,19 @@ bool DatabaseHandler::UpdateFolderHistoryStructured(const std::wstring table_sys
 				std::wcout << L"Populating structured file table..." << "\n";
 				dbODBC->PopulateDataTable(table_data);
 
-				std::wcout << GLanguageHandler->Text[rsUpdatingFolderHistory] << std::endl;
+				std::wcout << GLanguageHandler->Text[rsUpdatingFolderHistory] << L"\n";
 				UpdateFolderHistoryFile();
 			}
 			else
 			{
-				std::wcout << L"ODBC structured File Table Creation Failed \"" + table_data + L"\"" << std::endl;
+				std::wcout << L"ODBC structured File Table Creation Failed \"" + table_data + L"\"\n";
 
 				return false;
 			}
 		}
 		else
 		{
-			std::wcout << L"ODBC structured Folder Table Creation Failed \"" + table_system + L"\"" << std::endl;
+			std::wcout << L"ODBC structured Folder Table Creation Failed \"" + table_system + L"\"\n";
 
 			return false;
 		}
@@ -340,12 +340,12 @@ bool DatabaseHandler::UpdateFolderScanUltraScanHistoryIni(const std::wstring fol
 		}
 		catch(...)
 		{
-			std::wcout << L"Error reading \"" << users_path + L"scanhistory.dat" << L"\"" << std::endl;
+			std::wcout << L"Error reading \"" << users_path + L"scanhistory.dat" << L"\"\n";
 
 			return false;
 		}
 
-		std::wcout << L"Loaded " << ScanHistory.size() << L" scan history items." << std::endl;
+		std::wcout << L"Loaded " << ScanHistory.size() << L" scan history items.\n";
 
 		// =====================================================================================
 		// Add This Scan
@@ -386,7 +386,7 @@ bool DatabaseHandler::UpdateFolderScanUltraScanHistoryIni(const std::wstring fol
 						ofile << std::to_wstring(ho.DateI) << "\n";
 						ofile << ho.TimeI << "\n";
 						ofile << ho.ExcludeFiles << "\n";
-						ofile << ho.ExcludeFolders << std::endl;
+						ofile << ho.ExcludeFolders << "\n";
 
 						t++;
 					}

@@ -13,12 +13,10 @@
 #pragma once
 
 
-namespace ReportConsole
-{
-	void TopFolders(int);
+#include <string>
 
-	void TopFiles(int);
-	void BottomFiles(int);
-	void NewFiles(int);
-	void OldFiles(int);
+
+namespace ReportUtility
+{
+	std::wstring BarGraph(int);
 }

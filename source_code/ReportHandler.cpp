@@ -12,6 +12,7 @@
 
 #include "Constants.h"
 #include "ParameterHandler.h"
+#include "ReportConsole.h"
 #include "ReportCSV.h"
 #include "ReportCSVReportOptions.h"
 #include "ReportHandler.h"
@@ -100,7 +101,7 @@ namespace ReportHandler
 				}
 				case ReportType::Summary:
 				{
-					ReportSummary::Generate();
+					ReportSummary::Show();
 
 					reportCount++;
 
@@ -187,7 +188,7 @@ namespace ReportHandler
 
 				case ReportType::Top20:
 				{
-					ReportSummary::Top20();
+					ReportConsole::TopFiles(20);
 
 					reportCount++;
 
@@ -195,7 +196,7 @@ namespace ReportHandler
 				}
 				case ReportType::Bottom20:
 				{
-					ReportSummary::Bottom20();
+					ReportConsole::BottomFiles(20);
 
 					reportCount++;
 
@@ -203,7 +204,7 @@ namespace ReportHandler
 				}
 				case ReportType::New20:
 				{
-					ReportSummary::New20();
+					ReportConsole::NewFiles(20);
 
 					reportCount++;
 
@@ -211,7 +212,7 @@ namespace ReportHandler
 				}
 				case ReportType::Old20:
 				{
-					ReportSummary::Old20();
+					ReportConsole::OldFiles(20);
 
 					reportCount++;
 
@@ -220,10 +221,10 @@ namespace ReportHandler
 
 				case ReportType::All20:
 				{
-					ReportSummary::Top20();
-					ReportSummary::Bottom20();
-					ReportSummary::New20();
-					ReportSummary::Old20();
+					ReportConsole::TopFiles(20);
+					ReportConsole::BottomFiles(20);
+					ReportConsole::NewFiles(20);
+					ReportConsole::OldFiles(20);
 
 					reportCount++;
 
@@ -291,6 +292,6 @@ namespace ReportHandler
 
 	void ShowDefaultOutput()
 	{
-		ReportSummary::Generate();
+		ReportSummary::Show();
 	}
 }

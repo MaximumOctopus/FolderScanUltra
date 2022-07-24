@@ -67,7 +67,7 @@ bool LanguageHandler::LoadLanguage(const std::wstring file_name)
 
 			if (Text.size() != rsLanguageConstantsCount)
 			{
-				std::wcout << "Check your language files are up-to-date.They appear to have an incorrect number of entries! (" << rsLanguageConstantsCount << " vs " << Text.size()  << ")\n" << file_name << "\n" << "<install>\\system\\languages\\" << std::endl;
+				std::wcout << "Check your language files are up-to-date.They appear to have an incorrect number of entries! (" << rsLanguageConstantsCount << " vs " << Text.size()  << ")\n" << file_name << "\n" << "<install>\\system\\languages\\ \n";
 
 				for (int t = Text.size(); t < rsLanguageConstantsCount + 1; t++)
 				{
@@ -84,7 +84,7 @@ bool LanguageHandler::LoadLanguage(const std::wstring file_name)
 	}
 	else
 	{
-		std::wcout << L"Language file missing: " << "\n" << file_name << std::endl;
+		std::wcout << L"Language file missing: " << "\n" << file_name << L"\n"; 
 	}
 
     return false;

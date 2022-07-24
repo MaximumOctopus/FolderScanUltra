@@ -32,7 +32,7 @@ namespace ReportCSV
 {
 	void Summary(CSVReportOptions options)
 	{
-		std::wcout << GLanguageHandler->Text[rsSavingReports] + L" (CSV): " << "\n" << std::endl;
+		std::wcout << GLanguageHandler->Text[rsSavingReports] + L" (CSV): " << "\n\n";
 
 		std::wofstream ofile(options.FileName);
 
@@ -81,7 +81,7 @@ namespace ReportCSV
 					lOutput += L"\"100\"";
 				}
 			
-				ofile << lOutput << std::endl;
+				ofile << lOutput << L"\n"; 
 			}
 
 			ofile.close();
@@ -92,7 +92,7 @@ namespace ReportCSV
 	void FullList(CSVReportOptions options)
 	{
 		std::wcout << GLanguageHandler->Text[rsSavingReports] + L" (CSV): " << "\n";
-		std::wcout << L"    " << options.FileName << "\n" << std::endl;
+		std::wcout << L"    " << options.FileName << "\n\n";
 
 		std::wofstream ofile(options.FileName);
 
@@ -216,7 +216,7 @@ namespace ReportCSV
 									Convert::BoolToString(GScanDetails->Data.Files[t].Temp);
 					}
 
-					ofile << lOutput << std::endl;
+					ofile << lOutput << L"\n"; 
 				}
 			}
 

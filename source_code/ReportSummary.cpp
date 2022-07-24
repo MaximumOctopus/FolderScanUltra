@@ -28,10 +28,10 @@ extern LanguageHandler* GLanguageHandler;
 
 namespace ReportSummary
 {
-	void Generate()
+	void Show()
 	{
-		std::wcout << L"\n";
-		std::wcout << L"\n";
+		std::wcout << "\n";
+		std::wcout << "\n";
 
 		std::wcout << GLanguageHandler->SummaryReport[0] + L" \"" << GScanDetails->Path.String << L"\"\n";
 
@@ -53,82 +53,6 @@ namespace ReportSummary
 			std::wcout << GLanguageHandler->SummaryReport[9] + L" " << std::setprecision(3) << GScanDetails->Data.AverageFilesPerFolder << "\n";
 		}
 
-		std::wcout << L"" << std::endl;	
-	}
-
-
-	void Top20()
-	{
-		std::wcout << L"" << "\n";
-
-		int i = 0;
-
-		while ((i < 20) && (i < GScanDetails->Data.Top100Large.size()))
-		{
-			std::wcout << Formatting::AddLeading(Convert::IntDateToString(GScanDetails->Data.Top100Large[i].FileDateC), 9, L' ') + L" " +
-				Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.Top100Large[i].Size), 12, L' ') + L" " +
-				GScanDetails->Data.Folders[GScanDetails->Data.Top100Large[i].FilePathIndex] + GScanDetails->Data.Top100Large[i].FileName << "\n";
-
-			i++;
-		}
-
 		std::wcout << "\n";
-	}
-
-
-	void Bottom20()
-	{
-		std::wcout << L"\n";
-
-		int i = 0;
-
-		while ((i < 20) && (i < GScanDetails->Data.Top100Small.size()))
-		{
-			std::wcout << Formatting::AddLeading(Convert::IntDateToString(GScanDetails->Data.Top100Small[i].FileDateC), 9, L' ') + L" " +
-				Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.Top100Small[i].Size), 12, L' ') + L" " +
-				GScanDetails->Data.Folders[GScanDetails->Data.Top100Small[i].FilePathIndex] + GScanDetails->Data.Top100Small[i].FileName << "\n";
-
-			i++;
-		}
-
-		std::wcout << std::endl;
-	}
-
-
-	void New20()
-	{
-		std::wcout << L"\n";
-
-		int i = 0;
-
-		while ((i < 20) && (i < GScanDetails->Data.Top100Newest.size()))
-		{
-			std::wcout << Formatting::AddLeading(Convert::IntDateToString(GScanDetails->Data.Top100Newest[i].FileDateC), 9, L' ') + L" " +
-				Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.Top100Newest[i].Size), 12, L' ') + L" " +
-				GScanDetails->Data.Folders[GScanDetails->Data.Top100Newest[i].FilePathIndex] + GScanDetails->Data.Top100Newest[i].FileName << "\n";
-
-			i++;
-		}
-
-		std::wcout << std::endl;
-	}
-
-
-	void Old20()
-	{
-		std::wcout << L"\n";
-
-		int i = 0;
-
-		while ((i < 20) && (i < GScanDetails->Data.Top100Oldest.size()))
-		{
-			std::wcout << Formatting::AddLeading(Convert::IntDateToString(GScanDetails->Data.Top100Oldest[i].FileDateC), 9, L' ') + L" " +
-				Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.Top100Oldest[i].Size), 12, L' ') + L" " +
-				GScanDetails->Data.Folders[GScanDetails->Data.Top100Oldest[i].FilePathIndex] + GScanDetails->Data.Top100Oldest[i].FileName << "\n";
-
-			i++;
-		}
-
-		std::wcout << std::endl;
 	}
 }

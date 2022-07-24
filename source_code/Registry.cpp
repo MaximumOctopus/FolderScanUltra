@@ -91,5 +91,11 @@ bool Registry::WriteRegistryString(HKEY hKey, const std::wstring& key_name, cons
 		                   0,
 		                   REG_SZ,
 		                   (LPBYTE)(value.c_str()),
-		                   (value.size() + 1) * sizeof(wchar_t)) == ERROR_SUCCESS);		         
+		                   (value.size() + 1) * sizeof(wchar_t)) == ERROR_SUCCESS);
+}
+
+
+bool Registry::DeleteRegistry(HKEY hKey, const std::wstring& key_name)
+{
+	return (RegDeleteValue(hKey, key_name.c_str()) == ERROR_SUCCESS);
 }

@@ -18,11 +18,5 @@
 
 namespace ReportSummary
 {
-	void Generate();
-
-	void Top20();
-	void Bottom20();
-
-	void New20();
-	void Old20();
+	void Show();
 }

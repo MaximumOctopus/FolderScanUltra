@@ -44,8 +44,8 @@ namespace ErrorHandler
 
 	void OutputErrorConsole(InitStatus status)
 	{
-		std::wcout << L"" << "\n";
+		std::wcout << "\n";
 		std::wcout << GetErrorString(status) << "\n";
-		std::wcout << L"" << std::endl;
+		std::wcout << "\n";
 	}
 }
