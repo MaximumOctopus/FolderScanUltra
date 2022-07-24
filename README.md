@@ -1,4 +1,4 @@
-# FolderScanUltra 5.4.0
+# FolderScanUltra 5.4.1
 
 (c) Paul Alan Freshney 2019-2022
 
@@ -21,6 +21,14 @@ This was originally a Delphi application, released as part of the Xinorbis tools
 In 2022 I decided to rename it and add it to my pool of applications receiving regular updates (two applications now, so maybe a puddle, not a pool). It'll be distanced somewhat from xinorbis and become better for it. Many updates are planned.
 
 # Release History
+
+5.4.1 / July 24th 2022
+
+Minor tweaks to code.
+
+Altered /top20folders to /folderstop20
+
+Added a simple "bar graph" to above console output.
 
 5.4.0 / July 20th 2022
 
