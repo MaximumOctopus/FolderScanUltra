@@ -16,6 +16,11 @@ The included sqlite3.dll and sqlite3.lib files are x64 versions. They can only b
 
 32-bit sqlite3.dll and sqlite3.def (for building the .lib) files can be found on the official sqlite site: http://sqlite.org
 
+Compiled with C++ 14 in Visual Studio 2022.
+
+May require C++ runtime if you get an error when starting:
+    https://www.microsoft.com/en-gb/download/details.aspx?id=48145
+
 History
 
 This was originally a Delphi application, released as part of the Xinorbis toolset, called XCom, it was renamed X.Robot many years ago, and received a C++ rewrite in 2019.
