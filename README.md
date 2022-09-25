@@ -1,4 +1,4 @@
-# FolderScanUltra 5.4.1
+# FolderScanUltra 5.5
 
 (c) Paul Alan Freshney 2019-2022
 
@@ -21,6 +21,19 @@ This was originally a Delphi application, released as part of the Xinorbis tools
 In 2022 I decided to rename it and add it to my pool of applications receiving regular updates (two applications now, so maybe a puddle, not a pool). It'll be distanced somewhat from xinorbis and become better for it. Many updates are planned.
 
 # Release History
+
+5.5 / September 25th 2022
+
+Fixed an issue where adding a final \ to the end of scan path (eg e:\cats\) would cause a "folder does not exist error".
+
+Added powerful console options via the /console switch.
+
+This will activate an in-app console once a scan has finished, giving access to various reports, searching, and advanced filtering (with the ability
+to save search results). See the included PDF manual for more information.
+
+A few minor tweaks. Added full file attribute value to CSV and XML output.
+
+Updated the help manual with detailed information on the new console and its commands. It takes more effort to update the manual than it does to do the actual coding, so please read the manual!
 
 5.4.1 / July 24th 2022
 
