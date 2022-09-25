@@ -1,5 +1,5 @@
 ==================================================================================
-FolderScanUltra 5.4.1
+FolderScanUltra 5.5
 (c) Paul Alan Freshney 2019-2022
 
 paul@freshney.org
@@ -20,11 +20,24 @@ History
 
 This was originally a Delphi application, released as part of the Xinorbis toolset, called XCom, it was renamed X.Robot many years ago, and received a C++ rewrite in 2019.
 
-In 2022 I decided to rename it and add it to my pool of applications receiving regular updates (two applications now, so maybe a puddle, not a pool). It'll be distanced somewhat from xinorbis and become better for it. Many updates are planned.
+In 2022 I decided to rename it and add it to my pool of applications receiving regular updates (two applications now, so maybe a puddle, not a pool). It'll be distanced somewhat from xinorbis and become better for it. Many (exciting!?) updates are planned.
 
 ==================================================================================
 
 Release History
+
+5.5 / September 25th 2022
+
+Fixed an issue where adding a final \ to the end of scan path (eg e:\cats\) would cause a "folder does not exist error".
+
+Added powerful console options via the /console switch.
+
+This will activate an in-app console once a scan has finished, giving access to various reports, searching, and advanced filtering (with the ability
+to save search results). See the included PDF manual for more information.
+
+A few minor tweaks. Added full file attribute value to CSV and XML output.
+
+Updated the help manual with detailed information on the new console and its commands. It takes more effort to update the manual than it does to do the actual coding, so please read the manual!
 
 5.4.1 / July 24th 2022
 
@@ -32,7 +45,7 @@ Minor tweaks to code.
 
 Altered /top20folders to /folderstop20
 
-Added a simple "bar graph" to above console output.
+Added a simple "bar graph" to the above console output.
 
 5.4.0 / July 20th 2022
 
@@ -74,7 +87,7 @@ Various tweaks to the code, part of an on-going improvement process.
 
 Renamed, and released with some minor tweaks.
 
-The weird "n years after" phenomenon has happened again. It's almost exactly two years since I release an update to this.
+The weird "n years after" phenomenon has happened again. It's almost exactly two years since I released an update to this.
 
 4.1.1 / June 6th 2020
 
