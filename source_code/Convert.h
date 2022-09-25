@@ -21,6 +21,7 @@ namespace Convert
 {
 	std::wstring AttributeToIntAsString(int, int);
 	std::wstring ConvertToUsefulUnit(unsigned __int64);
+	unsigned __int64 ConvertUsefulUnitToInteger(std::wstring);
 	std::wstring DoubleToPercent(double);
 	std::wstring GetSizeString(int, unsigned __int64);
 
@@ -30,6 +31,11 @@ namespace Convert
 	int FileTimeToTimeInt(FILETIME*);
 	std::wstring IntDateToString(int);
 	std::wstring IntToHex(int, int);
+	int DateToYYYYMMDD(const std::wstring);
+	int TodayPlusDaysToYYYYMMDD(int days);
+
+	int DateFromAnyFormatToYYYYMMDD(std::wstring);
+	int TimeFromAnyFormatToHHMM(std::wstring);
 
 	std::wstring WebColour(int);
 

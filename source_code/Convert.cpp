@@ -10,15 +10,18 @@
 // 
 
 
-#include "Constants.h"
-#include "Convert.h"
-#include "LanguageHandler.h"
-#include "Settings.h"
+#include <algorithm>
 #include <string>
 #include <Windows.h>
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+
+#include "Constants.h"
+#include "Convert.h"
+#include "LanguageHandler.h"
+#include "Settings.h"
+#include "Utility.h"
 
 
 extern LanguageHandler* GLanguageHandler;
@@ -103,6 +106,245 @@ namespace Convert
 
 			return s + L" TB";
 		}
+	}
+
+
+	unsigned __int64 ConvertUsefulUnitToInteger(std::wstring input)
+	{
+		int output = 0;
+
+		std::wstring value = L"0";
+		std::wstring unit = L"";
+
+		for (int t = 0; t < input.length(); t++)
+		{
+			if (input[t] != L' ')
+			{
+				if (isalpha(input[t]))
+				{
+					unit += toupper(input[t]);
+				}
+				else
+				{
+					value += input[t];
+				}
+			}
+		}
+
+		if (value.find(GSettings->General.DecimalSeparator) != std::wstring::npos)  // handle non integer values differently
+		{
+			if (unit == GLanguageHandler->UpperCaseText(rsBytes))
+			{
+				output = static_cast<int>(std::stod(value));
+			}
+			else if (unit == L"K" || unit == L"KB" || unit == GLanguageHandler->UpperCaseUnit(rsUnitKB))
+			{
+				output = static_cast<int>(std::stod(value)) * 1024;
+			}
+			else if (unit == L"M" || unit == L"MB" || unit == GLanguageHandler->UpperCaseUnit(rsUnitMB))
+			{
+				output = static_cast<int>(std::stod(value)) * 1024 * 1024;
+			}
+			else if (unit == L"G" || unit == L"GB" || unit == GLanguageHandler->UpperCaseUnit(rsUnitGB))
+			{
+				output = static_cast<int>(std::stod(value)) * 1024 * 1024 * 1024;
+			}
+			else
+			{
+				output = static_cast<int>(std::stod(value));
+			}
+		}
+		else
+		{
+			if (unit == GLanguageHandler->UpperCaseText(rsBytes))
+			{
+				output = stoi(value);
+			}
+			else if (unit == L"K" || unit == L"KB" || unit == GLanguageHandler->UpperCaseUnit(rsUnitKB))
+			{
+				output = stoi(value) * 1024;
+			}
+			else if (unit == L"M" || unit == L"MB" || unit == GLanguageHandler->UpperCaseUnit(rsUnitMB))
+			{
+				output = stoi(value) * 1024 * 1024;
+			}
+			else if (unit == L"G" || unit == L"GB" || unit == GLanguageHandler->UpperCaseUnit(rsUnitGB))
+			{
+				output = stoi(value) * 1024 * 1024 * 1024;
+			}
+			else
+			{
+				output = stoi(value);
+			}
+		}
+
+		return output;
+	}
+
+
+	int DateFromAnyFormatToYYYYMMDD(std::wstring input)
+	{
+		int output = 0;
+		bool hastext = false;
+		std::wstring value = L"";
+
+		if (input.find(L"!") == 0)                // !x where x is number of days
+		{
+			int t = 0;
+
+			try
+			{
+				t = stoi(input.substr(1));
+			}
+			catch (...)
+			{
+				
+			}
+
+			output = Convert::TodayPlusDaysToYYYYMMDD(-t);
+		}
+		else if (input.find(L"$") == 0)           // $x where x is number of months
+		{
+			int t = 0;
+
+			try
+			{
+				t = stoi(input.substr(1));
+			}
+			catch (...)
+			{
+
+			}
+
+			output = Convert::TodayPlusDaysToYYYYMMDD(-(t * 30)); // -months
+		}
+		else
+		{
+			hastext = false;
+		}
+
+		input = Utility::ReplaceString(input, L"\\", L"*");
+		input = Utility::ReplaceString(input, L"/", L"*");
+		
+		std::transform(input.begin(), input.end(), input.begin(), ::toupper);
+
+		for (int t = 0; t < input.length(); t++)
+		{
+			if (isalpha(input[t]))
+			{
+				hastext = true;
+			}
+		}
+
+		// if the user has entered the month as text the replace the text with
+		// the correct ordinal month value
+		if (hastext)
+		{
+			std::wstring smup = L"";
+
+			for (int t = 0; t < 12; t++)
+			{
+				smup = GLanguageHandler->ShortMonths[t];
+
+				std::transform(smup.begin(), smup.end(), smup.begin(), ::toupper);
+
+				if (input.find(smup) != std::wstring::npos)
+				{
+					if (t < 10)
+					{
+						value = L'0' + std::to_wstring(t);
+					}
+					else
+					{
+						value = std::to_wstring(t);
+					}
+
+					input = Utility::ReplaceString(input, smup, value);
+				}
+			}
+		}
+
+		// ===========================================================================
+
+		if (input.find(L"*") == 2)             // dd/mm/yyyy
+		{
+			if (false) // to do XSettings.General.DateFormat = CDateFormatSlashMMDDYYYY)  // assume the user is entering in mm/dd/yyyy
+			{
+				std::wstring mmddyyyy = input.substr(6, 4) + input.substr(0, 2) + input.substr(3, 2);
+
+				try
+				{
+					output = stoi(mmddyyyy);
+				}
+				catch (...)
+				{
+					output = 19900101;
+				}
+			}
+			else
+			{
+				output = Convert::DateToYYYYMMDD(input);
+			}
+		}
+		else if (input.find(L"*") == 4)        // yyyy/mm/dd
+		{
+			std::wstring yyyymmdd = input.substr(0, 4) + input.substr(5, 2) + input.substr(8, 2);
+
+			try
+			{
+				output = stoi(yyyymmdd);
+			}
+			catch(...)
+			{
+				output = 19900101;
+			}
+		}
+		else
+		{
+			try
+			{
+				output = stoi(input);
+			}
+			catch (...)
+			{
+				output = 19900101;
+			}
+		}
+
+		return output;
+	}
+
+
+	// input is in format dd/mm/yyyy
+	int DateToYYYYMMDD(const std::wstring input)
+	{
+		if (input.length() == 10)
+		{
+			int d = stoi(input.substr(0, 2));
+			int m = stoi(input.substr(3, 2));
+			int y = stoi(input.substr(5, 4));			
+			
+			return (y * 10000) + (m * 100) + d;
+		}
+
+		return 19900101;
+	}
+
+
+	// +/- day count
+	int TodayPlusDaysToYYYYMMDD(int days)
+	{
+		time_t now = time(nullptr) + (days * 24 * 60 * 60);
+
+		tm* ltm = localtime(&now);
+
+		wchar_t buffer[10];
+
+		wcsftime(buffer, 10, L"%Y%m%d", ltm);
+
+		std::wstring output(buffer);
+
+		return stoi(output);
 	}
 
 
@@ -280,6 +522,24 @@ namespace Convert
 			return default;
 		}
 	}
+
+
+	int TimeFromAnyFormatToHHMM(std::wstring input)
+	{
+		try
+		{
+			int output = stoi(input);
+
+			return output;
+		}
+		catch (...)
+		{
+
+		}
+		
+		return 1200;
+	}
+
 
 	// RGB -> BGR
 	std::wstring WebColour(int colour)
