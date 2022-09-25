@@ -34,15 +34,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Help.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ScanDetails.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="VersionCheck.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="FileDateObject.cpp">
       <Filter>Source Files\Data Classes</Filter>
     </ClCompile>
@@ -82,9 +73,6 @@
     <ClCompile Include="Settings.cpp">
       <Filter>Source Files\Settings</Filter>
     </ClCompile>
-    <ClCompile Include="SystemGlobal.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="WindowsUtility.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
@@ -114,6 +102,30 @@
     </ClCompile>
     <ClCompile Include="ReportUtility.cpp">
       <Filter>Source Files\Reports</Filter>
+    </ClCompile>
+    <ClCompile Include="Command.cpp">
+      <Filter>Source Files\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandHandler.cpp">
+      <Filter>Source Files\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="SearchCriteriaObject.cpp">
+      <Filter>Source Files\Search</Filter>
+    </ClCompile>
+    <ClCompile Include="SearchUtility.cpp">
+      <Filter>Source Files\Search</Filter>
+    </ClCompile>
+    <ClCompile Include="Help.cpp">
+      <Filter>Source Files\Help</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemGlobal.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="ScanDetails.cpp">
+      <Filter>Source Files\Scan</Filter>
+    </ClCompile>
+    <ClCompile Include="VersionCheck.cpp">
+      <Filter>Source Files\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -163,21 +175,6 @@
       <Filter>Header Files\Reports</Filter>
     </ClInclude>
     <ClInclude Include="Constants.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Help.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MD5.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ScanDetails.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SystemGlobal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="VersionCheck.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sqlite3.h">
@@ -285,6 +282,36 @@
     <ClInclude Include="ReportUtility.h">
       <Filter>Header Files\Reports</Filter>
     </ClInclude>
+    <ClInclude Include="Command.h">
+      <Filter>Header Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandHandler.h">
+      <Filter>Header Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchUtility.h">
+      <Filter>Header Files\Search</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchCriteriaObject.h">
+      <Filter>Header Files\Search</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchConstants.h">
+      <Filter>Header Files\Search</Filter>
+    </ClInclude>
+    <ClInclude Include="Help.h">
+      <Filter>Header Files\Help</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemGlobal.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="MD5.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="VersionCheck.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="ScanDetails.h">
+      <Filter>Header Files\Scan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="X.Robot.rc" />
@@ -340,6 +367,30 @@
     </Filter>
     <Filter Include="Header Files\Settings">
       <UniqueIdentifier>{f0386327-efb0-43dd-9333-cd1af554d8c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Commands">
+      <UniqueIdentifier>{f69c61a0-fa3c-4833-b52d-1b7464bf0810}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Command">
+      <UniqueIdentifier>{a330fec1-15b8-4d25-9435-9e99c18fa5b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Search">
+      <UniqueIdentifier>{6521d2ab-80c2-4fee-b81c-08d14381ca1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Search">
+      <UniqueIdentifier>{2504ce5e-4c5e-4700-b17b-24da6239e7fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Help">
+      <UniqueIdentifier>{e076bd70-2e66-46ed-a50b-bc5de5bd58f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Help">
+      <UniqueIdentifier>{905e3685-b6e1-4998-a97b-7f365abaa368}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Scan">
+      <UniqueIdentifier>{655d363a-35d5-4882-ae00-a558a07aba77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Scan">
+      <UniqueIdentifier>{f872cb41-4ace-4acd-8597-8793d974cdc7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

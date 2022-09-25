@@ -592,6 +592,7 @@ namespace ReportXML
 				ofile << Formatting::InsertElement(L"system",				Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_SYSTEM), 2) << "\n";
 				ofile << Formatting::InsertElement(L"archive",				Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_ARCHIVE), 2) << "\n";
 				ofile << Formatting::InsertElement(L"temp",					Convert::BoolToString(GScanDetails->Data.Files[t].Temp), 2) << "\n";
+				ofile << Formatting::InsertElement(L"attributes",			std::to_wstring(GScanDetails->Data.Files[t].Attributes), 2) << "\n";
 				ofile << L"</item>" << "\n";
 			}
 

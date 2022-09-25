@@ -18,4 +18,10 @@ namespace ReportHandler
 	int GenerateReports();
 
 	void ShowDefaultOutput();
+
+	void QuickCSV();
+	void QuickHTML();
+	void QuickText();
+	void QuickTree();
+	void QuickXML();
 }

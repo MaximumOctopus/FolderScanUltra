@@ -30,7 +30,9 @@ namespace Help
 
 	void Stats();
 
-	void Cat();
+	void Cat(); // meow
 
 	void Header();
+
+	void ConsoleCommands();
 }

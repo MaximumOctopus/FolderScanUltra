@@ -80,6 +80,8 @@
     <Text Include="CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Command.h" />
+    <ClInclude Include="CommandHandler.h" />
     <ClInclude Include="Consolidated.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Convert.h" />
@@ -89,6 +91,9 @@
     <ClInclude Include="ReportTree.h" />
     <ClInclude Include="ReportTreeOptions.h" />
     <ClInclude Include="ReportUtility.h" />
+    <ClInclude Include="SearchConstants.h" />
+    <ClInclude Include="SearchCriteriaObject.h" />
+    <ClInclude Include="SearchUtility.h" />
     <ClInclude Include="StatusConstants.h" />
     <ClInclude Include="Errors.h" />
     <ClInclude Include="ExtensionSearch.h" />
@@ -138,6 +143,8 @@
     <ClInclude Include="WindowsUtility.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Command.cpp" />
+    <ClCompile Include="CommandHandler.cpp" />
     <ClCompile Include="DatabaseHandler.cpp" />
     <ClCompile Include="DatabaseODBC.cpp" />
     <ClCompile Include="DatabaseSQlite.cpp" />
@@ -168,6 +175,8 @@
     <ClCompile Include="ReportXinorbis.cpp" />
     <ClCompile Include="ReportXML.cpp" />
     <ClCompile Include="ScanDetails.cpp" />
+    <ClCompile Include="SearchCriteriaObject.cpp" />
+    <ClCompile Include="SearchUtility.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="Convert.cpp" />
     <ClCompile Include="SystemGlobal.cpp" />

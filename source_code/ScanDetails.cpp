@@ -11,14 +11,19 @@
 
 
 #include <algorithm>
+#include <codecvt>
+#include <fstream>
 #include <iostream>
 
 #include "Convert.h"
 #include "FileExtensionHandler.h"
 #include "FileObject.h"
 #include "FileDateObject.h"
+#include "Formatting.h"
 #include "LanguageHandler.h"
 #include "ScanDetails.h"
+#include "SearchCriteriaObject.h"
+#include "SearchUtility.h"
 #include "Settings.h"
 #include "SizeOfFolder.h"
 #include "Utility.h"
@@ -56,7 +61,18 @@ ScanDetails::ScanDetails(std::wstring folder)
 
 	if (WindowsUtility::DirectoryExistsWString(folder))
 	{
-		Path.String = folder + L"\\";
+		std::wstring directory_to_scan;
+
+		if (folder[folder.length() - 1] == L'\"') // folder path may contain erroneous quote char
+		{
+			directory_to_scan = folder.substr(0, folder.length() - 1);
+		}
+		else
+		{
+			directory_to_scan = folder;
+		}
+
+		Path.String = directory_to_scan + L"\\";
 
 		Path.Set = true;
 	}
@@ -1081,4 +1097,1126 @@ int ScanDetails::GetFolderIndex(const std::wstring folder_name)
 void ScanDetails::SortRootBySize()
 {
 	std::sort(Data.RootFolders.begin(), Data.RootFolders.end(), sortRootBySize);
+}
+
+
+void ScanDetails::ShowSearchStats()
+{
+	std::wcout << "\n";
+	std::wcout << "Folders: " << GScanDetails->SearchData.FolderCount << "\n";
+	std::wcout << "Files:   " << GScanDetails->SearchData.FileCount << "\n";
+	std::wcout << "Size:    " << Convert::ConvertToUsefulUnit(GScanDetails->SearchData.TotalSize) << "\n\n";
+}
+
+
+void ScanDetails::SaveSearchResults(Command command)
+{
+	if (SearchData.Files.size() != 0)
+	{
+		std::wstring FileName(command.secondary);
+
+		if (FileName == L"")
+		{
+			FileName = Utility::ProcessFileName(L"search_$yyyy$mm$dd_$Th$Tm$Ts.csv");
+		}
+
+		std::wofstream ofile(FileName);
+
+		ofile.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
+
+		if (ofile)
+		{
+			std::wstring s = GLanguageHandler->Text[rsFileName] + L',' +
+					GLanguageHandler->Text[rsFilePath] + L',' +
+					GLanguageHandler->Text[rsSize] + L',' +
+					GLanguageHandler->Text[rsSizeOfFilesBytes] + L',' +
+					GLanguageHandler->Text[rsCreatedDate] + L',' +
+					GLanguageHandler->Text[rsAccessedDate] + L',' +
+					GLanguageHandler->Text[rsModifiedDate] + L',' +
+					GLanguageHandler->Text[rsCreatedDate] + L" (" + GLanguageHandler->Text[rsTime] + L")" + L',' +
+					GLanguageHandler->Text[rsAccessedDate] + L" (" + GLanguageHandler->Text[rsTime] + L")" + L',' +
+					GLanguageHandler->Text[rsModifiedDate] + L" (" + GLanguageHandler->Text[rsTime] + L")" + L',' +
+					GLanguageHandler->Text[rsCategory] + L',' +
+					GLanguageHandler->Text[rsCategory] + L"ID" + L',' +
+					GLanguageHandler->Text[rsOwner] + L',' +
+					GLanguageHandler->LanguageTypes[__FileType_ReadOnly] + L',' +
+					GLanguageHandler->LanguageTypes[__FileType_Hidden] + L',' +
+					GLanguageHandler->LanguageTypes[__FileType_System] + L',' +
+					GLanguageHandler->LanguageTypes[__FileType_Archive] + L',' +
+					GLanguageHandler->Text[rsTemporary] + L',' +
+				    GLanguageHandler->Text[rsFileAttributes];
+
+			ofile << s << "\n";
+
+			std::wstring ucFolder = GLanguageHandler->Text[rsFolder];
+
+			std::transform(ucFolder.begin(), ucFolder.end(), ucFolder.begin(), ::toupper);
+
+			for (int t = 0; t < SearchData.Files.size(); t++)
+			{
+				std::wstring output;
+
+				if (GScanDetails->Data.Files[t].Attributes & FILE_ATTRIBUTE_DIRECTORY)
+				{
+
+					output = L"\"" + GScanDetails->Data.Files[t].FileName + L"\"" + L',' +
+						L"\"" + GScanDetails->Data.Folders[GScanDetails->Data.Files[t].FilePathIndex] + GScanDetails->Data.Files[t].FileName + L"\"" + L',' +
+
+						ucFolder + L',' +
+						L"-1" + L',' +
+
+						Convert::IntDateToString(GScanDetails->Data.Files[t].FileDateC) + L',' +
+						Convert::IntDateToString(GScanDetails->Data.Files[t].FileDateA) + L',' +
+						Convert::IntDateToString(GScanDetails->Data.Files[t].FileDateM) + L',' +
+
+						std::to_wstring(GScanDetails->Data.Files[t].FileTimeC) + L',' +
+						std::to_wstring(GScanDetails->Data.Files[t].FileTimeA) + L',' +
+						std::to_wstring(GScanDetails->Data.Files[t].FileTimeM) + L',' +
+
+						ucFolder + L',' +
+
+						L"99" + L',' +
+
+						GScanDetails->Data.Users[GScanDetails->Data.Files[t].Owner].Name + L',' +
+
+						Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_READONLY) + L',' +
+						Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_HIDDEN) + L',' +
+						Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_SYSTEM) + L',' +
+						Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_ARCHIVE) + L',' +
+						Convert::BoolToString(GScanDetails->Data.Files[t].Temp) + L',' +
+						std::to_wstring(GScanDetails->Data.Files[t].Attributes);
+				}
+				else
+				{
+					output = L"\"" + GScanDetails->Data.Files[t].FileName + L"\"" + L',' +
+						L"\"" + GScanDetails->Data.Folders[GScanDetails->Data.Files[t].FilePathIndex] + GScanDetails->Data.Files[t].FileName + L"\"" + L',' +
+
+						L"\"" + Convert::GetSizeString(0, GScanDetails->Data.Files[t].Size) + L"\"" + L',' +
+						L"\"" + std::to_wstring(GScanDetails->Data.Files[t].Size) + L"\"" + L',' +
+
+						Convert::IntDateToString(GScanDetails->Data.Files[t].FileDateC) + L',' +
+						Convert::IntDateToString(GScanDetails->Data.Files[t].FileDateA) + L',' +
+						Convert::IntDateToString(GScanDetails->Data.Files[t].FileDateM) + L',' +
+
+						std::to_wstring(GScanDetails->Data.Files[t].FileTimeC) + L',' +
+						std::to_wstring(GScanDetails->Data.Files[t].FileTimeA) + L',' +
+						std::to_wstring(GScanDetails->Data.Files[t].FileTimeM) + L',' +
+
+						GLanguageHandler->TypeDescriptions[GScanDetails->Data.Files[t].Category] + L',' +
+
+						std::to_wstring(GScanDetails->Data.Files[t].Category) + L',' +
+
+						GScanDetails->Data.Users[GScanDetails->Data.Files[t].Owner].Name + L',' +
+
+						Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_READONLY) + L',' +
+						Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_HIDDEN) + L',' +
+						Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_SYSTEM) + L',' +
+						Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_ARCHIVE) + L',' +
+						Convert::BoolToString(GScanDetails->Data.Files[t].Temp) + L',' +
+						std::to_wstring(GScanDetails->Data.Files[t].Attributes);
+				}
+
+				ofile << output << L"\n";
+			}
+
+			ofile.close();
+
+			std::wcout << L"    Saved ok.\n";
+		}
+		else
+		{
+		std::wcout << L"    Error saving file.\n";
+		}
+	}
+	else
+	{
+		std::wcout << L" no search results to save :(\n";
+	}
+}
+
+
+// searches for a single term within file name
+void ScanDetails::Search(Command command)
+{
+	int count = 0;
+
+	std::wstring term = command.secondary;
+	std::wstring filename = L"";
+
+	std::transform(term.begin(), term.end(), term.begin(), ::tolower);
+
+	for (int t = 0; t < Data.Files.size(); t++)
+	{
+		if (Data.Files[t].FileName.find(term) != std::wstring::npos)
+		{
+			std::wcout << Formatting::AddLeadingSpace(Convert::ConvertToUsefulUnit(Data.Files[t].Size), 8) << L"  " << Data.Folders[Data.Files[t].FilePathIndex] << Data.Files[t].FileName << L"\n";
+
+			count++;
+		}
+	}
+
+	if (count != 0)
+	{
+		std::wcout << L"\nFound " << count << L" matching files\n";
+	}
+}
+
+
+int ScanDetails::Filter(Command command)
+{
+	std::wstring UserSearchTerms(command.secondary);
+
+	FileObject file_object;
+
+	bool CategorySearchFound = false;
+	bool UserSearchFound = false;
+	bool ExcludeFolderSearchFound = false;
+	bool IncludeFolderSearchFound = false;
+	int CategorySearchCount = 0;
+	int UserSearchCount = 0;
+	int ExcludeFolderSearchCount = 0;
+	int IncludeFolderSearchCount = 0;
+
+	bool Found = false;
+	int FoundCount = 0;
+
+	SearchCriteriaObject tsco;
+
+	std::vector<SearchCriteriaObject> SearchCriteria;
+	std::vector<std::wstring> SearchTerms;
+	std::vector<std::wstring> QuickTerms;
+	std::vector<std::wstring> FoundTerms;
+
+	auto AddThisKeyword = [&SearchCriteria](const std::wstring s)
+	{
+		SearchCriteriaObject sco = SearchUtility::ProcessSearchTerm(s);
+
+		if (sco.Type != SearchType::None)
+		{
+			SearchCriteria.push_back(sco);
+
+			return false;
+		}
+
+		return true;
+	};
+
+	auto ProcessQuickTerms = [&QuickTerms](std::wstring s)
+	{
+		std::wstring output = L"";
+		bool inside = false;
+
+		QuickTerms.clear();
+
+		for (int i = 0; i < s.length(); i++)
+		{
+			if (s[i] == L'"')
+			{
+				// do nothing 
+			}
+			else if (s[i] == L'(')
+			{
+				inside = true;
+			}
+			else if (s[i] == L')')
+			{
+				inside = false;
+			}
+			else if (s[i] == L' ' && !inside)
+			{
+				QuickTerms.push_back(output);
+
+				output = L"";
+			}
+			else
+			{
+				output += s[i];
+			}
+		}
+
+		if (output != L"")
+		{
+			QuickTerms.push_back(output);
+		}
+	};
+
+	// getsearchterms
+	std::wstring s = L"";
+	bool reading = false;
+	bool inside = false;
+
+	for (int i = 0; i < UserSearchTerms.length(); i++)
+	{
+		if (UserSearchTerms[i] == L'"')
+		{
+			reading = !reading;
+
+			std::transform(s.begin(), s.end(), s.begin(), ::toupper);
+
+			if (AddThisKeyword(s))
+			{
+				SearchTerms.push_back(L'"' + s + L'"');
+			}
+			
+			s = L"";
+		}
+		else if (UserSearchTerms[i] == L'(')
+		{
+			inside = true;
+		}
+		else if (UserSearchTerms[i] == L')')
+		{
+			inside = false;
+		}
+		else if (UserSearchTerms[i] == L' ' && !inside)
+		{
+			if (reading)
+			{
+				s += L' ';
+			}
+			else
+			{
+				if (s != L"")
+				{
+					std::transform(s.begin(), s.end(), s.begin(), ::toupper);
+
+					if (AddThisKeyword(s)) // not a bracketted search function, must
+					{
+						// be a text AND or single string search
+						SearchTerms.push_back(s);
+					}
+
+					s = L"";
+				}
+			}
+		}
+		else
+		{
+			s += UserSearchTerms[i];
+		}
+	}
+
+	if (s != L"")
+	{
+		std::transform(s.begin(), s.end(), s.begin(), ::toupper);
+
+		if (AddThisKeyword(s))
+		{
+			SearchTerms.push_back(s);
+		}
+	}
+
+	// -------------------------------------------------------------------------
+
+	try
+	{
+		SearchData.Clear();
+
+		// -------------------------------------------------------------------------
+
+		for (int z = 0; z < SearchCriteria.size(); z++)
+		{
+			tsco = SearchCriteria[z];
+
+			switch (tsco.Type)
+			{
+			case SearchType::Category:
+				CategorySearchCount++;
+				break;
+			case SearchType::NotCategory:
+				CategorySearchCount++;
+				break;
+			case SearchType::UserName:
+				UserSearchCount++;
+				break;
+			case SearchType::NotUserName:
+				UserSearchCount++;
+				break;
+			case SearchType::FolderExclude:
+				ExcludeFolderSearchCount++;
+				break;
+			case SearchType::FolderInclude:
+				IncludeFolderSearchCount++;
+				break;
+			}
+
+			#ifdef _DEBUG
+			std::wcout << "  " << tsco.Debug() << "\n";
+			#endif 
+		}
+
+		if (CategorySearchCount == 0)
+		{
+			CategorySearchFound = true;
+		}
+		else
+		{
+			CategorySearchFound = false;
+		}
+
+		if (UserSearchCount == 0)
+		{
+			UserSearchFound = true;
+		}
+		else
+		{
+			UserSearchFound = false;
+		}
+
+		if (ExcludeFolderSearchCount == 0)
+		{
+			ExcludeFolderSearchFound = true;
+		}
+		else
+		{
+			ExcludeFolderSearchFound = false;
+		}
+
+		if (IncludeFolderSearchCount == 0)
+		{
+			IncludeFolderSearchFound = true;
+		}
+		else
+		{
+			IncludeFolderSearchFound = false;
+		}
+
+		// =========================================================================
+		// =========================================================================
+
+		for (int t = 0; t < Data.Files.size(); t++)
+		{
+			file_object = Data.Files[t];
+
+			Found = false;
+
+			// search for each search term -------------------------------------------
+			for (int x = 0; x < SearchTerms.size(); x++)
+			{
+				if (SearchTerms[x][0] == '"')  // this is an AND search...
+				{
+					ProcessQuickTerms(SearchTerms[x]);
+
+					FoundTerms.clear();
+
+					for (int z = 0; z < QuickTerms.size(); z++)
+					{
+						std::wstring filename(Data.Folders[file_object.FilePathIndex] + file_object.FileName);
+
+						std::transform(filename.begin(), filename.end(), filename.begin(), ::toupper);
+
+						if (QuickTerms[z].find(filename) != std::wstring::npos)
+						{
+							if (std::find(FoundTerms.begin(), FoundTerms.end(), QuickTerms[z]) != FoundTerms.end())
+							{
+								FoundTerms.push_back(QuickTerms[z]);
+							}
+						}
+					}
+
+					if (FoundTerms.size() == QuickTerms.size())
+					{
+						Found = true;
+					}
+				}
+				else
+				{
+					auto z = SearchTerms[x].find(L'*');
+
+					if (z != std::wstring::npos)
+					{
+						if (!(file_object.Attributes & FILE_ATTRIBUTE_DIRECTORY))
+						{
+							std::wstring filename(file_object.FileName);
+							std::transform(filename.begin(), filename.end(), filename.begin(), ::toupper);
+
+							if (z == 0)
+							{
+								std::wstring parameter(SearchTerms[x].substr(1));
+
+								if (parameter.find(filename) == filename.length() - SearchTerms[x].length() + 2) // to do check!
+
+								{
+									Found = true;
+								}
+							}
+							else if (z == SearchTerms[x].length() - 1)
+							{
+								std::wstring parameter(SearchTerms[x].substr(0, SearchTerms[x].length() - 1));
+
+								if (parameter.find(filename) == 0) // to do check!
+								{
+									Found = true;
+								}
+							}
+						}
+					}
+					else
+					{
+						std::wstring filename(Data.Folders[file_object.FilePathIndex] + file_object.FileName);
+						std::transform(filename.begin(), filename.end(), filename.begin(), ::toupper);
+
+						if (SearchTerms[x].find(filename) != std::wstring::npos)
+						{
+							Found = true;
+						}
+					}
+				}
+			}
+
+			// if there are no search terms, but search criteria then we set found to
+			// true in order that we check every item for the criteria
+			if (SearchTerms.size() == 0 && SearchCriteria.size() > 0)
+			{
+				Found = true;
+			}
+
+			// =======================================================================
+			// =======================================================================
+
+			// == process any special search criteria ================================
+			if (Found && SearchCriteria.size() != 0)
+			{
+				for (int z = 0; z < SearchCriteria.size(); z++)
+				{
+					tsco = SearchCriteria[z];
+
+					switch (tsco.Type)
+					{
+					case SearchType::SizeLess:   // size <
+						if (!(FILE_ATTRIBUTE_DIRECTORY & file_object.Attributes))
+						{
+							if (file_object.Size > tsco.IntegerValue)
+							{
+								Found = false;
+							}
+						}
+						else
+						{
+							Found = false;
+						}
+						break;
+					case SearchType::SizeEqual:   // size =
+						if (!(FILE_ATTRIBUTE_DIRECTORY & file_object.Attributes))
+						{
+							if (!(file_object.Size != tsco.IntegerValue))
+							{
+								Found = false;
+							}
+						}
+						else
+						{
+							Found = false;
+						}
+						break;
+					case SearchType::SizeMore:  // size >					
+						if (!(FILE_ATTRIBUTE_DIRECTORY & file_object.Attributes))
+						{			
+							if (file_object.Size < tsco.IntegerValue)
+							{
+								Found = false;
+							}
+						}
+						else
+						{
+							Found = false;
+						}
+						break;
+					case SearchType::DateLess:  // date <
+						if (file_object.FileDateC != 0)
+						{
+							if (file_object.FileDateC > tsco.IntegerValue)
+							{
+								Found = false;
+							}
+						}
+						else
+						{
+							Found = false;
+						}
+						break;
+					case SearchType::DateMore:  // date >
+						if (file_object.FileDateC != 0)
+						{
+							if (file_object.FileDateC < tsco.IntegerValue)
+							{
+								Found = false;
+							}
+						}
+						else
+						{
+							Found = false;
+						}
+						break;
+					case SearchType::DateEqual:  // date =
+						if (file_object.FileDateC != 0)
+						{
+							if (file_object.FileDateC != tsco.IntegerValue)
+							{
+								Found = false;
+							}
+						}
+						else
+						{
+							Found = false;
+						}
+						break;
+					case SearchType::ATimeLess:
+						if (file_object.FileTimeA > tsco.IntegerValue)
+						{
+							Found = false;
+						}
+						break;
+					case SearchType::ATimeMore:
+						if (file_object.FileTimeA < tsco.IntegerValue)
+						{
+							Found = false;
+						}
+						break;
+					case SearchType::ATimeEqual:
+						if (file_object.FileTimeA != tsco.IntegerValue)
+						{
+							Found = false;
+						}
+						break;
+					case SearchType::MTimeLess:
+						if (file_object.FileTimeM > tsco.IntegerValue)
+						{
+							Found = false;
+						}
+						break;
+					case SearchType::MTimeMore:
+						if (file_object.FileTimeM < tsco.IntegerValue)
+						{
+							Found = false;
+						}
+						break;
+					case SearchType::MTimeEqual:
+						if (file_object.FileTimeM != tsco.IntegerValue)
+						{
+							Found = false;
+						}
+						break;
+					case SearchType::TimeLess:
+						if (file_object.FileTimeC > tsco.IntegerValue)
+						{
+							Found = false;
+						}
+						break;
+					case SearchType::TimeMore:
+						if (file_object.FileTimeC < tsco.IntegerValue)
+						{
+							Found = false;
+						}
+						break;
+					case SearchType::TimeEqual:
+						if (file_object.FileTimeC != tsco.IntegerValue)
+						{
+							Found = false;
+						}
+						break;
+					case SearchType::FileType:  // hidden and system etc.
+						switch (tsco.IntegerValue)
+						{
+						case __FileType_Hidden:
+							if ((FILE_ATTRIBUTE_HIDDEN & file_object.Attributes) == 0) Found = false;
+							break;
+						case __FileType_System:
+							if ((FILE_ATTRIBUTE_SYSTEM & file_object.Attributes) == 0) Found = false;
+							break;
+						case __FileType_Archive:
+							if ((FILE_ATTRIBUTE_ARCHIVE & file_object.Attributes) == 0) Found = false;
+							break;
+						case __FileType_Null:
+							if (file_object.Size != 0) Found = false;
+							break;
+						case __FileType_ReadOnly:
+							if ((FILE_ATTRIBUTE_READONLY & file_object.Attributes) == 0) Found = false;
+							break;
+						case __FileType_Compressed:
+							if ((FILE_ATTRIBUTE_COMPRESSED & file_object.Attributes) == 0) Found = false;
+							break;
+						case __FileType_Encrypted:
+							if ((FILE_ATTRIBUTE_ENCRYPTED & file_object.Attributes) == 0) Found = false;
+							break;
+						case __FileType_RecallOnOpen:
+							if ((FILE_ATTRIBUTE_RECALL_ON_OPEN & file_object.Attributes) == 0) Found = false;
+							break;
+						case __FileType_RecallOnDataAccess:
+							if ((FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS & file_object.Attributes) == 0) Found = false;
+							break;
+						case __FileType_Offline:
+							if ((FILE_ATTRIBUTE_OFFLINE & file_object.Attributes) == 0) Found = false;
+							break;
+						case __FileType_CreatedToday:
+							if (file_object.FileDateC != TodayAsInteger) Found = false;
+							break;
+						case __FileType_AccessedToday:
+							if (file_object.FileDateA != TodayAsInteger) Found = false;
+							break;
+						case __FileType_ModifiedToday:
+							if (file_object.FileDateM != TodayAsInteger) Found = false;
+							break;
+						case __FileType_Temp:
+							if (!file_object.Temp) Found = false;
+							break;
+						case __FileType_Folder:
+							if (!(FILE_ATTRIBUTE_DIRECTORY & file_object.Attributes)) Found = false;
+							break;
+						case __FileType_File:
+							if (FILE_ATTRIBUTE_DIRECTORY & file_object.Attributes) Found = false;
+							break;
+						case __FileType_NoExtension:
+							if (Utility::GetFileExtension(file_object.FileName) != L"") Found = false;
+							break;
+						case __FileType_SparseFile:
+							if (!(FILE_ATTRIBUTE_SPARSE_FILE & file_object.Attributes)) Found = false;
+							break;
+						case __FileType_Reparsepoint:
+							if (!(FILE_ATTRIBUTE_REPARSE_POINT & file_object.Attributes)) Found = false;
+							break;
+						case __FileType_NotContentI:
+							if (!(FILE_ATTRIBUTE_NOT_CONTENT_INDEXED & file_object.Attributes)) Found = false;
+							break;
+
+						case __FileType_Virtual:
+							if (!(FILE_ATTRIBUTE_RECALL_ON_OPEN & file_object.Attributes) &&
+								!(FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS & file_object.Attributes) &&
+								!(FILE_ATTRIBUTE_OFFLINE & file_object.Attributes)) Found = false;
+							break;
+						}
+						break;
+					case SearchType::NotFileType:  // hidden and system etc.
+						switch (tsco.IntegerValue)
+						{
+						case __FileType_Hidden:
+							if (FILE_ATTRIBUTE_HIDDEN & file_object.Attributes) Found = false;
+							break;
+						case __FileType_System:
+							if (FILE_ATTRIBUTE_SYSTEM & file_object.Attributes) Found = false;
+							break;
+						case __FileType_Archive:
+							if (FILE_ATTRIBUTE_ARCHIVE & file_object.Attributes) Found = false;
+							break;
+						case __FileType_Null:
+							if (file_object.Size == 0) Found = false;
+							break;
+						case __FileType_ReadOnly:
+							if (FILE_ATTRIBUTE_READONLY & file_object.Attributes) Found = false;
+							break;
+						case __FileType_Compressed:
+							if (FILE_ATTRIBUTE_COMPRESSED & file_object.Attributes) Found = false;
+							break;
+						case __FileType_Encrypted:
+							if (FILE_ATTRIBUTE_ENCRYPTED & file_object.Attributes) Found = false;
+							break;
+						case __FileType_RecallOnOpen:
+							if (FILE_ATTRIBUTE_RECALL_ON_OPEN & file_object.Attributes) Found = false;
+							break;
+						case __FileType_RecallOnDataAccess:
+							if (FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS & file_object.Attributes) Found = false;
+							break;
+						case __FileType_Offline:
+							if (FILE_ATTRIBUTE_OFFLINE & file_object.Attributes) Found = false;
+							break;
+						case __FileType_CreatedToday:
+							if (file_object.FileDateC == TodayAsInteger) Found = false;
+							break;
+						case __FileType_AccessedToday:
+							if (file_object.FileDateA == TodayAsInteger) Found = false;
+							break;
+						case __FileType_ModifiedToday:
+							if (file_object.FileDateM == TodayAsInteger) Found = false;
+							break;
+						case __FileType_Temp:
+							if (file_object.Temp) Found = false;
+							break;
+						case __FileType_Folder:
+							if (FILE_ATTRIBUTE_DIRECTORY & file_object.Attributes) Found = false;
+							break;
+						case __FileType_File:
+							if (!(FILE_ATTRIBUTE_DIRECTORY & file_object.Attributes)) Found = false;
+							break;
+						case __FileType_NoExtension:
+							if (Utility::GetFileExtension(file_object.FileName) != L"") Found = false;
+							break;
+						case __FileType_SparseFile:
+							if (FILE_ATTRIBUTE_SPARSE_FILE & file_object.Attributes) Found = false;
+							break;
+						case __FileType_Reparsepoint:
+							if (FILE_ATTRIBUTE_REPARSE_POINT & file_object.Attributes) Found = false;
+							break;
+						case __FileType_NotContentI:
+							if (FILE_ATTRIBUTE_NOT_CONTENT_INDEXED & file_object.Attributes) Found = false;
+							break;
+
+						case __FileType_Virtual: if ((FILE_ATTRIBUTE_RECALL_ON_OPEN & file_object.Attributes)  ||
+							(FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS & file_object.Attributes) ||
+							(FILE_ATTRIBUTE_OFFLINE & file_object.Attributes)) Found = false;
+							break;
+						}
+						break;
+					case SearchType::ADateLess: // adate <
+						if (file_object.FileDateA != 0)
+						{
+							if (file_object.FileDateA > tsco.IntegerValue)
+							{
+								Found = false;
+							}
+						}
+						else
+						{
+							Found = false;
+						}
+						break;
+					case SearchType::ADateMore: // adate >
+						if (file_object.FileDateA != 0)
+						{
+							if (file_object.FileDateA < tsco.IntegerValue)
+							{
+								Found = false;
+							}
+						}
+						else
+						{
+							Found = false;
+						}
+						break;
+					case SearchType::ADateEqual:  // adate =
+						if (file_object.FileDateA != 0)
+						{
+							if (file_object.FileDateA != tsco.IntegerValue)
+							{
+								Found = false;
+							}
+						}
+						else
+						{
+							Found = false;
+						}
+						break;
+					case SearchType::MDateLess:  // mdate <
+						if (file_object.FileDateM != 0)
+						{
+							if (file_object.FileDateM > tsco.IntegerValue)
+							{
+								Found = false;
+							}
+						}
+						else
+						{
+							Found = false;
+						}
+						break;
+					case SearchType::MDateMore:  // mdate >
+						if (file_object.FileDateM != 0)
+						{
+							if (file_object.FileDateM < tsco.IntegerValue)
+							{
+								Found = false;
+							}
+						}
+						else
+						{
+							Found = false;
+						}
+						break;
+					case SearchType::MDateEqual:  // mdate =
+						if (file_object.FileDateM != 0)
+						{
+							if (file_object.FileDateM != tsco.IntegerValue)
+							{
+								Found = false;
+							}
+						}
+						else
+						{
+							Found = false;
+						}
+						break;
+					case SearchType::FileNameLengthEqual:
+						if (file_object.FileName.length() != tsco.IntegerValue)
+						{
+							Found = false;
+						}
+						else
+						{
+							Found = true;
+						}
+						break;
+					case SearchType::FileNameLengthLess:
+						if (file_object.FileName.length() > tsco.IntegerValue)
+						{
+							Found = false;
+						}
+						else
+						{
+							Found = true;
+						}
+						break;
+					case SearchType::FilenameLengthMore:
+						if (file_object.FileName.length() < tsco.IntegerValue)
+						{
+							Found = false;
+						}
+						else
+						{
+							Found = true;
+						}
+						break;
+					case SearchType::FilePathLengthEqual:
+						if (Data.Folders[file_object.FilePathIndex].length() + file_object.FileName.length() != tsco.IntegerValue)
+						{
+							Found = false;
+						}
+						else
+						{
+							Found = true;
+						}
+						break;
+					case SearchType::FilePathLengthLess:
+						if (Data.Folders[file_object.FilePathIndex].length() + file_object.FileName.length() > tsco.IntegerValue)
+						{
+							Found = false;
+						}
+						else
+						{
+							Found = true;
+						}
+						break;
+					case SearchType::FilePathLengthMore:
+						if (Data.Folders[file_object.FilePathIndex].length() + file_object.FileName.length() < tsco.IntegerValue)
+						{
+							Found = false;
+						}
+						else
+						{
+							Found = true;
+						}
+						break;
+					case SearchType::FileExtensionEqual:
+					{
+						std::wstring ext(Utility::GetFileExtension(file_object.FileName));
+
+						std::transform(ext.begin(), ext.end(), ext.begin(), ::toupper);
+
+						if (ext != tsco.StringValue)
+						{
+							Found = false;
+						}
+						else
+						{
+							Found = true;
+						}
+
+						break;
+					}
+					}
+				}
+			}
+
+			// =======================================================================
+			// =======================================================================
+
+			if (CategorySearchCount > 0)
+			{
+				CategorySearchFound = false;
+
+				for (int z = 0; z < SearchCriteria.size(); z++)
+				{
+					tsco = SearchCriteria[z];
+
+					switch (tsco.Type)
+					{
+					case SearchType::Category: // category
+						if (!(FILE_ATTRIBUTE_DIRECTORY & file_object.Attributes))
+						{
+							if (tsco.IntegerValue == __Category_Custom_All)
+							{
+								if (file_object.Category >= __Category_Custom_1)
+								{
+									CategorySearchFound = true;
+								}
+							}
+							else
+							{
+								if (file_object.Category == tsco.IntegerValue)
+								{
+									CategorySearchFound = true;
+								}
+							}
+						}
+						break;
+
+					case SearchType::NotCategory: // category
+						if (!(FILE_ATTRIBUTE_DIRECTORY & file_object.Attributes))
+						{
+							if (tsco.IntegerValue == __Category_Custom_All)
+							{
+								if (file_object.Category < __Category_Custom_1)
+								{
+									CategorySearchFound = true;
+								}
+							}
+							else
+							{
+								if (file_object.Category != tsco.IntegerValue)
+								{
+									CategorySearchFound = true;
+								}
+							}
+						}
+						break;
+					}
+				}
+			}
+
+			// =======================================================================
+			// =======================================================================
+
+			if (UserSearchCount > 0)
+			{
+				UserSearchFound = true;
+
+				for (int z = 0; z < SearchCriteria.size(); z++)
+				{
+					tsco = SearchCriteria[z];
+
+					std::wstring username(Data.Users[file_object.Owner].Name);
+
+					std::transform(username.begin(), username.end(), username.begin(), ::toupper);
+
+					switch (tsco.Type)
+					{
+					case SearchType::UserName:
+						if (username != tsco.StringValue)
+						{
+							UserSearchFound = false;
+						}
+						break;
+					case SearchType::NotUserName:
+						if (username == tsco.StringValue)
+						{
+							UserSearchFound = false;
+						}
+						break;
+					case SearchType::UserNameContains:
+						if (tsco.StringValue.find(username) == std::wstring::npos)
+						{
+							UserSearchFound = false;
+						}
+						break;
+					case SearchType::UserNameNotContains:
+						if (tsco.StringValue.find(username) != std::wstring::npos)
+						{
+							UserSearchFound = false;
+						}
+						break;
+					}
+				}
+			}
+
+			// =======================================================================
+			// =======================================================================
+
+			if (ExcludeFolderSearchCount > 0)
+			{
+				ExcludeFolderSearchFound = true;
+
+				for (int z = 0; z < SearchCriteria.size(); z++)
+				{
+					tsco = SearchCriteria[z];
+
+					switch (tsco.Type)
+					{
+					case SearchType::FolderExclude:
+					{
+						std::wstring folder(Data.Folders[file_object.FilePathIndex]);
+
+						std::transform(folder.begin(), folder.end(), folder.begin(), ::toupper);
+
+						if (tsco.StringValue.find(folder) != std::wstring::npos)
+						{
+							ExcludeFolderSearchFound = false;
+						}
+						break;
+					}
+					}
+				}
+			}
+
+			// =======================================================================
+			// =======================================================================
+
+			if (IncludeFolderSearchCount > 0)
+			{
+				IncludeFolderSearchFound = false;
+
+				for (int z = 0; z < SearchCriteria.size(); z++)
+				{
+					tsco = SearchCriteria[z];
+
+					switch (tsco.Type)
+					{
+					case SearchType::FolderInclude:
+					{
+						std::wstring folder(Data.Folders[file_object.FilePathIndex]);
+
+						std::transform(folder.begin(), folder.end(), folder.begin(), ::toupper);
+
+						if (tsco.StringValue.find(folder) != std::wstring::npos)
+						{
+							IncludeFolderSearchFound = true;
+						}
+
+						break;
+					}
+					}
+				}
+			}
+
+			// =======================================================================
+			// =======================================================================
+
+			Found = (Found && CategorySearchFound && UserSearchFound && ExcludeFolderSearchFound && IncludeFolderSearchFound);
+
+			// =======================================================================
+			// =======================================================================        
+
+			if (Found)
+			{
+				if (FILE_ATTRIBUTE_DIRECTORY & file_object.Attributes)
+				{
+					SearchData.FolderCount++;
+				}
+				else
+				{
+					SearchData.FileCount++;
+				}
+
+				SearchData.TotalSize += file_object.Size;
+
+				std::wcout << Formatting::AddLeadingSpace(Convert::ConvertToUsefulUnit(file_object.Size), 8) << L"  " << Data.Folders[file_object.FilePathIndex] << file_object.FileName << L"\n";
+
+				FoundCount++;
+
+				// ===================================================================
+
+				SearchData.Files.push_back(file_object); 
+
+				// ===================================================================
+			}
+		}
+	}
+	catch(...)
+	{
+			
+	}
+
+	if (FoundCount != 0)
+	{
+		ShowSearchStats();
+	}
+
+	return FoundCount;
 }

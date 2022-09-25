@@ -26,6 +26,7 @@ private:
 	LanguageType currentLanguage = LanguageType::Undefined;
 
     bool LoadLanguage(const std::wstring);
+	bool LoadUnits(const std::wstring);
 
 	void SetReportText();
 	void SetXDates();
@@ -37,9 +38,10 @@ public:
 	std::wstring ShortDays[7] = { L"Sun", L"Mon", L"Tue", L"Wed", L"Thu", L"Fri", L"Sat" };
 
 	bool LanguageLoadOK = false;
-	
-	std::vector<std::wstring> Text;
+
 	std::vector<std::wstring> Dates;
+	std::vector<std::wstring> Text;
+	std::vector<std::wstring> Units;
 
 	std::wstring Months[12];
 	std::wstring ShortMonths[12];
@@ -56,4 +58,7 @@ public:
 	std::wstring GetLanguageSymbol(void);
 
     LanguageHandler(const std::wstring, LanguageType);
+
+	std::wstring UpperCaseText(int);
+	std::wstring UpperCaseUnit(int);
 };

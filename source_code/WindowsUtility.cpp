@@ -125,7 +125,18 @@ bool WindowsUtility::DirectoryExists(LPCTSTR szPath)
 
 bool WindowsUtility::DirectoryExistsWString(const std::wstring& dirName_in)
 {
-	DWORD fileAttr = GetFileAttributes(dirName_in.c_str());
+	std::wstring directory;
+
+	if (dirName_in[dirName_in.length() - 1] == L'\"')
+	{
+		directory = dirName_in.substr(0, dirName_in.length() - 1);
+	}
+	else
+	{
+		directory = dirName_in;
+	}
+
+	DWORD fileAttr = GetFileAttributes(directory.c_str());
 
 	return (fileAttr != INVALID_FILE_ATTRIBUTES && (fileAttr & FILE_ATTRIBUTE_DIRECTORY));
 }

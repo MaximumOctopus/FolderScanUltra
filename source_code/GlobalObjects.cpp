@@ -50,7 +50,7 @@ namespace GlobalObjects
 
 				if (GParameterHandler->FindParameter(L"/o") && !GParameterHandler->FindParameter(L"/test"))
 				{
-					std::cout.setstate(std::ios_base::failbit);
+					std::wcout.setstate(std::ios_base::failbit);
 				}
 
 				return InitStatus::Success;

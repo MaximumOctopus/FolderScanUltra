@@ -37,5 +37,7 @@ namespace Utility
 	bool StringToBool(wchar_t);
 	int OptionToInt(wchar_t);
 
+	bool IsTestCharacter(wchar_t);
+
 	std::wstring LastFolder(const std::wstring&);
 }

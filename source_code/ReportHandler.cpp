@@ -294,4 +294,81 @@ namespace ReportHandler
 	{
 		ReportSummary::Show();
 	}
+
+
+	void QuickCSV()
+	{
+		CSVReportOptions trOptions;
+
+		trOptions.FileName = Utility::ProcessFileName(L"$yyyy$mm$dd_$Th$Tm$Ts.html");
+		trOptions.Category = -1;
+		trOptions.Separator = 0; // comma
+		trOptions.Titles = true;
+		trOptions.Units = 0;
+
+		ReportCSV::FullList(trOptions);
+	}
+
+
+	void QuickHTML()
+	{
+		HTMLReportOptions trOptions;
+		
+		trOptions.FileName = Utility::ProcessFileName(L"$yyyy$mm$dd_$Th$Tm$Ts.html");
+		trOptions.Align = L"right";
+		trOptions.LayoutSize = 2;
+		trOptions.Units = 0;
+
+		trOptions.Layout[0] = true; // header always visible
+
+		for (int t = 1; t < __HTMLLayoutOptionsCount; t++)
+		{
+			trOptions.Layout[t] = true;
+		}
+
+		ReportHTML::GenerateReport(trOptions);
+	}
+
+
+	void QuickText()
+	{
+		TextReportOptions trOptions;
+
+		trOptions.FileName = Utility::ProcessFileName(L"$yyyy$mm$dd_$Th$Tm$Ts.html");
+
+		for (int t = 0; t < __TextReportOptionsCount; t++)
+		{
+			trOptions.Layout[t] = true;
+		}
+
+		for (int t = 0; t < __FileCategoriesCount; t++)
+		{
+			trOptions.CategoryList[t] = true;
+		}
+
+		ReportText::FullList(trOptions);
+	}
+
+
+	void QuickTree()
+	{
+		TreeReportOptions treeOptions;
+
+		treeOptions.FileName = Utility::ProcessFileName(L"$yyyy$mm$dd_$Th$Tm$Ts.xml");
+
+		treeOptions.IncludeAttributes = true;
+		treeOptions.IncludeSize = true;
+
+		ReportTree::Generate(treeOptions);
+	}
+
+
+	void QuickXML()
+	{
+		XMLReportOptions trOptions;
+
+		trOptions.FileName = Utility::ProcessFileName(L"$yyyy$mm$dd_$Th$Tm$Ts.xml");
+
+		ReportXML::FullList(trOptions);
+	}
 }

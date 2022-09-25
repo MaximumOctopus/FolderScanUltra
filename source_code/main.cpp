@@ -18,6 +18,7 @@
 #include <iostream>
 #include <string>
 
+#include "CommandHandler.h"
 #include "DatabaseHandler.h"
 #include "Errors.h"
 #include "GlobalObjects.h"
@@ -34,6 +35,7 @@
 #include "VersionCheck.h"
 
 
+extern CommandHandler* GCommandHandler;
 extern ParameterHandler* GParameterHandler;
 extern ScanDetails* GScanDetails;
 extern SystemGlobal* GSystemGlobal;
@@ -130,6 +132,8 @@ void ProcessConsoleReport()
 
 int wmain(int argc, wchar_t* argv[])
 {
+	bool HasError = false;
+
 	_setmode(_fileno(stdout), _O_U16TEXT);
 
 	// ==========================================================================================
@@ -205,11 +209,15 @@ int wmain(int argc, wchar_t* argv[])
 					if (cgoResult != InitStatus::Success)
 					{
 						ErrorHandler::OutputErrorConsole(cgoResult);
+
+						HasError = true;
 					}
 				}
 				else
 				{
 					ErrorHandler::OutputErrorConsole(InitStatus::ScanFolderDoesNotExist);
+
+					HasError = true;
 				}
 			}
 		}
@@ -232,28 +240,64 @@ int wmain(int argc, wchar_t* argv[])
 	else
 	{
 		ErrorHandler::OutputErrorConsole(GSystemGlobal->Status);
+
+		HasError = true;
 	}
+
+	// ==========================================================================================
+	// ==========================================================================================
+	// ==========================================================================================
+
+	if (GParameterHandler->FindParameter(L"/console") && !HasError)
+	{
+		std::wcout << "\n  Console (\"exit\" to close)\n\n";
+
+		GCommandHandler = new CommandHandler();
+		
+		std::wstring input;
+
+		Command c;
+
+		do
+		{
+			std::wcout << L"> ";
+
+			std::getline(std::wcin, input);
+
+			c = GCommandHandler->ProcessCommand(input);
+
+		} while (c.primary != PrimaryCommand::Exit);
+
+		delete GCommandHandler;
+	}
+
+	// ==========================================================================================
+	// ==========================================================================================
+	// ==========================================================================================
 
 	// ==========================================================================================
 	// == Debug stuff ===========================================================================
 	// ==========================================================================================
 
 	#ifdef _DEBUG
-	std::wstring ufa = L"Used standard analysis";
-	std::wstring gud = L"No processing of user details";
-
-	if (GSettings->Optimisations.UseFastAnalysis)
+	if (!HasError)
 	{
-		ufa = L"Used fast analysis";
-	}
+		std::wstring ufa = L"Used standard analysis";
+		std::wstring gud = L"No processing of user details";
 
-	if (GSettings->Optimisations.GetUserDetails)
-	{
-		gud = L"Processed user details";
-	}
+		if (GSettings->Optimisations.UseFastAnalysis)
+		{
+			ufa = L"Used fast analysis";
+		}
 
-	std::wcout << L"\n (" << ufa << ", " << gud << ")\n";
-	#endif	
+		if (GSettings->Optimisations.GetUserDetails)
+		{
+			gud = L"Processed user details";
+		}
+
+		std::wcout << L"\n (" << ufa << ", " << gud << ")\n";
+	}
+	#endif		
 
 	// ==========================================================================================
 	// ==========================================================================================

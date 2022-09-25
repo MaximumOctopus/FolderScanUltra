@@ -55,6 +55,8 @@ struct GeneralSettings
 {
     int DateFormat = 2; // 0: dd/mm/yyyy 1: mm/dd/yyyy 2: yyyy/mm/dd
 
+	std::wstring DecimalSeparator = L".";
+
     bool ShowStatusOutput = true;
     bool ShowProgress = true;
 };

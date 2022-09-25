@@ -17,6 +17,7 @@
 #include <string>
 #include <vector>
 
+#include "Command.h"
 #include "Consolidated.h"
 #include "FileObject.h"
 #include "FileDateObject.h"
@@ -43,6 +44,24 @@ struct Disk
 	std::wstring volumeName = L"";
 	std::wstring serialNumber = L"";
 	std::wstring fileSystem = L"";
+};
+
+
+struct SearchData
+{
+	std::vector<FileObject> Files;
+
+	int FileCount = 0;
+	int FolderCount = 0;
+	unsigned __int64 TotalSize = 0;
+
+	void Clear() {
+		Files.clear();
+
+		FileCount = 0;
+		FolderCount = 0;
+		TotalSize = 0;
+	}
 };
 
 
@@ -106,6 +125,8 @@ private:
 	bool AnalyseFast();
 	void AnalyseRootFolders();
 
+	void ShowSearchStats();
+
 	void BuildFileDates();
 
 	void BuildTop100SizeLists();
@@ -116,6 +137,7 @@ private:
 public:
 
 	ScanData Data;
+	SearchData SearchData;
 
 	ScanPath Path;
 
@@ -148,4 +170,11 @@ public:
 	int GetFolderIndex(const std::wstring);
 
 	void SortRootBySize();
+
+	// ======================================================================
+
+	void SaveSearchResults(Command);
+
+	void Search(Command);
+	int Filter(Command);
 };

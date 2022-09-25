@@ -9,6 +9,8 @@
 // 
 // 
 
+#include <algorithm>
+#include <iostream>
 
 #include "Constants.h"
 #include "LanguageHandler.h"
@@ -17,8 +19,6 @@
 #include <fstream>
 #include <locale>
 #include <string>
-
-#include <iostream>
 
 
 LanguageHandler* GLanguageHandler;
@@ -35,7 +35,14 @@ LanguageHandler::LanguageHandler(const std::wstring folder, LanguageType languag
 		SetReportText();
 		SetXDates();
 
-		LanguageLoadOK = true;
+		if (LoadUnits(folder + L"system\\languages\\" + GetLanguageSymbol(language_type) + L"\\units.txt"))
+		{
+			LanguageLoadOK = true;
+		}
+		else
+		{
+			LanguageLoadOK = false;
+		}
 	}
 	else
 	{
@@ -88,6 +95,37 @@ bool LanguageHandler::LoadLanguage(const std::wstring file_name)
 	}
 
     return false;
+}
+
+
+bool LanguageHandler::LoadUnits(const std::wstring file_name)
+{
+	if (WindowsUtility::FileExists(file_name))
+	{
+		std::wifstream file(file_name);
+
+		file.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
+
+		if (file)
+		{
+			std::wstring s;
+
+			while (std::getline(file, s))
+			{
+				Units.push_back(s);
+			}
+
+			file.close();
+
+			return true;
+		}
+	}
+	else
+	{
+		std::wcout << L"Language Units file missing: " << "\n" << file_name << L"\n";
+	}
+
+	return false;
 }
 
 
@@ -280,4 +318,24 @@ std::wstring LanguageHandler::GetLanguageSymbol(void)
 	default:
 		return L"Undefined";
 	}
+}
+
+
+std::wstring LanguageHandler::UpperCaseText(int reference)
+{
+	std::wstring input = Text[reference];
+
+	std::transform(input.begin(), input.end(), input.begin(), ::toupper);
+
+	return input;
+}
+
+
+std::wstring LanguageHandler::UpperCaseUnit(int reference)
+{
+	std::wstring input = Units[reference];
+
+	std::transform(input.begin(), input.end(), input.begin(), ::toupper);
+
+	return input;
 }

@@ -477,6 +477,22 @@ namespace Utility
 	}
 
 
+	bool IsTestCharacter(wchar_t value)
+	{
+		switch (value)
+		{
+		case L'>':
+		case L'=':
+		case L'<':
+		case L'!':
+		case L'~':
+			return true;
+		}
+
+		return false;
+	}
+
+
 	std::wstring WebFileLink(const std::wstring input)
 	{
 		std::wstring wfl = input;

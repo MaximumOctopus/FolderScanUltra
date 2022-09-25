@@ -195,4 +195,38 @@ namespace Help
 		std::wcout << L"      https://github.com/MaximumOctopus/FolderScanUltra" << "\n";
 		std::wcout << L"      paul@freshney.org" << "\n\n";
 	}
+
+
+	void ConsoleCommands()
+	{
+		std::wcout << L"report type [count]\n";
+		std::wcout << L"    where type is topfolders, topfiles, bottomfiles, newfiles, oldfiles, summary\n";
+		std::wcout << L"                  csv, html, text, tree, xml\n";
+		std::wcout << L"    count (optional) is maximum items to display.\n\n";
+		std::wcout << L"search term\n";
+		std::wcout << L"    where term is the string to search for within the file name.\n\n";
+		std::wcout << L"filter filters\n";
+		std::wcout << L"    search using filters\n\n";
+
+		std::wcout << L"    search terms:\n";
+		std::wcout << L"        keyword or \"keyword1 keyword2\" for an AND\n";
+		std::wcout << L"        keyword* (starting with keyword)\n";
+		std::wcout << L"        *keyword (ending with keyword)\n\n";
+
+		std::wcout << L"        (option>value) (option<value) (option=value) (option!=value) (option~value) (option!~value)\n";
+		std::wcout << L"    where option can be one of these:\n";
+		std::wcout << L"        size, user, date, adate, mdate, time, atime, mtime\n";
+		std::wcout << L"        filepathlength, includefolder, excludefolder\n\n";
+		std::wcout << L"    use \"\" for multiple search paramaters eg \"(size>100MB) (size<200MB)\"\n\n";
+
+		std::wcout << L"    file attributes:\n";
+		std::wcout << L"        @ARCHIVE, @COMPRESSED, @ENCRYPTED, @HIDDEN, @NOTCONTENTI, @OFFLINE, @READONLY\n";
+		std::wcout << L"        @ACCESSED, @MODIFIED, @FILE, @FOLDER, @VIRTUAL, @TEMP, @SYSTEM\n\n";
+
+		std::wcout << L"    file category:\n";
+		std::wcout << L"        #COD, #COM, #GFX, #MOVIE, #OFF, #OTH, #PROG, #SBD, #SYS\n";
+		std::wcout << L"        #C1..#C10 (for custom categories)\n\n";
+
+		std::wcout << L"    more detail on available search filters in the included manual (page 14)\n\n";
+	}
 }

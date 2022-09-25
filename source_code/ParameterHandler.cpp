@@ -260,7 +260,7 @@ int ParameterHandler::IsProcessingSwitch(int parameter)
 {
 	std::wstring param = parameters[parameter];
 
-	std::transform(param.begin(), param.end(), param.begin(), ::towupper);
+	std::transform(param.begin(), param.end(), param.begin(), ::toupper);
 
 	int ptype = GetParameterType(param);
 
@@ -277,7 +277,7 @@ int ParameterHandler::IsDatabaseSwitch(int parameter)
 {
 	std::wstring param = parameters[parameter];
 
-	std::transform(param.begin(), param.end(), param.begin(), ::towupper);
+	std::transform(param.begin(), param.end(), param.begin(), ::toupper);
 
 	int ptype = GetParameterType(param);
 

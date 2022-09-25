@@ -37,6 +37,28 @@ namespace Formatting
 	}
 
 
+	std::wstring AddLeadingSpace(std::wstring input, int length)
+	{
+		if (input.length() == length)
+		{
+			return input;
+		}
+		else if (input.length() < length)
+		{
+			for (int t = input.length(); t < length; t++)
+			{
+				input.insert(input.begin(), L' ');
+			}
+
+			return input;
+		}
+		else
+		{
+			return input;
+		}
+	}
+
+
 	std::wstring AddTrailing(std::wstring input, int length, char character)
 	{
 		if (input.length() == length)

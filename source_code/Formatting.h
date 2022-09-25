@@ -16,6 +16,7 @@
 namespace Formatting
 {
 	std::wstring AddLeading(std::wstring, int, char);
+	std::wstring AddLeadingSpace(std::wstring, int);
 	std::wstring AddTrailing(std::wstring, int, char);
 
 	std::wstring MakeItalic(const std::wstring, bool);
