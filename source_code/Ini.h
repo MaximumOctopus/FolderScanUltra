@@ -20,16 +20,21 @@ class Ini
 {
 private:
 
-	bool LoadFile(const std::wstring);
+	std::wstring LastSection = L"";		// cache the name of the last section checked, used with below
+	int LastSectionIndex = 0;			// cache the index to lines so the next Read call is quicker
+
+	[[nodiscard]] bool LoadFile(const std::wstring);
 
 public:
 
 	bool Loaded = false;
 
+	bool LastKeyExist = false;
+
 	std::vector<std::wstring> Lines;
 
 	Ini(const std::wstring);
 
-	std::wstring ReadString(const std::wstring, std::wstring, const std::wstring);
-	int ReadInteger(std::wstring, std::wstring, int);
+	[[nodiscard]] std::wstring ReadString(const std::wstring, std::wstring, const std::wstring);
+	[[nodiscard]] int ReadInteger(std::wstring, std::wstring, int);
 };

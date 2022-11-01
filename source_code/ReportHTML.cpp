@@ -14,7 +14,6 @@
 
 
 #include <algorithm>
-#include <codecvt>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -70,33 +69,31 @@ namespace ReportHTML
 		// == Lets write the file =====================================================
 		// ============================================================================
 
-		std::wofstream file(options.FileName);
-
-		file.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
+		std::ofstream file(options.FileName);
 
 		if (file)
 		{
-			file << L"<html><head><title>FolderScanUltra analysis \"" + GScanDetails->Path.String + L"\"</title>" << "\n";
-			file << L"<meta name=\"generator\" content=\"FolderScanUltra, (c) Paul Alan Freshney 2002-" + Utility::CurrentYear() + L", paul@freshney.org\">" << "\n";
-			file << L"<meta name=\"debug\" content=\"" + std::to_wstring(options.LayoutSize) + L"\">" << "\n";
-			file << L"<style type=\"text/css\">" << "\n";
-			file << L"<!--" << "\n";
-			file << L"A:link {color:#" + Convert::WebColour(GSettings->Reports.HTMLColours[0]) + L"; text-decoration: none;}" << "\n";
-			file << L"A:visited {color:#" + Convert::WebColour(GSettings->Reports.HTMLColours[0]) + L"; text-decoration: none;}" << "\n";
-			file << L"A:hover {color:#" + Convert::WebColour(GSettings->Reports.HTMLColours[1]) + L"; text-decoration: underline;}" << "\n";
-			file << L"A:active {color:#" + Convert::WebColour(GSettings->Reports.HTMLColours[0]) + L"; text-decoration: none;}" << "\n";
-			file << L".C4G {font-family: Geneva, Arial, Helvetica, san-serif; font-size:10pt; color:#" + Convert::WebColour(GSettings->Reports.HTMLColours[3]) + L";}" << "\n";
-			file << L".C4CB {font-family: Geneva, Arial, Helvetica, san-serif; font-size:10pt; text-align:center; font-weight: bold; color:#" + Convert::WebColour(GSettings->Reports.HTMLColours[3]) + L";}" << "\n";
-			file << L".C4C {font-family: Geneva, Arial, Helvetica, san-serif; font-size:10pt; text-align:center; color:#" + Convert::WebColour(GSettings->Reports.HTMLColours[3]) + L";}" << "\n";
-			file << L".C4L {font-family: Geneva, Arial, Helvetica, san-serif; font-size:10pt; text-align:left; color:#" + Convert::WebColour(GSettings->Reports.HTMLColours[3]) + L";}" << "\n";
-			file << L".C4R {font-family: Geneva, Arial, Helvetica, san-serif; font-size:10pt; text-align:right; color:#" + Convert::WebColour(GSettings->Reports.HTMLColours[3]) + L";}" << "\n";
-			file << L".C7G {font-family: Geneva, Arial, Helvetica, san-serif; font-size:10pt; color:#" + Convert::WebColour(GSettings->Reports.HTMLColours[6]) + L";}" << "\n";
-			file << L".C7CB {font-family: Geneva, Arial, Helvetica, san-serif; font-size:10pt; text-align:center; font-weight: bold; color:#" + Convert::WebColour(GSettings->Reports.HTMLColours[6]) + L";}" << "\n";
-			file << L".C7C {font-family: Geneva, Arial, Helvetica, san-serif; font-size:10pt; text-align:center; color:#" + Convert::WebColour(GSettings->Reports.HTMLColours[6]) + L";}" << "\n";
-			file << L".XCB {text-align:center; font-weight: bold;}" << "\n";
-			file << L"-->" << "\n";
-			file << L"</style></head>" << "\n";
-			file << L"<body leftmargin=\"5\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[2]) + L"\" text=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[7]) + L"\" topmargin=\"5\">" << "\n";
+			file << Formatting::to_utf8(L"<html><head><title>FolderScanUltra analysis \"" + GScanDetails->Path.String + L"\"</title>\n");
+			file << Formatting::to_utf8(L"<meta name=\"generator\" content=\"FolderScanUltra, (c) Paul Alan Freshney 2002-" + Utility::CurrentYear() + L", paul@freshney.org\">\n");
+			file << Formatting::to_utf8(L"<meta name=\"debug\" content=\"" + std::to_wstring(options.LayoutSize) + L"\">\n");
+			file << Formatting::to_utf8(L"<style type=\"text/css\">\n");
+			file << Formatting::to_utf8(L"<!--\n");
+			file << Formatting::to_utf8(L"A:link {color:#" + Convert::WebColour(GSettings->Reports.HTMLColours[0]) + L"; text-decoration: none;}\n");
+			file << Formatting::to_utf8(L"A:visited {color:#" + Convert::WebColour(GSettings->Reports.HTMLColours[0]) + L"; text-decoration: none;}\n");
+			file << Formatting::to_utf8(L"A:hover {color:#" + Convert::WebColour(GSettings->Reports.HTMLColours[1]) + L"; text-decoration: underline;}\n");
+			file << Formatting::to_utf8(L"A:active {color:#" + Convert::WebColour(GSettings->Reports.HTMLColours[0]) + L"; text-decoration: none;}\n");
+			file << Formatting::to_utf8(L".C4G {font-family: Geneva, Arial, Helvetica, san-serif; font-size:10pt; color:#" + Convert::WebColour(GSettings->Reports.HTMLColours[3]) + L";}\n");
+			file << Formatting::to_utf8(L".C4CB {font-family: Geneva, Arial, Helvetica, san-serif; font-size:10pt; text-align:center; font-weight: bold; color:#" + Convert::WebColour(GSettings->Reports.HTMLColours[3]) + L";}\n");
+			file << Formatting::to_utf8(L".C4C {font-family: Geneva, Arial, Helvetica, san-serif; font-size:10pt; text-align:center; color:#" + Convert::WebColour(GSettings->Reports.HTMLColours[3]) + L";}\n");
+			file << Formatting::to_utf8(L".C4L {font-family: Geneva, Arial, Helvetica, san-serif; font-size:10pt; text-align:left; color:#" + Convert::WebColour(GSettings->Reports.HTMLColours[3]) + L";}\n");
+			file << Formatting::to_utf8(L".C4R {font-family: Geneva, Arial, Helvetica, san-serif; font-size:10pt; text-align:right; color:#" + Convert::WebColour(GSettings->Reports.HTMLColours[3]) + L";}\n");
+			file << Formatting::to_utf8(L".C7G {font-family: Geneva, Arial, Helvetica, san-serif; font-size:10pt; color:#" + Convert::WebColour(GSettings->Reports.HTMLColours[6]) + L";}\n");
+			file << Formatting::to_utf8(L".C7CB {font-family: Geneva, Arial, Helvetica, san-serif; font-size:10pt; text-align:center; font-weight: bold; color:#" + Convert::WebColour(GSettings->Reports.HTMLColours[6]) + L";}\n");
+			file << Formatting::to_utf8(L".C7C {font-family: Geneva, Arial, Helvetica, san-serif; font-size:10pt; text-align:center; color:#" + Convert::WebColour(GSettings->Reports.HTMLColours[6]) + L";}\n");
+			file << Formatting::to_utf8(L".XCB {text-align:center; font-weight: bold;}\n");
+			file << Formatting::to_utf8(L"-->\n");
+			file << Formatting::to_utf8(L"</style></head>\n");
+			file << Formatting::to_utf8(L"<body leftmargin=\"5\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[2]) + L"\" text=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[7]) + L"\" topmargin=\"5\">\n");
 
 			// ===========================================================================
 
@@ -163,26 +160,26 @@ namespace ReportHTML
 			// ===========================================================================
 			// footer table. always gets added
 
-			file << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" << "\n";
-			file << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\">" << "\n";
-			file << L"<td align=\"center\" class=\"C7G\">" << "\n";
-			file << L"<a href=\"mailto:paul@freshney.org\">paul@freshney.org</a> / <a href=\"https://github.com/MaximumOctopus/FolderScanUltra\" target=\"_blank\">https://github.com/MaximumOctopus/FolderScanUltra</a></td>" << "\n";
-			file << L"</tr>" << "\n";
-			file << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\" class=\"C7G\"><td align=\"center\">(c) Paul Alan Freshney 2002-" + Utility::CurrentYear() + L"</td></tr>";
-			file << L"</table></body></html>\n";
+			file << Formatting::to_utf8(L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n");
+			file << Formatting::to_utf8(L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\">\n");
+			file << Formatting::to_utf8(L"<td align=\"center\" class=\"C7G\">\n");
+			file << Formatting::to_utf8(L"<a href=\"mailto:paul@freshney.org\">paul@freshney.org</a> / <a href=\"https://github.com/MaximumOctopus/FolderScanUltra\" target=\"_blank\">https://github.com/MaximumOctopus/FolderScanUltra</a></td>\n");
+			file << Formatting::to_utf8(L"</tr>\n");
+			file << Formatting::to_utf8(L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\" class=\"C7G\"><td align=\"center\">(c) Paul Alan Freshney 2002-" + Utility::CurrentYear() + L"</td></tr>");
+			file << Formatting::to_utf8(L"</table></body></html>\n");
 
 			file.close();
 		}
 		else
 		{
 			std::wcout << L"\n";
-			std::wcout << GLanguageHandler->Text[rsErrorSaving] + L" \"" + options.FileName + L"\"." << "\n";
+			std::wcout << GLanguageHandler->Text[rsErrorSaving] + L" \"" + options.FileName + L"\".\n";
 			std::wcout << L"\n";
 		}
 	}
 
 
-	void CreateDeepReport(std::wofstream& ofile, HTMLReportOptions options)
+	void CreateDeepReport(std::ofstream& ofile, HTMLReportOptions options)
 	{
 		ReportDeep deep;
 
@@ -233,7 +230,7 @@ namespace ReportHTML
 						);
 					}
 
-					ofile << L"</table>\n";
+					ofile << Formatting::to_utf8(L"</table>\n");
 
 					anchor++;
 
@@ -248,23 +245,23 @@ namespace ReportHTML
 	}
 
 
-	void ReportHeader(std::wofstream& ofile, HTMLReportOptions options, std::wstring menu_string)
+	void ReportHeader(std::ofstream& ofile, HTMLReportOptions options, std::wstring menu_string)
 	{
 		// ============================================================================
 		// == header table ============================================================
 		// ============================================================================
 
-		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\">" << "\n";
-		ofile << L"<tr class=\"C4G\">" << "\n";
+		ofile << Formatting::to_utf8(L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\">\n");
+		ofile << Formatting::to_utf8(L"<tr class=\"C4G\">\n");
 
-		ofile << L"<td class=\"C4C\"><b>FolderScanUltra " + __FSUVersion + L"</b> " + GLanguageHandler->Text[rsReportFor] +
-			L" <b><a href=\"" + Utility::WebFileLink(GScanDetails->Path.String) + L"\">" + GScanDetails->Path.String + L"</a></b></td>" << "\n";
+		ofile << Formatting::to_utf8(L"<td class=\"C4C\"><b>FolderScanUltra " + __FSUVersion + L"</b> " + GLanguageHandler->Text[rsReportFor] +
+			L" <b><a href=\"" + Utility::WebFileLink(GScanDetails->Path.String) + L"\">" + GScanDetails->Path.String + L"</a></b></td>\n");
 
-		ofile << L"</tr>" << "\n";
-		ofile << L"<tr class=\"C4C\">" << "\n";
-		ofile << L"<td>" + GLanguageHandler->Text[rsAnalysedAt] + L" <b>" + Utility::GetTime(DateTimeFormat::Display) + L"</b>, <b>" + Utility::GetDate(DateTimeFormat::Display) + L"</b>.</td>" << "\n";
-		ofile << L"</tr>" << "\n";
-		ofile << L"</table>" << "\n";
+		ofile << Formatting::to_utf8(L"</tr>\n");
+		ofile << Formatting::to_utf8(L"<tr class=\"C4C\">\n");
+		ofile << Formatting::to_utf8(L"<td>" + GLanguageHandler->Text[rsAnalysedAt] + L" <b>" + Utility::GetTime(DateTimeFormat::Display) + L"</b>, <b>" + Utility::GetDate(DateTimeFormat::Display) + L"</b>.</td>\n");
+		ofile << Formatting::to_utf8(L"</tr>\n");
+		ofile << Formatting::to_utf8(L"</table>\n");
 
 		InsertSpacingTable(ofile);
 
@@ -272,20 +269,20 @@ namespace ReportHTML
 		// == excluded folder list ====================================================
 		// ============================================================================
 		//  if ExcludedFolders.size()<>0 then {
-		//    ofile << L"<table align=\"center\" width=\"" + std::to_wstring(ReportSizes[CheckReportOption(options, 11, 2), __rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">");
-		//    ofile << L"<tr class=\"C7G\" bgcolor=\"#" + WebColor(prefs.HTMLColours[5]) + L"\">");
+		//    ofile << Formatting::to_utf8("<table align=\"center\" width=\"" + std::to_wstring(ReportSizes[CheckReportOption(options, 11, 2), __rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">");
+		//    ofile << Formatting::to_utf8("<tr class=\"C7G\" bgcolor=\"#" + WebColor(prefs.HTMLColours[5]) + L"\">");
 		//    Writeln(ofile,   "<td width=\"387" height="20"><b>" +GLanguageHandler->XText[lsExcludedFolders] + L"</b></td>");
-		//    ofile << L"</tr>");
+		//    ofile << Formatting::to_utf8("</tr>");
 
 		//    for t:=0 to ExcludedFolders.size()-1 do {
-		//      ofile << L"<tr bgcolor=\"#" + WebColor(prefs.HTMLColours[9]) + L"\">");
+		//      ofile << Formatting::to_utf8("<tr bgcolor=\"#" + WebColor(prefs.HTMLColours[9]) + L"\">");
 		//      Writeln(ofile,   "<td class=\"C4G\">");
 		//      Writeln(ofile,     "<div align=\"left\"><a href="" + Utility::WebFileLink(ExcludedFolders.Strings[t]) + L"\" target="_blank">" +ExcludedFolders.Strings[t] + L"<a></div>");
 		//      Writeln(ofile,   "</td>");
-		//      ofile << L"</tr>");
+		//      ofile << Formatting::to_utf8("</tr>");
 		//    }
 
-		//    ofile << L"</table>");
+		//    ofile << Formatting::to_utf8("</table>");
 
 		//    InsertSpacingTable(ofile);
 		//  }
@@ -294,18 +291,18 @@ namespace ReportHTML
 		// == excluded file list ======================================================
 		// ============================================================================
 		//  if ExcludedFiles.size()<>0 then {
-		//    ofile << L"<table align=\"center\" width=\"" + std::to_wstring(ReportSizes[CheckReportOption(options, 11, 2), __rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">");
-		//    ofile << L"<tr class=\"C7G\" bgcolor=\"#" + WebColor(prefs.HTMLColours[5]) + L"\">");
+		//    ofile << Formatting::to_utf8("<table align=\"center\" width=\"" + std::to_wstring(ReportSizes[CheckReportOption(options, 11, 2), __rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">");
+		//    ofile << Formatting::to_utf8("<tr class=\"C7G\" bgcolor=\"#" + WebColor(prefs.HTMLColours[5]) + L"\">");
 		//    Writeln(ofile,   "<td width=\"387" height="20"><b>" +GLanguageHandler->XText[lsExcludedFiles] + L"</b></td>");
-		//    ofile << L"</tr>");
+		//    ofile << Formatting::to_utf8("</tr>");
 
 		//    for t:=0 to ExcludedFiles.size()-1 do {
-		//      ofile << L"<tr bgcolor=\"#" + WebColor(prefs.HTMLColours[9]) + L"\">");
+		//      ofile << Formatting::to_utf8("<tr bgcolor=\"#" + WebColor(prefs.HTMLColours[9]) + L"\">");
 		//      Writeln(ofile,   "<td class=\"C4G\"><div align=\"left\"><a href="" + Utility::WebFileLink(ExcludedFiles.Strings[t]) + L"\" target="_blank">" +ExcludedFiles.Strings[t] + L"<a></div></td>");
-		//      ofile << L"</tr>");
+		//      ofile << Formatting::to_utf8("</tr>");
 		//    }
 
-		//    ofile << L"</table>");
+		//    ofile << Formatting::to_utf8("</table>");
 
 		//    InsertSpacingTable(ofile);
 		//  }
@@ -314,15 +311,15 @@ namespace ReportHTML
 		// == navigation table ========================================================
 		// ============================================================================
 
-		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\">" +
+		ofile << Formatting::to_utf8(L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\">" +
 			L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\"><td class=\"C7G\"><strong>Menu</strong></td></tr>" +
-			L"<tr class=\"C4C\"><td>" + menu_string + L"</td></tr></table>\n";
+			L"<tr class=\"C4C\"><td>" + menu_string + L"</td></tr></table>\n");
 
 		InsertSpacingTable(ofile);
 	}
 
 
-	void ReportFileCategory(std::wofstream& ofile, HTMLReportOptions options)
+	void ReportFileCategory(std::ofstream& ofile, HTMLReportOptions options)
 	{
 		// ============================================================================
 		// == file category table =====================================================
@@ -385,7 +382,7 @@ namespace ReportHTML
 				(((double)GScanDetails->Data.ExtensionSpread[0].Size / (double)GScanDetails->Data.TotalSize) * 100) * ((double)__ReportSizes[__rsBarGraph] / (double)large2)
 			);
 
-			ofile << L"</table>\n";
+			ofile << Formatting::to_utf8(L"</table>\n");
 
 			InsertSpacingTable(ofile);
 
@@ -400,7 +397,7 @@ namespace ReportHTML
 	}
 
 
-	void ReportFileAttributesTable(std::wofstream& ofile, HTMLReportOptions options)
+	void ReportFileAttributesTable(std::ofstream& ofile, HTMLReportOptions options)
 	{
 		// ============================================================================
 		// == file attributes table ===================================================
@@ -442,13 +439,13 @@ namespace ReportHTML
 			}
 		}
 
-		ofile << L"</table>\n";
+		ofile << Formatting::to_utf8(L"</table>\n");
 
 		InsertSpacingTable(ofile);
 	}
 
 
-	void ReportUsers(std::wofstream& ofile, HTMLReportOptions options)
+	void ReportUsers(std::ofstream& ofile, HTMLReportOptions options)
 	{
 		// ============================================================================
 		// == Username ================================================================
@@ -500,16 +497,16 @@ namespace ReportHTML
 	}
 
 
-	void ReportTemporary(std::wofstream& ofile)
+	void ReportTemporary(std::ofstream& ofile)
 	{
 		int rowidx = 0;
 
-		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" << "\n";
-		ofile << L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\"><td height=\"13\"><a name=\"op7\" /><b>" + GLanguageHandler->Text[rsTempFiles] + L"</b></td></tr>" << "\n";
+		ofile << Formatting::to_utf8(L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n");
+		ofile << Formatting::to_utf8(L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\"><td height=\"13\"><a name=\"op7\" /><b>" + GLanguageHandler->Text[rsTempFiles] + L"</b></td></tr>\n");
 
 		if (GScanDetails->Data.TemporaryFiles.size() == 0)
 		{
-			ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\" class=\"C4G\"><td colspan=\"7\" height=\"13\">" + GLanguageHandler->Text[rsNoneFound] + L"</td></tr>" << "\n";
+			ofile << Formatting::to_utf8(L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\" class=\"C4G\"><td colspan=\"7\" height=\"13\">" + GLanguageHandler->Text[rsNoneFound] + L"</td></tr>\n");
 		}
 		else
 		{
@@ -517,28 +514,28 @@ namespace ReportHTML
 			{
 				if (t % 2 == 0)
 				{
-					ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\">" << "\n";
+					ofile << Formatting::to_utf8(L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\">\n");
 				}
 				else
 				{
-					ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[10]) + L"\">" << "\n";
+					ofile << Formatting::to_utf8(L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[10]) + L"\">\n");
 				}
 
-				ofile << L"<td height=\"13\">" + GScanDetails->Data.TemporaryFiles[t] + L"</td>" << "\n";
+				ofile << Formatting::to_utf8(L"<td height=\"13\">" + GScanDetails->Data.TemporaryFiles[t] + L"</td>\n");
 
-				ofile << L"</tr>" << "\n";
+				ofile << Formatting::to_utf8(L"</tr>\n");
 
 				rowidx++;
 			}
 		}
 
-		ofile << L"</table>\n";
+		ofile << Formatting::to_utf8(L"</table>\n");
 
 		InsertSpacingTable(ofile);
 	}
 
 
-	void ReportFileExtensionLists(std::wofstream &ofile, HTMLReportOptions options)
+	void ReportFileExtensionLists(std::ofstream &ofile, HTMLReportOptions options)
 	{
 		// ============================================================================
 		// == File Extesnion Lists ====================================================
@@ -633,11 +630,11 @@ namespace ReportHTML
 										// ==================================================================
 										if (rowidx % 2 != 0)
 										{
-											ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\">" << "\n";
+											ofile << Formatting::to_utf8(L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\">\n");
 										}
 										else
 										{
-											ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[10]) + L"\">" << "\n";
+											ofile << Formatting::to_utf8(L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[10]) + L"\">\n");
 										}
 
 										rowidx++;
@@ -646,51 +643,47 @@ namespace ReportHTML
 
 										if (GFileExtensionHandler->Extensions[z].Name == L"")
 										{
-											ofile << L"<td width=\"100\" height=\"13\"><i>none</i></td>" << "\n";
+											ofile << Formatting::to_utf8(L"<td width=\"100\" height=\"13\"><i>none</i></td>\n");
 										}
 										else
 										{
-											ofile << L"<td width=\"100\" height=\"13\">" + GFileExtensionHandler->Extensions[z].Name + L"</td>" << "\n";
+											ofile << Formatting::to_utf8(L"<td width=\"100\" height=\"13\">" + GFileExtensionHandler->Extensions[z].Name + L"</td>\n");
 										}
 
-										ofile << L"<td width=\"64\" height=\"13\"><div align=\"center\">" + std::to_wstring(GFileExtensionHandler->Extensions[z].Quantity) + L"</div></td>" << "\n";
-										ofile << L"<td width=\"64\" height=\"13\"><div align=\"center\">" + Convert::DoubleToPercent((double)GFileExtensionHandler->Extensions[z].Quantity / (double)GScanDetails->Data.FileCount) + L"</div></td>" << "\n";
-										ofile << L"<td width=\"160\">" << "\n";
+										ofile << Formatting::to_utf8(L"<td width=\"64\" height=\"13\"><div align=\"center\">" + std::to_wstring(GFileExtensionHandler->Extensions[z].Quantity) + L"</div></td>\n");
+										ofile << Formatting::to_utf8(L"<td width=\"64\" height=\"13\"><div align=\"center\">" + Convert::DoubleToPercent((double)GFileExtensionHandler->Extensions[z].Quantity / (double)GScanDetails->Data.FileCount) + L"</div></td>\n");
+										ofile << Formatting::to_utf8(L"<td width=\"160\">\n");
 										
 										if (large1 != 0)
 										{
-											ofile << L"<table width=\"" + std::to_wstring(std::round((((double)GFileExtensionHandler->Extensions[z].Quantity / (double)GScanDetails->Data.FileCount) * 100) * ((double)__ReportSizes[__rsBarGraph] / (double)large1))) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[4]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" << "\n";
+											ofile << Formatting::to_utf8(L"<table width=\"" + std::to_wstring(std::round((((double)GFileExtensionHandler->Extensions[z].Quantity / (double)GScanDetails->Data.FileCount) * 100) * ((double)__ReportSizes[__rsBarGraph] / (double)large1))) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[4]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">\n");
 										}
 										else
 										{
-											ofile << L"<table width=\"1\" border=\"0\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[4]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" << "\n";
+											ofile << Formatting::to_utf8(L"<table width=\"1\" border=\"0\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[4]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">\n");
 										}
 										
-										ofile << L"<tr><td></td></tr>" <<
-												     L"</table>" <<
-												     L"</td>" << "\n";
-										ofile << L"<td width=\"85\" height=\"13\">" <<
-											L"<div align=\"" + options.Align + L"\">" + Convert::GetSizeString(options.Units, GFileExtensionHandler->Extensions[z].Size) + L"</div>" <<
-											L"</td>" << "\n";
+										ofile << Formatting::to_utf8(L"<tr><td></td></tr></table></td>\n");
+										ofile << Formatting::to_utf8(L"<td width=\"85\" height=\"13\"><div align=\"" + options.Align + L"\">" + Convert::GetSizeString(options.Units, GFileExtensionHandler->Extensions[z].Size) + L"</div></td>\n");
 
 										percentage = std::round((((double)GFileExtensionHandler->Extensions[z].Size) / (double)GScanDetails->Data.TotalSize) * 100);
 
-										ofile << L"<td width=\"67\" height=\"13\"><div align=\"center\">" + Convert::DoubleToPercent((double)GFileExtensionHandler->Extensions[z].Size / (double)GScanDetails->Data.TotalSize) + L"</div></td>" << "\n";
-										ofile << L"<td width=\"160\">" << "\n";
+										ofile << Formatting::to_utf8(L"<td width=\"67\" height=\"13\"><div align=\"center\">" + Convert::DoubleToPercent((double)GFileExtensionHandler->Extensions[z].Size / (double)GScanDetails->Data.TotalSize) + L"</div></td>\n");
+										ofile << Formatting::to_utf8(L"<td width=\"160\">\n");
 
 										if (large2 != 0)
 										{
-											ofile << L"<table width=\"" + std::to_wstring(std::round((double)percentage * ((double)__ReportSizes[__rsBarGraph] / (double)large2))) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[4]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" << "\n";
+											ofile << Formatting::to_utf8(L"<table width=\"" + std::to_wstring(std::round((double)percentage * ((double)__ReportSizes[__rsBarGraph] / (double)large2))) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[4]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">\n");
 										}
 										else
 										{
-											ofile << L"<table width=\"1\" border=\"0\" bgcolor = \"#" + Convert::WebColour(GSettings->Reports.HTMLColours[4]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" << "\n";
+											ofile << Formatting::to_utf8(L"<table width=\"1\" border=\"0\" bgcolor = \"#" + Convert::WebColour(GSettings->Reports.HTMLColours[4]) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">\n");
 										}
 										
-										ofile << L"<tr><td></td></tr>" << "\n";
-										ofile << L"</table>" << "\n";
-										ofile << L"</td>" << "\n";
-										ofile << L"</tr>" << "\n";
+										ofile << Formatting::to_utf8(L"<tr><td></td></tr>\n");
+										ofile << Formatting::to_utf8(L"</table>\n");
+										ofile << Formatting::to_utf8(L"</td>\n");
+										ofile << Formatting::to_utf8(L"</tr>\n");
 
 										linecount++;
 									}
@@ -700,10 +693,10 @@ namespace ReportHTML
 
 						if (linecount == 0)
 						{
-							ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\"><td colspan=\"7\" height=\"13\" class=\"C4G\">" + GLanguageHandler->Text[rsNoneFound] + L".</td></tr>" << "\n";
+							ofile << Formatting::to_utf8(L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\"><td colspan=\"7\" height=\"13\" class=\"C4G\">" + GLanguageHandler->Text[rsNoneFound] + L".</td></tr>\n");
 						}
 
-						ofile << L"</table>\n";
+						ofile << Formatting::to_utf8(L"</table>\n");
 
 						InsertSpacingTable(ofile);
 					}
@@ -713,7 +706,7 @@ namespace ReportHTML
 	}
 
 
-	void ReportMagnitude(std::wofstream &ofile, HTMLReportOptions options)
+	void ReportMagnitude(std::ofstream &ofile, HTMLReportOptions options)
 	{
 		// ============================================================================
 		// == magnitude table =========================================================
@@ -752,7 +745,7 @@ namespace ReportHTML
 					);
 				}
 
-				ofile << L"</table>\n";
+				ofile << Formatting::to_utf8(L"</table>\n");
 
 				InsertSpacingTable(ofile);
 
@@ -767,96 +760,80 @@ namespace ReportHTML
 	}
 
 
-	void ReportQuickInfo(std::wofstream &ofile, HTMLReportOptions options)
+	void ReportQuickInfo(std::ofstream &ofile, HTMLReportOptions options)
 	{
 		// ============================================================================
 		// == quick info table ========================================================
 		// ============================================================================
 
-		ofile << L"<table align=\"center\" width=\"" << std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" height=\"180\" border=\"0\" cellspacing=\"1\" cellpadding=\"1\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\">" << "\n";
-		ofile << L"<tr><td width=\"100%\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\" class=\"C7G\"><strong>" + GLanguageHandler->Text[rsSummary] + L"</strong></td></tr>" << "\n";
-		ofile << L"<tr>" << "\n";
-		ofile << L"<td>" << "\n";
-		ofile << L"<table width=\"100%\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" << "\n";
-		ofile << L"<tr>" << "\n";
-		ofile << L"<td width=\"350\" rowspan=\"11\"><div align=\"center\" id=\"chartQuickInfo1\"></div></td>" << "\n";
-		ofile << L"<td width=\"350\" rowspan=\"11\"><div align=\"center\" id=\"chartQuickInfo2\"></div></td>" << "\n";
-		ofile << L"<td width=\"170\" class=\"C4R\">" + GLanguageHandler->Text[rsNumberOfFiles] + L" </td>" << "\n";
-		ofile << L"<td width=\"92\" class=\"C4L\"> <b>" + std::to_wstring(GScanDetails->Data.FileCount) + L"</b></td>" << "\n";
-		ofile << L"</tr>" << "\n";
+		ofile << Formatting::to_utf8(L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" height=\"180\" border=\"0\" cellspacing=\"1\" cellpadding=\"1\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\">\n");
+		ofile << Formatting::to_utf8(L"<tr><td width=\"100%\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\" class=\"C7G\"><strong>" + GLanguageHandler->Text[rsSummary] + L"</strong></td></tr>\n");
+		ofile << Formatting::to_utf8(L"<tr>\n");
+		ofile << Formatting::to_utf8(L"<td>\n");
+		ofile << Formatting::to_utf8(L"<table width=\"100%\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n");
+		ofile << Formatting::to_utf8(L"<tr>\n");
+		ofile << Formatting::to_utf8(L"<td width=\"350\" rowspan=\"11\"><div align=\"center\" id=\"chartQuickInfo1\"></div></td>\n");
+		ofile << Formatting::to_utf8(L"<td width=\"350\" rowspan=\"11\"><div align=\"center\" id=\"chartQuickInfo2\"></div></td>\n");
+		ofile << Formatting::to_utf8(L"<td width=\"170\" class=\"C4R\">" + GLanguageHandler->Text[rsNumberOfFiles] + L" </td>\n");
+		ofile << Formatting::to_utf8(L"<td width=\"92\" class=\"C4L\"> <b>" + std::to_wstring(GScanDetails->Data.FileCount) + L"</b></td>\n");
+		ofile << Formatting::to_utf8(L"</tr>\n");
 
-		ofile << L"<tr><td width=\"170\" class=\"C4R\">" + GLanguageHandler->Text[rsNumberOfFolders] + 
-				L" </td><td width=\"92\" class=\"C4L\"> <b>" + std::to_wstring(GScanDetails->Data.FolderCount) +	L"</b></td></tr>" << "\n";
-		ofile << L"<tr>" <<
-				L"<td width=\"170\" class=\"C4R\">" + GLanguageHandler->Text[rsTotalSizeofFilesAnalysed] + L" </td>" <<
-				L"<td width=\"92\" class=\"C4L\"> <b>" + Convert::ConvertToUsefulUnit(GScanDetails->Data.TotalSize) + L"</b></td>" <<
-				L"</tr>" << "\n";
-		ofile << L"<tr><td width=\"170\" class=\"C4G\">&nbsp;</td><td width=\"92\" class=\"C4G\">&nbsp;</td></tr>" << "\n";
-		ofile << L"<tr>" << "\n";
-		ofile << L"<td width=\"170\" class=\"C4R\">" + GLanguageHandler->Text[rsDiskSpaceUsed] + L" </td>" << "\n";
+		ofile << Formatting::to_utf8(L"<tr><td width=\"170\" class=\"C4R\">" + GLanguageHandler->Text[rsNumberOfFolders] + 
+				L" </td><td width=\"92\" class=\"C4L\"> <b>" + std::to_wstring(GScanDetails->Data.FolderCount) +	L"</b></td></tr>\n");
+		ofile << Formatting::to_utf8(L"<tr><td width=\"170\" class=\"C4R\">" + GLanguageHandler->Text[rsTotalSizeofFilesAnalysed] + L" </td><td width=\"92\" class=\"C4L\"> <b>" + Convert::ConvertToUsefulUnit(GScanDetails->Data.TotalSize) + L"</b></td></tr>\n");
+		ofile << Formatting::to_utf8(L"<tr><td width=\"170\" class=\"C4G\">&nbsp;</td><td width=\"92\" class=\"C4G\">&nbsp;</td></tr>\n");
+		ofile << Formatting::to_utf8(L"<tr>\n");
+		ofile << Formatting::to_utf8(L"<td width=\"170\" class=\"C4R\">" + GLanguageHandler->Text[rsDiskSpaceUsed] + L" </td>\n");
 
 		if (GScanDetails->DiskStats.DriveSpaceUsed > 0)
 		{
-			ofile << L"<td width=\"92\" class=\"C4L\"> <b>" + Convert::ConvertToUsefulUnit(GScanDetails->DiskStats.DriveSpaceUsed) + L"</b></td>" << "\n";
+			ofile << Formatting::to_utf8(L"<td width=\"92\" class=\"C4L\"> <b>" + Convert::ConvertToUsefulUnit(GScanDetails->DiskStats.DriveSpaceUsed) + L"</b></td>\n");
 		}
 		else
 		{
-			ofile << L"<td width=\"92\" class=\"C4L\"> <b>" + GLanguageHandler->Text[rsUnknown] + L"</b></td>" << "\n";
+			ofile << Formatting::to_utf8(L"<td width=\"92\" class=\"C4L\"> <b>" + GLanguageHandler->Text[rsUnknown] + L"</b></td>\n");
 		}
 
-		ofile << L"</tr>" << "\n";
+		ofile << Formatting::to_utf8(L"</tr>\n");
 
-		ofile << L"<tr>" << "\n";
-		ofile << L"<td width=\"170\" class=\"C4R\">" + GLanguageHandler->Text[rsDiskSpaceWasted] + L" </td>" << "\n";
+		ofile << Formatting::to_utf8(L"<tr>\n");
+		ofile << Formatting::to_utf8(L"<td width=\"170\" class=\"C4R\">" + GLanguageHandler->Text[rsDiskSpaceWasted] + L" </td>\n");
 
 		if (GScanDetails->Data.TotalSizeOD >= GScanDetails->Data.TotalSize)
 		{
-			ofile << L"<td width=\"92\" class=\"C4L\"> <b>" + Convert::ConvertToUsefulUnit(GScanDetails->Data.TotalSizeOD - GScanDetails->Data.TotalSize) + L"</b></td>" << "\n";
+			ofile << Formatting::to_utf8(L"<td width=\"92\" class=\"C4L\"> <b>" + Convert::ConvertToUsefulUnit(GScanDetails->Data.TotalSizeOD - GScanDetails->Data.TotalSize) + L"</b></td>\n");
 		}
 		else
 		{
-			ofile << L"<td width=\"92\" class=\"C4L\"> <b>" + GLanguageHandler->Text[rsUnknown] + L"</b></td>" << "\n";
+			ofile << Formatting::to_utf8(L"<td width=\"92\" class=\"C4L\"> <b>" + GLanguageHandler->Text[rsUnknown] + L"</b></td>\n");
 		}
 
-		ofile << L"</tr>" << "\n";
-		ofile << L"<tr>" <<
-			L"<td width=\"170\" class=\"C4G\">&nbsp;</td>" <<
-			L"<td width=\"92\" class=\"C4G\">&nbsp;</td>" <<
-			L"</tr>" << "\n";
+		ofile << Formatting::to_utf8(L"</tr>\n");
+		ofile << Formatting::to_utf8(L"<tr><td width=\"170\" class=\"C4G\">&nbsp;</td><td width=\"92\" class=\"C4G\">&nbsp;</td></tr>\n");
 
 		if (GScanDetails->DiskStats.DriveSpaceFree > 0)
 		{
-			ofile << L"<tr>" <<
-				L"<td width=\"170\" class=\"C4R\">" + GLanguageHandler->Text[rsDiskSpaceFree] + L" </td>" <<
-				L"<td width=\"92\" class=\"C4L\"> <b>" + Convert::ConvertToUsefulUnit(GScanDetails->DiskStats.DriveSpaceFree) + L"</b></td>" <<
-				L"</tr>" << "\n";
+			ofile << Formatting::to_utf8(L"<tr><td width=\"170\" class=\"C4R\">" + GLanguageHandler->Text[rsDiskSpaceFree] + L" </td>" +
+				L"<td width=\"92\" class=\"C4L\"> <b>" + Convert::ConvertToUsefulUnit(GScanDetails->DiskStats.DriveSpaceFree) + L"</b></td>" +
+				L"</tr>\n");
 		}
 		else
 		{
-			ofile << L"<tr>" <<
-				L"<td width=\"170\" class=\"C4R\">" + GLanguageHandler->Text[rsDiskSpaceFree] + L" </td>" <<
-				L"<td width=\"92\" class=\"C4L\"> <b>?</b> </td>" <<
-				L"</tr>" << "\n";
+			ofile << Formatting::to_utf8(L"<tr><td width=\"170\" class=\"C4R\">" + GLanguageHandler->Text[rsDiskSpaceFree] + L" </td><td width=\"92\" class=\"C4L\"> <b>?</b> </td></tr>\n");
 		}
 		
-		ofile << L"<tr>" <<
-				L"<td width=\"170\" class=\"C4G\">&nbsp;</td>" <<
-				L"<td width=\"92\" class=\"C4G\">&nbsp;</td>" <<
-				L"</tr>" << "\n";
-		ofile << L"<tr>" <<
-				L"<td width=\"170\" class=\"C4G\">&nbsp;</td>" <<
-				L"<td width=\"92\" class=\"C4G\">&nbsp;</td>" <<
-				L"</tr>" << "\n";
-		ofile << L"</table>" << "\n";
-		ofile << L"</td>" << "\n";
-		ofile << L"</tr>" << "\n";
-		ofile << L"</table>\n";
+		ofile << Formatting::to_utf8(L"<tr><td width=\"170\" class=\"C4G\">&nbsp;</td><td width=\"92\" class=\"C4G\">&nbsp;</td></tr>\n");
+		ofile << Formatting::to_utf8(L"<tr><td width=\"170\" class=\"C4G\">&nbsp;</td><td width=\"92\" class=\"C4G\">&nbsp;</td></tr>\n");
+		ofile << Formatting::to_utf8(L"</table>\n");
+		ofile << Formatting::to_utf8(L"</td>\n");
+		ofile << Formatting::to_utf8(L"</tr>\n");
+		ofile << Formatting::to_utf8(L"</table>\n");
 	
 		InsertSpacingTable(ofile);
 	}
 
 
-	void ReportDirectoryList(int fileDatesCount, std::wofstream &ofile, HTMLReportOptions options)
+	void ReportDirectoryList(int fileDatesCount, std::ofstream &ofile, HTMLReportOptions options)
 	{
 		// ============================================================================
 		// == directory list---by file count ==========================================
@@ -880,6 +857,8 @@ namespace ReportHTML
 			}
 			
 			if (large1 <= 0) { large1 = __ReportSizes[__rsBarGraphSmall]; }
+
+			std::ranges::sort(GScanDetails->Data.RootFolders, {}, &RootFolder::Count);
 			
 			for (int t = 0; t < GScanDetails->Data.RootFolders.size(); t++)
 			{
@@ -918,7 +897,7 @@ namespace ReportHTML
 				}
 			}
 				
-			ofile << L"</table>\n";
+			ofile << Formatting::to_utf8(L"</table>\n");
 
 			if ((options.Layout[0]) && (fileDatesCount != 0))
 			{
@@ -949,6 +928,8 @@ namespace ReportHTML
 				if (large1 <= 0) { large1 = __ReportSizes[__rsBarGraphSmall]; }
 
 				rowidx = 1;
+
+				std::ranges::sort(GScanDetails->Data.RootFolders, {}, &RootFolder::Size);
 
 				for (int t = 0; t < GScanDetails->Data.RootFolders.size(); t++)
 				{
@@ -987,9 +968,70 @@ namespace ReportHTML
 
 				if (options.Layout[0])
 				{
-					ofile << L"</table>" << "\n";
+					ofile << Formatting::to_utf8(L"</table>\n");
 
 					SingleGraph(ofile, rsSize, L"chartDirectory2");
+				}
+
+				// ============================================================================
+				// == directory list---alphabetical by file size ==============================
+				// ============================================================================
+
+				FourColumnTableDoubleTitleHeader(ofile, L"op4", GLanguageHandler->Text[rsFoldersRootSize], GLanguageHandler->Text[rsFolder] + L" (alphabetical)", GLanguageHandler->Text[rsSizeOfFiles], GLanguageHandler->Text[rsAsPercent]);
+
+				if (GScanDetails->Data.TotalSize != 0)
+				{
+					//find largest category %
+					large1 = 0;
+
+					for (int t = 0; t < GScanDetails->Data.RootFolders.size(); t++)
+					{
+						if (std::round(((double)GScanDetails->Data.RootFolders[t].Size / (double)GScanDetails->Data.TotalSize) * 100) > large1)
+						{
+							large1 = std::round(((double)GScanDetails->Data.RootFolders[t].Size / (double)GScanDetails->Data.TotalSize) * 100);
+						}
+					}
+
+					if (large1 <= 0) { large1 = __ReportSizes[__rsBarGraphSmall]; }
+
+					rowidx = 1;
+
+					std::ranges::sort(GScanDetails->Data.RootFolders, {}, &RootFolder::Name);
+
+					for (int t = 0; t < GScanDetails->Data.RootFolders.size(); t++)
+					{
+						if (GScanDetails->Data.RootFolders[t].Count != 0)
+						{
+							if (GSettings->Reports.HTMLMonoBargraph)
+							{
+								colour = GSettings->Reports.HTMLColours[4];
+							}
+							else
+							{
+								colour = __SpectrumColours[t % __SpectrumMod];
+							}
+
+							std::wstring link = L"";
+
+							if (t == 0)
+							{
+								link = L"<a href=\"" + Utility::WebFileLink(GScanDetails->Path.String) + L"\" target=\"_blank\">" + Formatting::MakeItalic(GScanDetails->Data.RootFolders[t].Name, GScanDetails->Data.RootFolders[t].Attributes & FILE_ATTRIBUTE_HIDDEN) + L"</a>";
+							}
+							else
+							{
+								link = L"<a href=\"" + Utility::WebFileLink(GScanDetails->Path.String + GScanDetails->Data.RootFolders[t].Name) + L"\" target=\"_blank\">" + Formatting::MakeItalic(GScanDetails->Data.RootFolders[t].Name, GScanDetails->Data.RootFolders[t].Attributes & FILE_ATTRIBUTE_HIDDEN) + L"</a>";
+							}
+
+							FourColumnTableRow(ofile, rowidx, link,
+								Convert::GetSizeString(options.Units, GScanDetails->Data.RootFolders[t].Size),
+								Convert::DoubleToPercent((double)GScanDetails->Data.RootFolders[t].Size / (double)GScanDetails->Data.TotalSize),
+								colour,
+								(((double)GScanDetails->Data.RootFolders[t].Size / (double)GScanDetails->Data.TotalSize) * 100) * ((double)__ReportSizes[__rsBarGraphSmall] / (double)large1)
+							);
+
+							rowidx++;
+						}
+					}
 				}
 			}
 		}
@@ -998,13 +1040,13 @@ namespace ReportHTML
 	}
 
 
-	void DeepReportFrom(std::wofstream& ofile, std::wstring folder, SizeOfFolder sof, unsigned __int64 largestSize, int largestCount)
+	void DeepReportFrom(std::ofstream& ofile, std::wstring folder, SizeOfFolder sof, unsigned __int64 largestSize, int largestCount)
 	{
 		SevenColumnTableDoubleTitleHeader(ofile, L"op9", GLanguageHandler->Text[rsFileAttributes] + L" (Created)", GLanguageHandler->Text[rsYear]);
 	}
 
 
-	void ReportTop101Largest(std::wofstream &ofile, HTMLReportOptions options)
+	void ReportTop101Largest(std::ofstream &ofile, HTMLReportOptions options)
 	{
 		// ============================================================================
 		// == top 50 largest files ====================================================
@@ -1033,44 +1075,44 @@ namespace ReportHTML
 				);
 		}
 
-		ofile << L"</table>\n";
+		ofile << Formatting::to_utf8(L"</table>\n");
 
 		InsertSpacingTable(ofile);
 	}
 
 
-	void ReportTop101Smallest(std::wofstream &ofile, HTMLReportOptions options)
+	void ReportTop101Smallest(std::ofstream &ofile, HTMLReportOptions options)
 	{
-		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" +
+		ofile << Formatting::to_utf8(L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" +
 			L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\"><td colspan=\"2\" height=\"13\"><a name=\"op14\"/><b>" + GLanguageHandler->Text[rsTop101] + L"(" + GLanguageHandler->Text[rsSmallest] + L")</b></td></tr>" +
 			L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\">" +
 			L"<td height=\"13\" width=\"685\"><b>" + GLanguageHandler->Text[rsFiles] + L"</b></td>" +
 			L"<td height=\"13\" width=\"85\"><b>" + GLanguageHandler->Text[rsSize] + L"</b></td>" +
-			L"</tr>" << "\n";
+			L"</tr>\n");
 
 		for (int t = 0; t < GScanDetails->Data.Top100Small.size(); t++)
 		{
 			if (t % 2 != 0)
 			{
-				ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\">" << "\n";
+				ofile << Formatting::to_utf8(L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\">\n");
 			}
 			else
 			{
-				ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[10]) + L"\">" << "\n";
+				ofile << Formatting::to_utf8(L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[10]) + L"\">\n");
 			}
 			
-			ofile << L"<td height=\"13\" width=\"685\">" + GScanDetails->Data.Folders[GScanDetails->Data.Top100Small[t].FilePathIndex] + GScanDetails->Data.Top100Small[t].FileName + L"</td>" << "\n";
-			ofile << L"<td height=\"13\" width=\"85\"><div align=\"" + options.Align + L"\">" + Convert::GetSizeString(options.Units, GScanDetails->Data.Top100Small[t].Size) + L"</div></td>" << "\n";
-			ofile << L"</tr>" << "\n";
+			ofile << Formatting::to_utf8(L"<td height=\"13\" width=\"685\">" + GScanDetails->Data.Folders[GScanDetails->Data.Top100Small[t].FilePathIndex] + GScanDetails->Data.Top100Small[t].FileName + L"</td>\n");
+			ofile << Formatting::to_utf8(L"<td height=\"13\" width=\"85\"><div align=\"" + options.Align + L"\">" + Convert::GetSizeString(options.Units, GScanDetails->Data.Top100Small[t].Size) + L"</div></td>\n");
+			ofile << Formatting::to_utf8(L"</tr>\n");
 		}
 
-		ofile << L"</table>\n";
+		ofile << Formatting::to_utf8(L"</table>\n");
 
 		InsertSpacingTable(ofile);
 	}
 
 
-	void ReportTop101Newest(std::wofstream &ofile, HTMLReportOptions options)
+	void ReportTop101Newest(std::ofstream &ofile, HTMLReportOptions options)
 	{
 		FourColumnTableDoubleTitleHeaderNoGraph(ofile, L"op13", GLanguageHandler->Text[rsHTMLReport16], GLanguageHandler->Text[rsFiles],
 			GLanguageHandler->Text[rsCreated],
@@ -1087,13 +1129,13 @@ namespace ReportHTML
 			);		
 		}
 
-		ofile << L"</table>\n";
+		ofile << Formatting::to_utf8(L"</table>\n");
 
 		InsertSpacingTable(ofile);
 	}
 
 
-	void ReportTop101Oldest(std::wofstream &ofile, HTMLReportOptions options)
+	void ReportTop101Oldest(std::ofstream &ofile, HTMLReportOptions options)
 	{
 		FourColumnTableDoubleTitleHeaderNoGraph(ofile, L"op14", GLanguageHandler->Text[rsHTMLReport17], GLanguageHandler->Text[rsFiles],
 			GLanguageHandler->Text[rsCreated],
@@ -1110,13 +1152,13 @@ namespace ReportHTML
 			);
 		}
 
-		ofile << L"</table>\n";
+		ofile << Formatting::to_utf8(L"</table>\n");
 
 		InsertSpacingTable(ofile);
 	}	
 	
 
-	void ReportFileDates(std::wofstream &ofile, HTMLReportOptions options)
+	void ReportFileDates(std::ofstream &ofile, HTMLReportOptions options)
 	{
 		if (options.Layout[0])
 		{
@@ -1198,16 +1240,16 @@ namespace ReportHTML
 		}
 	}
 
-	void ReportNullFiles(std::wofstream &ofile, HTMLReportOptions options)
+	void ReportNullFiles(std::ofstream &ofile, HTMLReportOptions options)
 	{
 		int rowidx = 0;
 
-		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" << "\n";
-		ofile << L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\"><td height=\"13\"><a name=\"op7\" /><b>" + GLanguageHandler->Text[rsNullFiles] + L"</b></td></tr>" << "\n";
+		ofile << Formatting::to_utf8(L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n");
+		ofile << Formatting::to_utf8(L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\"><td height=\"13\"><a name=\"op7\" /><b>" + GLanguageHandler->Text[rsNullFiles] + L"</b></td></tr>\n");
 
 		if (GScanDetails->Data.NullFiles.size() == 0)
 		{
-			ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\" class=\"C4G\"><td colspan=\"7\" height=\"13\">" + GLanguageHandler->Text[rsNoneFound] + L"</td></tr>" << "\n";
+			ofile << Formatting::to_utf8(L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\" class=\"C4G\"><td colspan=\"7\" height=\"13\">" + GLanguageHandler->Text[rsNoneFound] + L"</td></tr>\n");
 		}
 		else
 		{
@@ -1215,22 +1257,22 @@ namespace ReportHTML
 			{
 				if (t % 2 == 0)
 				{
-					ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\">" << "\n";
+					ofile << Formatting::to_utf8(L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\">\n");
 				}
 				else
 				{
-					ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[10]) + L"\">" << "\n";
+					ofile << Formatting::to_utf8(L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[10]) + L"\">\n");
 				}
 
-				ofile << L"<td height=\"13\">" + GScanDetails->Data.NullFiles[t] + L"</td>" << "\n";
+				ofile << Formatting::to_utf8(L"<td height=\"13\">" + GScanDetails->Data.NullFiles[t] + L"</td>\n");
 
-				ofile << L"</tr>" << "\n";
+				ofile << Formatting::to_utf8(L"</tr>\n");
 
 				rowidx++;
 			}
 		}
 		
-		ofile << L"</table>\n";
+		ofile << Formatting::to_utf8(L"</table>\n");
 
 		InsertSpacingTable(ofile);
 	}
@@ -1257,15 +1299,15 @@ namespace ReportHTML
 	}
 
 
-	void InsertSpacingTable(std::wofstream &ofile)
+	void InsertSpacingTable(std::ofstream &ofile)
 	{
-		ofile << L"<table align=\"center\" width=\"770\" border=\"0\"><tr><td>&nbsp;</td></tr></table>\n";
+		ofile << Formatting::to_utf8(L"<table align=\"center\" width=\"770\" border=\"0\"><tr><td>&nbsp;</td></tr></table>\n");
 	} 
 
 
-	void DoubleGraph(std::wofstream& ofile, std::wstring id1, std::wstring id2)
+	void DoubleGraph(std::ofstream& ofile, std::wstring id1, std::wstring id2)
 	{
-		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellspacing=\"1\" cellpadding=\"1\">" +
+		ofile << Formatting::to_utf8(L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellspacing=\"1\" cellpadding=\"1\">" +
 			L"<tr class=\"C7CB\">" +
 			L"<td bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\">" + GLanguageHandler->Text[rsQuantity] + L"</td>" +
 			L"<td bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\">" + GLanguageHandler->Text[rsSize] + L"</td>" +
@@ -1274,41 +1316,41 @@ namespace ReportHTML
 			L"<td bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\"><div align=\"center\" id=\"" + id1 + L"\"></td>" +
 			L"<td bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\"><div align=\"center\" id=\"" + id2 + L"\"></td>" +
 			L"</tr>" +
-			L"</table>\n";
+			L"</table>\n");
 	}
 
 
-	void SingleGraph(std::wofstream& ofile, int title_language_id, std::wstring id)
+	void SingleGraph(std::ofstream& ofile, int title_language_id, std::wstring id)
 	{
-		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellspacing=\"1\" cellpadding=\"1\">" +
+		ofile << Formatting::to_utf8(L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellspacing=\"1\" cellpadding=\"1\">" +
 			L"<tr class=\"C7CB\">" +
 			L"<td bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\">" + GLanguageHandler->Text[title_language_id] + L"</td>" +
 			L"</tr>" +
 			L"<tr><td bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\"><div align=\"center\" id=\"" + id + L"\"></td></tr>" +
-			L"</table>\n";
+			L"</table>\n");
 	}
 
 
-	void BuildGraphScript(std::wofstream &ofile, HTMLReportOptions options)
+	void BuildGraphScript(std::ofstream &ofile, HTMLReportOptions options)
 	{
-		ofile << L"<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>" << "\n";
-		ofile << L"<script type=\"text/javascript\">" << "\n";
-		ofile << L"google.charts.load('current', {'packages':['corechart']});" << "\n";
-		ofile << L"google.charts.setOnLoadCallback(drawChart);" << "\n";
+		ofile << Formatting::to_utf8(L"<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>\n");
+		ofile << Formatting::to_utf8(L"<script type=\"text/javascript\">\n");
+		ofile << Formatting::to_utf8(L"google.charts.load('current', {'packages':['corechart']});\n");
+		ofile << Formatting::to_utf8(L"google.charts.setOnLoadCallback(drawChart);\n");
 
-		ofile << L"function drawChart() {" << "\n";
+		ofile << Formatting::to_utf8(L"function drawChart() {\n");
 
 		BuildGraphData(ofile, options);
 
 		BuildGraphCode(ofile, options);
 
-		ofile << L"}" << "\n";
+		ofile << Formatting::to_utf8(L"}\n");
 
-		ofile << L"</script>\n";
+		ofile << Formatting::to_utf8(L"</script>\n");
 	}
 
 
-	void BuildGraphData(std::wofstream &ofile, HTMLReportOptions options)
+	void BuildGraphData(std::ofstream &ofile, HTMLReportOptions options)
 	{
 		for (int t = 0; t < __HTMLLayoutOptionsCount; t++)
 		{
@@ -1342,7 +1384,7 @@ namespace ReportHTML
 	}
 
 
-	void BuildGraphCode(std::wofstream &ofile, HTMLReportOptions options)
+	void BuildGraphCode(std::ofstream &ofile, HTMLReportOptions options)
 	{
 		for (int t = 0; t < __HTMLLayoutOptionsCount; t++)
 		{
@@ -1351,60 +1393,60 @@ namespace ReportHTML
 				switch (t)
 				{
 				case 0:
-					ofile << L"var optionsQI1 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartDD]) + L", 'height' : 200 };" << "\n";
-					ofile << L"var optionsQI2 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartDD]) + L", 'height' : 200 };" << "\n";
+					ofile << Formatting::to_utf8(L"var optionsQI1 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartDD]) + L", 'height' : 200 };\n");
+					ofile << Formatting::to_utf8(L"var optionsQI2 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartDD]) + L", 'height' : 200 };\n");
 
-					ofile << L"var chartQI1 = new google.visualization.PieChart(document.getElementById('chartQuickInfo1'));" << "\n";
-					ofile << L"var chartQI2 = new google.visualization.PieChart(document.getElementById('chartQuickInfo2'));" << "\n";
-					ofile << L"chartQI1.draw(dataQI1, optionsQI1);" << "\n";
-					ofile << L"chartQI2.draw(dataQI2, optionsQI2);" << "\n";
+					ofile << Formatting::to_utf8(L"var chartQI1 = new google.visualization.PieChart(document.getElementById('chartQuickInfo1'));\n");
+					ofile << Formatting::to_utf8(L"var chartQI2 = new google.visualization.PieChart(document.getElementById('chartQuickInfo2'));\n");
+					ofile << Formatting::to_utf8(L"chartQI1.draw(dataQI1, optionsQI1);\n");
+					ofile << Formatting::to_utf8(L"chartQI2.draw(dataQI2, optionsQI2);\n");
 
 					break;
 				case 2:
-					ofile << L"var optionsC1 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartCM]) + L", 'height' : 220 };" << "\n";
-					ofile << L"var optionsC2 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartCM]) + L", 'height' : 220 };" << "\n";
+					ofile << Formatting::to_utf8(L"var optionsC1 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartCM]) + L", 'height' : 220 };\n");
+					ofile << Formatting::to_utf8(L"var optionsC2 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartCM]) + L", 'height' : 220 };\n");
 
-					ofile << L"var chartC1 = new google.visualization.ColumnChart(document.getElementById('chartCategory1'));" << "\n";
-					ofile << L"var chartC2 = new google.visualization.ColumnChart(document.getElementById('chartCategory2'));" << "\n";
+					ofile << Formatting::to_utf8(L"var chartC1 = new google.visualization.ColumnChart(document.getElementById('chartCategory1'));\n");
+					ofile << Formatting::to_utf8(L"var chartC2 = new google.visualization.ColumnChart(document.getElementById('chartCategory2'));\n");
 
-					ofile << L"chartC1.draw(dataC1, optionsC1);" << "\n";
-					ofile << L"chartC2.draw(dataC2, optionsC2);" << "\n";
+					ofile << Formatting::to_utf8(L"chartC1.draw(dataC1, optionsC1);\n");
+					ofile << Formatting::to_utf8(L"chartC2.draw(dataC2, optionsC2);\n");
 
 					break;
 				case 3:
-					ofile << L"var optionsD1 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartCD]) + L", 'height' : 400 };" << "\n";
-					ofile << L"var optionsD2 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartCD]) + L", 'height' : 400 };" << "\n";
+					ofile << Formatting::to_utf8(L"var optionsD1 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartCD]) + L", 'height' : 400 };\n");
+					ofile << Formatting::to_utf8(L"var optionsD2 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartCD]) + L", 'height' : 400 };\n");
 
-					ofile << L"var chartD1 = new google.visualization.ColumnChart(document.getElementById('chartDirectory1'));" << "\n";
-					ofile << L"var chartD2 = new google.visualization.ColumnChart(document.getElementById('chartDirectory2'));" << "\n";
+					ofile << Formatting::to_utf8(L"var chartD1 = new google.visualization.ColumnChart(document.getElementById('chartDirectory1'));\n");
+					ofile << Formatting::to_utf8(L"var chartD2 = new google.visualization.ColumnChart(document.getElementById('chartDirectory2'));\n");
 
-					ofile << L"chartD1.draw(dataD1, optionsD1);" << "\n";
-					ofile << L"chartD2.draw(dataD2, optionsD2);" << "\n";
+					ofile << Formatting::to_utf8(L"chartD1.draw(dataD1, optionsD1);\n");
+					ofile << Formatting::to_utf8(L"chartD2.draw(dataD2, optionsD2);\n");
 
 					break;
 				case 4:
 
-					ofile << L"var optionsM1 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartXM]) + L", 'height' : 220 };" << "\n";
-					ofile << L"var optionsM2 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartXM]) + L", 'height' : 220 };" << "\n";
+					ofile << Formatting::to_utf8(L"var optionsM1 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartXM]) + L", 'height' : 220 };\n");
+					ofile << Formatting::to_utf8(L"var optionsM2 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartXM]) + L", 'height' : 220 };\n");
 
-					ofile << L"var chartM1 = new google.visualization.ColumnChart(document.getElementById('chartMagnitude1'));" << "\n";
-					ofile << L"var chartM2 = new google.visualization.ColumnChart(document.getElementById('chartMagnitude2'));" << "\n";
+					ofile << Formatting::to_utf8(L"var chartM1 = new google.visualization.ColumnChart(document.getElementById('chartMagnitude1'));\n");
+					ofile << Formatting::to_utf8(L"var chartM2 = new google.visualization.ColumnChart(document.getElementById('chartMagnitude2'));\n");
 
-					ofile << L"chartM1.draw(dataM1, optionsM1);" << "\n";
-					ofile << L"chartM2.draw(dataM2, optionsM2);" << "\n";
+					ofile << Formatting::to_utf8(L"chartM1.draw(dataM1, optionsM1);\n");
+					ofile << Formatting::to_utf8(L"chartM2.draw(dataM2, optionsM2);\n");
 
 
 					break;
 				case 7:
 
-					ofile << L"var optionsFD1 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartFD]) + L", 'height' : 400 };" << "\n";
-					ofile << L"var optionsFD2 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartFD]) + L", 'height' : 400 };" << "\n";
+					ofile << Formatting::to_utf8(L"var optionsFD1 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartFD]) + L", 'height' : 400 };\n");
+					ofile << Formatting::to_utf8(L"var optionsFD2 = { 'legend' : 'none', 'width' : " + std::to_wstring(__ReportSizes[__rsChartFD]) + L", 'height' : 400 };\n");
 
-					ofile << L"var chartFD1 = new google.visualization.ColumnChart(document.getElementById('chartFileDates1'));" << "\n";
-					ofile << L"var chartFD2 = new google.visualization.ColumnChart(document.getElementById('chartFileDates2'));" << "\n";
+					ofile << Formatting::to_utf8(L"var chartFD1 = new google.visualization.ColumnChart(document.getElementById('chartFileDates1'));\n");
+					ofile << Formatting::to_utf8(L"var chartFD2 = new google.visualization.ColumnChart(document.getElementById('chartFileDates2'));\n");
 					
-					ofile << L"chartFD1.draw(dataFD1, optionsFD1);" << "\n";
-					ofile << L"chartFD2.draw(dataFD2, optionsFD2);" << "\n";
+					ofile << Formatting::to_utf8(L"chartFD1.draw(dataFD1, optionsFD1);\n");
+					ofile << Formatting::to_utf8(L"chartFD2.draw(dataFD2, optionsFD2);\n");
 
 					break;
 				}
@@ -1413,93 +1455,93 @@ namespace ReportHTML
 	}
 
 
-	void BuildGraphDataQuickInfo(std::wofstream &ofile)
+	void BuildGraphDataQuickInfo(std::ofstream &ofile)
 	{
-		ofile << L"var dataQI1 = google.visualization.arrayToDataTable([" << "\n";
-		ofile << L"['Disk space', '%'], ['Disk Free', " + std::to_wstring(GScanDetails->DiskStats.DriveSpaceFree) + L"], ['Disk Used', " + std::to_wstring(GScanDetails->DiskStats.DriveSpaceUsed) + L"] ]);" << "\n";
+		ofile << Formatting::to_utf8(L"var dataQI1 = google.visualization.arrayToDataTable([\n");
+		ofile << Formatting::to_utf8(L"['Disk space', '%'], ['Disk Free', " + std::to_wstring(GScanDetails->DiskStats.DriveSpaceFree) + L"], ['Disk Used', " + std::to_wstring(GScanDetails->DiskStats.DriveSpaceUsed) + L"] ]);\n");
 
-		ofile << L"var dataQI2 = google.visualization.arrayToDataTable([" << "\n";
-		ofile << L"['Disk space', '%'], ['Disk', " + std::to_wstring(GScanDetails->DiskStats.DriveSpaceTotal - GScanDetails->Data.TotalSize) + L"], ['Scan', " + std::to_wstring(GScanDetails->Data.TotalSize) + L"] ]);" << "\n";
+		ofile << Formatting::to_utf8(L"var dataQI2 = google.visualization.arrayToDataTable([\n");
+		ofile << Formatting::to_utf8(L"['Disk space', '%'], ['Disk', " + std::to_wstring(GScanDetails->DiskStats.DriveSpaceTotal - GScanDetails->Data.TotalSize) + L"], ['Scan', " + std::to_wstring(GScanDetails->Data.TotalSize) + L"] ]);\n");
 	}
 
 
-	void BuildGraphDataCategory(std::wofstream &ofile)
+	void BuildGraphDataCategory(std::ofstream &ofile)
 	{
-		ofile << L"var dataC1 = new google.visualization.arrayToDataTable([ ['Category', 'Quantity', { role: 'style' }]," << "\n";
+		ofile << Formatting::to_utf8(L"var dataC1 = new google.visualization.arrayToDataTable([ ['Category', 'Quantity', { role: 'style' }],\n");
 
 		for (int t = 1; t < __FileCategoriesCount; t++)
 		{
-			ofile << L"['" << GLanguageHandler->TypeDescriptions[t] << L"', " << GScanDetails->Data.ExtensionSpread[t].Count << L", '#" << Convert::WebColour(GSettings->FileCategoryColors[t]) << L"']," << "\n";
+			ofile << Formatting::to_utf8(L"['" + GLanguageHandler->TypeDescriptions[t] + L"', " + std::to_wstring(GScanDetails->Data.ExtensionSpread[t].Count) + L", '#" + Convert::WebColour(GSettings->FileCategoryColors[t]) + L"'],\n");
 		}
 
-		ofile << L"]);" << "\n";
+		ofile << Formatting::to_utf8(L"]);\n");
 
-		ofile << L"var dataC2 = new google.visualization.arrayToDataTable([ ['Category', 'Size', { role: 'style' }]," << "\n";
+		ofile << Formatting::to_utf8(L"var dataC2 = new google.visualization.arrayToDataTable([ ['Category', 'Size', { role: 'style' }],\n");
 
 		for (int t = 1; t < __FileCategoriesCount; t++)
 		{
-			ofile << L"['" << GLanguageHandler->TypeDescriptions[t] << L"', " << GScanDetails->Data.ExtensionSpread[t].Size << L", '#" << Convert::WebColour(GSettings->FileCategoryColors[t]) << L"']," << "\n";
+			ofile << Formatting::to_utf8(L"['" + GLanguageHandler->TypeDescriptions[t] + L"', " + std::to_wstring(GScanDetails->Data.ExtensionSpread[t].Size) + L", '#" + Convert::WebColour(GSettings->FileCategoryColors[t]) + L"'],\n");
 		}
 
-		ofile << L"]);\n";
+		ofile << Formatting::to_utf8(L"]);\n");
 	}
 
 
-	void BuildGraphDataDirectory(std::wofstream &ofile)
+	void BuildGraphDataDirectory(std::ofstream &ofile)
 	{
 		int colour;
 
-		ofile << L"var dataD1 = new google.visualization.arrayToDataTable([ ['Folder', 'Quantity', { role: 'style' }]," << "\n";
+		ofile << Formatting::to_utf8(L"var dataD1 = new google.visualization.arrayToDataTable([ ['Folder', 'Quantity', { role: 'style' }],\n");
 
 		for (int t = 0; t < GScanDetails->Data.RootFolders.size(); t++)
 		{
 			colour = __SpectrumColours[t % __SpectrumMod];
 
-			ofile << L"['" << GScanDetails->Data.RootFolders[t].Name << L"', " << GScanDetails->Data.RootFolders[t].Count << L", '#" << Convert::WebColour(colour) << L"']," << "\n";
+			ofile << Formatting::to_utf8(L"[\"" + GScanDetails->Data.RootFolders[t].Name + L"\", " + std::to_wstring(GScanDetails->Data.RootFolders[t].Count) + L", '#" + Convert::WebColour(colour) + L"'],\n");
 		}
 
-		ofile << L"]);" << "\n";
+		ofile << Formatting::to_utf8(L"]);\n");
 
-		ofile << L"var dataD2 = new google.visualization.arrayToDataTable([ ['Folder', 'Size', { role: 'style' }]," << "\n";
+		ofile << Formatting::to_utf8(L"var dataD2 = new google.visualization.arrayToDataTable([ ['Folder', 'Size', { role: 'style' }],\n");
 
 		for (int t = 0; t < GScanDetails->Data.RootFolders.size(); t++)
 		{
 			colour = __SpectrumColours[t % __SpectrumMod];
 
-			ofile << L"['" << GScanDetails->Data.RootFolders[t].Name << L"', " << GScanDetails->Data.RootFolders[t].Size << L", '#" << Convert::WebColour(colour) << L"']," << "\n";
+			ofile << Formatting::to_utf8(L"[\"" + GScanDetails->Data.RootFolders[t].Name + L"\", " + std::to_wstring(GScanDetails->Data.RootFolders[t].Size) + L", '#" + Convert::WebColour(colour) + L"'],\n");
 		}
 
-		ofile << L"]);\n";
+		ofile << Formatting::to_utf8(L"]);\n");
 	}
 
 
-	void BuildGraphDataMagnitude(std::wofstream &ofile)
+	void BuildGraphDataMagnitude(std::ofstream &ofile)
 	{
-		ofile << L"var dataM1 = new google.visualization.arrayToDataTable([ ['Range', 'Quantity', { role: 'style' }]," << "\n";
+		ofile << Formatting::to_utf8(L"var dataM1 = new google.visualization.arrayToDataTable([ ['Range', 'Quantity', { role: 'style' }],\n");
 
 		for (int t = 0; t < __MagnitudesCount; t++)
 		{
-			ofile << L"['" << __MagniLabels[t] << L"', " << GScanDetails->Data.Magnitude[t].Count << L", '#" << Convert::WebColour(__MagniColours[t]) << L"']," << "\n";
+			ofile << Formatting::to_utf8(L"['" + __MagniLabels[t] + L"', " + std::to_wstring(GScanDetails->Data.Magnitude[t].Count) + L", '#" + Convert::WebColour(__MagniColours[t]) + L"'],\n");
 		}
 
-		ofile << L"]);" << "\n";
+		ofile << Formatting::to_utf8(L"]);\n");
 
-		ofile << L"var dataM2 = new google.visualization.arrayToDataTable([ ['Range', 'Size', { role: 'style' }]," << "\n";
+		ofile << Formatting::to_utf8(L"var dataM2 = new google.visualization.arrayToDataTable([ ['Range', 'Size', { role: 'style' }],\n");
 
 		for (int t = 0; t < __MagnitudesCount; t++)
 		{
-			ofile << L"['" << __MagniLabels[t] << L"', " << GScanDetails->Data.Magnitude[t].Size << L", '#" << Convert::WebColour(__MagniColours[t]) << L"']," << "\n";
+			ofile << Formatting::to_utf8(L"['" + __MagniLabels[t] + L"', " + std::to_wstring(GScanDetails->Data.Magnitude[t].Size) + L", '#" + Convert::WebColour(__MagniColours[t]) + L"'],\n");
 		}
 
-		ofile << L"]);\n";
+		ofile << Formatting::to_utf8(L"]);\n");
 	}
 
 
-	void BuildGraphDataFileDates(std::wofstream &ofile)
+	void BuildGraphDataFileDates(std::ofstream &ofile)
 	{
 		int colour;
 
-		ofile << L"var dataFD1 = new google.visualization.arrayToDataTable([ ['Year', 'Quantity', { role: 'style' }]," << "\n";
+		ofile << Formatting::to_utf8(L"var dataFD1 = new google.visualization.arrayToDataTable([ ['Year', 'Quantity', { role: 'style' }],\n");
 
 		for (int t = 0; t < GScanDetails->Data.FileDates.size(); t++)
 		{
@@ -1507,13 +1549,13 @@ namespace ReportHTML
 			{
 				colour = __SpectrumColours[t % __SpectrumMod];
 
-				ofile << L"['" << GScanDetails->Data.FileDates[t].Year << L"', " << GScanDetails->Data.FileDates[t].Count << L", '#" << Convert::WebColour(colour) << L"']," << "\n";
+				ofile << Formatting::to_utf8(L"['" + std::to_wstring(GScanDetails->Data.FileDates[t].Year) + L"', " + std::to_wstring(GScanDetails->Data.FileDates[t].Count) + L", '#" + Convert::WebColour(colour) + L"'],\n");
 			}
 		}
 
-		ofile << L"]);" << "\n";
+		ofile << Formatting::to_utf8(L"]);\n");
 
-		ofile << L"var dataFD2 = new google.visualization.arrayToDataTable([ ['Year', 'Size', { role: 'style' }]," << "\n";
+		ofile << Formatting::to_utf8(L"var dataFD2 = new google.visualization.arrayToDataTable([ ['Year', 'Size', { role: 'style' }],\n");
 
 		for (int t = 0; t < GScanDetails->Data.FileDates.size(); t++)
 		{
@@ -1521,87 +1563,87 @@ namespace ReportHTML
 			{
 				colour = __SpectrumColours[t % __SpectrumMod];
 
-				ofile << L"['" << GScanDetails->Data.FileDates[t].Year << L"', " << GScanDetails->Data.FileDates[t].Size << L", '#" << Convert::WebColour(colour) << L"']," << "\n";
+				ofile << Formatting::to_utf8(L"['" + std::to_wstring(GScanDetails->Data.FileDates[t].Year) + L"', " + std::to_wstring(GScanDetails->Data.FileDates[t].Size) + L", '#" + Convert::WebColour(colour) + L"'],\n");
 			}
 		}
 
-		ofile << L"]);" << "\n";
+		ofile << Formatting::to_utf8(L"]);\n");
 	}
 
 
-	void FourColumnTableDoubleTitleHeader(std::wofstream& ofile, std::wstring anchor, std::wstring title_top, std::wstring title_bottom, std::wstring col1, std::wstring col2)
+	void FourColumnTableDoubleTitleHeader(std::ofstream& ofile, std::wstring anchor, std::wstring title_top, std::wstring title_bottom, std::wstring col1, std::wstring col2)
 	{
-		ofile << L"<table align=\"center\" width=\"" << std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" +
+		ofile << Formatting::to_utf8(L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" +
 			L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\"><td colspan=\"4\" height=\"13\"><a name=\"" + anchor + L"\" /><b>" + title_top + L"</b></td></tr>" +
 			L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\">" +
 			L"<td height=\"13\" width=\"910\"><b>" + title_bottom + L"</b></td>" +
 			L"<td height=\"13\" width=\"160\" class=\"XCB\">&nbsp;</td>" +
 			L"<td height=\"13\" width=\"90\" class=\"XCB\">" + col1 + L"</td>" +
 			L"<td height=\"13\" width=\"90\" class=\"XCB\">" + col2 + L"</td>" +
-			L"</tr>" << "\n";
+			L"</tr>\n");
 	}
 
 
-	void FourColumnTableRow(std::wofstream& ofile, int row, std::wstring col1, std::wstring col3, std::wstring col4, int graph_colour, float graph)
+	void FourColumnTableRow(std::ofstream& ofile, int row, std::wstring col1, std::wstring col3, std::wstring col4, int graph_colour, float graph)
 	{
 		if (row % 2 != 0)
 		{
-			ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\">" << "\n";
+			ofile << Formatting::to_utf8(L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\">\n");
 		}
 		else
 		{
-			ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[10]) + L"\">" << "\n";
+			ofile << Formatting::to_utf8(L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[10]) + L"\">\n");
 		}
 
-		ofile << L"<td height=\"13\">" + col1 + L"</td>" << "\n";
-		ofile << L"<td height=\"13\">" << "\n";
-		ofile << L"<table width=\"" + std::to_wstring(graph) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(graph_colour) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" << "\n";
-		ofile << L"<tr><td></td></tr>" << "\n";
-		ofile << L"</table>" << "\n";
-		ofile << L"</td>" << "\n";
-		ofile << L"<td height=\"13\" align=\"right\">" + col3 + L"</td>" << "\n";
-		ofile << L"<td height=\"13\" align=\"right\">" + col4 + L"</td>" << "\n";
-		ofile << L"</tr>" << "\n";
+		ofile << Formatting::to_utf8(L"<td height=\"13\">" + col1 + L"</td>\n");
+		ofile << Formatting::to_utf8(L"<td height=\"13\">\n");
+		ofile << Formatting::to_utf8(L"<table width=\"" + std::to_wstring(graph) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(graph_colour) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">\n");
+		ofile << Formatting::to_utf8(L"<tr><td></td></tr>\n");
+		ofile << Formatting::to_utf8(L"</table>\n");
+		ofile << Formatting::to_utf8(L"</td>\n");
+		ofile << Formatting::to_utf8(L"<td height=\"13\" align=\"right\">" + col3 + L"</td>\n");
+		ofile << Formatting::to_utf8(L"<td height=\"13\" align=\"right\">" + col4 + L"</td>\n");
+		ofile << Formatting::to_utf8(L"</tr>\n");
 	}
 
 
-	void FourColumnTableDoubleTitleHeaderNoGraph(std::wofstream& ofile, std::wstring anchor, std::wstring title_top, std::wstring title_bottom, std::wstring col1, std::wstring col2, std::wstring col3)
+	void FourColumnTableDoubleTitleHeaderNoGraph(std::ofstream& ofile, std::wstring anchor, std::wstring title_top, std::wstring title_bottom, std::wstring col1, std::wstring col2, std::wstring col3)
 	{
-		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" << "\n";
-		ofile << L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\">" << "\n";
-		ofile << L"<td colspan=\"4\" height=\"13\"><a name=\"" + anchor + L"\" /><b>" + title_top + L"</b></td>" << "\n";
-		ofile << L"</tr>" << "\n";
-		ofile << L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\">" << "\n";
-		ofile << L"<td height=\"13\" width=\"980\"><b>" + title_bottom + L"</b></td>" << "\n";
-		ofile << L"<td height=\"13\" width=\"90\" align=\"center\"><b>" + col1 + L"</b></td>" << "\n";
-		ofile << L"<td height=\"13\" width=\"90\" align=\"center\"><b>" + col2 + L"</b></td>" << "\n";
-		ofile << L"<td height=\"13\" width=\"90\" align=\"center\"><b>" + col3 + L"</b></td>" << "\n";
+		ofile << Formatting::to_utf8(L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n");
+		ofile << Formatting::to_utf8(L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\">\n");
+		ofile << Formatting::to_utf8(L"<td colspan=\"4\" height=\"13\"><a name=\"" + anchor + L"\" /><b>" + title_top + L"</b></td>\n");
+		ofile << Formatting::to_utf8(L"</tr>\n");
+		ofile << Formatting::to_utf8(L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\">\n");
+		ofile << Formatting::to_utf8(L"<td height=\"13\" width=\"980\"><b>" + title_bottom + L"</b></td>\n");
+		ofile << Formatting::to_utf8(L"<td height=\"13\" width=\"90\" align=\"center\"><b>" + col1 + L"</b></td>\n");
+		ofile << Formatting::to_utf8(L"<td height=\"13\" width=\"90\" align=\"center\"><b>" + col2 + L"</b></td>\n");
+		ofile << Formatting::to_utf8(L"<td height=\"13\" width=\"90\" align=\"center\"><b>" + col3 + L"</b></td>\n");
 	}
 
 
-	void FourColumnTableDoubleTitleNoGraphRow(std::wofstream& ofile, int row, std::wstring col1, std::wstring col2, std::wstring col3, std::wstring col4)
+	void FourColumnTableDoubleTitleNoGraphRow(std::ofstream& ofile, int row, std::wstring col1, std::wstring col2, std::wstring col3, std::wstring col4)
 	{
 		if (row % 2 != 0)
 		{
-			ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\">" << "\n";
+			ofile << Formatting::to_utf8(L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\">\n");
 		}
 		else
 		{
-			ofile << L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[10]) + L"\">" << "\n";
+			ofile << Formatting::to_utf8(L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[10]) + L"\">\n");
 		}
 
-		ofile << L"<td height=\"13\">" + col1 + L"</td>" << "\n";
-		ofile << L"<td height=\"13\" align=\"right\">" + col2 + L"</td>" << "\n";
-		ofile << L"<td height=\"13\" align=\"right\">" + col3 + L"</td>" << "\n";
-		ofile << L"<td height=\"13\" align=\"left\">" + col4 + L"</td>" << "\n";
-		ofile << L"</tr>" << "\n";
+		ofile << Formatting::to_utf8(L"<td height=\"13\">" + col1 + L"</td>\n");
+		ofile << Formatting::to_utf8(L"<td height=\"13\" align=\"right\">" + col2 + L"</td>\n");
+		ofile << Formatting::to_utf8(L"<td height=\"13\" align=\"right\">" + col3 + L"</td>\n");
+		ofile << Formatting::to_utf8(L"<td height=\"13\" align=\"left\">" + col4 + L"</td>\n");
+		ofile << Formatting::to_utf8(L"</tr>\n");
 	}
 
 
-	void SevenColumnTableHeader(std::wofstream& ofile, std::wstring anchor, std::wstring title)
+	void SevenColumnTableHeader(std::ofstream& ofile, std::wstring anchor, std::wstring title)
 	{
-		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" << "\n";
-		ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\">" +
+		ofile << Formatting::to_utf8(L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n");
+		ofile << Formatting::to_utf8(L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\">" +
 			L"<td width=\"150\" height=\"13\" class=\"C7G\"> <a name=\"" + anchor + L"\" /><b>" + title + L"</b></td>" +
 			L"<td width=\"90\" height=\"13\" class=\"C7CB\">" + GLanguageHandler->Text[rsQuantity] + L"</td>" +
 			L"<td width=\"80\" height=\"13\" class=\"C7CB\">" + GLanguageHandler->Text[rsAsPercent] + L"</td>" +
@@ -1609,81 +1651,78 @@ namespace ReportHTML
 			L"<td width=\"90\" height=\"13\" class=\"C7CB\">" + GLanguageHandler->Text[rsSizeOfFiles] + L"</td>" +
 			L"<td width=\"80\" height=\"13\" class=\"C7CB\">" + GLanguageHandler->Text[rsAsPercent] + L"</td>" +
 			L"<td width=\"380\" height=\"20\">&nbsp;</td>" +
-			L"</tr>" << "\n";
+			L"</tr>\n");
 	}
 
 
-	void SevenColumnTableRow(std::wofstream& ofile, int row, std::wstring caption, std::wstring col1, std::wstring col2, std::wstring col3, std::wstring col4, int graph_colour, float graph_left, float graph_right)
+	void SevenColumnTableRow(std::ofstream& ofile, int row, std::wstring caption, std::wstring col1, std::wstring col2, std::wstring col3, std::wstring col4, int graph_colour, float graph_left, float graph_right)
 	{
 		if (row % 2 != 0)
 		{
-			ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\">" << "\n";
+			ofile << Formatting::to_utf8(L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\">\n");
 		}
 		else
 		{
-			ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[10]) + L"\">" << "\n";
+			ofile << Formatting::to_utf8(L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[10]) + L"\">\n");
 		}
 
-		ofile << L"<td class=\"C4L\">" + caption + L"</td>" << "\n";
-		ofile << L"<td class=\"C4G\" align=\"right\">" + col1 + L"</td>" << "\n";
-		ofile << L"<td class=\"C4G\" align=\"right\">" + col2 + L"</td>" << "\n";
-		ofile << L"<td> " <<
-			L"<table width=\"" << std::to_wstring((int)graph_left) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(graph_colour) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" +
-			L"<tr><td></td></tr>" <<
-			L"</table>" <<
-			L"</td>" << "\n";
-		ofile << L"<td class=\"C4G\" align=\"right\">" + col3 + L"</td>" << "\n";
-		ofile << L"<td class=\"C4G\" align=\"right\">" + col4 + L"</td>" +
-			L"<td>" <<
-			L"<table width=\"" << std::to_wstring((int)graph_right) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(graph_colour) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" +
-			L"<tr><td></td></tr>" <<
-			L"</table>" <<
-			L"</td>" << "\n";
-		ofile << L"</tr>" << "\n";
+		ofile << Formatting::to_utf8(L"<td class=\"C4L\">" + caption + L"</td>\n");
+		ofile << Formatting::to_utf8(L"<td class=\"C4G\" align=\"right\">" + col1 + L"</td>\n");
+		ofile << Formatting::to_utf8(L"<td class=\"C4G\" align=\"right\">" + col2 + L"</td>\n");
+		ofile << Formatting::to_utf8(L"<td><table width=\"" + std::to_wstring((int)graph_left) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(graph_colour) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" +
+			L"<tr><td></td></tr></table></td>\n");
+		ofile << Formatting::to_utf8(L"<td class=\"C4G\" align=\"right\">" + col3 + L"</td>\n");
+		ofile << Formatting::to_utf8(L"<td class=\"C4G\" align=\"right\">" + col4 + L"</td>" +
+			L"<td>" +
+			L"<table width=\"" + std::to_wstring((int)graph_right) + L"\" border=\"0\" bgcolor=\"#" + Convert::WebColour(graph_colour) + L"\" height=\"8\" cellpadding=\"0\" cellspacing=\"0\">" +
+			L"<tr><td></td></tr>" +
+			L"</table>" +
+			L"</td>\n");
+		ofile << Formatting::to_utf8(L"</tr>\n");
 	}
 
 
-	void SevenColumnTableRowBlank(std::wofstream& ofile, int row, std::wstring caption)
+	void SevenColumnTableRowBlank(std::ofstream& ofile, int row, std::wstring caption)
 	{
 		if (row % 2 != 0)
 		{
-			ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\">" << "\n";
+			ofile << Formatting::to_utf8(L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[9]) + L"\">\n");
 		}
 		else
 		{
-			ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[10]) + L"\">" << "\n";
+			ofile << Formatting::to_utf8(L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[10]) + L"\">\n");
 		}
 
-		ofile << L"<td class=\"C4L\">" + caption + L"</td>" << "\n";
-		ofile << L"<td class=\"C4C\" align=\"right\">&nbsp;</td>" << "\n";
-		ofile << L"<td class=\"C4C\" align=\"right\">&nbsp;</td>" << "\n";
-		ofile << L"<td>&nbsp;</td>" << "\n";
-		ofile << L"<td class=\"C4G\" align=\"right\">&nbsp;</td>" << "\n";
-		ofile << L"<td class=\"C4C\" align=\"right\">&nbsp;</td>" << "\n";
-		ofile << L"<td>&nbsp;</td></tr>" << "\n";
+		ofile << Formatting::to_utf8(L"<td class=\"C4L\">" + caption + L"</td>\n");
+		ofile << Formatting::to_utf8(L"<td class=\"C4C\" align=\"right\">&nbsp;</td>\n");
+		ofile << Formatting::to_utf8(L"<td class=\"C4C\" align=\"right\">&nbsp;</td>\n");
+		ofile << Formatting::to_utf8(L"<td>&nbsp;</td>\n");
+		ofile << Formatting::to_utf8(L"<td class=\"C4G\" align=\"right\">&nbsp;</td>\n");
+		ofile << Formatting::to_utf8(L"<td class=\"C4C\" align=\"right\">&nbsp;</td>\n");
+		ofile << Formatting::to_utf8(L"<td>&nbsp;</td></tr>\n");
 	}
 
 
-	void SevenColumnTableEnd(std::wofstream& ofile)
+	void SevenColumnTableEnd(std::ofstream& ofile)
 	{
-		ofile << L"</table>\n";
+		ofile << Formatting::to_utf8(L"</table>\n");
 	}
 
 
-	void SevenColumnTableDoubleTitleHeader(std::wofstream& ofile, std::wstring anchor, std::wstring title_top, std::wstring title_bottom)
+	void SevenColumnTableDoubleTitleHeader(std::ofstream& ofile, std::wstring anchor, std::wstring title_top, std::wstring title_bottom)
 	{
-		ofile << L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">" << "\n";
-		ofile << L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\">" << "\n";
-		ofile << L"<td colspan=\"7\" width=\"387\" height=\"20\"><a name=\"" + anchor + L"\"</a><b>" + title_top + L"</b></td>" << "\n";
-		ofile << L"</tr>" << "\n";
-		ofile << L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\">" << "\n";
-		ofile << L"<td width=\"150\" height=\"13\" class=\"C7G\"><a name=\"op3\" /><b>" + GLanguageHandler->Text[rsYear] + L"</b></td>" << "\n";
-		ofile << L"<td width=\"90\" height=\"13\" class=\"C7G\"><div align=\"center\"><b>" + GLanguageHandler->Text[rsQuantity] + L"</b></div></td>" << "\n";
-		ofile << L"<td width=\"80\" height=\"13\" class=\"C7G\"><div align=\"center\"><b>" + GLanguageHandler->Text[rsAsPercent] + L"</b></div></td>" << "\n";
-		ofile << L"<td width=\"380\" height=\"13\">&nbsp;</td>" << "\n";
-		ofile << L"<td width=\"90\" height=\"13\" class=\"C7G\"><div align=\"center\"><b>" + GLanguageHandler->Text[rsSizeOfFiles] + L"</b></div></td>" << "\n";
-		ofile << L"<td width=\"80\" height=\"13\" class=\"C7G\"><div align=\"center\"><b>" + GLanguageHandler->Text[rsAsPercent] + L"</b></div></td>" << "\n";
-		ofile << L"<td width=\"380\" height=\"20\">&nbsp;</td>" << "\n";
-		ofile << L"</tr>\n";
+		ofile << Formatting::to_utf8(L"<table align=\"center\" width=\"" + std::to_wstring(__ReportSizes[__rsTableWidth]) + L"\" border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n");
+		ofile << Formatting::to_utf8(L"<tr class=\"C7G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\">\n");
+		ofile << Formatting::to_utf8(L"<td colspan=\"7\" width=\"387\" height=\"20\"><a name=\"" + anchor + L"\"</a><b>" + title_top + L"</b></td>\n");
+		ofile << Formatting::to_utf8(L"</tr>\n");
+		ofile << Formatting::to_utf8(L"<tr bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[5]) + L"\">\n");
+		ofile << Formatting::to_utf8(L"<td width=\"150\" height=\"13\" class=\"C7G\"><a name=\"op3\" /><b>" + GLanguageHandler->Text[rsYear] + L"</b></td>\n");
+		ofile << Formatting::to_utf8(L"<td width=\"90\" height=\"13\" class=\"C7G\"><div align=\"center\"><b>" + GLanguageHandler->Text[rsQuantity] + L"</b></div></td>\n");
+		ofile << Formatting::to_utf8(L"<td width=\"80\" height=\"13\" class=\"C7G\"><div align=\"center\"><b>" + GLanguageHandler->Text[rsAsPercent] + L"</b></div></td>\n");
+		ofile << Formatting::to_utf8(L"<td width=\"380\" height=\"13\">&nbsp;</td>\n");
+		ofile << Formatting::to_utf8(L"<td width=\"90\" height=\"13\" class=\"C7G\"><div align=\"center\"><b>" + GLanguageHandler->Text[rsSizeOfFiles] + L"</b></div></td>\n");
+		ofile << Formatting::to_utf8(L"<td width=\"80\" height=\"13\" class=\"C7G\"><div align=\"center\"><b>" + GLanguageHandler->Text[rsAsPercent] + L"</b></div></td>\n");
+		ofile << Formatting::to_utf8(L"<td width=\"380\" height=\"20\">&nbsp;</td>\n");
+		ofile << Formatting::to_utf8(L"</tr>\n");
 	}
 };

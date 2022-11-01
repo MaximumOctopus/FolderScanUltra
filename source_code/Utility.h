@@ -9,7 +9,6 @@
 // 
 // 
 
-
 #pragma once
 
 
@@ -18,26 +17,26 @@
 
 namespace Utility
 {
-    std::wstring CurrentYear();
-	int CurrentYearI();
+	[[nodiscard]] std::wstring CurrentYear();
+	[[nodiscard]] int CurrentYearI();
 
-	std::wstring DateTime(int);
-	std::wstring GetDate(DateTimeFormat);
-	std::wstring GetTime(DateTimeFormat);
-	int TodayAsInteger();
+	[[nodiscard]] std::wstring DateTime(int);
+	[[nodiscard]] std::wstring GetDate(DateTimeFormat);
+	[[nodiscard]] std::wstring GetTime(DateTimeFormat);
+	[[nodiscard]] int TodayAsInteger();
 	
-	std::wstring GetMD5(std::wstring);
-	std::wstring GetFileExtension(const std::wstring &);
-	std::wstring ProcessFileName(const std::wstring &);
-	std::wstring ReplaceString(const std::wstring, const std::wstring&, const std::wstring&);
-	std::wstring SplitFilename(const std::wstring&);
-	std::wstring WebFileLink(const std::wstring);
+	[[nodiscard]] std::wstring GetMD5(std::wstring);
+	[[nodiscard]] std::wstring GetFileExtension(const std::wstring &);
+	[[nodiscard]] std::wstring ProcessFileName(const std::wstring &);
+	[[nodiscard]] std::wstring ReplaceString(const std::wstring, const std::wstring&, const std::wstring&);
+	[[nodiscard]] std::wstring SplitFilename(const std::wstring&);
+	[[nodiscard]] std::wstring WebFileLink(const std::wstring);
 
-	std::wstring BoolToString(bool);
-	bool StringToBool(wchar_t);
-	int OptionToInt(wchar_t);
+	[[nodiscard]] std::wstring BoolToString(bool);
+	[[nodiscard]] bool StringToBool(wchar_t);
+	[[nodiscard]] int OptionToInt(wchar_t);
 
-	bool IsTestCharacter(wchar_t);
+	[[nodiscard]] bool IsTestCharacter(wchar_t);
 
-	std::wstring LastFolder(const std::wstring&);
+	[[nodiscard]] std::wstring LastFolder(const std::wstring&);
 }

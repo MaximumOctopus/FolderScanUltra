@@ -9,7 +9,6 @@
 // 
 // 
 
-
 #pragma once
 
 
@@ -37,5 +36,5 @@ public:
     bool InstallationCheck();
 	bool CheckFolderStructure();
 	void UpdateDriveDetails(const std::wstring);
-	std::wstring GetUsersPath(const std::wstring);
+    [[nodiscard]] std::wstring GetUsersPath(const std::wstring);
 };

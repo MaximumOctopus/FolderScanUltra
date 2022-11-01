@@ -9,7 +9,6 @@
 // 
 // 
 
-
 #include <iostream>
 
 #include "FileExtensionHandler.h"
@@ -40,15 +39,18 @@ namespace GlobalObjects
 
 		if (GSettings->System.Loaded)
 		{
+			GSettings->Optimisations.UseFastAnalysis = GParameterHandler->Optimisations.UseFastAnalysis;
+			GSettings->Optimisations.GetUserDetails = GParameterHandler->Optimisations.GetUserDetails;
+
 			GLanguageHandler = new LanguageHandler(GSystemGlobal->AppPath, GSettings->System.CurrentLanguage);
 
 			if (GLanguageHandler->LanguageLoadOK)
 			{
 				GFileExtensionHandler = new FileExtensionHandler();
 
-				GScanDetails = new ScanDetails(GParameterHandler->GetParameter(0));
+				GScanDetails = new ScanDetails(GParameterHandler->GetScanFolder());
 
-				if (GParameterHandler->FindParameter(L"/o") && !GParameterHandler->FindParameter(L"/test"))
+				if (GParameterHandler->FindParameter(kNoOutput) && !GParameterHandler->FindParameter(kTest))
 				{
 					std::wcout.setstate(std::ios_base::failbit);
 				}

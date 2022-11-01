@@ -9,6 +9,7 @@
 // 
 // 
 
+#include <iostream>
 
 #include "Constants.h"
 #include "ParameterHandler.h"
@@ -28,7 +29,6 @@
 #include "ReportXinorbis.h"
 #include "ReportXinorbisReportOptions.h"
 #include "Utility.h"
-#include <iostream>
 
 
 extern ParameterHandler* GParameterHandler;
@@ -40,31 +40,27 @@ namespace ReportHandler
 	{
 		int reportCount = 0;
 
-		std::wcout << "\n";
-
 		for (int t = 1; t < GParameterHandler->Count(); t++)
 		{
-			ReportType report_type = GParameterHandler->IsReport(t);
-
-			if (report_type != ReportType::Error)
+			ParameterData pd = GParameterHandler->GetParameter(t);
+			
+			if (pd.IsReport)
 			{
-				ParameterDetails parameter_details = GParameterHandler->ParametersForReport(t, report_type);
+				std::wstring FileName = Utility::ProcessFileName(pd.FileName);
 
-				parameter_details.Value = Utility::ProcessFileName(parameter_details.Value);
-
-				switch (parameter_details.Type)
+				switch (pd.Parameter)
 				{
-				case ReportType::CSV:
+				case ParameterOption::CSVReport:
 				{
 					CSVReportOptions trOptions;
 
-					trOptions.FileName = parameter_details.Value;
+					trOptions.FileName = FileName;
 					trOptions.Category = -1;
 					trOptions.Separator = 0; // comma
-					trOptions.Titles = Utility::StringToBool(parameter_details.Options[1]);
-					trOptions.Units = Utility::OptionToInt(parameter_details.Options[2]);
+					trOptions.Titles = Utility::StringToBool(pd.ReportOptions[1]);
+					trOptions.Units = Utility::OptionToInt(pd.ReportOptions[2]);
 
-					if (parameter_details.Options[0] == L'0')
+					if (pd.ReportOptions[0] == L'0')
 					{
 						ReportCSV::Summary(trOptions);
 					}
@@ -77,20 +73,20 @@ namespace ReportHandler
 
 					break;
 				}
-				case ReportType::HTML:
+				case ParameterOption::HTMLReport:
 				{
 					HTMLReportOptions trOptions;
 
-					trOptions.FileName = parameter_details.Value;
+					trOptions.FileName = FileName;
 					trOptions.Align = L"right";
-					trOptions.LayoutSize = Utility::OptionToInt(parameter_details.Options[11]);
-					trOptions.Units = Utility::OptionToInt(parameter_details.Options[12]);
+					trOptions.LayoutSize = Utility::OptionToInt(pd.ReportOptions[11]);
+					trOptions.Units = Utility::OptionToInt(pd.ReportOptions[12]);
 
 					trOptions.Layout[0] = true; // header always visible
 
 					for (int t = 1; t < __HTMLLayoutOptionsCount; t++)
 					{
-						trOptions.Layout[t] = Utility::StringToBool(parameter_details.Options[t]);
+						trOptions.Layout[t] = Utility::StringToBool(pd.ReportOptions[t]);
 					}
 
 					ReportHTML::GenerateReport(trOptions);
@@ -99,7 +95,7 @@ namespace ReportHandler
 
 					break;
 				}
-				case ReportType::Summary:
+				case ParameterOption::Summary:
 				{
 					ReportSummary::Show();
 
@@ -107,15 +103,15 @@ namespace ReportHandler
 
 					break;
 				}
-				case ReportType::Text:
+				case ParameterOption::TextReport:
 				{
 					TextReportOptions trOptions;
 
-					trOptions.FileName = parameter_details.Value;
+					trOptions.FileName = FileName;
 
 					for (int t = 0; t < __TextReportOptionsCount; t++)
 					{
-						trOptions.Layout[t] = Utility::StringToBool(parameter_details.Options[t]);
+						trOptions.Layout[t] = Utility::StringToBool(pd.ReportOptions[t]);
 					}
 
 					for (int t = 0; t < __FileCategoriesCount; t++)
@@ -129,14 +125,14 @@ namespace ReportHandler
 
 					break;
 				}
-				case ReportType::Tree:
+				case ParameterOption::TreeReport:
 				{
 					TreeReportOptions treeOptions;
 
-					treeOptions.FileName = parameter_details.Value;
+					treeOptions.FileName = FileName;
 
-					treeOptions.IncludeAttributes = Utility::StringToBool(parameter_details.Options[0]);
-					treeOptions.IncludeSize = Utility::StringToBool(parameter_details.Options[1]);
+					treeOptions.IncludeAttributes = Utility::StringToBool(pd.ReportOptions[0]);
+					treeOptions.IncludeSize = Utility::StringToBool(pd.ReportOptions[1]);
 
 					ReportTree::Generate(treeOptions);
 
@@ -144,15 +140,15 @@ namespace ReportHandler
 
 					break;
 				}
-				case ReportType::XML:
+				case ParameterOption::XMLReport:
 				{
 					XMLReportOptions trOptions;
 
-					trOptions.FileName = parameter_details.Value;
+					trOptions.FileName = FileName;
 
 					for (int t = 0; t < XMLReportOptionsCount; t++)
 					{
-						trOptions.Layout[t] = Utility::StringToBool(parameter_details.Options[t]);
+						trOptions.Layout[t] = Utility::StringToBool(pd.ReportOptions[t]);
 					}
 
 					ReportXML::Summary(trOptions);
@@ -161,11 +157,11 @@ namespace ReportHandler
 
 					break;
 				}
-				case ReportType::XMLFullList:
+				case ParameterOption::XMLFullListReport:
 				{
 					XMLReportOptions trOptions;
 
-					trOptions.FileName = parameter_details.Value;
+					trOptions.FileName = FileName;
 
 					ReportXML::FullList(trOptions);
 
@@ -173,11 +169,11 @@ namespace ReportHandler
 
 					break;
 				}
-				case ReportType::Xinorbis:
+				case ParameterOption::XinorbisReport:
 				{
 					XinorbisReportOptions xrOptions;
 
-					xrOptions.FileName = parameter_details.Value;
+					xrOptions.FileName = FileName;
 
 					ReportXinorbis::GenerateXinorbisReport(xrOptions);
 
@@ -186,7 +182,7 @@ namespace ReportHandler
 					break;
 				}
 
-				case ReportType::Top20:
+				case ParameterOption::TopTwenty:
 				{
 					ReportConsole::TopFiles(20);
 
@@ -194,7 +190,7 @@ namespace ReportHandler
 
 					break;
 				}
-				case ReportType::Bottom20:
+				case ParameterOption::BottomTwenty:
 				{
 					ReportConsole::BottomFiles(20);
 
@@ -202,7 +198,7 @@ namespace ReportHandler
 
 					break;
 				}
-				case ReportType::New20:
+				case ParameterOption::NewTwenty:
 				{
 					ReportConsole::NewFiles(20);
 
@@ -210,7 +206,7 @@ namespace ReportHandler
 
 					break;
 				}
-				case ReportType::Old20:
+				case ParameterOption::OldTwenty:
 				{
 					ReportConsole::OldFiles(20);
 
@@ -219,7 +215,7 @@ namespace ReportHandler
 					break;
 				}
 
-				case ReportType::All20:
+				case ParameterOption::AllTwenty:
 				{
 					ReportConsole::TopFiles(20);
 					ReportConsole::BottomFiles(20);
@@ -231,15 +227,15 @@ namespace ReportHandler
 					break;
 				}
 
-				case ReportType::TextDeep:
+				case ParameterOption::DeepTextReport:
 				{
 					TextReportOptions trOptions;
 
-					trOptions.FileName = parameter_details.Value;
+					trOptions.FileName = pd.Value;
 
 					for (int t = 0; t < __TextReportOptionsCount; t++)
 					{
-						trOptions.Layout[t] = Utility::StringToBool(parameter_details.Options[t]);
+						trOptions.Layout[t] = Utility::StringToBool(pd.ReportOptions[t]);
 					}
 
 					for (int t = 0; t < __FileCategoriesCount; t++)
@@ -256,21 +252,21 @@ namespace ReportHandler
 					break;
 				}
 
-				case ReportType::HTMLDeep:
+				case ParameterOption::DeepHTMLReport:
 				{
 					HTMLReportOptions trOptions;
 
-					trOptions.FileName = parameter_details.Value;
+					trOptions.FileName = pd.Value;
 					trOptions.Align = L"right";
-					trOptions.LayoutSize = Utility::OptionToInt(parameter_details.Options[11]);
-					trOptions.Units = Utility::OptionToInt(parameter_details.Options[12]);
+					trOptions.LayoutSize = Utility::OptionToInt(pd.ReportOptions[11]);
+					trOptions.Units = Utility::OptionToInt(pd.ReportOptions[12]);
 					trOptions.DeepScan = true;
 
 					trOptions.Layout[0] = true;
 
 					for (int t = 1; t < __HTMLLayoutOptionsCount; t++)
 					{
-						trOptions.Layout[t] = Utility::StringToBool(parameter_details.Options[t]);
+						trOptions.Layout[t] = Utility::StringToBool(pd.ReportOptions[t]);
 					}
 
 					ReportHTML::GenerateReport(trOptions);

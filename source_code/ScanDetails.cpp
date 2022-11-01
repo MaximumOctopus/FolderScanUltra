@@ -9,9 +9,7 @@
 // 
 // 
 
-
 #include <algorithm>
-#include <codecvt>
 #include <fstream>
 #include <iostream>
 
@@ -59,7 +57,7 @@ ScanDetails::ScanDetails(std::wstring folder)
 
 	ClearData();
 
-	if (WindowsUtility::DirectoryExistsWString(folder))
+	if (WindowsUtility::DirectoryExists(folder))
 	{
 		std::wstring directory_to_scan;
 
@@ -1011,7 +1009,7 @@ void ScanDetails::BuildTop100DateLists()
 
 void ScanDetails::ListRoot()
 {
-	std::wcout << "\n" << "  Listing root files/folders:" << "\n\n";
+	std::wcout << L"\n  Listing root files/folders:\n\n";
 
 	std::wstring tmp = Path.String + L"*";
 
@@ -1103,9 +1101,9 @@ void ScanDetails::SortRootBySize()
 void ScanDetails::ShowSearchStats()
 {
 	std::wcout << "\n";
-	std::wcout << "Folders: " << GScanDetails->SearchData.FolderCount << "\n";
-	std::wcout << "Files:   " << GScanDetails->SearchData.FileCount << "\n";
-	std::wcout << "Size:    " << Convert::ConvertToUsefulUnit(GScanDetails->SearchData.TotalSize) << "\n\n";
+	std::wcout << std::format(L"Folders: {0}\n", GScanDetails->SearchData.FolderCount);
+	std::wcout << std::format(L"Files:   {0}\n", GScanDetails->SearchData.FileCount);
+	std::wcout << std::format(L"Size:    {0}\n\n", Convert::ConvertToUsefulUnit(GScanDetails->SearchData.TotalSize));
 }
 
 
@@ -1120,9 +1118,7 @@ void ScanDetails::SaveSearchResults(Command command)
 			FileName = Utility::ProcessFileName(L"search_$yyyy$mm$dd_$Th$Tm$Ts.csv");
 		}
 
-		std::wofstream ofile(FileName);
-
-		ofile.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
+		std::ofstream ofile(FileName);
 
 		if (ofile)
 		{
@@ -1146,7 +1142,7 @@ void ScanDetails::SaveSearchResults(Command command)
 					GLanguageHandler->Text[rsTemporary] + L',' +
 				    GLanguageHandler->Text[rsFileAttributes];
 
-			ofile << s << "\n";
+			ofile << Formatting::to_utf8(s + L"\n");
 
 			std::wstring ucFolder = GLanguageHandler->Text[rsFolder];
 
@@ -1216,7 +1212,7 @@ void ScanDetails::SaveSearchResults(Command command)
 						std::to_wstring(GScanDetails->Data.Files[t].Attributes);
 				}
 
-				ofile << output << L"\n";
+				ofile << Formatting::to_utf8(output + L"\n");
 			}
 
 			ofile.close();
@@ -1249,7 +1245,7 @@ void ScanDetails::Search(Command command)
 	{
 		if (Data.Files[t].FileName.find(term) != std::wstring::npos)
 		{
-			std::wcout << Formatting::AddLeadingSpace(Convert::ConvertToUsefulUnit(Data.Files[t].Size), 8) << L"  " << Data.Folders[Data.Files[t].FilePathIndex] << Data.Files[t].FileName << L"\n";
+			std::wcout << std::format(L"{0}  {1}{2}\n", Formatting::AddLeadingSpace(Convert::ConvertToUsefulUnit(Data.Files[t].Size), 8), Data.Folders[Data.Files[t].FilePathIndex], Data.Files[t].FileName);
 
 			count++;
 		}
@@ -1257,7 +1253,7 @@ void ScanDetails::Search(Command command)
 
 	if (count != 0)
 	{
-		std::wcout << L"\nFound " << count << L" matching files\n";
+		std::wcout << std::format(L"\nFound {0} matching files\n", count);
 	}
 }
 
@@ -2196,7 +2192,7 @@ int ScanDetails::Filter(Command command)
 
 				SearchData.TotalSize += file_object.Size;
 
-				std::wcout << Formatting::AddLeadingSpace(Convert::ConvertToUsefulUnit(file_object.Size), 8) << L"  " << Data.Folders[file_object.FilePathIndex] << file_object.FileName << L"\n";
+				std::wcout << std::format(L"{0}  {1}{2}\n", Formatting::AddLeadingSpace(Convert::ConvertToUsefulUnit(file_object.Size), 8), Data.Folders[file_object.FilePathIndex], file_object.FileName);
 
 				FoundCount++;
 

@@ -9,38 +9,35 @@
 // 
 // 
 
-
 #pragma once
 
 
 #include <string>
-#include <windows.h>
 
 #include "DriveDetails.h"
 
 
 namespace WindowsUtility
 {
-	bool AddToContextMenu(std::wstring path);
-	bool RemoveFromContextMenu();
+	[[nodiscard]] bool AddToContextMenu(std::wstring path);
+	[[nodiscard]] bool RemoveFromContextMenu();
 	
-	int CreateWFolder(const std::wstring&);
+	[[nodiscard]] bool CreateFolder(const std::wstring&);
 	
-	bool DirectoryExists(LPCTSTR);
-	bool DirectoryExistsWString(const std::wstring&);
+	[[nodiscard]] bool DirectoryExists(const std::wstring&);
 
-	bool FileExists(const std::wstring&);
+	[[nodiscard]] bool FileExists(const std::wstring&);
 	
-	std::wstring GetFileOwner(std::wstring);
+	[[nodiscard]] std::wstring GetFileOwner(std::wstring);
 
-	std::wstring GetComputerNetName();
-	std::wstring GetUserFromWindows();
+	[[nodiscard]] std::wstring GetComputerNetName();
+	[[nodiscard]] std::wstring GetUserFromWindows();
 
-	std::wstring GetDiskTypeString(const std::wstring&);
-	DriveDetails GetDriveDetails(const std::wstring&);
+	[[nodiscard]] std::wstring GetDiskTypeString(const std::wstring&);
+	[[nodiscard]] DriveDetails GetDriveDetails(const std::wstring&);
 
-	std::wstring GetExePath();
-	std::wstring GetDataFolder();
+	[[nodiscard]] std::wstring GetExePath();
+	[[nodiscard]] std::wstring GetDataFolder();
 
-	std::wstring GetEnvVariable(std::wstring);
+	[[nodiscard]] std::wstring GetEnvVariable(std::wstring);
 }

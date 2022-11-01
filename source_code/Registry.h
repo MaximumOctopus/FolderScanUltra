@@ -9,7 +9,6 @@
 // 
 // 
 
-
 #pragma once
 
 
@@ -19,13 +18,13 @@
 
 namespace Registry
 {
-	std::wstring ReadRegistryString(HKEY, std::wstring, std::wstring);
+	[[nodiscard]] std::wstring ReadRegistryString(HKEY, std::wstring, std::wstring);
 
-	int ReadRegistryInteger(HKEY, std::wstring, int);
+	[[nodiscard]] int ReadRegistryInteger(HKEY, std::wstring, int);
 
-	bool ReadRegistryBool(HKEY, std::wstring, bool);
+	[[nodiscard]] bool ReadRegistryBool(HKEY, std::wstring, bool);
 
-	bool WriteRegistryString(HKEY, const std::wstring&, const std::wstring&);
+	[[nodiscard]] bool WriteRegistryString(HKEY, const std::wstring&, const std::wstring&);
 
-	bool DeleteRegistry(HKEY, const std::wstring&);
+	[[nodiscard]] bool DeleteRegistry(HKEY, const std::wstring&);
 }

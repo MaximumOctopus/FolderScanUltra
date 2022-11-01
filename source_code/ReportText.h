@@ -9,7 +9,6 @@
 // 
 // 
 
-
 #pragma once
 
 
@@ -32,26 +31,26 @@ namespace ReportText
 {
 	void FullList(TextReportOptions);
 
-	void CreateDeepReport(std::wofstream&);
+	void CreateDeepReport(std::ofstream&);
 
-	void ReportHeader(std::wofstream &);
-	void ReportSummary(std::wofstream &);
-	void ReportAttributes(std::wofstream &);
-	void ReportCategories(std::wofstream &);
-	void ReportDirectoryList(std::wofstream &);
-	void ReportFileDates(std::wofstream &);
-	void ReportMagnitude(std::wofstream &);
-	void ReportExtensions(std::wofstream &, TextReportOptions);
-	void ReportNullFiles(std::wofstream &);
-	void ReportTemporaryFiles(std::wofstream&);
-	void ReportUsers(std::wofstream &);
+	void ReportHeader(std::ofstream &);
+	void ReportSummary(std::ofstream &);
+	void ReportAttributes(std::ofstream &);
+	void ReportCategories(std::ofstream &);
+	void ReportDirectoryList(std::ofstream &);
+	void ReportFileDates(std::ofstream &);
+	void ReportMagnitude(std::ofstream &);
+	void ReportExtensions(std::ofstream &, TextReportOptions);
+	void ReportNullFiles(std::ofstream &);
+	void ReportTemporaryFiles(std::ofstream&);
+	void ReportUsers(std::ofstream &);
 
-	void ReportLargestFiles(std::wofstream &);
-	void ReportSmallestFiles(std::wofstream &);
+	void ReportLargestFiles(std::ofstream &);
+	void ReportSmallestFiles(std::ofstream &);
 
-	void ReportNewestFiles(std::wofstream &);
-	void ReportOldestFiles(std::wofstream &);
+	void ReportNewestFiles(std::ofstream &);
+	void ReportOldestFiles(std::ofstream &);
 
-	void TitleBlock5Row(std::wofstream&, int, int);
-	void TitleBlock3Row(std::wofstream&, int);
+	void TitleBlock5Row(std::ofstream&, int, int);
+	void TitleBlock3Row(std::ofstream&, int);
 };

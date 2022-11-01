@@ -79,7 +79,7 @@ namespace ReportConsole
 
 	void TopFiles(int count)
 	{
-		std::wcout << L"" << "\n";
+		std::wcout << L"\n";
 
 		if (GScanDetails->Data.Top100Large.size() != 0)
 		{
@@ -87,9 +87,10 @@ namespace ReportConsole
 
 			while ((i < count) && (i < GScanDetails->Data.Top100Large.size()))
 			{
-				std::wcout << Formatting::AddLeading(Convert::IntDateToString(GScanDetails->Data.Top100Large[i].FileDateC), 9, L' ') + L" " +
-					Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.Top100Large[i].Size), 12, L' ') + L" " +
-					GScanDetails->Data.Folders[GScanDetails->Data.Top100Large[i].FilePathIndex] + GScanDetails->Data.Top100Large[i].FileName << "\n";
+				std::wcout << std::format(L"{0} {1} {2}\n",
+					Formatting::AddLeading(Convert::IntDateToString(GScanDetails->Data.Top100Large[i].FileDateC), 11, L' '),
+					Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.Top100Large[i].Size), 9, L' '),
+					GScanDetails->Data.Folders[GScanDetails->Data.Top100Large[i].FilePathIndex] + GScanDetails->Data.Top100Large[i].FileName);
 
 				i++;
 			}
@@ -113,16 +114,17 @@ namespace ReportConsole
 
 			while ((i < count) && (i < GScanDetails->Data.Top100Small.size()))
 			{
-				std::wcout << Formatting::AddLeading(Convert::IntDateToString(GScanDetails->Data.Top100Small[i].FileDateC), 9, L' ') + L" " +
-					Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.Top100Small[i].Size), 12, L' ') + L" " +
-					GScanDetails->Data.Folders[GScanDetails->Data.Top100Small[i].FilePathIndex] + GScanDetails->Data.Top100Small[i].FileName << "\n";
+				std::wcout << std::format(L"{0} {1} {2}\n",
+					Formatting::AddLeading(Convert::IntDateToString(GScanDetails->Data.Top100Small[i].FileDateC), 11, L' '),
+					Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.Top100Small[i].Size), 9, L' '),
+					GScanDetails->Data.Folders[GScanDetails->Data.Top100Small[i].FilePathIndex] + GScanDetails->Data.Top100Small[i].FileName);
 
 				i++;
 			}
 		}
 		else
 		{
-			std::wcout << "Top100Small list is empty! \n";
+			std::wcout << "Top100Small list is empty!\n";
 		}
 
 		std::wcout << L"\n";
@@ -139,16 +141,17 @@ namespace ReportConsole
 
 			while ((i < count) && (i < GScanDetails->Data.Top100Newest.size()))
 			{
-				std::wcout << Formatting::AddLeading(Convert::IntDateToString(GScanDetails->Data.Top100Newest[i].FileDateC), 9, L' ') + L" " +
-					Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.Top100Newest[i].Size), 12, L' ') + L" " +
-					GScanDetails->Data.Folders[GScanDetails->Data.Top100Newest[i].FilePathIndex] + GScanDetails->Data.Top100Newest[i].FileName << "\n";
+				std::wcout << std::format(L"{0} {1} {2}\n",
+					Formatting::AddLeading(Convert::IntDateToString(GScanDetails->Data.Top100Newest[i].FileDateC), 11, L' '),
+					Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.Top100Newest[i].Size), 9, L' '),
+					GScanDetails->Data.Folders[GScanDetails->Data.Top100Newest[i].FilePathIndex] + GScanDetails->Data.Top100Newest[i].FileName);
 
 				i++;
 			}
 		}
 		else
 		{
-			std::wcout << "Top100Newest list is empty! \n";
+			std::wcout << "Top100Newest list is empty!\n";
 		}
 
 		std::wcout << L"\n"; 
@@ -165,9 +168,10 @@ namespace ReportConsole
 
 			while ((i < count) && (i < GScanDetails->Data.Top100Oldest.size()))
 			{
-				std::wcout << Formatting::AddLeading(Convert::IntDateToString(GScanDetails->Data.Top100Oldest[i].FileDateC), 9, L' ') + L" " +
-					Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.Top100Oldest[i].Size), 12, L' ') + L" " +
-					GScanDetails->Data.Folders[GScanDetails->Data.Top100Oldest[i].FilePathIndex] + GScanDetails->Data.Top100Oldest[i].FileName << "\n";
+				std::wcout << std::format(L"{0} {1} {2}\n",
+					Formatting::AddLeading(Convert::IntDateToString(GScanDetails->Data.Top100Oldest[i].FileDateC), 11, L' '),
+					Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.Top100Oldest[i].Size), 9, L' '),
+					GScanDetails->Data.Folders[GScanDetails->Data.Top100Oldest[i].FilePathIndex] + GScanDetails->Data.Top100Oldest[i].FileName);
 
 				i++;
 			}

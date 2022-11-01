@@ -9,7 +9,6 @@
 // 
 // 
 
-
 #pragma once
 
 
@@ -20,90 +19,189 @@
 #include "ParameterDetails.h"
 
 
-const static int __parameterInvalid = 0x00;
+const static int kReportParametersCount = 15;
 
-const static int __parameterDBUpdateScanHistory = 0x06;
-const static int __parameterDBODBC = 0x07;
-const static int __parameterDBSQlite = 0x08;
-const static int __parameterDBStructured = 0x09;
-const static int __parameterDBSystemTable = 0x0A;
-const static int __parameterDBDataTable = 0x0B;
-const static int __parameterDBUpdateFolderistory = 0x0C;
+const static std::wstring kConsole = L"/console";
+const static std::wstring kNoUsers = L"/nouser";
+const static std::wstring kNoProcess = L"/noprocess";
+const static std::wstring kNoTemp = L"/notemp";
+const static std::wstring kNoOutput = L"/nooutput";
+const static std::wstring kTest = L"/test";
+const static std::wstring kVersionCheck = L"/checkversion";
+const static std::wstring kHelp = L"/?";
+const static std::wstring kStatistics = L"/stats";
+const static std::wstring kListRoot = L"/listroot";
+const static std::wstring kVersion = L"/version";
 
-const static int __parameterReportCSV = 0x10;
-const static int __parameterReportText = 0x11;
-const static int __parameterReportHTML = 0x12;
-const static int __parameterReportTree = 0x13;
-const static int __parameterReportXinorbis = 0x14;
-const static int __parameterReportXML = 0x15;
-const static int __parameterReportXMLFileList = 0x16;
-const static int __parameterReportSummary = 0x17;
-const static int __parameterReportTop20 = 0x18;
-const static int __parameterReportBottom20 = 0x19;
-const static int __parameterReportNewest20 = 0x1A;
-const static int __parameterReportOldest20 = 0x1B;
+//const static std::wstring k L"/p") != std::wstring::npos) { return 0x01; }
+//const static std::wstring k L"/o") != std::wstring::npos) { return 0x02; }
 
-const static int __parameterReportTextDeep = 0x1C;
-const static int __parameterReportHTMLDeep = 0x1D;
+const static std::wstring kCats = L"/cats";
+const static std::wstring kPause = L"/pause";
+const static std::wstring kLoadConfig = L"/load";
+const static std::wstring kSaveConfig = L"/save";
 
-const static int __parameterNoUserDetails = 0x20;
-const static int __parameterNoProcess = 0x21;
-const static int __parameterNoTempFiles = 0x22;
-const static int __parameterAllowVirtual = 0x23;
+const static std::wstring kCSVReport = L"/csv";
+const static std::wstring kHTMLReport = L"/html";
+const static std::wstring kTextReport = L"/txt";
+const static std::wstring kTreeReport = L"/tree";
+const static std::wstring kXMLReport = L"/xml";
+const static std::wstring kXFLReport = L"/xfl";
+const static std::wstring kXinorbisReport = L"/xin";
+const static std::wstring kDeepHTMLReport = L"/deephtml";
+const static std::wstring kDeepTextReport = L"/deeptext";
 
-const static int __parameterVersionCheck = 0x80;
+const static std::wstring kSummary = L"/sum";
+const static std::wstring kAllTwenty = L"/all20";
+const static std::wstring kTopTwenty = L"/top20";
+const static std::wstring kBottomTwenty = L"/bottom20";
+const static std::wstring kNewTwenty = L"/new20";
+const static std::wstring kOldTwenty = L"/old20";
+const static std::wstring kFolderTopTwenty = L"/folderstop20";
 
-const static int __parameterCat = 0x90;
-const static int __parameterTest = 0x91;
+const static std::wstring kAllFolders = L"/allfolders";
+const static std::wstring kAllowVirtual = L"/allowvirtual";
 
-const static int __reportParametersCount = 15;
+const static std::wstring kUpdateFolderHistory = L"/updatefolderhistory";
+const static std::wstring kODBC = L"/ODBC";
+const static std::wstring kSQLite = L"/sqlite";
+const static std::wstring kDBStructured = L"/dbstructured";
+const static std::wstring kSystemTable = L"/systemtable";
+const static std::wstring kDataTable = L"/datatable";
+const static std::wstring kUpdateScanHistory = L"/updatescanhistory";
 
-const static std::wstring __reportParameters[__reportParametersCount] = { L"/csv", L"/html", L"/sum", L"/tree", L"/txt", L"/xml", L"/xfl", L"/xin", L"/top20", L"/bottom20", L"/new20", L"/old20", L"/all20", L"/deeptext", L"/deephtml"};
-const static ReportType __reportParameterTypes[__reportParametersCount] = { ReportType::CSV, ReportType::HTML, ReportType::Summary, ReportType::Tree, ReportType::Text, ReportType::XML, ReportType::XMLFullList, ReportType::Xinorbis,
-																			ReportType::Top20, ReportType::Bottom20, ReportType::New20, ReportType::Old20, ReportType::All20, ReportType::TextDeep, ReportType::HTMLDeep };
+const static std::wstring kSetContextMenu = L"/setcontextmenu";
+const static std::wstring kDeleteContextMenu = L"/deletecontextmenu";
+
+
+enum class ParameterOption {
+	None = 0, ScanFolder = 1, Cats = 2,
+	LoadConfig = 3, SaveConfig = 4,
+	CSVReport = 5, HTMLReport = 6, TextReport = 7, TreeReport = 8, XMLReport = 9, XMLFullListReport = 10, XinorbisReport = 11, DeepHTMLReport = 12, DeepTextReport = 13,
+	Summary = 14, TopTwenty = 15, BottomTwenty = 16, NewTwenty = 17, OldTwenty = 18, FolderTopTwenty = 19, AllTwenty = 20,
+	AllFolders = 21, AllVirtual = 22,
+	UpdateFolderHistory = 23, ODBC = 24, SQLite = 25, DBStructured = 26, SystemTable = 27, DataTable = 28, UpdateScanHistory = 29,
+	NoUsers = 30, NoProcess = 31, NoTemp = 32, Test = 33, VersionCheck = 34,
+	SetContextMenu = 35, DeleteContextMenu = 36, Pause = 37,
+	Console = 38, Version = 39, Help = 40, Statistics = 41, ListRoot = 42, NoOutput = 43
+};
+
+static const int kCommandListCount = 42;
+
+static const std::wstring CommandList[kCommandListCount] = {
+	kCats, kLoadConfig, kSaveConfig,
+	kCSVReport, kHTMLReport, kTextReport, kTreeReport, kXMLReport, kXFLReport, kXinorbisReport, kDeepHTMLReport, kDeepTextReport,
+	kSummary, kTopTwenty, kBottomTwenty, kNewTwenty, kOldTwenty, kFolderTopTwenty, kAllTwenty,
+	kAllFolders, kAllowVirtual,
+	kUpdateFolderHistory, kODBC, kSQLite, kDBStructured, kSystemTable, kDataTable, kUpdateScanHistory,
+	kNoUsers, kNoProcess, kNoTemp, kTest, kVersionCheck,
+	kSetContextMenu, kDeleteContextMenu, kPause,
+	kConsole, kVersion, kHelp, kStatistics, kListRoot, kNoOutput
+};
+
+static const ParameterOption ParameterReference[kCommandListCount] = {
+	ParameterOption::Cats, ParameterOption::LoadConfig, ParameterOption::SaveConfig,
+	ParameterOption::CSVReport, ParameterOption::HTMLReport, ParameterOption::TextReport, ParameterOption::TreeReport, ParameterOption::XMLReport, ParameterOption::XMLFullListReport, ParameterOption::XinorbisReport, ParameterOption::DeepHTMLReport, ParameterOption::DeepTextReport,
+	ParameterOption::Summary, ParameterOption::TopTwenty, ParameterOption::BottomTwenty, ParameterOption::NewTwenty, ParameterOption::OldTwenty, ParameterOption::FolderTopTwenty, ParameterOption::AllTwenty,
+	ParameterOption::AllFolders, ParameterOption::AllVirtual,
+	ParameterOption::UpdateFolderHistory, ParameterOption::ODBC, ParameterOption::SQLite, ParameterOption::DBStructured, ParameterOption::SystemTable, ParameterOption::DataTable, ParameterOption::UpdateScanHistory,
+	ParameterOption::NoUsers, ParameterOption::NoProcess, ParameterOption::NoTemp, ParameterOption::Test, ParameterOption::VersionCheck,
+	ParameterOption::SetContextMenu, ParameterOption::DeleteContextMenu, ParameterOption::Pause,
+	ParameterOption::Console, ParameterOption::Version, ParameterOption::Help, ParameterOption::Statistics, ParameterOption::ListRoot, ParameterOption::NoOutput
+};
+
+
+const static std::wstring ReportCommandList[kReportParametersCount] = {
+	kCSVReport, kHTMLReport, kSummary, kTreeReport, kTextReport, kXMLReport, kXFLReport, kXinorbisReport,
+	kTopTwenty, kBottomTwenty, kNewTwenty, kOldTwenty, kAllTwenty, kDeepTextReport, kDeepHTMLReport };
+
+const static ParameterOption RreportParameterReference[kReportParametersCount] = {
+	ParameterOption::CSVReport, ParameterOption::HTMLReport, ParameterOption::Summary, ParameterOption::TreeReport, ParameterOption::TextReport, ParameterOption::XMLReport, ParameterOption::XMLFullListReport, ParameterOption::XinorbisReport,
+	ParameterOption::TopTwenty, ParameterOption::BottomTwenty, ParameterOption::NewTwenty, ParameterOption::OldTwenty, ParameterOption::AllTwenty, ParameterOption::DeepTextReport, ParameterOption::DeepHTMLReport
+};
+
+
+struct ParameterData 
+{	
+	std::wstring OriginalInput = L"";					// original command-line switch
+
+	std::wstring Command = L"";
+	std::wstring ReportOptions = L"";
+	std::wstring FileName = L"";
+	std::wstring Value = L"";
+
+	ParameterOption Parameter = ParameterOption::None;
+
+	bool IsDatabase = false;
+	bool IsProcessing = false;
+	bool IsReport = false;
+
+	bool IsDateReport = false;
+	bool IsFileDateReport = false;
+	bool IsSizeReport = false;
+};
+
+
+struct OptimisationsData
+{
+	bool UseFastAnalysis = true;
+	bool GetUserDetails = false;
+};
 
 
 class ParameterHandler
 {
 private:
 
-    std::vector<std::wstring> parameters;
+	std::wstring SystemDataPath = L"";
+
+	std::vector<ParameterData> Parameters;
+
 	std::vector<std::wstring> tokens;
+
+	void ProcessCommandLineParameter(std::wstring);
+
+	std::wstring GetCommandValue(const std::wstring);
+	ParameterOption GetPropertyOption(const std::wstring);
 
 	void CreateTokens(std::wstring);
 
 	void ProcessForOptimisations();
 
-	bool IsDateReport(ReportType);
-	bool IsFileDateReport(ReportType);
-	bool IsSizeReport(ReportType);
+	bool IsReport(const std::wstring);
+	bool IsProcessingSwitch(ParameterOption);
+	bool IsDatabaseSwitch(ParameterOption);
+
+	bool IsDateReport(ParameterOption);
+	bool IsFileDateReport(ParameterOption);
+	bool IsSizeReport(ParameterOption);
 
 public:
 
-    ParameterHandler(int argc, wchar_t *argv[]);
+	OptimisationsData Optimisations;
+
+    ParameterHandler(int argc, wchar_t *argv[], std::wstring);
 
 	bool FindParameter(std::wstring);
-	std::wstring GetParameter(int);
-	std::wstring GetParameterValue(int);
+	ParameterData GetParameter(int);
+	std::wstring GetParameterValue(std::wstring);
 	int Count();
-	ReportType IsReport(int);
-	ParameterDetails ParameterInformation(int);
-	ParameterDetails ParametersForReport(int, ReportType);
 
-	int GetParameterType(std::wstring);
+	std::wstring GetScanFolder();
+	
+	void ParametersForReport(ParameterData&);
 
-	int IsProcessingSwitch(int);
-	int IsDatabaseSwitch(int);
+	int HelpSwitch(std::wstring);
 
-	std::wstring ReportSwitch(ReportType);
-	int HelpSwitch(std::wstring&);
-
-	std::wstring DefaultFileName(ReportType);
-	std::wstring DefaultOptions(ReportType);
+	std::wstring DefaultFileName(ParameterOption);
+	std::wstring DefaultOptions(ParameterOption);
 
 	bool NeedToProcessTopSizeLists();
 	bool NeedToProcessTopDateLists();
 	bool NeedToProcessFileDates();
 
 	bool HasScanFolder();
+
+	bool Save(std::wstring);
+	bool Load(std::wstring);
 };

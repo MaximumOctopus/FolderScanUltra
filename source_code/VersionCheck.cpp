@@ -9,16 +9,15 @@
 // 
 // 
 
-
-#include "Constants.h"
-#include "Utility.h"
-#include "VersionCheck.h"
-#include <codecvt>
 #include <iostream> 
 #include <stdio.h>
 #include <string>
 #include <urlmon.h>
 #include <windows.h>
+
+#include "Constants.h"
+#include "Utility.h"
+#include "VersionCheck.h"
 
 #pragma comment(lib, "urlmon.lib")
 
@@ -36,7 +35,7 @@ bool VersionCheck::IsNewVersion(std::wstring current_version)
 
     std::wstring versionInfo;
 
-    std::wcout << L"Getting FolderScanUltra version information from MaximumOctopus.com... " << "\n" << "\n";
+    std::wcout << L"Getting FolderScanUltra version information from MaximumOctopus.com...\n\n";
 
     if(SUCCEEDED(CoInitialize(NULL))) {
 
@@ -58,32 +57,36 @@ bool VersionCheck::IsNewVersion(std::wstring current_version)
                 
                 lpStream->Release();
 
-                std::wstring_convert<std::codecvt_utf8<wchar_t>> myconv;
-                versionInfo = myconv.from_bytes(lpResult);
+                std::wstring versionInfo;
+
+                for (int t = 0; t < dwSize; t++)
+                {
+                    versionInfo += lpResult[t]; // lol, this is horrible (i couldn't believe it when it worked)
+                }
 
                 free(lpResult);
 
                 if (versionInfo.find(__FSUVersion) == std::wstring::npos)
                 {
-                    std::wcout << L"New version available!" << "\n" << "\n" << "\n";
-                    std::wcout << L"This version        : " << __FSUDate << L", " << __FSUVersion << "\n";
-                    std::wcout << L"Most recent version : " << versionInfo << "\n";
+                    std::wcout << L"  New version available!\n\n\n";
+                    std::wcout << L"    This version        : " << __FSUDate << L", " << __FSUVersion << "\n";
+                    std::wcout << L"    Most recent version : " << versionInfo << "\n";
                 }
                 else
                 {
-                    std::wcout << L"Your version is up-to-date." << "\n" << "\n";
-                    std::wcout << L"This version        : " << __FSUDate << L", " << __FSUVersion << "\n";
-                    std::wcout << L"Most recent version : " << versionInfo << "\n";
+                    std::wcout << L"  Your version is up-to-date.\n\n";
+                    std::wcout << L"    This version        : " << __FSUDate << L", " << __FSUVersion << "\n";
+                    std::wcout << L"    Most recent version : " << versionInfo << "\n";
                 }
             }
             else
             {
-                std::wcout << L"... error with download." << "\n";
+                std::wcout << L"... error with download.\n";
             }
         }
         else
         {
-            std::wcout << L"... error downloading version file." << "\n";
+            std::wcout << L"... error downloading version file.\n";
         }
 
         CoUninitialize();

@@ -32,12 +32,12 @@ DatabaseSQlite::DatabaseSQlite(std::wstring file_name)
 
 	if (dbAvailable)
 	{
-		std::wcout << L"SQlite connection open!" << "\n";
+		std::wcout << L"SQlite connection open!\n";
 		std::wcout << L"       " << dbFileName << "\n\n";
 	}
 	else
 	{
-		std::wcout << L"SQlite connection fail :(" << "\n";
+		std::wcout << L"SQlite connection fail :(\n";
 		std::wcout << L"       " << dbFileName << "\n\n";
 	}
 }
@@ -317,7 +317,7 @@ bool DatabaseSQlite::CreateNewSystemTable(const std::wstring table_name)
 		return false;
 	}
 
-	std::wcout << L"SQlite created system table" << L"\n"; 
+	std::wcout << L"SQlite created system table\n"; 
 
 	sqlite3_finalize(stmt);
 
@@ -327,7 +327,7 @@ bool DatabaseSQlite::CreateNewSystemTable(const std::wstring table_name)
 
 bool DatabaseSQlite::PopulateDataTable(const std::wstring table_name)
 {
-	std::wcout << L"Populating Data table..." << "\n" << L"\n"; 
+	std::wcout << L"Populating Data table...\n\n"; 
 
 	std::wstring stem = L"INSERT INTO \"" + table_name + L"\" (FilePath, FileName, FileSize, FileSizeDisk, FileDateC, FileDateA, FileDateM, Category, Directory, Readonly, Hidden, System, Archive, Temp, Owner, ScanDate) VALUES (";
 	std::wstring sql;
@@ -381,7 +381,7 @@ bool DatabaseSQlite::PopulateDataTable(const std::wstring table_name)
 
 bool DatabaseSQlite::PopulateSystemTable(const std::wstring table_name, const std::wstring data_table_name)
 {
-	std::wcout << L"Populating System table..." << "\n" << L"\n"; 
+	std::wcout << L"Populating System table...\n\n"; 
 
 	std::wstring stem = L"INSERT INTO \"" + table_name + L"\" (TableName, Folder, SizeString, Size, Files, Folders, ScanDate) VALUES (\"";
 	std::wstring sql;

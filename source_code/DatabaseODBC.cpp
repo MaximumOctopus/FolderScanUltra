@@ -269,7 +269,7 @@ bool DatabaseODBC::CreateNewSystemTable(const std::wstring table_name)
 
 bool DatabaseODBC::PopulateDataTable(const std::wstring table_name)
 {
-	std::wcout << L"Populating Data table..." << "\n\n";
+	std::wcout << L"Populating Data table...\n\n";
 
 	std::wstring stem = L"INSERT INTO \"" + table_name + L"\" (FilePath, FileName, FileSize, FileSizeDisk, FileDateC, FileDateA, FileDateM, Category, Directory, Readonly, Hidden, System, Archive, Temp, Owner, ScanDate) VALUES (";
 	std::wstring sql;
@@ -309,7 +309,7 @@ bool DatabaseODBC::PopulateDataTable(const std::wstring table_name)
 
 bool DatabaseODBC::PopulateSystemTable(const std::wstring table_name, const std::wstring data_table_name)
 {
-	std::wcout << L"Populating System table..." << "\n\n";
+	std::wcout << L"Populating System table...\n\n";
 
 	std::wstring stem = L"INSERT INTO \"" + table_name + L"\" (TableName, Folder, SizeString, Size, Files, Folders, ScanDate) VALUES (\"";
 	std::wstring sql;

@@ -9,9 +9,7 @@
 // 
 // 
 
-
 #include <algorithm>
-#include <codecvt>
 #include <fstream>
 #include <iostream>
 #include <Windows.h>
@@ -40,9 +38,7 @@ namespace ReportTree
         std::transform(l.begin(), l.end(), l.begin(), ::tolower);
         std::transform(r.begin(), r.end(), r.begin(), ::tolower);
 
-        int c = l.compare(r);
-
-        if (c <= 0)
+        if (l.compare(r) <= 0)
         {
             return true;
         }
@@ -53,28 +49,26 @@ namespace ReportTree
 
     void Generate(TreeReportOptions options)
     {
-        std::wofstream file(options.FileName);
-
-        file.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
+        std::ofstream file(options.FileName);
 
         if (file)
         {
             std::sort(GScanDetails->Data.Files.begin(), GScanDetails->Data.Files.end(), sortByPath);
 
-            std::wcout << GLanguageHandler->Text[rsSavingReports] + L" (Tree): " << "\n";
+            std::wcout << GLanguageHandler->Text[rsSavingReports] + L" (Tree):\n";
             std::wcout << L"    " << options.FileName << "\n\n";
 
             std::wstring OldPath = L"";
             std::wstring Optional = L"";
             int Indent = 1;
 
-            file << "\n";
-            file << GLanguageHandler->SummaryReport[1] << GScanDetails->Data.FileCount << "\n";
-            file << GLanguageHandler->SummaryReport[2] << GScanDetails->Data.FolderCount << "\n";
-            file << GLanguageHandler->SummaryReport[3] << Convert::ConvertToUsefulUnit(GScanDetails->Data.TotalSize) << "\n";
-            file << "\n";
+            file << Formatting::to_utf8(L"\n");
+            file << Formatting::to_utf8(GLanguageHandler->SummaryReport[1] + std::to_wstring(GScanDetails->Data.FileCount) + L"\n");
+            file << Formatting::to_utf8(GLanguageHandler->SummaryReport[2] + std::to_wstring(GScanDetails->Data.FolderCount) + L"\n");
+            file << Formatting::to_utf8(GLanguageHandler->SummaryReport[3] + Convert::ConvertToUsefulUnit(GScanDetails->Data.TotalSize) + L"\n");
+            file << Formatting::to_utf8(L"\n");
 
-            file << GScanDetails->Path.String << "\n";
+            file << Formatting::to_utf8(GScanDetails->Path.String + L"\n");
 
             for (int t = 0; t < GScanDetails->Data.Files.size(); t++)
             {
@@ -97,7 +91,7 @@ namespace ReportTree
                             Optional = L"";
                         }
 
-                        file << Formatting::StringOfCharacters(Indent * 4, L" ") + L"\\ " + Utility::LastFolder(GScanDetails->Data.Folders[GScanDetails->Data.Files[t].FilePathIndex] + GScanDetails->Data.Files[t].FileName) + Optional << "\n";
+                        file << Formatting::to_utf8(Formatting::StringOfCharacters(Indent * 4, L" ") + L"\\ " + Utility::LastFolder(GScanDetails->Data.Folders[GScanDetails->Data.Files[t].FilePathIndex] + GScanDetails->Data.Files[t].FileName) + Optional + L"\n");
                     }
                 }
                 else
@@ -123,13 +117,13 @@ namespace ReportTree
                         Optional += Formatting::GetAttributeAsString(GScanDetails->Data.Files[t].Attributes) + L" ";
                     }
 
-                    file << Formatting::StringOfCharacters(Indent * 4, L" ") + Optional + GScanDetails->Data.Files[t].FileName << "\n";
+                    file << Formatting::to_utf8(Formatting::StringOfCharacters(Indent * 4, L" ") + Optional + GScanDetails->Data.Files[t].FileName + L"\n");
                 }
             }
         }
         else
         {
-            std::wcout << GLanguageHandler->Text[rsErrorSaving] + L" (Tree):" << "\n";
+            std::wcout << GLanguageHandler->Text[rsErrorSaving] + L" (Tree):\n";
             std::wcout << L"    " << options.FileName << "\n\n";
         }
     }

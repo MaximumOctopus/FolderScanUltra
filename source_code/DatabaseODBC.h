@@ -9,7 +9,6 @@
 // 
 // 
 
-
 #pragma once
 
 
@@ -48,7 +47,7 @@ public:
 	bool PopulateDataTable(const std::wstring);
 	bool PopulateSystemTable(const std::wstring, const std::wstring);
 
-	void DatabaseODBC::ShowError(unsigned int, const SQLHANDLE&);
+	void ShowError(unsigned int, const SQLHANDLE&);
 
 	DatabaseODBC(std::wstring &);
 	~DatabaseODBC();

@@ -9,8 +9,6 @@
 // 
 // 
 
-
-#include <codecvt>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -38,14 +36,12 @@ namespace ReportText
 {
 	void FullList(TextReportOptions options)
 	{
-		std::wofstream ofile(options.FileName);
-
-		ofile.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
+		std::ofstream ofile(options.FileName);
 
 		if (ofile)
 		{
-			std::wcout << GLanguageHandler->Text[rsSavingReports] + L" (Text): " << "\n";
-			std::wcout << L"    " << options.FileName << "\n" << "\n";
+			std::wcout << GLanguageHandler->Text[rsSavingReports] + L" (Text):\n";
+			std::wcout << L"    " << options.FileName << "\n\n";
 
 			for (int t = 0; t < __TextReportOptionsCount; t++)
 			{
@@ -100,18 +96,18 @@ namespace ReportText
 			}
 
 			ofile << "\n";
-			ofile << GLanguageHandler->TextReport[0] << "\n";
-			ofile << L"======== FolderScanUltra Text Report = (c) Paul A Freshney " << Utility::CurrentYear() << " ==\n";
+			ofile << Formatting::to_utf8(GLanguageHandler->TextReport[0] + L"\n");
+			ofile << Formatting::to_utf8(L"======================= FolderScanUltra Text Report = (c) Paul A Freshney " + Utility::CurrentYear() + L" ==\n");
 		}
 		else
 		{
-			std::wcout << GLanguageHandler->Text[rsErrorSaving] + L" (Text):" << "\n";
+			std::wcout << GLanguageHandler->Text[rsErrorSaving] + L" (Text):\n";
 			std::wcout << L"    " << options.FileName << "\n\n";
 		}
 	}
 
 
-	void CreateDeepReport(std::wofstream& ofile)
+	void CreateDeepReport(std::ofstream& ofile)
 	{
 		ReportDeep deep;
 
@@ -139,7 +135,7 @@ namespace ReportText
 				if (deep.FolderData.size() != 0)
 				{
 					TitleBlock5Row(ofile, 5, 6);
-					ofile << folder << "\n\n";
+					ofile << Formatting::to_utf8(folder + L"\n\n");
 
 					if (GScanDetails->Data.FileCount != 0)
 					{
@@ -161,7 +157,7 @@ namespace ReportText
 
 							//      str := str + '  ' + TXFormatting.GetAttributesAsString(GScanDetails.RootFolders[t].Attributes);
 
-							ofile << str << "\n";
+							ofile << Formatting::to_utf8(str + L"\n");
 						}					
 					}
 					else
@@ -169,7 +165,7 @@ namespace ReportText
 						ofile << "No data\n";
 					}
 
-					ofile << GLanguageHandler->TextReport[0] << "\n\n";
+					ofile << Formatting::to_utf8(GLanguageHandler->TextReport[0] + L"\n\n");
 
 					anchor++;
 				}
@@ -182,25 +178,25 @@ namespace ReportText
 	}
 
 
-	void ReportHeader(std::wofstream &ofile)
+	void ReportHeader(std::ofstream &ofile)
 	{
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << L"--------------------------------------------------------------------------------" << "\n";
-		ofile << L"-- FolderScanUltra -------------------------------------------------------------" << "\n";
-		ofile << L"--------------------------------------------------------------------------------" << "\n";
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << L"" << "\n";
+		ofile << Formatting::to_utf8(GLanguageHandler->TextReport[0] + L"\n");
+		ofile << Formatting::to_utf8(L"--------------------------------------------------------------------------------\n");
+		ofile << Formatting::to_utf8(L"-- FolderScanUltra -------------------------------------------------------------\n");
+		ofile << Formatting::to_utf8(L"--------------------------------------------------------------------------------\n");
+		ofile << Formatting::to_utf8(GLanguageHandler->TextReport[0] + L"\n");
+		ofile << Formatting::to_utf8(L"\n");
 	}
 
 
-	void ReportSummary(std::wofstream &ofile)
+	void ReportSummary(std::ofstream &ofile)
 	{
-		ofile << GLanguageHandler->SummaryReport[0] + L" \"" + GScanDetails->Path.String + L"\"" << "\n";
-		ofile << Formatting::AddLeading(L"", GLanguageHandler->SummaryReport[0].size() + 1, L' ') + Utility::GetDate(DateTimeFormat::Display) + L", " + Utility::GetTime(DateTimeFormat::Display) << "\n\n";
-		ofile << GLanguageHandler->SummaryReport[1] + L" " << GScanDetails->Data.FileCount << "\n";
-		ofile << GLanguageHandler->SummaryReport[2] + L" " << GScanDetails->Data.FolderCount << "\n";
-		ofile << GLanguageHandler->SummaryReport[3] + L" " << Convert::ConvertToUsefulUnit(GScanDetails->Data.TotalSize) << "\n\n";
-		ofile << GLanguageHandler->DriveReport[0]   + L" " << WindowsUtility::GetDiskTypeString(GScanDetails->GetDrive()) << "\n";
+		ofile << Formatting::to_utf8(GLanguageHandler->SummaryReport[0] + L" \"" + GScanDetails->Path.String + L"\"\n");
+		ofile << Formatting::to_utf8(Formatting::AddLeading(L"", GLanguageHandler->SummaryReport[0].size() + 1, L' ') + Utility::GetDate(DateTimeFormat::Display) + L", " + Utility::GetTime(DateTimeFormat::Display) + L"\n\n");
+		ofile << Formatting::to_utf8(GLanguageHandler->SummaryReport[1] + L" " + std::to_wstring(GScanDetails->Data.FileCount) + L"\n");
+		ofile << Formatting::to_utf8(GLanguageHandler->SummaryReport[2] + L" " + std::to_wstring(GScanDetails->Data.FolderCount) + L"\n");
+		ofile << Formatting::to_utf8(GLanguageHandler->SummaryReport[3] + L" " + Convert::ConvertToUsefulUnit(GScanDetails->Data.TotalSize) + L"\n\n");
+		ofile << Formatting::to_utf8(GLanguageHandler->DriveReport[0]   + L" " + WindowsUtility::GetDiskTypeString(GScanDetails->GetDrive()) + L"\n");
 		
 		DriveDetails dd = WindowsUtility::GetDriveDetails(GScanDetails->GetDrive());
 
@@ -208,32 +204,32 @@ namespace ReportText
 		{
 			ofile << "\n";
 
-			ofile << GLanguageHandler->DriveReport[1] + L" " << dd.FileSystem << "\n";
-			ofile << GLanguageHandler->DriveReport[5] + L" " << dd.SectorsPerCluster << "\n";
-			ofile << GLanguageHandler->DriveReport[6] + L" " << dd.BytesPerSector << "\n";
-			ofile << GLanguageHandler->DriveReport[7] + L" " << dd.FreeClusters << "\n";
-			ofile << GLanguageHandler->DriveReport[8] + L" " << dd.Clusters << "\n";
-			ofile << GLanguageHandler->DriveReport[9] + L" " << dd.VolumeName << "\n";
-			ofile << GLanguageHandler->DriveReport[10] + L" " << dd.SerialNumber << " (" << dd.SerialNumberHex << ")" << "\n";
+			ofile << Formatting::to_utf8(GLanguageHandler->DriveReport[1] + L" " + dd.FileSystem + L"\n");
+			ofile << Formatting::to_utf8(GLanguageHandler->DriveReport[5] + L" " + std::to_wstring(dd.SectorsPerCluster) + L"\n");
+			ofile << Formatting::to_utf8(GLanguageHandler->DriveReport[6] + L" " + std::to_wstring(dd.BytesPerSector) + L"\n");
+			ofile << Formatting::to_utf8(GLanguageHandler->DriveReport[7] + L" " + std::to_wstring(dd.FreeClusters) + L"\n");
+			ofile << Formatting::to_utf8(GLanguageHandler->DriveReport[8] + L" " + std::to_wstring(dd.Clusters) + L"\n");
+			ofile << Formatting::to_utf8(GLanguageHandler->DriveReport[9] + L" " + dd.VolumeName + L"\n");
+			ofile << Formatting::to_utf8(GLanguageHandler->DriveReport[10] + L" " + dd.SerialNumber + L" (" + dd.SerialNumberHex + L")\n");
 		}
 
 		ofile << "\n";
 
 		if (GScanDetails->Data.FileCount != 0)
 		{
-			ofile << GLanguageHandler->SummaryReport[8] + L" " + Convert::ConvertToUsefulUnit(GScanDetails->Data.AverageFileSize) << "\n";
+			ofile << Formatting::to_utf8(GLanguageHandler->SummaryReport[8] + L" " + Convert::ConvertToUsefulUnit(GScanDetails->Data.AverageFileSize) + L"\n");
 		}
 
 		if (GScanDetails->Data.FolderCount != 0)
 		{
-			ofile << GLanguageHandler->SummaryReport[9] + L" " << GScanDetails->Data.AverageFilesPerFolder << "\n";
+			ofile << Formatting::to_utf8(GLanguageHandler->SummaryReport[9] + L" " + std::to_wstring(GScanDetails->Data.AverageFilesPerFolder) + L"\n");
 		}
 
 		ofile << "\n";
 	}
 
 
-	void ReportAttributes(std::wofstream &ofile)
+	void ReportAttributes(std::ofstream &ofile)
 	{
 		TitleBlock5Row(ofile, 3, 4);
 
@@ -255,16 +251,15 @@ namespace ReportText
 					str += Formatting::AddLeading(L"100%", TRAsPercentWidth, L' ');
 				}
 
-				ofile << str << "\n";
+				ofile << Formatting::to_utf8(str + L"\n");
 			}
 		}
 
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << "\n";
+		ofile << Formatting::to_utf8(GLanguageHandler->TextReport[0] + L"\n\n");
 	}
 
 
-	void ReportCategories(std::wofstream &ofile)
+	void ReportCategories(std::ofstream &ofile)
 	{
 		TitleBlock5Row(ofile, 1, 2);
 
@@ -286,7 +281,7 @@ namespace ReportText
 					str += Formatting::AddLeading(L"100%", TRAsPercentWidth, L' ');
 				}
 
-				ofile << str << "\n";
+				ofile << Formatting::to_utf8(str + L"\n");
 			}
 
 			ofile << "\n";
@@ -305,20 +300,21 @@ namespace ReportText
 				str += Formatting::AddLeading(L"100%", TRAsPercentWidth, L' ');
 			}
 
-			ofile << str << "\n";
+			ofile << Formatting::to_utf8(str + L"\n");
 
-			ofile << GLanguageHandler->TextReport[0] << "\n";
-			ofile << "\n";
+			ofile << Formatting::to_utf8(GLanguageHandler->TextReport[0] + L"\n\n");
 		}
 	}
 
 
-	void ReportDirectoryList(std::wofstream &ofile)
+	void ReportDirectoryList(std::ofstream &ofile)
 	{
 		TitleBlock5Row(ofile, 5, 6);
 
 		if (GScanDetails->Data.FileCount != 0)
 		{
+			std::ranges::sort(GScanDetails->Data.RootFolders, {}, &RootFolder::Size);
+
 			if (GScanDetails->Data.RootFolders.size() != 0)
 			{
 				for (int t = 0; t < GScanDetails->Data.RootFolders.size(); t++)
@@ -339,16 +335,89 @@ namespace ReportText
 
 					//      str := str + '  ' + TXFormatting.GetAttributesAsString(GScanDetails.RootFolders[t].Attributes);
 
-					ofile << str << "\n";
+					ofile << Formatting::to_utf8(str + L"\n");
 				}
 			}
 		}
 
-		ofile << GLanguageHandler->TextReport[0] << "\n" << "\n";
+		ofile << Formatting::to_utf8(GLanguageHandler->TextReport[0] + L"\n\n");
+
+		TitleBlock5Row(ofile, 5, 6);
+
+		if (GScanDetails->Data.FileCount != 0)
+		{
+			std::ranges::sort(GScanDetails->Data.RootFolders, {}, &RootFolder::Count);
+
+			if (GScanDetails->Data.RootFolders.size() != 0)
+			{
+				for (int t = 0; t < GScanDetails->Data.RootFolders.size(); t++)
+				{
+					std::wstring str = Formatting::AddTrailing(L' ' + GScanDetails->Data.RootFolders[t].Name, TRDescriptionWidth, L' ') +
+						Formatting::AddLeading(std::to_wstring(GScanDetails->Data.RootFolders[t].Count), TRQuantityWidth, L' ') + L"  " +
+						Formatting::AddLeading(Convert::DoubleToPercent((double)GScanDetails->Data.RootFolders[t].Count / (double)GScanDetails->Data.FileCount), TRAsPercentWidth, L' ') + L"  " +
+						Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.RootFolders[t].Size), TRSizeWidth, L' ');
+
+					if (GScanDetails->Data.TotalSize != 0)
+					{
+						str += Formatting::AddLeading(Convert::DoubleToPercent((double)GScanDetails->Data.RootFolders[t].Size / (double)GScanDetails->Data.TotalSize), TRAsPercentWidth, L' ');
+					}
+					else
+					{
+						str += Formatting::AddLeading(L"100%", TRAsPercentWidth, L' ');
+					}
+
+					//      str := str + '  ' + TXFormatting.GetAttributesAsString(GScanDetails.RootFolders[t].Attributes);
+
+					ofile << Formatting::to_utf8(str + L"\n");
+				}
+			}
+		}
+
+		ofile << Formatting::to_utf8(GLanguageHandler->TextReport[0] + L"\n\n");
+
+		// ========================================================================================================
+		// only show alphabetical table if there are enough entries to make it worth while
+		// ========================================================================================================
+
+		if (GScanDetails->Data.RootFolders.size() > 20)
+		{
+			TitleBlock5Row(ofile, 5, 6);
+
+			if (GScanDetails->Data.FileCount != 0)
+			{
+				std::ranges::sort(GScanDetails->Data.RootFolders, {}, &RootFolder::Name);
+
+				if (GScanDetails->Data.RootFolders.size() != 0)
+				{
+					for (int t = 0; t < GScanDetails->Data.RootFolders.size(); t++)
+					{
+						std::wstring str = Formatting::AddTrailing(L' ' + GScanDetails->Data.RootFolders[t].Name, TRDescriptionWidth, L' ') +
+							Formatting::AddLeading(std::to_wstring(GScanDetails->Data.RootFolders[t].Count), TRQuantityWidth, L' ') + L"  " +
+							Formatting::AddLeading(Convert::DoubleToPercent((double)GScanDetails->Data.RootFolders[t].Count / (double)GScanDetails->Data.FileCount), TRAsPercentWidth, L' ') + L"  " +
+							Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.RootFolders[t].Size), TRSizeWidth, L' ');
+
+						if (GScanDetails->Data.TotalSize != 0)
+						{
+							str += Formatting::AddLeading(Convert::DoubleToPercent((double)GScanDetails->Data.RootFolders[t].Size / (double)GScanDetails->Data.TotalSize), TRAsPercentWidth, L' ');
+						}
+						else
+						{
+							str += Formatting::AddLeading(L"100%", TRAsPercentWidth, L' ');
+						}
+
+						//      str := str + '  ' + TXFormatting.GetAttributesAsString(GScanDetails.RootFolders[t].Attributes);
+
+						ofile << Formatting::to_utf8(str + L"\n");
+					}
+				}
+			}
+
+			ofile << Formatting::to_utf8(GLanguageHandler->TextReport[0] + L"\n\n");
+		}
 	}
 
 
-	void ReportFileDates(std::wofstream &ofile)
+	void ReportFileDates(std::ofstream &ofile)
 	{
 		TitleBlock5Row(ofile, 17, 18);
 
@@ -374,17 +443,17 @@ namespace ReportText
 							str += Formatting::AddLeading(L"100%", TRAsPercentWidth, L' ');
 						}
 
-						ofile << str << "\n";
+						ofile << Formatting::to_utf8(str + L"\n");
 					}
 				}
 			}
 		}
 
-		ofile << GLanguageHandler->TextReport[0] << "\n" << "\n";
+		ofile << Formatting::to_utf8(GLanguageHandler->TextReport[0] + L"\n\n");
 	}
 
 	
-	void ReportMagnitude(std::wofstream &ofile)
+	void ReportMagnitude(std::ofstream &ofile)
 	{
 		TitleBlock5Row(ofile, 7, 2);
 
@@ -406,16 +475,15 @@ namespace ReportText
 					str += Formatting::AddLeading(L"100%", TRAsPercentWidth, L' ');
 				}
 
-				ofile << str << "\n";
+				ofile << Formatting::to_utf8(str + L"\n");
 			}
 		}
 
-		ofile << GLanguageHandler->Text[rsFavourite] << "\n";
-		ofile << "\n";
+		ofile << Formatting::to_utf8(GLanguageHandler->Text[rsFavourite] + L"\n\n");
 	}
 
 
-	void ReportExtensions(std::wofstream &ofile, TextReportOptions options)
+	void ReportExtensions(std::ofstream &ofile, TextReportOptions options)
 	{
 		TitleBlock3Row(ofile, 8);
 
@@ -425,7 +493,7 @@ namespace ReportText
 			{
 				if (options.CategoryList[t])
 				{
-					ofile << GLanguageHandler->TextReport[2] << "\n";
+					ofile << Formatting::to_utf8(GLanguageHandler->TextReport[2] + L"\n");
 
 					std::wstring str  = Formatting::AddTrailing(L' ' + GLanguageHandler->TypeDescriptions[t], TRDescriptionWidth, L' ') +
 										Formatting::AddLeading(std::to_wstring(GScanDetails->Data.ExtensionSpread[t].Count), TRQuantityWidth, L' ') +
@@ -441,9 +509,9 @@ namespace ReportText
 						str += Formatting::AddLeading(L"100%", TRAsPercentWidth, L' ');
 					}
 
-					ofile << str << "\n";
-					ofile << L"------------------------------------------------------------------" << "\n";
-
+					ofile << Formatting::to_utf8(str + L"\n");
+					ofile << Formatting::to_utf8(L"---------------------------------------------------------------------------------\n");
+					                               
 					if (t != __FileCategoriesOther)
 					{
 						for (int z = 0; z < GFileExtensionHandler->Extensions.size(); z++)
@@ -469,7 +537,7 @@ namespace ReportText
 										str += Formatting::AddLeading(L"100%", TRAsPercentWidth, L' ');
 									}
 
-									ofile << str << "\n";
+									ofile << Formatting::to_utf8(str + L"\n");
 								}
 							}
 						}
@@ -494,7 +562,7 @@ namespace ReportText
 									str += Formatting::AddLeading(L"100%", TRAsPercentWidth, L' ');
 								}
 
-								ofile << str << "\n";
+								ofile << Formatting::to_utf8(str + L"\n");
 							}
 						}
 					}
@@ -506,7 +574,7 @@ namespace ReportText
 	}
 
 
-	void ReportNullFiles(std::wofstream &ofile)
+	void ReportNullFiles(std::ofstream &ofile)
 	{
 		TitleBlock3Row(ofile, 9);
 
@@ -514,12 +582,12 @@ namespace ReportText
 		{
 			for (int t = 0; t < GScanDetails->Data.NullFiles.size(); t++)
 			{
-				ofile << GScanDetails->Data.NullFiles[t] << "\n";
+				ofile << Formatting::to_utf8(GScanDetails->Data.NullFiles[t] + L"\n");
 			}
 		}
 		else
 		{
-			ofile << GLanguageHandler->Text[rsNoneFound] << "\n";
+			ofile << Formatting::to_utf8(GLanguageHandler->Text[rsNoneFound] + L"\n");
 		}
 
 		ofile << "\n";
@@ -530,19 +598,19 @@ namespace ReportText
 		{
 			for (int t = 0; t < GScanDetails->Data.NullFolders.size(); t++)
 			{
-				ofile << GScanDetails->Data.NullFolders[t] << "\n";
+				ofile << Formatting::to_utf8(GScanDetails->Data.NullFolders[t] + L"\n");
 			}
 		}
 		else
 		{
-			ofile << GLanguageHandler->Text[rsNoneFound] << "\n";
+			ofile << Formatting::to_utf8(GLanguageHandler->Text[rsNoneFound] + L"\n");
 		}
 
 		ofile << "\n";
 	}
 
 
-	void ReportTemporaryFiles(std::wofstream& ofile)
+	void ReportTemporaryFiles(std::ofstream& ofile)
 	{
 		TitleBlock3Row(ofile, 19);
 
@@ -552,12 +620,12 @@ namespace ReportText
 			{
 				for (int t = 0; t < GScanDetails->Data.TemporaryFiles.size(); t++)
 				{
-					ofile << GScanDetails->Data.TemporaryFiles[t] << "\n";
+					ofile << Formatting::to_utf8(GScanDetails->Data.TemporaryFiles[t] + L"\n");
 				}
 			}
 			else
 			{
-				ofile << GLanguageHandler->Text[rsNoneFound] << "\n";
+				ofile << Formatting::to_utf8(GLanguageHandler->Text[rsNoneFound] + L"\n");
 			}
 		}
 
@@ -565,7 +633,7 @@ namespace ReportText
 	}
 
 
-	void ReportUsers(std::wofstream &ofile)
+	void ReportUsers(std::ofstream &ofile)
 	{
 		TitleBlock5Row(ofile, 11, 12);
 
@@ -587,89 +655,89 @@ namespace ReportText
 					str += Formatting::AddLeading(L"100%", TRAsPercentWidth, L' ');
 				}
 
-				ofile << str << "\n";
+				ofile << Formatting::to_utf8(str + L"\n");
 			}
 		}
 
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << "\n";
+		ofile << Formatting::to_utf8(GLanguageHandler->TextReport[0] + L"\n");
+		ofile << Formatting::to_utf8(L"\n");
 	}
 
 	
-	void ReportLargestFiles(std::wofstream &ofile)
+	void ReportLargestFiles(std::ofstream &ofile)
 	{
 		TitleBlock3Row(ofile, 13);
 
 		for (int t = 0; t < GScanDetails->Data.Top100Large.size(); t++)
 		{
-			ofile << Formatting::AddLeading(Convert::IntDateToString(GScanDetails->Data.Top100Large[t].FileDateC), 9, L' ') + L" " +
+			ofile << Formatting::to_utf8(Formatting::AddLeading(Convert::IntDateToString(GScanDetails->Data.Top100Large[t].FileDateC), 9, L' ') + L" " +
 					Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.Top100Large[t].Size), 14, L' ') + L" " +
-					GScanDetails->Data.Folders[GScanDetails->Data.Top100Large[t].FilePathIndex] + GScanDetails->Data.Top100Large[t].FileName << "\n";
+					GScanDetails->Data.Folders[GScanDetails->Data.Top100Large[t].FilePathIndex] + GScanDetails->Data.Top100Large[t].FileName + L"\n");
 		}
 
 		ofile << "\n";
 	}
 
 
-	void ReportSmallestFiles(std::wofstream &ofile)
+	void ReportSmallestFiles(std::ofstream &ofile)
 	{
 		TitleBlock3Row(ofile, 14);
 
 		for (int t = 0; t < GScanDetails->Data.Top100Large.size(); t++)
 		{
-			ofile << Formatting::AddLeading(Convert::IntDateToString(GScanDetails->Data.Top100Small[t].FileDateC), 9, ' ') + L" " +
+			ofile << Formatting::to_utf8(Formatting::AddLeading(Convert::IntDateToString(GScanDetails->Data.Top100Small[t].FileDateC), 9, ' ') + L" " +
 					Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.Top100Small[t].Size), 14, ' ') + L" " +
-					GScanDetails->Data.Folders[GScanDetails->Data.Top100Small[t].FilePathIndex] + GScanDetails->Data.Top100Small[t].FileName << "\n";
+					GScanDetails->Data.Folders[GScanDetails->Data.Top100Small[t].FilePathIndex] + GScanDetails->Data.Top100Small[t].FileName + L"\n");
 		}
 
 		ofile << "\n";
 	}
 
 
-	void ReportNewestFiles(std::wofstream &ofile)
+	void ReportNewestFiles(std::ofstream &ofile)
 	{
 		TitleBlock3Row(ofile, 15);
 
 		for (int t = 0; t < GScanDetails->Data.Top100Newest.size(); t++)
 		{
-			ofile << Formatting::AddLeading(Convert::IntDateToString(GScanDetails->Data.Top100Newest[t].FileDateC), 9, ' ') + L" " +
+			ofile << Formatting::to_utf8(Formatting::AddLeading(Convert::IntDateToString(GScanDetails->Data.Top100Newest[t].FileDateC), 9, ' ') + L" " +
 				Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.Top100Newest[t].Size), 14, ' ') + L" " +
-				GScanDetails->Data.Folders[GScanDetails->Data.Top100Newest[t].FilePathIndex] + GScanDetails->Data.Top100Newest[t].FileName << "\n";
+				GScanDetails->Data.Folders[GScanDetails->Data.Top100Newest[t].FilePathIndex] + GScanDetails->Data.Top100Newest[t].FileName + L"\n");
 		}
 
 		ofile << "\n";
 	}
 
 
-	void ReportOldestFiles(std::wofstream &ofile)
+	void ReportOldestFiles(std::ofstream &ofile)
 	{
 		TitleBlock3Row(ofile, 16);
 
 		for (int t = 0; t < GScanDetails->Data.Top100Oldest.size(); t++)
 		{
-			ofile << Formatting::AddLeading(Convert::IntDateToString(GScanDetails->Data.Top100Oldest[t].FileDateC), 9, ' ') + L" " +
+			ofile << Formatting::to_utf8(Formatting::AddLeading(Convert::IntDateToString(GScanDetails->Data.Top100Oldest[t].FileDateC), 9, ' ') + L" " +
 				Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.Top100Oldest[t].Size), 14, ' ') + L" " +
-				GScanDetails->Data.Folders[GScanDetails->Data.Top100Oldest[t].FilePathIndex] + GScanDetails->Data.Top100Oldest[t].FileName << "\n";
+				GScanDetails->Data.Folders[GScanDetails->Data.Top100Oldest[t].FilePathIndex] + GScanDetails->Data.Top100Oldest[t].FileName + L"\n");
 		}
 
 		ofile << "\n";
 	}
 
 
-	void TitleBlock5Row(std::wofstream& ofile, int language_id_1, int language_id_2)
+	void TitleBlock5Row(std::ofstream& ofile, int language_id_1, int language_id_2)
 	{
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << GLanguageHandler->TextReport[language_id_1] << "\n";
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << GLanguageHandler->TextReport[language_id_2] << "\n";
-		ofile << GLanguageHandler->TextReport[0] << "\n";
+		ofile << Formatting::to_utf8(GLanguageHandler->TextReport[0] + L"\n");
+		ofile << Formatting::to_utf8(GLanguageHandler->TextReport[language_id_1] + L"\n");
+		ofile << Formatting::to_utf8(GLanguageHandler->TextReport[0] + L"\n");
+		ofile << Formatting::to_utf8(GLanguageHandler->TextReport[language_id_2] + L"\n");
+		ofile << Formatting::to_utf8(GLanguageHandler->TextReport[0] + L"\n");
 	}
 
 
-	void TitleBlock3Row(std::wofstream& ofile, int language_id)
+	void TitleBlock3Row(std::ofstream& ofile, int language_id)
 	{
-		ofile << GLanguageHandler->TextReport[0] << "\n";
-		ofile << GLanguageHandler->TextReport[language_id] << "\n";
-		ofile << GLanguageHandler->TextReport[0] << "\n";
+		ofile << Formatting::to_utf8(GLanguageHandler->TextReport[0] + L"\n");
+		ofile << Formatting::to_utf8(GLanguageHandler->TextReport[language_id] + L"\n");
+		ofile << Formatting::to_utf8(GLanguageHandler->TextReport[0] + L"\n");
 	}
 }

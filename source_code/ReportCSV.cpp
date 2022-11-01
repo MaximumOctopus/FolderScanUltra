@@ -11,13 +11,13 @@
 
 
 #include <algorithm>
-#include <codecvt>
 #include <fstream>
 #include <iostream>
 #include <string>
 
 #include "Constants.h"
 #include "Convert.h"
+#include "Formatting.h"
 #include "LanguageHandler.h"
 #include "ReportCSV.h"
 #include "ReportCSVReportOptions.h"
@@ -32,11 +32,9 @@ namespace ReportCSV
 {
 	void Summary(CSVReportOptions options)
 	{
-		std::wcout << GLanguageHandler->Text[rsSavingReports] + L" (CSV): " << "\n\n";
+		std::wcout << GLanguageHandler->Text[rsSavingReports] + L" (CSV):\n\n";
 
-		std::wofstream ofile(options.FileName);
-
-		ofile.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
+		std::ofstream ofile(options.FileName);
 
 		if (ofile)
 		{
@@ -49,12 +47,12 @@ namespace ReportCSV
 
 			if (options.Titles)
 			{
-				ofile << GLanguageHandler->Text[rsCategory] + separator +
+				ofile << Formatting::to_utf8(GLanguageHandler->Text[rsCategory] + separator +
 						 GLanguageHandler->Text[rsQuantity] + separator +
 						 GLanguageHandler->Text[rsQuantity] + separator + GLanguageHandler->Text[rsAsPercent] + separator +
 						 GLanguageHandler->Text[rsSize] + separator +
 						 GLanguageHandler->Text[rsSizeOfFilesBytes] + separator +
-						 GLanguageHandler->Text[rsSize] + GLanguageHandler->Text[rsAsPercent] << "\n";
+						 GLanguageHandler->Text[rsSize] + GLanguageHandler->Text[rsAsPercent] + L"\n");
 			}
 
 			std::wstring output;
@@ -81,7 +79,7 @@ namespace ReportCSV
 					output += L"\"100\"";
 				}
 			
-				ofile << output << L"\n";
+				ofile << Formatting::to_utf8(output + L"\n");
 			}
 
 			ofile.close();
@@ -91,12 +89,10 @@ namespace ReportCSV
 
 	void FullList(CSVReportOptions options)
 	{
-		std::wcout << GLanguageHandler->Text[rsSavingReports] + L" (CSV): " << "\n";
+		std::wcout << GLanguageHandler->Text[rsSavingReports] + L" (CSV):\n";
 		std::wcout << L"    " << options.FileName << "\n\n";
 
-		std::wofstream ofile(options.FileName);
-
-		ofile.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
+		std::ofstream ofile(options.FileName);
 
 		if (ofile)
 		{
@@ -130,7 +126,7 @@ namespace ReportCSV
 					GLanguageHandler->Text[rsTemporary] + separator +
 					GLanguageHandler->Text[rsFileAttributes];
 
-				ofile << s << "\n";
+				ofile << Formatting::to_utf8(s + L"\n");
 			}
 
 			std::wstring ucFolder = GLanguageHandler->Text[rsFolder];
@@ -219,7 +215,7 @@ namespace ReportCSV
 							std::to_wstring(GScanDetails->Data.Files[t].Attributes);
 					}
 
-					ofile << output << L"\n";
+					ofile << Formatting::to_utf8(output + L"\n");
 				}
 			}
 

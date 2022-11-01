@@ -72,40 +72,40 @@ void Settings::SetDefaults()
 }
 
 
-void Settings::ProcessProcessingSetting(int pps)
+void Settings::ProcessProcessingSetting(ParameterOption option)
 {
-	switch (pps)
+	switch (option)
 	{
-	case __parameterNoUserDetails:
+	case ParameterOption::NoUsers:
 		Optimisations.GetUserDetails = false;
 		break;
-	case __parameterNoProcess:
+	case ParameterOption::NoProcess:
 		Optimisations.ProcessData = false;
 		break;
-	case __parameterNoTempFiles:
+	case ParameterOption::NoTemp:
 		Optimisations.GetTempFiles = false;
 		break;
 	}
 }
 
 
-void Settings::ProcessDatabaseSetting(int pds, const std::wstring value)
+void Settings::ProcessDatabaseSetting(ParameterOption option, const std::wstring value)
 {
-	switch (pds)
+	switch (option)
 	{
-	case 0x06:
+	case ParameterOption::UpdateScanHistory:
 		Database.UpdateScanHistory = true;
 		break;
-	case 0x07:
+	case ParameterOption::ODBC:
 		Database.DatabaseMode = DBMode::ODBC;
 		break;
-	case 0x08:
+	case ParameterOption::SQLite:
 		Database.DatabaseMode = DBMode::SQLite;
 		break;
-	case 0x09:
+	case ParameterOption::DBStructured:
 		Database.DBStructured = true;
 		break;
-	case 0x0A:
+	case ParameterOption::SystemTable:
 		Database.SystemTable = true;
 
 		if (value != L"")
@@ -113,7 +113,7 @@ void Settings::ProcessDatabaseSetting(int pds, const std::wstring value)
 			Database.SystemTableName = value;
 		}
 		break;
-	case 0x0B:
+	case ParameterOption::DataTable:
 		Database.DataTable = true;
 
 		if (value != L"")
@@ -121,7 +121,7 @@ void Settings::ProcessDatabaseSetting(int pds, const std::wstring value)
 			Database.DataTableName = value;
 		}
 		break;
-	case 0x0C:
+	case ParameterOption::UpdateFolderHistory:
 		Database.UpdateFolderHistory = true;
 		break;
 	}
@@ -133,8 +133,6 @@ bool Settings::OpenSettings(bool read_only)
     if (Custom.SettingsSaveLocation == SettingsSource::ConfigIni)
     {
 		__iniFile = new Ini(GSystemGlobal->AppPath + L"custom.ini");
-
-		std::wcout << GSystemGlobal->AppPath + L"custom.ini\n";
 
 		if (__iniFile->Loaded)
 		{

@@ -11,10 +11,8 @@
 
 
 #include <algorithm>
-#include <codecvt>
 #include <fstream>
 #include <iostream>
-#include <locale>
 #include <string>
 #include <vector>
 
@@ -24,6 +22,7 @@
 #include "DatabaseODBC.h"
 #include "DatabaseSQlite.h"
 #include "FolderHistoryHandler.h"
+#include "Formatting.h"
 #include "LanguageHandler.h"
 #include "Registry.h"
 #include "ReportConstants.h"
@@ -66,7 +65,7 @@ DatabaseHandler::DatabaseHandler(DBMode mode, const std::wstring db_parameter)
 	}
 
 	default:
-		std::wcout << "\n" << L"Unknown database mode.\n";
+		std::wcout << L"\nUnknown database mode.\n";
 	}
 }
 
@@ -102,7 +101,7 @@ bool DatabaseHandler::InitSQlite(const std::wstring SQlite_file_name)
 	}
 	catch (...)
 	{
-		std::wcout << L"Error initialising SQLite :(" << "\n\n";
+		std::wcout << L"Error initialising SQLite :(\n\n";
 
 		dbSQlite->dbAvailable = false;
 	}
@@ -119,7 +118,7 @@ bool DatabaseHandler::InitODBC(std::wstring connection_string)
 	}
 	catch (...)
 	{
-		std::wcout << L"Error initialising SQLite :(" << "\n\n";
+		std::wcout << L"Error initialising SQLite :(\n\n";
 
 		dbODBC->dbAvailable = false;
 	}
@@ -206,10 +205,10 @@ bool DatabaseHandler::UpdateFolderHistoryStructured(const std::wstring table_sys
 
 			if (dbSQlite->CreateNewDataTable(table_data))
 			{
-				std::wcout << L"Populating structured folder table..." << "\n";
+				std::wcout << L"Populating structured folder table...\n";
 				dbSQlite->PopulateSystemTable(table_system, table_data);
 
-				std::wcout << L"Populating structured file table..." << "\n";
+				std::wcout << L"Populating structured file table...\n";
 				dbSQlite->PopulateDataTable(table_data);
 
 				std::wcout << GLanguageHandler->Text[rsUpdatingFolderHistory] << L"\n";
@@ -238,10 +237,10 @@ bool DatabaseHandler::UpdateFolderHistoryStructured(const std::wstring table_sys
 
 			if (dbODBC->CreateNewDataTable(table_data))
 			{
-				std::wcout << L"Populating structured folder table..." << "\n";
+				std::wcout << L"Populating structured folder table...\n";
 				dbODBC->PopulateSystemTable(table_system, table_data);
 
-				std::wcout << L"Populating structured file table..." << "\n";
+				std::wcout << L"Populating structured file table...\n";
 				dbODBC->PopulateDataTable(table_data);
 
 				std::wcout << GLanguageHandler->Text[rsUpdatingFolderHistory] << L"\n";
@@ -304,8 +303,6 @@ bool DatabaseHandler::UpdateFolderScanUltraScanHistoryIni(const std::wstring fol
 		{
 			std::wifstream file(users_path + L"scanhistory.dat");
 
-			file.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
-
 			if (file)
 			{
 				std::wstring s;
@@ -340,7 +337,7 @@ bool DatabaseHandler::UpdateFolderScanUltraScanHistoryIni(const std::wstring fol
 		}
 		catch(...)
 		{
-			std::wcout << L"Error reading \"" << users_path + L"scanhistory.dat" << L"\"\n";
+			std::wcout << L"Error reading \"" << users_path + L"scanhistory.dat\"\n";
 
 			return false;
 		}
@@ -369,9 +366,7 @@ bool DatabaseHandler::UpdateFolderScanUltraScanHistoryIni(const std::wstring fol
 		{
 			if (ScanHistory.size() != 0)
 			{
-				std::wofstream ofile(users_path + L"scanhistory.dat");
-
-				ofile.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
+				std::ofstream ofile(users_path + L"scanhistory.dat");
 
 				if (ofile)
 				{
@@ -382,11 +377,11 @@ bool DatabaseHandler::UpdateFolderScanUltraScanHistoryIni(const std::wstring fol
 					{
 						ScanHistoryObject ho = ScanHistory[t];
 
-						ofile << ho.Path << "\n";
-						ofile << std::to_wstring(ho.DateI) << "\n";
-						ofile << ho.TimeI << "\n";
-						ofile << ho.ExcludeFiles << "\n";
-						ofile << ho.ExcludeFolders << "\n";
+						ofile << Formatting::to_utf8(ho.Path + L"\n");
+						ofile << Formatting::to_utf8(std::to_wstring(ho.DateI) + L"\n");
+						ofile << Formatting::to_utf8(ho.TimeI + L"\n");
+						ofile << Formatting::to_utf8(ho.ExcludeFiles + L"\n");
+						ofile << Formatting::to_utf8(ho.ExcludeFolders + L"\n");
 
 						t++;
 					}

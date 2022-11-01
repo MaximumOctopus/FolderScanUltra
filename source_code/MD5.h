@@ -9,7 +9,6 @@
 // 
 // 
 
-
 #pragma once
 
 
@@ -18,5 +17,5 @@
 
 namespace MD5
 {
-	std::wstring GetMD5HashString(char* pcValue);
+	[[nodiscard]] std::wstring GetMD5HashString(char* pcValue);
 }

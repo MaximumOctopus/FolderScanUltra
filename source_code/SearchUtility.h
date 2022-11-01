@@ -9,7 +9,6 @@
 // 
 // 
 
-
 #pragma once
 
 
@@ -33,5 +32,5 @@ namespace SearchUtility
         
     void IntegerValueHelper(SearchCriteriaObject&, std::wstring, int, int, SearchType);
 
-    SearchCriteriaObject ProcessSearchTerm(const std::wstring);
+    [[nodiscard]] SearchCriteriaObject ProcessSearchTerm(const std::wstring);
 }

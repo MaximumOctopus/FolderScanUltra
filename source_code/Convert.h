@@ -9,7 +9,6 @@
 // 
 // 
 
-
 #pragma once
 
 
@@ -19,25 +18,25 @@
 
 namespace Convert
 {
-	std::wstring AttributeToIntAsString(int, int);
-	std::wstring ConvertToUsefulUnit(unsigned __int64);
-	unsigned __int64 ConvertUsefulUnitToInteger(std::wstring);
-	std::wstring DoubleToPercent(double);
-	std::wstring GetSizeString(int, unsigned __int64);
+	[[nodiscard]] std::wstring AttributeToIntAsString(int, int);
+	[[nodiscard]] std::wstring ConvertToUsefulUnit(unsigned __int64);
+	[[nodiscard]] unsigned __int64 ConvertUsefulUnitToInteger(std::wstring);
+	[[nodiscard]] std::wstring DoubleToPercent(double);
+	[[nodiscard]] std::wstring GetSizeString(int, unsigned __int64);
 
-	std::wstring BoolToString(bool);
+	[[nodiscard]] std::wstring BoolToString(bool);
 
-	int FileTimeToDateInt(FILETIME*);
-	int FileTimeToTimeInt(FILETIME*);
-	std::wstring IntDateToString(int);
-	std::wstring IntToHex(int, int);
-	int DateToYYYYMMDD(const std::wstring);
-	int TodayPlusDaysToYYYYMMDD(int days);
+	[[nodiscard]] int FileTimeToDateInt(FILETIME*);
+	[[nodiscard]] int FileTimeToTimeInt(FILETIME*);
+	[[nodiscard]] std::wstring IntDateToString(int);
+	[[nodiscard]] std::wstring IntToHex(int, int);
+	[[nodiscard]] int DateToYYYYMMDD(const std::wstring);
+	[[nodiscard]] int TodayPlusDaysToYYYYMMDD(int days);
 
-	int DateFromAnyFormatToYYYYMMDD(std::wstring);
-	int TimeFromAnyFormatToHHMM(std::wstring);
+	[[nodiscard]] int DateFromAnyFormatToYYYYMMDD(std::wstring);
+	[[nodiscard]] int TimeFromAnyFormatToHHMM(std::wstring);
 
-	std::wstring WebColour(int);
+	[[nodiscard]] std::wstring WebColour(int);
 
-	int StrToIntDef(std::wstring, int);
+	[[nodiscard]] int StrToIntDef(std::wstring, int);
 };

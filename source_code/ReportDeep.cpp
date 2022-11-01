@@ -9,7 +9,6 @@
 // 
 // 
 
-
 #include <iostream>
 #include "ReportDeep.h"
 #include "ScanDetails.h"

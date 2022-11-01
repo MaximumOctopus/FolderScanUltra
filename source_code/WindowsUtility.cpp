@@ -9,7 +9,6 @@
 // 
 // 
 
-
 #include "accctrl.h"
 #include "aclapi.h"
 #include <filesystem>
@@ -99,61 +98,21 @@ bool WindowsUtility::RemoveFromContextMenu()
 
 
 // returns 0 on success, 1 on fail
-int WindowsUtility::CreateWFolder(const std::wstring& dirName_in)
+bool WindowsUtility::CreateFolder(const std::wstring& folder_name)
 {
-	bool success = CreateDirectoryW(dirName_in.c_str(), NULL);
-
-	if (success)
-	{
-		return 0;
-	}
-	else
-	{
-		return 1;
-	}
+	return std::filesystem::create_directory(folder_name);
 }
 
 
-bool WindowsUtility::DirectoryExists(LPCTSTR szPath)
+bool WindowsUtility::DirectoryExists(const std::wstring& folder_name)
 {
-	DWORD dwAttrib = GetFileAttributes(szPath);
-
-	return (dwAttrib != INVALID_FILE_ATTRIBUTES &&
-		   (dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
-}
-
-
-bool WindowsUtility::DirectoryExistsWString(const std::wstring& dirName_in)
-{
-	std::wstring directory;
-
-	if (dirName_in[dirName_in.length() - 1] == L'\"')
-	{
-		directory = dirName_in.substr(0, dirName_in.length() - 1);
-	}
-	else
-	{
-		directory = dirName_in;
-	}
-
-	DWORD fileAttr = GetFileAttributes(directory.c_str());
-
-	return (fileAttr != INVALID_FILE_ATTRIBUTES && (fileAttr & FILE_ATTRIBUTE_DIRECTORY));
+	return std::filesystem::exists(folder_name);
 }
 
 
 bool WindowsUtility::FileExists(const std::wstring& file_name)
 {
-	if (FILE *file = _wfopen(file_name.c_str(), L"r"))
-	{
-		fclose(file);
-		
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	return std::filesystem::exists(file_name);
 }
 
 

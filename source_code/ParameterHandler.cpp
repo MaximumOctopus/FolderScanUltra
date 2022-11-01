@@ -10,66 +10,224 @@
 // 
 
 #include <algorithm>
+#include <fstream>
 #include <iostream>
 
 #include "Constants.h"
+#include "Formatting.h"
 #include "help.h"
 #include "ParameterDetails.h"
 #include "ParameterHandler.h"
-#include "Settings.h"
-#include "SystemGlobal.h"
+#include "Utility.h"
 #include "WindowsUtility.h"
 
 
 ParameterHandler* GParameterHandler;
 
 
-extern SystemGlobal* GSystemGlobal;
-extern Settings* GSettings;
-
-
-ParameterHandler::ParameterHandler(int argc, wchar_t *argv[])
+ParameterHandler::ParameterHandler(int argc, wchar_t *argv[], std::wstring DataPath)
 {
-    for (int t = 1; t < argc; t++)
-    {
-        parameters.push_back(argv[t]);
-    } 
+	SystemDataPath = DataPath;
 
-	if (FindParameter(L"/setcontextmenu"))
+	if (argc != 0)
 	{
-		WindowsUtility::AddToContextMenu(argv[0]);
-	}
+		std::wstring first = argv[1];
 
-	if (FindParameter(L"/deletecontextmenu"))
-	{
-		WindowsUtility::RemoveFromContextMenu();
-	}
+		if (first.find(kLoadConfig) == 0)
+		{
+			std::wstring FileName = Formatting::AffixFileExtension(GetParameterValue(first), L".fsuproject");
 
-	ProcessForOptimisations();
+			if (FileName != L"")
+			{
+				if (!Load(FileName))
+				{
+					std::wcout << L"Unable to load file \"" + FileName + L"\", file does not exist.";
+				}
+			}
+			else
+			{
+				std::wcout << L"Cannot load configuration, file name is blank!\n";
+			}
+		}
+
+		for (int i = 1; i < argc; i++)
+		{
+			std::wstring input = argv[i];
+
+			ProcessCommandLineParameter(input);
+		}
+
+	// == post processing ========================================================
+
+		for (int t = 0; t < Parameters.size(); t++)
+		{
+			#ifdef _DEBUG
+			std::wcout << L"Parameter: " << Parameters[t].OriginalInput << "\n";
+			#endif		
+
+			if (Parameters[t].Parameter == ParameterOption::SaveConfig)
+			{
+				if (Parameters[t].Value != L"")
+				{
+					Save(Formatting::AffixFileExtension(Parameters[t].Value, L".fsuproject"));
+				}
+				else
+				{
+					std::wcout << L"Cannot save configuration, file name is blank!\n";
+				}
+			}
+			else if (Parameters[t].Parameter == ParameterOption::SetContextMenu)
+			{
+				if (!WindowsUtility::AddToContextMenu(argv[0]))
+				{
+					std::wcout << L"Cannot add FolderScanUltra to context menu!\n";
+				}
+			}
+			else if (Parameters[t].Parameter == ParameterOption::DeleteContextMenu)
+			{
+				if (!WindowsUtility::RemoveFromContextMenu())
+				{
+					std::wcout << L"Cannot remove FolderScanUltra from context menu!\n";
+				}
+			}
+		}
+
+		// ===========================================================================
+
+		ProcessForOptimisations();
+	}
 }
 
 
-std::wstring ParameterHandler::GetParameter(int index)
+void ParameterHandler::ProcessCommandLineParameter(std::wstring input)
 {
-	if (index < parameters.size())
+	#ifdef _DEBUG
+	std::wcout << L"Command: " << input << "\n";
+	#endif
+
+	ParameterData pd;
+
+	pd.OriginalInput = input;
+	pd.Command = GetCommandValue(input);
+	pd.Parameter = GetPropertyOption(pd.Command);
+
+	switch (pd.Parameter)
 	{
-		return parameters[index];
+	case ParameterOption::None:
+		if (input[0] != L'/')
+		{
+			pd.Parameter = ParameterOption::ScanFolder;
+
+			Parameters.push_back(pd);
+		}
+		else
+		{
+			std::wcout << L" Invalid command parameter \"" << pd.OriginalInput << "\"\n";
+		}
+		break;
+	case ParameterOption::LoadConfig:							
+		// load is handled automatically before other parameters are processed
+		// we can safely ignore it here as it has no purpose
+		break;
+	
+	default:
+	{
+		pd.IsDatabase = IsDatabaseSwitch(pd.Parameter);
+		pd.IsProcessing = IsProcessingSwitch(pd.Parameter);
+		pd.IsReport = IsReport(pd.Command);
+
+		pd.IsDateReport = IsDateReport(pd.Parameter);
+		pd.IsFileDateReport = IsFileDateReport(pd.Parameter);
+		pd.IsSizeReport = IsSizeReport(pd.Parameter);
+
+		if (pd.IsReport)
+		{
+			ParametersForReport(pd);
+		}
+		else
+		{
+			pd.Value = GetParameterValue(pd.OriginalInput);
+		}
+
+		Parameters.push_back(pd);
+	}
+	}
+}
+
+
+std::wstring ParameterHandler::GetScanFolder()
+{
+	if (Parameters.size() != 0)
+	{
+		if (Parameters[0].OriginalInput[0] != L'/')
+		{
+			return Parameters[0].OriginalInput;
+		}
+	}
+
+	return L"";
+}
+
+
+std::wstring ParameterHandler::GetCommandValue(const std::wstring input)
+{
+	size_t pos = input.find(';');
+
+	if (pos == std::wstring::npos)
+	{
+		pos = input.find(':');
+	}
+
+	if (pos != std::wstring::npos)
+	{
+		return input.substr(0, pos);
+	}
+
+	return input;
+}
+
+
+ParameterOption ParameterHandler::GetPropertyOption(const std::wstring input)
+{
+	ParameterOption po = ParameterOption::None;
+
+	for (int t = 0; t < kCommandListCount; t++)
+	{
+		if (CommandList[t].starts_with(input))
+		{
+			return ParameterReference[t];
+		}
+	}
+
+	return po;
+}
+
+
+ParameterData ParameterHandler::GetParameter(int index)
+{
+	if (index < Parameters.size())
+	{
+		return Parameters[index];
 	}
 	
-	return L"";
+	return ParameterData();
 }
 
 
 // gets a single parameter from a parameter with the form
 // /parameter;value
-std::wstring ParameterHandler::GetParameterValue(int parameter)
+std::wstring ParameterHandler::GetParameterValue(std::wstring input)
 {
-	std::wstring param = GetParameter(parameter);
-	size_t pos = param.find(L';');
-	
+	size_t pos = input.find(';');
+
+	if (pos == std::wstring::npos)
+	{
+		pos = input.find(':');
+	}
+
 	if (pos != std::wstring::npos)
 	{
-		return param.substr(pos + 1);
+		return input.substr(pos + 1);
 	}
 	
 	return L"";
@@ -78,7 +236,7 @@ std::wstring ParameterHandler::GetParameterValue(int parameter)
 
 int ParameterHandler::Count()
 {
-	return parameters.size();
+	return Parameters.size();
 }
 
 
@@ -86,13 +244,9 @@ bool ParameterHandler::FindParameter(std::wstring parameter)
 {
 	std::transform(parameter.begin(), parameter.end(), parameter.begin(), ::tolower);
 
-	for (int t = 0; t < parameters.size(); t++)
+	for (int t = 0; t < Parameters.size(); t++)
 	{
-		std::wstring p = parameters[t];
-
-		std::transform(p.begin(), p.end(), p.begin(), ::tolower);
-
-		if (p == parameter)
+		if (Parameters[t].Command == parameter)
 		{
 			return true;
 		}
@@ -102,46 +256,109 @@ bool ParameterHandler::FindParameter(std::wstring parameter)
 }
 
 
-ParameterDetails ParameterHandler::ParameterInformation(int type)
+bool ParameterHandler::IsReport(const std::wstring command)
 {
-	ParameterDetails parameter_details;
-
-	return parameter_details;
-}
-
-
-ReportType ParameterHandler::IsReport(int index)
-{
-	std::wstring parameter(parameters[index]);
-
-	std::transform(parameter.begin(), parameter.end(), parameter.begin(), ::tolower);
-
-	for (int r = 0; r < __reportParametersCount; r++)
+	for (int r = 0; r < kReportParametersCount; r++)
 	{
-		if (parameter.find(__reportParameters[r]) == 0)
+		if (command.find(ReportCommandList[r]) == 0)
 		{
-			return __reportParameterTypes[r];
+			return true;
 		}
 	}
 
-	return ReportType::Error;
+	return false;
 }
 
 
-ParameterDetails ParameterHandler::ParametersForReport(int index, ReportType reportType)
+bool ParameterHandler::IsProcessingSwitch(ParameterOption option)
 {
-	ParameterDetails parameter_details;
-
-	CreateTokens(parameters[index]);
-
-	parameter_details.Type  = reportType;
-	parameter_details.Value = DefaultFileName(reportType);
-
-	if (parameter_details.Value != L"")
+	switch (option)
 	{
-		std::wstring options = DefaultOptions(reportType);
+	case ParameterOption::NoUsers:
+	case ParameterOption::NoProcess:
+	case ParameterOption::NoTemp:
+		return true;
+	}
 
-		parameter_details.Options = options;
+	return false;
+}
+
+
+bool ParameterHandler::IsDatabaseSwitch(ParameterOption option)
+{
+	switch (option)
+	{
+	case ParameterOption::UpdateFolderHistory:
+	case ParameterOption::ODBC:
+	case ParameterOption::SQLite:
+	case ParameterOption::DBStructured:
+	case ParameterOption::SystemTable:
+	case ParameterOption::DataTable:
+	case ParameterOption::UpdateScanHistory:
+		return true;
+	}
+
+	return false;
+}
+
+
+bool ParameterHandler::IsDateReport(ParameterOption option)
+{
+	switch (option)
+	{
+	case ParameterOption::TreeReport:
+	case ParameterOption::XMLFullListReport:
+	case ParameterOption::TopTwenty:
+	case ParameterOption::BottomTwenty:
+		return false;
+	}
+
+	return true;
+}
+
+
+bool ParameterHandler::IsFileDateReport(ParameterOption option)
+{
+	switch (option)
+	{
+	case ParameterOption::HTMLReport:
+	case ParameterOption::TextReport:
+	case ParameterOption::XMLReport:
+	case ParameterOption::XinorbisReport:
+	case ParameterOption::DeepTextReport:
+	case ParameterOption::DeepHTMLReport:
+		return true;
+	}
+
+	return false;
+}
+
+bool ParameterHandler::IsSizeReport(ParameterOption option)
+{
+	switch (option)
+	{
+	case ParameterOption::TreeReport:
+	case ParameterOption::XMLFullListReport:
+	case ParameterOption::NewTwenty:
+	case ParameterOption::OldTwenty:
+		return false;
+	}
+
+	return true;
+}
+
+
+void ParameterHandler::ParametersForReport(ParameterData& option)
+{
+	CreateTokens(option.OriginalInput);
+
+	option.FileName = DefaultFileName(option.Parameter);
+
+	if (option.FileName != L"")
+	{
+		std::wstring options = DefaultOptions(option.Parameter);
+
+		option.ReportOptions = options;
 
 		switch (tokens.size())
 		{
@@ -149,13 +366,13 @@ ParameterDetails ParameterHandler::ParametersForReport(int index, ReportType rep
 		{
 			if (tokens[1].find(L"\\") != std::wstring::npos)
 			{
-				parameter_details.Value = tokens[1];
+				option.Value = tokens[1];
 			}
 			else
 			{
 				for (int t = 0; t < tokens[1].length(); t++)
 				{
-					parameter_details.Options[t] = tokens[1][t];
+					option.ReportOptions[t] = tokens[1][t];
 				}
 			}
 
@@ -164,91 +381,34 @@ ParameterDetails ParameterHandler::ParametersForReport(int index, ReportType rep
 		case 3:
 			for (int t = 0; t < tokens[1].length(); t++)
 			{
-				parameter_details.Options[t] = tokens[1][t];
+				option.ReportOptions[t] = tokens[1][t];
 			}
 
-			parameter_details.Value = tokens[2];
+			option.Value = tokens[2];
 
 			break;
 		}
 	}
-	else
-	{
-		parameter_details.Type = ReportType::Error;
-	}
-
-	return parameter_details;
-}
-
-
-int ParameterHandler::GetParameterType(std::wstring parameter)
-{
-	std::transform(parameter.begin(), parameter.end(), parameter.begin(), ::tolower);
-
-	if (parameter.find(L"/csv") != std::wstring::npos) { return __parameterReportCSV; }
-	if (parameter.find(L"/htm") != std::wstring::npos) { return __parameterReportHTML; }
-	if (parameter.find(L"/html") != std::wstring::npos) { return __parameterReportHTML; }
-	if (parameter.find(L"/txt") != std::wstring::npos) { return __parameterReportText; }
-	if (parameter.find(L"/text") != std::wstring::npos) { return __parameterReportText; }
-	if (parameter.find(L"/tree") != std::wstring::npos) { return __parameterReportTree; }
-	if (parameter.find(L"/xin") != std::wstring::npos) { return __parameterReportXinorbis; }
-	if (parameter.find(L"/xml") != std::wstring::npos) { return __parameterReportXML; }
-	if (parameter.find(L"/xfl") != std::wstring::npos) { return __parameterReportXMLFileList; }
-
-	if (parameter.find(L"/deeptext") != std::wstring::npos) { return __parameterReportTextDeep; }
-	if (parameter.find(L"/deephtml") != std::wstring::npos) { return __parameterReportHTMLDeep; }
-
-	if (parameter.find(L"/sum") != std::wstring::npos) { return __parameterReportSummary; }
-	if (parameter.find(L"/top20") != std::wstring::npos) { return __parameterReportTop20; }
-	if (parameter.find(L"/bottom20") != std::wstring::npos) { return __parameterReportBottom20; }
-	if (parameter.find(L"/new20") != std::wstring::npos) { return __parameterReportNewest20; }
-	if (parameter.find(L"/old20") != std::wstring::npos) { return __parameterReportOldest20; }
-
-	if (parameter.find(L"/allowvirtual") != std::wstring::npos) { return __parameterAllowVirtual; }
-
-	if (parameter.find(L"/open") != std::wstring::npos) { return 0xFF; }
-
-	if (parameter.find(L"/updatescanhistory") != std::wstring::npos) { return __parameterDBUpdateScanHistory; }
-	if (parameter.find(L"/odbc") != std::wstring::npos) { return __parameterDBODBC; }
-	if (parameter.find(L"/sqlite") != std::wstring::npos) { return __parameterDBSQlite; }
-	if (parameter.find(L"/dbstructured") != std::wstring::npos) { return __parameterDBStructured; }
-	if (parameter.find(L"/systemtable") != std::wstring::npos) { return __parameterDBSystemTable; }
-	if (parameter.find(L"/datatable") != std::wstring::npos) { return __parameterDBDataTable; }
-	if (parameter.find(L"/updatefolderhistory") != std::wstring::npos) { return __parameterDBUpdateFolderistory; }
-
-	if (parameter.find(L"/nouser") != std::wstring::npos) { return __parameterNoUserDetails; }
-	if (parameter.find(L"/noprocess") != std::wstring::npos) { return __parameterNoProcess; }
-	if (parameter.find(L"/notemp") != std::wstring::npos) { return __parameterNoTempFiles; }
-
-	if (parameter.find(L"/cat") != std::wstring::npos) { return __parameterCat; }
-	if (parameter.find(L"/test") != std::wstring::npos) { return __parameterTest; }
-
-	if (parameter.find(L"/versioncheck") != std::wstring::npos) { return __parameterVersionCheck; }
-
-	if (parameter.find(L"/p") != std::wstring::npos) { return 0x01; }
-	if (parameter.find(L"/o") != std::wstring::npos) { return 0x02; }
-
-	return __parameterInvalid;
 }
 
 
 void ParameterHandler::ProcessForOptimisations()
 {
-	for (int p = 0; p < parameters.size(); p++)
+	for (int p = 0; p < Parameters.size(); p++)
 	{
-		switch (GetParameterType(parameters[p]))
+		switch (Parameters[p].Parameter)
 		{
-		case __parameterReportCSV:
-		case __parameterReportText:
-		case __parameterReportHTML:
-		case __parameterReportXinorbis:
-		case __parameterReportXML:
-		case __parameterReportXMLFileList:
-		case __parameterReportTextDeep:
-		case __parameterReportHTMLDeep:
-		case __parameterDBUpdateScanHistory:
-			GSettings->Optimisations.UseFastAnalysis = false;
-			GSettings->Optimisations.GetUserDetails = true;
+		case ParameterOption::CSVReport:
+		case ParameterOption::TextReport:
+		case ParameterOption::HTMLReport:
+		case ParameterOption::XinorbisReport:
+		case ParameterOption::XMLReport:
+		case ParameterOption::XMLFullListReport:
+		case ParameterOption::DeepTextReport:
+		case ParameterOption::DeepHTMLReport:
+		case ParameterOption::UpdateScanHistory:
+			Optimisations.UseFastAnalysis = false;
+			Optimisations.GetUserDetails = true;
 
 			return;
 		}
@@ -256,115 +416,23 @@ void ParameterHandler::ProcessForOptimisations()
 }
 
 
-int ParameterHandler::IsProcessingSwitch(int parameter)
-{
-	std::wstring param = parameters[parameter];
-
-	std::transform(param.begin(), param.end(), param.begin(), ::toupper);
-
-	int ptype = GetParameterType(param);
-
-	if ((ptype >= 0x20) && (ptype <= 0x22))
-	{
-		return ptype;
-	}
-
-	return __parameterInvalid;
-}
-
-
-int ParameterHandler::IsDatabaseSwitch(int parameter)
-{
-	std::wstring param = parameters[parameter];
-
-	std::transform(param.begin(), param.end(), param.begin(), ::toupper);
-
-	int ptype = GetParameterType(param);
-
-	if ((ptype >= 0x06) && (ptype <= 0x0C))
-	{
-		return ptype;
-	}
-
-	return __parameterInvalid;
-}
-
-
-std::wstring ParameterHandler::ReportSwitch(ReportType report)
-{
-	switch (report)
-	{
-		case ReportType::CSV:
-			return L"/csv";
-			break;
-		case ReportType::HTML:
-			return L"/html";
-			break;
-		case ReportType::Summary:
-			return L"/sum";
-			break;
-		case ReportType::Text:
-			return L"/txt";
-			break;
-		case ReportType::Tree:
-			return L"/tree";
-			break;
-		case ReportType::XML:
-			return L"/xml";
-			break;
-		case ReportType::XMLFullList:
-			return L"/xfl";
-			break;
-		case ReportType::Xinorbis:
-			return L"/xin";
-			break;
-
-		case ReportType::Top20:
-			return L"/top20";
-			break;
-		case ReportType::Bottom20:
-			return L"/bottom20";
-			break;
-		case ReportType::New20:
-			return L"/new20";
-			break;
-		case ReportType::Old20:
-			return L"/old20";
-			break;
-		case ReportType::All20:
-			return L"/all20";
-			break;
-
-		case ReportType::TextDeep:
-			return L"/deeptext";
-			break;
-		case ReportType::HTMLDeep:
-			return L"/deephtml";
-			break;
-
-		default:
-			return L"";
-	}
-}
-
-
-int ParameterHandler::HelpSwitch(std::wstring& help)
+int ParameterHandler::HelpSwitch(std::wstring help)
 {
 	std::transform(help.begin(), help.end(), help.begin(), ::tolower);
 
-	if ((help == L"/?") || (help == L"/h"))
+	if (help == kHelp)
 	{
 		return __HelpUsage;
 	}
-	else if ((help == L"/version") || (help == L"/v"))
+	else if (help == kVersion)
 	{
 		return __HelpSimple;
 	}
-	else if (help == L"/stats")
+	else if (help == kStatistics)
 	{
 		return __HelpStats;
 	}
-	else if (help == L"/cats")
+	else if (help == kCats)
 	{
 		return __HelpCat;
 	}
@@ -378,8 +446,10 @@ int ParameterHandler::HelpSwitch(std::wstring& help)
 // /xyz;options
 // /xyz;options;filename
 // and separates each component in the tokens array
-void ParameterHandler::CreateTokens(std::wstring parameter)
+void ParameterHandler::CreateTokens(std::wstring input)
 {
+	std::wstring parameter = input;
+
 	tokens.clear();
 
 	std::wstring delimiter = L";";
@@ -392,9 +462,9 @@ void ParameterHandler::CreateTokens(std::wstring parameter)
 
 		std::wstring token;
 
-		while (parameter.find_first_of(delimiter) != std::wstring::npos)
+		while (parameter.find(delimiter) != std::wstring::npos)
 		{
-			pos = parameter.find_first_of(delimiter);
+			pos = parameter.find(delimiter);
 
 			token = parameter.substr(0, pos);
 
@@ -406,45 +476,35 @@ void ParameterHandler::CreateTokens(std::wstring parameter)
 }
 
 
-std::wstring ParameterHandler::DefaultFileName(ReportType report)
+std::wstring ParameterHandler::DefaultFileName(ParameterOption option)
 {
-	switch (report)
+	switch (option)
 	{
-		case ReportType::CSV:
-			return GSystemGlobal->DataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\CSV\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.csv";
-			break;
-		case ReportType::HTML:
-			return GSystemGlobal->DataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\HTML\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.html";
-			break;
-		case ReportType::Summary:
-			return GSystemGlobal->DataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\Text\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.txt";
-			break;
-		case ReportType::Text:
-			return GSystemGlobal->DataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\Text\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.txt";
-			break;
-		case ReportType::Tree:
-			return GSystemGlobal->DataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\Tree\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.txt";
-			break;
-		case ReportType::Xinorbis:
-			return GSystemGlobal->DataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\Text\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.zsr2";
-			break;
-		case ReportType::XML:
-		case ReportType::XMLFullList:
-			return GSystemGlobal->DataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\XML\\"  + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.xml";
-			break;
-		case ReportType::Top20:
-		case ReportType::Bottom20:
-		case ReportType::New20:
-		case ReportType::Old20:
-			return GSystemGlobal->DataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\Text\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.txt";
-			break;
+		case ParameterOption::CSVReport:
+			return SystemDataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\CSV\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.csv";
+		case ParameterOption::HTMLReport:
+			return SystemDataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\HTML\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.html";
+		case ParameterOption::Summary:
+			return SystemDataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\Text\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.txt";
+		case ParameterOption::TextReport:
+			return SystemDataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\Text\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.txt";
+		case ParameterOption::TreeReport:
+			return SystemDataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\Tree\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.txt";
+		case ParameterOption::XinorbisReport:
+			return SystemDataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\Text\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.zsr2";
+		case ParameterOption::XMLReport:
+		case ParameterOption::XMLFullListReport:
+			return SystemDataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\XML\\"  + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.xml";
+		case ParameterOption::TopTwenty:
+		case ParameterOption::BottomTwenty:
+		case ParameterOption::NewTwenty:
+		case ParameterOption::OldTwenty:
+			return SystemDataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\Text\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.txt";
 
-		case ReportType::TextDeep:
-			return GSystemGlobal->DataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\Text\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.txt";
-			break;
-		case ReportType::HTMLDeep:
-			return GSystemGlobal->DataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\HTML\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.html";
-			break;
+		case ParameterOption::DeepTextReport:
+			return SystemDataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\Text\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.txt";
+		case ParameterOption::DeepHTMLReport:
+			return SystemDataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\HTML\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.html";
 
 		default:
 			return L"";
@@ -452,41 +512,32 @@ std::wstring ParameterHandler::DefaultFileName(ReportType report)
 }
 
 
-std::wstring ParameterHandler::DefaultOptions(ReportType report)
+std::wstring ParameterHandler::DefaultOptions(ParameterOption option)
 {
-	switch (report)
+	switch (option)
 	{
-	case ReportType::CSV:
+	case ParameterOption::CSVReport:
 		return L"110";
-		break;
-	case ReportType::HTML:
-	case ReportType::HTMLDeep:
+	case ParameterOption::HTMLReport:
+	case ParameterOption::DeepHTMLReport:
 		return L"1111111111120";
-		break;
-	case ReportType::Summary:
+	case ParameterOption::Summary:
 		return L"1";
-		break;
-	case ReportType::Text:
-	case ReportType::TextDeep:
+	case ParameterOption::TextReport:
+	case ParameterOption::DeepTextReport:
 		return L"11111111111";
-		break;
-	case ReportType::Tree:
+	case ParameterOption::TreeReport:
 		return L"11";
-		break;
-	case ReportType::XML:
+	case ParameterOption::XMLReport:
 		return L"01111111111";
-		break;
-	case ReportType::XMLFullList:
+	case ParameterOption::XMLFullListReport:
 		return L"1";
-		break;
 
-	case ReportType::Top20:
-	case ReportType::Bottom20:
-	case ReportType::New20:
-	case ReportType::Old20:
+	case ParameterOption::TopTwenty:
+	case ParameterOption::BottomTwenty:
+	case ParameterOption::NewTwenty:
+	case ParameterOption::OldTwenty:
 		return L"1";
-		break;
-
 
 	default:
 		return L"";
@@ -497,13 +548,13 @@ std::wstring ParameterHandler::DefaultOptions(ReportType report)
 // returns true if the first parameter is NOT a switch
 bool ParameterHandler::HasScanFolder()
 {
-	if (parameters.size() == 0)
+	if (Parameters.size() == 0)
 	{
 		return false;
 	}
 	else
 	{
-		if (parameters[0][0] == L'/')
+		if (Parameters[0].OriginalInput[0] == L'/')
 		{
 			return false;
 		}
@@ -518,11 +569,9 @@ bool ParameterHandler::HasScanFolder()
 // checks for reports, or sorted console output parameters
 bool ParameterHandler::NeedToProcessTopSizeLists()
 {
-	for (int t = 1; t < parameters.size(); t++)
+	for (int t = 1; t < Parameters.size(); t++)
 	{
-		ReportType report_type = GParameterHandler->IsReport(t);
-		
-		if (IsSizeReport(report_type))
+		if (Parameters[t].IsSizeReport)
 		{
 			return true;
 		}
@@ -534,11 +583,9 @@ bool ParameterHandler::NeedToProcessTopSizeLists()
 
 bool ParameterHandler::NeedToProcessTopDateLists()
 {
-	for (int t = 1; t < parameters.size(); t++)
+	for (int t = 1; t < Parameters.size(); t++)
 	{
-		ReportType report_type = GParameterHandler->IsReport(t);
-
-		if (IsDateReport(report_type))
+		if (Parameters[t].IsDateReport)
 		{
 			return true;
 		}
@@ -550,11 +597,9 @@ bool ParameterHandler::NeedToProcessTopDateLists()
 
 bool ParameterHandler::NeedToProcessFileDates()
 {
-	for (int t = 1; t < parameters.size(); t++)
+	for (int t = 1; t < Parameters.size(); t++)
 	{
-		ReportType report_type = GParameterHandler->IsReport(t);
-
-		if (IsFileDateReport(report_type))
+		if (Parameters[t].IsFileDateReport)
 		{
 			return true;
 		}
@@ -564,47 +609,60 @@ bool ParameterHandler::NeedToProcessFileDates()
 }
 
 
-bool ParameterHandler::IsDateReport(ReportType report_type)
+bool ParameterHandler::Save(std::wstring file_name)
 {
-	switch (report_type)
+	std::ofstream file(file_name);
+
+	if (file)
 	{
-	case ReportType::Tree:
-	case ReportType::XMLFullList:
-	case ReportType::Top20:
-	case ReportType::Bottom20:
-		return false;
-	}
+		std::wcout << L"Saving parameter list: " << file_name << "\n\n";
 
-	return true;
-}
+		file << Formatting::to_utf8(L"#\n");
+		file << Formatting::to_utf8(L"# created: " + Utility::DateTime(0) + L"\n");
+		file << Formatting::to_utf8(L"#\n");
+	
+		for (int t = 0; t < Parameters.size(); t++)
+		{
+			if (Parameters[t].Parameter != ParameterOption::LoadConfig && Parameters[t].Parameter != ParameterOption::SaveConfig)
+			{
+				file << Formatting::to_utf8(Parameters[t].OriginalInput + L"\n");
+			}
+		}
 
+		file.close();
 
-bool ParameterHandler::IsFileDateReport(ReportType report_type)
-{
-	switch (report_type)
-	{
-	case ReportType::HTML:
-	case ReportType::Text:
-	case ReportType::XML:
-	case ReportType::Xinorbis:
-	case ReportType::TextDeep:
-	case ReportType::HTMLDeep:
 		return true;
 	}
 
 	return false;
 }
 
-bool ParameterHandler::IsSizeReport(ReportType report_type)
+
+bool ParameterHandler::Load(std::wstring file_name)
 {
-	switch (report_type)
+	std::wifstream file(file_name);
+
+	if (file)
 	{
-	case ReportType::Tree:
-	case ReportType::XMLFullList:
-	case ReportType::New20:
-	case ReportType::Old20:
-		return false;
+		std::wcout << L"Loading parameter list: " << file_name << "\n\n";
+
+		std::wstring s;
+
+		while (std::getline(file, s))
+		{
+			if (s != L"")
+			{
+				if (s[0] != L'#')
+				{
+					ProcessCommandLineParameter(s);
+				}
+			}
+		}
+
+		file.close();
+
+		return true;
 	}
 
-	return true;
+	return false;
 }

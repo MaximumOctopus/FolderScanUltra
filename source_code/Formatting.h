@@ -9,22 +9,26 @@
 // 
 // 
 
-
 #include <string>
 
 
 namespace Formatting
 {
-	std::wstring AddLeading(std::wstring, int, char);
-	std::wstring AddLeadingSpace(std::wstring, int);
-	std::wstring AddTrailing(std::wstring, int, char);
+	[[nodiscard]] std::wstring AddLeading(std::wstring, int, char);
+	[[nodiscard]] std::wstring AddLeadingSpace(std::wstring, int);
+	[[nodiscard]] std::wstring AddTrailing(std::wstring, int, char);
 
-	std::wstring MakeItalic(const std::wstring, bool);
-	std::wstring InsertElement(const std::wstring, std::wstring, int);
-	std::wstring ReplaceEntitiesForXML(std::wstring);
-	std::wstring TrimFileNameForOutput(const std::wstring);
+	[[nodiscard]] std::wstring AffixFileExtension(const std::wstring, const std::wstring);
 
-	std::wstring GetAttributeAsString(int attributes);
+	[[nodiscard]] std::wstring MakeItalic(const std::wstring, bool);
+	[[nodiscard]] std::wstring InsertElement(const std::wstring, std::wstring, int);
+	[[nodiscard]] std::wstring ReplaceEntitiesForXML(std::wstring);
+	[[nodiscard]] std::wstring TrimFileNameForOutput(const std::wstring);
 
-	std::wstring StringOfCharacters(int, std::wstring);
+	[[nodiscard]] std::wstring GetAttributeAsString(int);
+
+	[[nodiscard]] std::wstring StringOfCharacters(int, std::wstring);
+
+	[[nodiscard]] std::string to_utf8(const std::wstring&);
+	[[nodiscard]] std::string to_utf8x(const wchar_t*, int);
 }

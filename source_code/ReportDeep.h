@@ -9,7 +9,6 @@
 // 
 // 
 
-
 #pragma once
 
 
@@ -33,7 +32,7 @@ public:
 
 	ReportDeep();
 
-	void ReportDeep::Add(std::wstring folder, unsigned __int64 size, int file_count);
+	void Add(std::wstring folder, unsigned __int64 size, int file_count);
 
 	bool ProcessFolder(int);
 };

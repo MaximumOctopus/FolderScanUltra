@@ -9,7 +9,6 @@
 // 
 // 
 
-
 #pragma once
 
 
@@ -153,9 +152,9 @@ public:
 
 	void ClearData();
 
-	int FindUser(std::wstring);
+	[[nodiscard]] int FindUser(std::wstring);
 
-	bool Scan(bool, bool, bool, bool);
+	[[nodiscard]] bool Scan(bool, bool, bool, bool);
 
 	void ScanFolder(const std::wstring &);
 
@@ -163,11 +162,11 @@ public:
 
 	void AddUserNotSpecified();
 
-	SizeOfFolder GetSizeOfFolder(const std::wstring, const std::wstring);
+	[[nodiscard]] SizeOfFolder GetSizeOfFolder(const std::wstring, const std::wstring);
 
-	std::wstring GetDrive();
+	[[nodiscard]] std::wstring GetDrive();
 
-	int GetFolderIndex(const std::wstring);
+	[[nodiscard]] int GetFolderIndex(const std::wstring);
 
 	void SortRootBySize();
 
@@ -176,5 +175,5 @@ public:
 	void SaveSearchResults(Command);
 
 	void Search(Command);
-	int Filter(Command);
+	[[nodiscard]] int Filter(Command);
 };

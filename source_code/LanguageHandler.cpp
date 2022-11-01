@@ -10,15 +10,13 @@
 // 
 
 #include <algorithm>
+#include <fstream>
 #include <iostream>
+#include <string>
 
 #include "Constants.h"
 #include "LanguageHandler.h"
 #include "WindowsUtility.h"
-#include <codecvt>
-#include <fstream>
-#include <locale>
-#include <string>
 
 
 LanguageHandler* GLanguageHandler;
@@ -57,8 +55,6 @@ bool LanguageHandler::LoadLanguage(const std::wstring file_name)
 	{
 		std::wifstream file(file_name);
 
-		file.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
-
 		if (file)
 		{
 			std::wstring s;
@@ -91,7 +87,7 @@ bool LanguageHandler::LoadLanguage(const std::wstring file_name)
 	}
 	else
 	{
-		std::wcout << L"Language file missing: " << "\n" << file_name << L"\n"; 
+		std::wcout << L"Language file missing: \n" << file_name << L"\n"; 
 	}
 
     return false;
@@ -103,8 +99,6 @@ bool LanguageHandler::LoadUnits(const std::wstring file_name)
 	if (WindowsUtility::FileExists(file_name))
 	{
 		std::wifstream file(file_name);
-
-		file.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
 
 		if (file)
 		{
@@ -122,7 +116,7 @@ bool LanguageHandler::LoadUnits(const std::wstring file_name)
 	}
 	else
 	{
-		std::wcout << L"Language Units file missing: " << "\n" << file_name << L"\n";
+		std::wcout << L"Language Units file missing: \n" << file_name << L"\n";
 	}
 
 	return false;
@@ -171,6 +165,7 @@ void LanguageHandler::SetReportText()
 	TextReport[16] = Text[rsTextReport17];
 	TextReport[17] = Text[rsTextReport18];
 	TextReport[18] = Text[rsTextReport19];
+	TextReport[19] = Text[rsTextReport20];
 
 	LanguageTypes[0] = Text[rsHidden];
 	LanguageTypes[1] = Text[rsSystem];
@@ -237,13 +232,13 @@ void LanguageHandler::SetReportText()
 void LanguageHandler::SetXDates()
 {
 	// rsDateDD
-	Dates.push_back(Text[rsDay].substr(0) + Text[rsDay].substr(0));
+	Dates.push_back(Text[rsDay].substr(0, 1) + Text[rsDay].substr(0, 1));
 
 	// rsDateMM
-	Dates.push_back(Text[rsMonth].substr(0) + Text[rsMonth].substr(0));
+	Dates.push_back(Text[rsMonth].substr(0, 1) + Text[rsMonth].substr(0, 1));
 
 	// rsDateYYYY
-	Dates.push_back(Text[rsYear].substr(0) + Text[rsYear].substr(0) + Text[rsYear].substr(0) + Text[rsYear].substr(0));
+	Dates.push_back(Text[rsYear].substr(0, 1) + Text[rsYear].substr(0, 1) + Text[rsYear].substr(0, 1) + Text[rsYear].substr(0, 1));
 }
 
 

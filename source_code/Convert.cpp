@@ -9,8 +9,8 @@
 // 
 // 
 
-
 #include <algorithm>
+#include <format>
 #include <string>
 #include <Windows.h>
 #include <iostream>
@@ -68,43 +68,27 @@ namespace Convert
 		}
 		else if (value < 1048576)
 		{
-			double lSize = (double)value / (double)1024;
+			double size = (double)value / (double)1024;
 
-			std::wstring s(7, '\0');
-			int i = swprintf(&s[0], L"%.2f", lSize);
-			s.resize(i);
-
-			return s + L" KB";
+			return std::format(L"{0:.2f}KB", size);
 		}
 		else if (value < 1073741824)
 		{
-			double lSize = (double)value / (double)1048576;
+			double size = (double)value / (double)1048576;
 
-			std::wstring s(7, '\0');
-			int i = swprintf(&s[0], L"%.2f", lSize);
-			s.resize(i);
-
-			return s + L" MB";
+			return std::format(L"{0:.2f}MB", size);
 		}
 		else if (value < 1099511627776)
 		{
-			double lSize = (double)value / (double)1073741824;
-				
-			std::wstring s(7, '\0');
-			int i = swprintf(&s[0], L"%.2f", lSize);
-			s.resize(i);
-
-			return s + L" GB";
+			double size = (double)value / (double)1073741824;
+			
+			return std::format(L"{0:.2f}GB", size);
 		}
 		else
 		{
-			double lSize = (double)value / (double)1099511627776;
+			double size = (double)value / (double)1099511627776;
 
-			std::wstring s(7, '\0');
-			int i = swprintf(&s[0], L"%.2f", lSize);
-			s.resize(i);
-
-			return s + L" TB";
+			return std::format(L"{0:.2f}TB", size);
 		}
 	}
 
@@ -370,7 +354,7 @@ namespace Convert
 			int i = swprintf(&s[0], L"%.0f", value * 100);
 			s.resize(i);
 
-			return s + L"%";
+			return s + L"%"; // std::format(L"{0:.2f} KB", size); to do
 		}
 		else
 		{
@@ -441,7 +425,7 @@ namespace Convert
 				int i = swprintf(&s[0], L"%.2f", double(size / 1024));
 				s.resize(i);
 
-				return s + L"KB";
+				return s + L"KB";// to do
 			}
 			case 3:
 			{
@@ -449,7 +433,7 @@ namespace Convert
 				int i = swprintf(&s[0], L"%.2f", double(size / 1048576)); // 1024^2
 				s.resize(i);
 
-				return s + L"MB";
+				return s + L"MB";// to do
 			}
 			case 4:
 			{
@@ -457,7 +441,7 @@ namespace Convert
 				int i = swprintf(&s[0], L"%.2f", double(size / 1073741824)); // 1024^3
 				s.resize(i);
 
-				return s + L"GB";
+				return s + L"GB";// to do
 			}
 			
 			default:
@@ -507,7 +491,7 @@ namespace Convert
 	}
 
 
-	int StrToIntDef(std::wstring input, int default)
+	int StrToIntDef(std::wstring input, int default_value)
 	{
 		std::wstring::size_type sz;   // alias of size_t
 
@@ -519,7 +503,7 @@ namespace Convert
 		}
 		catch (...)
 		{
-			return default;
+			return default_value;
 		}
 	}
 

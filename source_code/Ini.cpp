@@ -9,17 +9,12 @@
 // 
 // 
 
-
-#include "Ini.h"
-
 #include <algorithm>
-#include <codecvt>
 #include <fstream>
-#include <locale>
 #include <string>
 #include <vector>
 
-
+#include "Ini.h"
 
 Ini::Ini(const std::wstring file_name)
 {
@@ -30,8 +25,6 @@ Ini::Ini(const std::wstring file_name)
 bool Ini::LoadFile(const std::wstring file_name)
 {
 	std::wifstream file(file_name);
-
-	file.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
 
 	if (file)
 	{
@@ -50,14 +43,13 @@ bool Ini::LoadFile(const std::wstring file_name)
 		file.close();
 
 		return true;
-
 	}
 
 	return false;
 }
 
 
-int Ini::ReadInteger(const std::wstring section, std::wstring key, int default)
+int Ini::ReadInteger(const std::wstring section, std::wstring key, int default_value)
 {
 	std::wstring::size_type sz;   // alias of size_t
 
@@ -67,28 +59,35 @@ int Ini::ReadInteger(const std::wstring section, std::wstring key, int default)
 
 		if (i == -1)
 		{
-			return default;
+			return default_value;
 		}
 
 		return i;
 	}
 	catch(...)
 	{
-		return default;
+		return default_value;
 	}
 }
 
 
-std::wstring Ini::ReadString(std::wstring section, std::wstring key, const std::wstring default)
+std::wstring Ini::ReadString(std::wstring section, std::wstring key, const std::wstring default_value)
 {
 	bool inSection = false;
 	std::wstring sectionName = L"";
+	int StartIndex = 0;
 
 	key = key + L'=';
 
+	std::transform(key.begin(), key.end(), key.begin(), ::tolower);
 	std::transform(section.begin(), section.end(), section.begin(), ::tolower);
 
-	for (int i = 0; i < Lines.size(); i++)
+	if (LastSection == section)
+	{
+		StartIndex = LastSectionIndex;
+	}
+
+	for (int i = StartIndex; i < Lines.size(); i++)
 	{
 		if (Lines[i][0] == L'[')
 		{
@@ -97,7 +96,9 @@ std::wstring Ini::ReadString(std::wstring section, std::wstring key, const std::
 				// we were in the right section, but now entered a new one.... which means the key we're looking
 				// for must be missing, so return the default value
 
-				return default;
+				LastKeyExist = false;
+
+				return default_value;
 			}
 			else
 			{
@@ -111,6 +112,9 @@ std::wstring Ini::ReadString(std::wstring section, std::wstring key, const std::
 				if (sectionName == section)
 				{
 					inSection = true;
+
+					LastSection = section;
+					LastSectionIndex = i;
 				}
 			}
 		}
@@ -122,17 +126,21 @@ std::wstring Ini::ReadString(std::wstring section, std::wstring key, const std::
 				{
 					if ((Lines[i][0] != L';') && (Lines[i][0] != L'/'))
 					{
-						if (Lines[i].find(key) == 0)
+						if (Lines[i].starts_with(key))
 						{
 							if (Lines[i].length() > key.length())
 							{
+								LastKeyExist = true;
+
 								return Lines[i].substr(key.length());
 							}
 							else
 							{
-								// key is emtpy (key= ) so let's return the default                                
+								// key is empty (key= ) so let's return the default                                
 
-								return default;
+								LastKeyExist = false;
+
+								return default_value;
 							}
 						}
 					}
@@ -141,5 +149,5 @@ std::wstring Ini::ReadString(std::wstring section, std::wstring key, const std::
 		}
 	}
 
-	return default;
+	return default_value;
 }

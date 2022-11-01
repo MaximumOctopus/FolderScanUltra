@@ -9,7 +9,6 @@
 // 
 // 
 
-
 #include <iostream>
 #include <string>
 
@@ -25,14 +24,11 @@ extern ParameterHandler* GParameterHandler;
 SystemGlobal* GSystemGlobal;
 
 
-// =============================================================
-
-
 SystemGlobal::SystemGlobal(int argc, wchar_t *argv[])
 {
 	InitialiseFolderScanUltra();
 
-	GParameterHandler = new ParameterHandler(argc, argv);
+	GParameterHandler = new ParameterHandler(argc, argv, DataPath);
 }
 
 
@@ -64,40 +60,40 @@ bool SystemGlobal::CheckFolderStructure()
 
 	std::wstring cName = WindowsUtility::GetComputerNetName();
 
-	if (!WindowsUtility::DirectoryExistsWString(AppPath + L"logs\\"))											 { failCount += WindowsUtility::CreateWFolder(AppPath + L"logs"); }
+	if (!WindowsUtility::DirectoryExists(AppPath + L"logs\\"))								  { failCount += WindowsUtility::CreateFolder(AppPath + L"logs"); }
 
-	if (!WindowsUtility::DirectoryExistsWString(DataPath))												         { failCount += WindowsUtility::CreateWFolder(DataPath); }
+	if (!WindowsUtility::DirectoryExists(DataPath))										  	  { failCount += WindowsUtility::CreateFolder(DataPath); }
 
-	if (!WindowsUtility::DirectoryExistsWString(DataPath + L"Saves"))								 { failCount += WindowsUtility::CreateWFolder(DataPath + L"Saves"); }
-	if (!WindowsUtility::DirectoryExistsWString(DataPath + L"Saves\\Custom Reports"))                { failCount += WindowsUtility::CreateWFolder(DataPath + L"Saves\\Custom Reports"); }
+	if (!WindowsUtility::DirectoryExists(DataPath + L"Saves"))								  { failCount += WindowsUtility::CreateFolder(DataPath + L"Saves"); }
+	if (!WindowsUtility::DirectoryExists(DataPath + L"Saves\\Custom Reports"))                { failCount += WindowsUtility::CreateFolder(DataPath + L"Saves\\Custom Reports"); }
 
-	if (!WindowsUtility::DirectoryExistsWString(DataPath + L"Reports"))                              { failCount += WindowsUtility::CreateWFolder(DataPath + L"Reports"); }
-	if (!WindowsUtility::DirectoryExistsWString(DataPath + L"Reports\\" + cName))                    { failCount += WindowsUtility::CreateWFolder(DataPath + L"Reports\\" + cName); }
+	if (!WindowsUtility::DirectoryExists(DataPath + L"Reports"))                              { failCount += WindowsUtility::CreateFolder(DataPath + L"Reports"); }
+	if (!WindowsUtility::DirectoryExists(DataPath + L"Reports\\" + cName))                    { failCount += WindowsUtility::CreateFolder(DataPath + L"Reports\\" + cName); }
 		
-	if (!WindowsUtility::DirectoryExistsWString(DataPath + L"Reports\\" + cName + L"\\CSV"))         { failCount += WindowsUtility::CreateWFolder(DataPath + L"Reports\\" + cName + L"\\CSV"); }
+	if (!WindowsUtility::DirectoryExists(DataPath + L"Reports\\" + cName + L"\\CSV"))         { failCount += WindowsUtility::CreateFolder(DataPath + L"Reports\\" + cName + L"\\CSV"); }
 
-	if (!WindowsUtility::DirectoryExistsWString(DataPath + L"Reports\\" + cName + L"\\HTML"))        { failCount += WindowsUtility::CreateWFolder(DataPath + L"Reports\\" + cName + L"\\HTML"); }
-	if (!WindowsUtility::DirectoryExistsWString(DataPath + L"Reports\\" + cName + L"\\HTML\\data"))  { failCount += WindowsUtility::CreateWFolder(DataPath + L"Reports\\" + cName + L"\\HTML\\data"); }
+	if (!WindowsUtility::DirectoryExists(DataPath + L"Reports\\" + cName + L"\\HTML"))        { failCount += WindowsUtility::CreateFolder(DataPath + L"Reports\\" + cName + L"\\HTML"); }
+	if (!WindowsUtility::DirectoryExists(DataPath + L"Reports\\" + cName + L"\\HTML\\data"))  { failCount += WindowsUtility::CreateFolder(DataPath + L"Reports\\" + cName + L"\\HTML\\data"); }
 
-	if (!WindowsUtility::DirectoryExistsWString(DataPath + L"Reports\\" + cName + L"\\Xinorbis"))    { failCount += WindowsUtility::CreateWFolder(DataPath + L"Reports\\" + cName + L"\\Xinorbis"); }
+	if (!WindowsUtility::DirectoryExists(DataPath + L"Reports\\" + cName + L"\\Xinorbis"))    { failCount += WindowsUtility::CreateFolder(DataPath + L"Reports\\" + cName + L"\\Xinorbis"); }
 
- 	if (!WindowsUtility::DirectoryExistsWString(DataPath + L"Reports\\" + cName + L"\\Summary"))     { failCount += WindowsUtility::CreateWFolder(DataPath + L"Reports\\" + cName + L"\\Summary"); }
+ 	if (!WindowsUtility::DirectoryExists(DataPath + L"Reports\\" + cName + L"\\Summary"))     { failCount += WindowsUtility::CreateFolder(DataPath + L"Reports\\" + cName + L"\\Summary"); }
 
- 	if (!WindowsUtility::DirectoryExistsWString(DataPath + L"Reports\\" + cName + L"\\Text"))        { failCount += WindowsUtility::CreateWFolder(DataPath + L"Reports\\" + cName + L"\\Text"); }
+ 	if (!WindowsUtility::DirectoryExists(DataPath + L"Reports\\" + cName + L"\\Text"))        { failCount += WindowsUtility::CreateFolder(DataPath + L"Reports\\" + cName + L"\\Text"); }
 
-	if (!WindowsUtility::DirectoryExistsWString(DataPath + L"Reports\\" + cName + L"\\Tree"))        { failCount += WindowsUtility::CreateWFolder(DataPath + L"Reports\\" + cName + L"\\Tree"); }
+	if (!WindowsUtility::DirectoryExists(DataPath + L"Reports\\" + cName + L"\\Tree"))        { failCount += WindowsUtility::CreateFolder(DataPath + L"Reports\\" + cName + L"\\Tree"); }
 
-	if (!WindowsUtility::DirectoryExistsWString(DataPath + L"Reports\\" + cName + L"\\XML"))         { failCount += WindowsUtility::CreateWFolder(DataPath + L"Reports\\" + cName + L"\\XML"); }
+	if (!WindowsUtility::DirectoryExists(DataPath + L"Reports\\" + cName + L"\\XML"))         { failCount += WindowsUtility::CreateFolder(DataPath + L"Reports\\" + cName + L"\\XML"); }
 
-	if (!WindowsUtility::DirectoryExistsWString(DataPath + L"Database\\"))                           { failCount += WindowsUtility::CreateWFolder(DataPath + L"Database"); }
+	if (!WindowsUtility::DirectoryExists(DataPath + L"Database\\"))                           { failCount += WindowsUtility::CreateFolder(DataPath + L"Database"); }
 	
-	if (!WindowsUtility::DirectoryExistsWString(DataPath + L"" + cName))                             { failCount += WindowsUtility::CreateWFolder(DataPath + L"" + cName); }
+	if (!WindowsUtility::DirectoryExists(DataPath + L"" + cName))                             { failCount += WindowsUtility::CreateFolder(DataPath + L"" + cName); }
 
 	
-	if (!WindowsUtility::DirectoryExistsWString(AppPath + L"system\\"))
+	if (!WindowsUtility::DirectoryExists(AppPath + L"system\\"))
 	{
-		std::wcout << L"FolderScanUltra is not properly installed" << "\n";
-		std::wcout << L"Missing folder: " + AppPath + L"Data" << "\n\n";
+		std::wcout << L"FolderScanUltra is not properly installed\n";
+		std::wcout << L"Missing folder: " + AppPath + L"Data\n\n";
 		
 		failCount++;
 	}
@@ -108,8 +104,8 @@ bool SystemGlobal::CheckFolderStructure()
 		// DO NO USE TRANSLATED TEXT FOR THESE CONSTANTS!
 		// ====================================================================================
 
-		std::wcout << L"Error(s) while updating \"" + DataPath + L"\"." << "\n";
-		std::wcout << L"This folder, and all subfolders, must be read/write." << "\n\n";
+		std::wcout << L"Error(s) while updating \"" + DataPath + L"\".\n";
+		std::wcout << L"This folder, and all subfolders, must be read/write.\n\n";
 		
 		return false;
 	}

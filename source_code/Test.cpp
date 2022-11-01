@@ -9,7 +9,6 @@
 // 
 // 
 
-
 #include "Constants.h"
 #include "Ini.h"
 #include "SystemGlobal.h"
@@ -30,7 +29,7 @@ namespace Test
 	{
 		bool lErrors = false;
 
-		std::wcout << "\n" << L"    Testing parameters..." << "\n" << "\n";
+		std::wcout << L"\n    Testing parameters...\n\n";
 
 		if (!CheckScanFolder()) { lErrors = true; }
 
@@ -48,11 +47,11 @@ namespace Test
 
 		if (lErrors)
 		{
-			std::wcout << "\n" << "    Errors found :(" << "\n";
+			std::wcout << L"\n    Errors found :(\n";
 		}
 		else
 		{
-			std::wcout << "\n" << "    No errors found :)" << "\n";
+			std::wcout << L"\n    No errors found :)\n";
 		}
 
 		std::wcout << L"\n"; 
@@ -61,26 +60,26 @@ namespace Test
 
 	bool CheckScanFolder()
 	{
-		std::wstring firstParameter = GParameterHandler->GetParameter(0);
+		std::wstring ScanFolder = GParameterHandler->GetScanFolder();
 
-		if (firstParameter.find(L'\\') != std::wstring::npos)
+		if (ScanFolder.find(L'\\') != std::wstring::npos)
 		{
-			if (WindowsUtility::DirectoryExistsWString(firstParameter))
+			if (WindowsUtility::DirectoryExists(ScanFolder))
 			{
-				std::wcout << L"      Scan folder exists \"" + firstParameter + L"\"" << "\n\n";
+				std::wcout << L"      Scan folder exists \"" + ScanFolder + L"\"\n\n";
 
 				return true;
 			}
 			else
 			{
-				std::wcout << L"      Scan folder does not exist \"" + firstParameter + L"\"" << "\n\n";
+				std::wcout << L"      Scan folder does not exist \"" + ScanFolder + L"\"\n\n";
 
 				return false;
 			}
 		}
 		else
 		{
-			std::wcout << L"      No scan folder specified." << "\n\n";
+			std::wcout << L"      No scan folder specified.\n\n";
 
 			return true;
 		}
@@ -89,13 +88,13 @@ namespace Test
 
 	bool CheckInstallationFolder()
 	{
-		std::wcout << L"    FolderScanUltra installation" << "\n" << "\n";
+		std::wcout << L"    FolderScanUltra installation\n\n";
 
-		if (WindowsUtility::DirectoryExistsWString(GSystemGlobal->AppPath + L"system\\"))
+		if (WindowsUtility::DirectoryExists(GSystemGlobal->AppPath + L"system\\"))
 		{
-			std::wcout << L"      \\system\\ folder found." << "\n";
+			std::wcout << L"      \\system\\ folder found.\n";
 
-			if (WindowsUtility::DirectoryExistsWString(GSystemGlobal->AppPath + L"system\\languages\\"))
+			if (WindowsUtility::DirectoryExists(GSystemGlobal->AppPath + L"system\\languages\\"))
 			{
 				std::wcout << L"      \\system\\languages\\ folder found.\n";
 
@@ -124,13 +123,13 @@ namespace Test
 		{
 			for (int t = 1; t < GParameterHandler->Count(); t++)
 			{
-				int id = GParameterHandler->GetParameterType(GParameterHandler->GetParameter(t));
+				ParameterData pd = GParameterHandler->GetParameter(t);
 
-				if (id == __parameterInvalid)
+				if (pd.Parameter == ParameterOption::None)
 				{
 					parametersOK = false;
 
-					std::wcout << L"      Unknown command \"" + GParameterHandler->GetParameter(t) + L"\"\n";
+					std::wcout << L"      Unknown command \"" + pd.OriginalInput + L"\"\n";
 				}
 			}
 		}
@@ -147,77 +146,75 @@ namespace Test
 	{
 		if (GParameterHandler->Count() >= 2)
 		{
-			std::wcout << "\n" << L"    Reports" << "\n" << "\n";
+			std::wcout << L"\n    Reports\n\n";
 
 			int reportCount = 0;
 
 			for (int t = 0; t < GParameterHandler->Count(); t++)
 			{
-				ReportType rt = GParameterHandler->IsReport(t);
+				ParameterData pd = GParameterHandler->GetParameter(t);
 
-				if (rt != ReportType::Error)
+				if (pd.IsReport)
 				{
-					ParameterDetails pd = GParameterHandler->ParametersForReport(t, rt);
-
-					switch (rt)
+					switch (pd.Parameter)
 					{
-					case ReportType::CSV:
+					case ParameterOption::CSVReport:
 						std::wcout << L"      CSV     : " << pd.Value << "\n";
 
-						for (int x = 0; x < pd.Options.size(); x++)
+						for (int x = 0; x < pd.ReportOptions.length(); x++)
 						{
-							std::wcout << L"              : " << CSVOptions(x, pd.Options[x]) << L"\n";
+							std::wcout << L"              : " << CSVOptions(x, pd.ReportOptions[x]) << L"\n";
 						}
 
 						break;
-					case ReportType::HTML:
+					case ParameterOption::HTMLReport:
 						std::wcout << L"      HTM     : " << pd.Value << "\n";
 
-						for (int x = 0; x < pd.Options.size(); x++)
+						for (int x = 0; x < pd.ReportOptions.length(); x++)
 						{
-							std::wcout << L"              : " << HTMLOptions(x, pd.Options[x]) << L"\n"; 
+							std::wcout << L"              : " << HTMLOptions(x, pd.ReportOptions[x]) << L"\n";
 						}
 
 						break;
-					case ReportType::Summary:
-						std::wcout << L"      Summary : output to console" << L"\n"; 
+					case ParameterOption::Summary:
+						std::wcout << L"      Summary : output to console\n"; 
 						break;
-					case ReportType::Text:
+					case ParameterOption::TextReport:
 						std::wcout << L"      Text    : " << pd.Value << "\n";
 
-						for (int x = 0; x < pd.Options.size(); x++)
+						for (int x = 0; x < pd.ReportOptions.length(); x++)
 						{
-							std::wcout << L"              : " << TextOptions(x, pd.Options[x]) << L"\n"; 
+							std::wcout << L"              : " << TextOptions(x, pd.ReportOptions[x]) << L"\n";
 						}
 
 						break;
-					case ReportType::XML:
+					case ParameterOption::XMLReport:
 						std::wcout << L"      XML     : " << pd.Value << "\n";
 
-						for (int x = 0; x < pd.Options.size(); x++)
+						for (int x = 0; x < pd.ReportOptions.length(); x++)
 						{
-							std::wcout << L"              : " << XMLOptions(x, pd.Options[x]) << L"\n"; 
+							std::wcout << L"              : " << XMLOptions(x, pd.ReportOptions[x]) << L"\n";
 						}
 
 						break;
-					case ReportType::XMLFullList:
+					case ParameterOption::XMLFullListReport:
 						std::wcout << L"      XML     : (file list)" << pd.Value << L"\n"; 
 						break;
 
-					case ReportType::Top20:
+					case ParameterOption::TopTwenty:
 						std::wcout << L"      Top 20  : output to console\n"; 
 						break;
-					case ReportType::Bottom20:
+					case ParameterOption::BottomTwenty:
 						std::wcout << L"      Bot 20  : output to console\n";
 						break;
-					case ReportType::New20:
+					case ParameterOption::NewTwenty:
 						std::wcout << L"      New 20  : output to console\n"; 
 						break;
-					case ReportType::Old20:
+					case ParameterOption::OldTwenty:
 						std::wcout << L"      Old 20  : output to console\n";
 						break;
 
-					case ReportType::All20:
+					case ParameterOption::AllTwenty:
 						std::wcout << L"      All 20  : outputs all 20 lists console\n";
 						break;
 					}
@@ -251,46 +248,44 @@ namespace Test
 
 		if (GParameterHandler->Count() >= 2)
 		{
-			std::wcout << "\n" << L"    Database" << "\n" << "\n";
+			std::wcout << L"\n    Database\n\n";
 
 			for (int t = 0; t < GParameterHandler->Count(); t++)
 			{
-				if (GParameterHandler->IsDatabaseSwitch(t) != __parameterInvalid)
+				ParameterData pd = GParameterHandler->GetParameter(t);
+
+				if (pd.Parameter != ParameterOption::None)
 				{
 					dbpCount++;
 
-					int pt = GParameterHandler->GetParameterType(GParameterHandler->GetParameter(t));
-
-					switch (pt)
+					switch (pd.Parameter)
 					{
-					case __parameterDBUpdateScanHistory:
+					case ParameterOption::UpdateScanHistory:
 						std::wcout << L"      Update scan history.\n";
 
 						userSetFolderHistory = true;
 
 						break;
-					case __parameterDBODBC:
+					case ParameterOption::ODBC:
 						std::wcout << L"      Use ODBC database.\n";
 
 						userSetODBC = true;
 
 						break;
-					case __parameterDBSQlite:
+					case ParameterOption::SQLite:
 						std::wcout << L"      Use SQlite database.\n";
 
 						userSetSQlite = true;
 
 						break;
-					case __parameterDBStructured:
+					case ParameterOption::DBStructured:
 						std::wcout << L"      Use structured database format.\n";
 						break;
-					case __parameterDBSystemTable:
+					case ParameterOption::SystemTable:
 					{
-						std::wstring tableName = GParameterHandler->GetParameterValue(t);
-
-						if (tableName != L"")
+						if (pd.Value != L"")
 						{
-							std::wcout << L"      Specified system table name \"" + tableName + L"\".\n";
+							std::wcout << L"      Specified system table name \"" + pd.Value + L"\".\n";
 						}
 						else
 						{
@@ -301,13 +296,11 @@ namespace Test
 
 						break;
 					}
-					case __parameterDBDataTable:
+					case ParameterOption::DataTable:
 					{
-						std::wstring tableName = GParameterHandler->GetParameterValue(t);
-
-						if (tableName != L"")
+						if (pd.Value != L"")
 						{
-							std::wcout << L"      Specified data table name \"" + tableName + L"\".\n";
+							std::wcout << L"      Specified data table name \"" + pd.Value + L"\".\n";
 						}
 						else
 						{
@@ -318,12 +311,10 @@ namespace Test
 
 						break;
 					}
-					case __parameterDBUpdateFolderistory:
+					case ParameterOption::UpdateFolderHistory:
 						std::wcout << L"      Update folder history database.\n";
 						break;
 
-					default:
-						std::wcout << L" unknown " << pt << L"\n"; 
 					}
 				}
 			}
@@ -366,7 +357,7 @@ namespace Test
 
 	bool Scan()
 	{
-		if (GParameterHandler->FindParameter(L"/nouser"))
+		if (GParameterHandler->FindParameter(kNoUsers))
 		{
 			std::wcout << L"      Will not gather user name information (optimisation).\n";
 		}
@@ -375,7 +366,7 @@ namespace Test
 			std::wcout << L"      Will gather user name information.\n";
 		}
 
-		if (GParameterHandler->FindParameter(L"/notemp"))
+		if (GParameterHandler->FindParameter(kNoTemp))
 		{
 			std::wcout << L"      Will not process temporary file stats (optimisation).\n";
 		}
@@ -384,12 +375,12 @@ namespace Test
 			std::wcout << L"      Will process temporary file stats.\n";
 		}
 
-		if (GParameterHandler->FindParameter(L"/o"))
+		if (GParameterHandler->FindParameter(kNoOutput))
 		{
 			std::wcout << L"     Disabling console output.\n";
 		}
 
-		if (GParameterHandler->FindParameter(L"/allowvirtual"))
+		if (GParameterHandler->FindParameter(kAllowVirtual))
 		{
 			std::wcout << L"     Virtual files will be processed.\n";
 		}
@@ -919,13 +910,13 @@ namespace Test
 	{
 		if (WindowsUtility::FileExists(GSystemGlobal->AppPath + L"custom.ini"))
 		{
-			std::wcout << "\n" << L"    Custom.ini found" << "\n" << "\n";
+			std::wcout << L"\n    Custom.ini found\n\n";
 
 			Ini* iniFile = new Ini(GSystemGlobal->AppPath + L"custom.ini");
 
 			if (iniFile->Loaded)
 			{
-				std::wcout << GSystemGlobal->AppPath + L"Loaded okay" << "\n";
+				std::wcout << GSystemGlobal->AppPath + L"Loaded okay\n";
 
 				std::wstring pcm = iniFile->ReadString(L"Main", L"PortableMode", L"");
 
@@ -973,7 +964,7 @@ namespace Test
 		}
 		else
 		{
-			std::wcout << "\n" << L"    Custom.ini Not found" << "\n\n";
+			std::wcout << L"\n    Custom.ini Not found\n\n";
 		}
 
 		return true;

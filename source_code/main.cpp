@@ -9,7 +9,6 @@
 // 
 // 
 
-
 #pragma comment(lib, "crypt32.lib") 
 
 
@@ -21,7 +20,7 @@
 #include "CommandHandler.h"
 #include "DatabaseHandler.h"
 #include "Errors.h"
-#include "GlobalObjects.h"
+#include "GlobalObjects.h"+
 #include "Help.h"
 #include "ParameterHandler.h"
 #include "ReportConsole.h"
@@ -100,18 +99,16 @@ void ProcessSettingsFromCommandLine()
 {
 	for (int t = 0; t < GParameterHandler->Count(); t++)
 	{
-		int i = GParameterHandler->IsProcessingSwitch(t);
+		ParameterData pd = GParameterHandler->GetParameter(t);
 
-		if (i != __parameterInvalid)
+		if (pd.IsProcessing)
 		{
-			GSettings->ProcessProcessingSetting(i);
+			GSettings->ProcessProcessingSetting(pd.Parameter);
 		}
-
-		i = GParameterHandler->IsDatabaseSwitch(t);
-
-		if (i != __parameterInvalid)
+		
+		if (pd.IsDatabase)
 		{
-			GSettings->ProcessDatabaseSetting(i, GParameterHandler->GetParameterValue(i));
+			GSettings->ProcessDatabaseSetting(pd.Parameter, pd.Value);
 		}
 	}
 }
@@ -119,11 +116,11 @@ void ProcessSettingsFromCommandLine()
 
 void ProcessConsoleReport()
 {
-	if (GParameterHandler->FindParameter(L"/folderstop20"))
+	if (GParameterHandler->FindParameter(kFolderTopTwenty))
 	{
 		ReportConsole::TopFolders(20);
 	}
-	else if (GParameterHandler->FindParameter(L"/allfolders"))
+	else if (GParameterHandler->FindParameter(kAllFolders))
 	{
 		ReportConsole::TopFolders(999);
 	}
@@ -134,7 +131,10 @@ int wmain(int argc, wchar_t* argv[])
 {
 	bool HasError = false;
 
-	_setmode(_fileno(stdout), _O_U16TEXT);
+	if (_setmode(_fileno(stdout), _O_U16TEXT) == -1)
+	{
+		std::wcout << L"Error setting U16 console mode. No idea why :(\n";
+	}
 
 	// ==========================================================================================
 	// ==========================================================================================
@@ -161,18 +161,18 @@ int wmain(int argc, wchar_t* argv[])
 	{
 		if (GParameterHandler->HasScanFolder())
 		{
-			if (GParameterHandler->FindParameter(L"/allowvirtual"))
+			if (GParameterHandler->FindParameter(kAllowVirtual))
 			{
 				GScanDetails->AllowVirtualFiles = true;
 			}
 
-			if (GParameterHandler->FindParameter(L"/test"))
+			if (GParameterHandler->FindParameter(kTest))
 			{
 				Test::RunTest();
 			}
 			else
 			{
-				if (WindowsUtility::DirectoryExistsWString(GParameterHandler->GetParameter(0)))
+				if (WindowsUtility::DirectoryExists(GParameterHandler->GetScanFolder()))
 				{
 					InitStatus cgoResult = GlobalObjects::CreateGlobalObjects();
 
@@ -182,7 +182,7 @@ int wmain(int argc, wchar_t* argv[])
 
 						if (GScanDetails->Path.Set)
 						{
-							if (GParameterHandler->FindParameter(L"/listroot"))
+							if (GParameterHandler->FindParameter(kListRoot))
 							{
 								GScanDetails->ListRoot();
 							}
@@ -223,17 +223,17 @@ int wmain(int argc, wchar_t* argv[])
 		}
 		else
 		{
-			if (GParameterHandler->FindParameter(L"/test"))
+			if (GParameterHandler->FindParameter(kTest))
 			{
 				Test::RunTest();
 			}
-			else if (GParameterHandler->FindParameter(L"/versioncheck"))
+			else if (GParameterHandler->FindParameter(kVersionCheck))
 			{
 				VersionCheck::IsNewVersion(L"");
 			}
 			else
 			{
-				Help::OutputHelpOption(GParameterHandler->HelpSwitch(GParameterHandler->GetParameter(0)));
+				Help::OutputHelpOption(GParameterHandler->HelpSwitch(GParameterHandler->GetParameter(0).OriginalInput));
 			}
 		}
 	}
@@ -248,7 +248,7 @@ int wmain(int argc, wchar_t* argv[])
 	// ==========================================================================================
 	// ==========================================================================================
 
-	if (GParameterHandler->FindParameter(L"/console") && !HasError)
+	if (GParameterHandler->FindParameter(kConsole) && !HasError)
 	{
 		std::wcout << "\n  Console (\"exit\" to close)\n\n";
 
@@ -295,7 +295,7 @@ int wmain(int argc, wchar_t* argv[])
 			gud = L"Processed user details";
 		}
 
-		std::wcout << L"\n (" << ufa << ", " << gud << ")\n";
+		std::wcout << std::format(L"\n ({0}, {1})\n", ufa, gud);
 	}
 	#endif		
 
@@ -303,7 +303,7 @@ int wmain(int argc, wchar_t* argv[])
 	// ==========================================================================================
 	// ==========================================================================================
 
-	if (GParameterHandler->FindParameter(L"/pause"))
+	if (GParameterHandler->FindParameter(kPause))
 	{
 		system("pause");
 	}

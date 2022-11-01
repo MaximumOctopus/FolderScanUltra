@@ -9,7 +9,6 @@
 // 
 // 
 
-
 #include <algorithm>
 #include <ctime>
 #include <iostream>
@@ -47,7 +46,6 @@ namespace Utility
 
 		return (ltm->tm_year + 1900);
 	}
-
 
 
 	std::wstring GetDate(DateTimeFormat date_format)

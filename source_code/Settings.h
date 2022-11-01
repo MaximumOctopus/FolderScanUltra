@@ -9,9 +9,7 @@
 // 
 // 
 
-
 #pragma once
-
 
 
 #include <Windows.h>
@@ -20,6 +18,7 @@
 #include "Constants.h"
 #include "DatabaseHandler.h"
 #include "Ini.h"
+#include "ParameterHandler.h"
 #include "ReportConstants.h"
 #include "ReportHTMLReportOptions.h"
 
@@ -131,8 +130,8 @@ public:
 
 	int FileCategoryColors[__FileCategoriesCount]; // 0 is a hack for "folders"
 
-	void ProcessProcessingSetting(int);
-	void ProcessDatabaseSetting(int, const std::wstring);
+	void ProcessProcessingSetting(ParameterOption);
+	void ProcessDatabaseSetting(ParameterOption, const std::wstring);
 
 	void SetDefaults();
 
