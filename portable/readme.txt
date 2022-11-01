@@ -1,5 +1,5 @@
 ==================================================================================
-FolderScanUltra 5.5
+FolderScanUltra 5.6
 (c) Paul Alan Freshney 2019-2022
 
 paul@freshney.org
@@ -30,6 +30,25 @@ In 2022 I decided to rename it and add it to my pool of applications receiving r
 ==================================================================================
 
 Release History
+
+5.6 / November 1st 2022
+
+Added: /load and /save to save command-line parameters for easy reuse
+
+       /load:file_name
+	   Must be the first command after fsu. 
+	   No extension needed. Other parameters can be added after the load command if required.
+	   
+	   /save:file_name
+	   No extension needed.
+	   
+Added: HTML root folder lists are now sorted by size and file count.
+Added: HTML root folder by size, alphabetical.
+Added: Text root folder sections sorted by size and file count.
+Added: HTML root folder by size, alphabetical (if number of root folders >20)
+
+Fixed: Issue where charts won't appear in HTML reports if ' is present in a folder name.
+	   	   
 
 5.5 / September 25th 2022
 
