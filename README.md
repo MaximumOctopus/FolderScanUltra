@@ -1,4 +1,4 @@
-# FolderScanUltra 5.6
+# FolderScanUltra 5.7
 
 (c) Paul Alan Freshney 2019-2022
 
@@ -8,6 +8,9 @@ FSU is a powerful console-based folder/drive analysis tool for creating highly d
 
 It can generate CSV, XML, Text, Tree, and summary reports.
 
+The no DB version doesn't require the sqlite3.dll and is missing all Xinorbis-related functionality (this will now be the default and recommended version).
+
+For the DB version:
 
 The included sqlite3.dll and sqlite3.lib files are x64 versions. They can only be used to compile the 64-bit version.
 
@@ -21,6 +24,21 @@ This was originally a Delphi application, released as part of the Xinorbis tools
 In 2022 I decided to rename it and add it to my pool of applications receiving regular updates (two applications now, so maybe a puddle, not a pool). It'll be distanced somewhat from xinorbis and become better for it. Many updates are planned.
 
 # Release History
+
+5.7 / November 25th 2022
+
+Added: The following console output options (based on the text report sections of the same name):
+       /attributes
+       /categories
+       /extensions
+       /filedates
+       /magnitude
+       /users
+
+Fixed: File Dates section in text reports being incorrectly titled
+
+Code modified so that a separate non-database-enabled version can be built, which doesn't need
+the sql dll. This will be the default.
 
 5.6 / November 1st 2022
 
