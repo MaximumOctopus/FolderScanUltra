@@ -784,3 +784,5 @@ Warning, scan was stopped before it completed
 Ignore virtual or offline folders
 Deep scan
 -- Temporary Files -------------------------------------------------------------
+-- File Dates ------------------------------------------------------------------
+Year --------------------------------------- Qty --- As % ----- Size --- As % --

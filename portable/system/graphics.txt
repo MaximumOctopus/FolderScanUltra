@@ -12,6 +12,7 @@ aoi
 ase
 bed
 blend
+blend1
 block
 blp
 bmp
@@ -47,6 +48,7 @@ emf
 ep
 eps
 exif
+exr
 fact
 fbx
 fpx
@@ -54,7 +56,9 @@ g
 gbr
 gif
 glm
+gltf
 gpl
+hdr
 icns
 ico
 iff
@@ -85,6 +89,7 @@ mng
 mpo
 mrc
 msp
+mtl
 nef
 nif
 nitf

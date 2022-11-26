@@ -1,5 +1,5 @@
 ==================================================================================
-FolderScanUltra 5.6
+FolderScanUltra 5.7
 (c) Paul Alan Freshney 2019-2022
 
 paul@freshney.org
@@ -16,7 +16,7 @@ The included sqlite3.dll and sqlite3.lib files are x64 versions. They can only b
 
 32-bit sqlite3.dll and sqlite3.def (for building the .lib) files can be found on the official sqlite site: http://sqlite.org
 
-Compiled with C++ 14 in Visual Studio 2022.
+Compiled with C++ 20 in Visual Studio 2022.
 
 May require C++ runtime if you get an error when starting:
     https://www.microsoft.com/en-gb/download/details.aspx?id=48145
@@ -30,6 +30,21 @@ In 2022 I decided to rename it and add it to my pool of applications receiving r
 ==================================================================================
 
 Release History
+
+5.7 / November 25th 2022
+
+Added: The following console output options (based on the text report sections of the same name):
+       /attributes
+       /categories
+       /extensions
+       /filedates
+       /magnitude
+       /users
+
+Fixed: File Dates section in text reports being incorrectly titled
+
+Code modified so that a separate non-database-enabled version can be built, which doesn't need
+the sql dll. This will be the default.
 
 5.6 / November 1st 2022
 

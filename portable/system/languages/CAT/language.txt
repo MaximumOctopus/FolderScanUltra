@@ -784,3 +784,5 @@ Warnin, scan waz stopped before it haz completez
 Ignore virtual or offline folders
 Deep scan
 -- Temporary Files -------------------------------------------------------------
+-- File Datez ------------------------------------------------------------------
+Year --------------------------------------- Qty --- As % ----- Size --- As % --
