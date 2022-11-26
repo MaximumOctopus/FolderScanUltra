@@ -126,9 +126,9 @@ void ScanDetails::AddUserNotSpecified()
 {
 	UserData ud;
 	
-	ud.Name    = GLanguageHandler->Text[rsNOT_SPECIFIED];
+	ud.Name  = GLanguageHandler->Text[rsNOT_SPECIFIED];
 	ud.Count = Data.FileCount;
-	ud.Size = Data.TotalSize;
+	ud.Size  = Data.TotalSize;
 
 	Data.Users.push_back(ud);
 }
@@ -1226,7 +1226,7 @@ void ScanDetails::SaveSearchResults(Command command)
 	}
 	else
 	{
-		std::wcout << L" no search results to save :(\n";
+		std::wcout << L" No search results to save :(\n";
 	}
 }
 

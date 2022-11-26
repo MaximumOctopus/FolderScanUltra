@@ -20,4 +20,11 @@ namespace ReportConsole
 	void BottomFiles(int);
 	void NewFiles(int);
 	void OldFiles(int);
+
+	void Attributes();
+	void Categories();
+	void Extensions();
+	void FileDates();
+	void Magnitude();
+	void Users();
 }

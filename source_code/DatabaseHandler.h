@@ -19,9 +19,6 @@
 #include "DatabaseSQlite.h"
 
 
-enum class DBMode { None = 0, SQLite = 1, ODBC = 2 };
-
-
 class DatabaseHandler
 {
 private:

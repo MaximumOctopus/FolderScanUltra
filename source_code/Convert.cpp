@@ -349,12 +349,8 @@ namespace Convert
 			{
 				return L">99%";
 			}
-
-			std::wstring s(100, '\0');
-			int i = swprintf(&s[0], L"%.0f", value * 100);
-			s.resize(i);
-
-			return s + L"%"; // std::format(L"{0:.2f} KB", size); to do
+		
+			return std::format(L"{0:.2f}%", value * 100);
 		}
 		else
 		{
@@ -420,29 +416,11 @@ namespace Convert
 			case 1:
 				return std::to_wstring(size);
 			case 2:
-			{
-				std::wstring s(9, ' ');
-				int i = swprintf(&s[0], L"%.2f", double(size / 1024));
-				s.resize(i);
-
-				return s + L"KB";// to do
-			}
+				return std::format(L"{0:.2f}KB", (double)size / 1024);
 			case 3:
-			{
-				std::wstring s(9, ' ');
-				int i = swprintf(&s[0], L"%.2f", double(size / 1048576)); // 1024^2
-				s.resize(i);
-
-				return s + L"MB";// to do
-			}
+				return std::format(L"{0:.2f}MB", (double)size / 1048576);
 			case 4:
-			{
-				std::wstring s(9, ' ');
-				int i = swprintf(&s[0], L"%.2f", double(size / 1073741824)); // 1024^3
-				s.resize(i);
-
-				return s + L"GB";// to do
-			}
+				return std::format(L"{0:.2f}GB", (double)size / 1073741824);
 			
 			default:
 				return ConvertToUsefulUnit(size);
@@ -462,22 +440,17 @@ namespace Convert
 		{
 			case 0:
 				return day + L"/" + month + L"/" + year;   // dd/mm/yyyy
-				break;
 			case 1:
 				return month + L"/" + day + L"/" + year;   // mm/dd/yyyy
-				break;
 			case 2:
 				return year + L"/" + month + L"/" + day;   // yyyy/mm/dd
-				break;
 			case 3:
 				return day + L"-" + month + L"-" + year;   // dd-mm-yyyy
-				break;
 			case 4:
 				return month + L"-" + day + L"-" + year;   // mm-dd-yyyy
-				break;
 		}
 
-		return L"17/04/1975";
+		return L"01/01/1990";
 	}
 
 

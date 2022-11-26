@@ -16,11 +16,14 @@
 #include <string>
 
 #include "Constants.h"
-#include "DatabaseHandler.h"
 #include "Ini.h"
 #include "ParameterHandler.h"
 #include "ReportConstants.h"
 #include "ReportHTMLReportOptions.h"
+
+#ifdef __XINORBIS
+#include "DatabaseHandler.h"
+#endif
 
 
 struct CustomSettings

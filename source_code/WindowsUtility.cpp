@@ -50,11 +50,20 @@ bool WindowsUtility::AddToContextMenu(std::wstring path)
 			return false;
 		}
 
-		Registry::WriteRegistryString(hKey, L"\\directory\\shell\\FolderScanUltra", L"Examine this folder with FolderScanUltra");
+		if (!Registry::WriteRegistryString(hKey, L"\\directory\\shell\\FolderScanUltra", L"Examine this folder with FolderScanUltra"))
+		{
+			std::wcout << L"Unable to add \"\\directory\\shell\\FolderScanUltra\" to registry.\n";
+		}
 
-		Registry::WriteRegistryString(hKey, L"\\directory\\shell\\FolderScanUltra\\Command", L"\"" + path + L"\" \"%1\" \"/pause\"");
+		if (!Registry::WriteRegistryString(hKey, L"\\directory\\shell\\FolderScanUltra\\Command", L"\"" + path + L"\" \"%1\" \"/pause\""))
+		{
+			std::wcout << L"Unable to add \"\\directory\\shell\\FolderScanUltra\\Command\" to registry.\n";
+		}
 
-		Registry::WriteRegistryString(hKey, L"\\directory\\shell\\FolderScanUltra\\DefaultIcon", L"\"" + path + L", 0\""); 
+		if (!Registry::WriteRegistryString(hKey, L"\\directory\\shell\\FolderScanUltra\\DefaultIcon", L"\"" + path + L", 0\""))
+		{
+			std::wcout << L"Unable to add \"\\directory\\shell\\FolderScanUltra\\DefaultIcon\" to registry.\n";
+		}
 	}
 	catch(...)
 	{
@@ -82,11 +91,21 @@ bool WindowsUtility::RemoveFromContextMenu()
 			return false;
 		}
 
-		Registry::DeleteRegistry(hKey, L"\\directory\\shell\\FolderScanUltra");
+		if (!Registry::DeleteRegistry(hKey, L"\\directory\\shell\\FolderScanUltra"))
+		{
+			std::wcout << L"Unable to delete \"\\directory\\shell\\FolderScanUltra\"\n";
+		}
 
-		Registry::DeleteRegistry(hKey, L"\\directory\\shell\\FolderScanUltra\\Command");
+		if (!Registry::DeleteRegistry(hKey, L"\\directory\\shell\\FolderScanUltra\\Command"))
+		{
+			std::wcout << L"Unable to delete \"\\directory\\shell\\FolderScanUltra\\Command\"\n";
+		}
 
-		Registry::DeleteRegistry(hKey, L"\\directory\\shell\\FolderScanUltra\\DefaultIcon");
+		if (!Registry::DeleteRegistry(hKey, L"\\directory\\shell\\FolderScanUltra\\DefaultIcon"))
+		{
+			std::wcout << L"Unable to delete \"\\directory\\shell\\FolderScanUltra\\DefaultIcon\"\n";
+
+		}
 	}
 	catch (...)
 	{

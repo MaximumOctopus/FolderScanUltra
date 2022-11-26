@@ -177,9 +177,6 @@
     <ClInclude Include="Constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sqlite3.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
     <ClInclude Include="FileDateObject.h">
       <Filter>Header Files\Data Classes</Filter>
     </ClInclude>
@@ -312,6 +309,9 @@
     <ClInclude Include="ScanDetails.h">
       <Filter>Header Files\Scan</Filter>
     </ClInclude>
+    <ClInclude Include="sqlite3.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="X.Robot.rc" />
@@ -394,13 +394,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="sqlite3.lib">
-      <Filter>Resource Files</Filter>
-    </Library>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="_custom.ini">
       <Filter>Resource Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="sqlite3.lib">
+      <Filter>Resource Files</Filter>
+    </Library>
   </ItemGroup>
 </Project>

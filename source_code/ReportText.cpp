@@ -240,7 +240,7 @@ namespace ReportText
 				std::wstring str =	Formatting::AddTrailing(L" " + GLanguageHandler->LanguageTypes[t], TRDescriptionWidth, L' ') +
 									Formatting::AddLeading(std::to_wstring(GScanDetails->Data.FileAttributes[t].Count), TRQuantityWidth, L' ') + L"  " +
 									Formatting::AddLeading(Convert::DoubleToPercent((double)GScanDetails->Data.FileAttributes[t].Count / (double)GScanDetails->Data.FileCount), TRAsPercentWidth, ' ') + L"  " +
-									Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.FileAttributes[t].Size), TRSizeWidth, ' ');
+									Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.FileAttributes[t].Size), TRSizeWidth, ' ') + L"  ";
 
 				if (GScanDetails->Data.TotalSize != 0)
 				{	
@@ -289,7 +289,7 @@ namespace ReportText
 			std::wstring str =	Formatting::AddTrailing(L' ' + GLanguageHandler->Text[rsTemporary], TRDescriptionWidth, L' ') +
 								Formatting::AddLeading(std::to_wstring(GScanDetails->Data.ExtensionSpread[0].Count), TRQuantityWidth, L' ') + L"  " +
 								Formatting::AddLeading(Convert::DoubleToPercent((double)GScanDetails->Data.ExtensionSpread[0].Count / (double)GScanDetails->Data.FileCount), TRAsPercentWidth, L' ') + L"  " +
-								Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.ExtensionSpread[0].Size), TRSizeWidth, L' ');
+								Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.ExtensionSpread[0].Size), TRSizeWidth, L' ') + L"  ";
 
 			if (GScanDetails->Data.TotalSize != 0)
 			{
@@ -419,7 +419,7 @@ namespace ReportText
 
 	void ReportFileDates(std::ofstream &ofile)
 	{
-		TitleBlock5Row(ofile, 17, 18);
+		TitleBlock5Row(ofile, 20, 21);
 
 		if (GScanDetails->Data.FileCount != 0)
 		{
@@ -432,7 +432,7 @@ namespace ReportText
 						std::wstring str = Formatting::AddTrailing(L' ' + std::to_wstring(GScanDetails->Data.FileDates[t].Year), TRDescriptionWidth, L' ') +
 							Formatting::AddLeading(std::to_wstring(GScanDetails->Data.FileDates[t].Count), TRQuantityWidth, L' ') + L"  " +
 							Formatting::AddLeading(Convert::DoubleToPercent((double)GScanDetails->Data.FileDates[t].Count / (double)GScanDetails->Data.FileCount), TRAsPercentWidth, L' ') + L"  " +
-							Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.FileDates[t].Size), TRSizeWidth, L' ');
+							Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.FileDates[t].Size), TRSizeWidth, L' ') + L"  ";
 
 						if (GScanDetails->Data.TotalSize != 0)
 						{
@@ -464,7 +464,7 @@ namespace ReportText
 				std::wstring str = Formatting::AddTrailing(L' ' + __MagniLabels[t], TRDescriptionWidth, L' ') +
 					Formatting::AddLeading(std::to_wstring(GScanDetails->Data.Magnitude[t].Count), TRQuantityWidth, L' ') + L"  " +
 					Formatting::AddLeading(Convert::DoubleToPercent((double)GScanDetails->Data.Magnitude[t].Count / (double)GScanDetails->Data.FileCount), TRAsPercentWidth, L' ') + L"  " +
-					Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.Magnitude[t].Size), TRSizeWidth, L' ');
+					Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.Magnitude[t].Size), TRSizeWidth, L' ') + L"  ";
 
 				if (GScanDetails->Data.TotalSize != 0)
 				{
@@ -496,9 +496,9 @@ namespace ReportText
 					ofile << Formatting::to_utf8(GLanguageHandler->TextReport[2] + L"\n");
 
 					std::wstring str  = Formatting::AddTrailing(L' ' + GLanguageHandler->TypeDescriptions[t], TRDescriptionWidth, L' ') +
-										Formatting::AddLeading(std::to_wstring(GScanDetails->Data.ExtensionSpread[t].Count), TRQuantityWidth, L' ') +
-										Formatting::AddLeading(Convert::DoubleToPercent((double)GScanDetails->Data.ExtensionSpread[t].Count / (double)GScanDetails->Data.FileCount), TRAsPercentWidth, L' ') +
-										Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.ExtensionSpread[t].Size), TRSizeWidth, L' ');
+										Formatting::AddLeading(std::to_wstring(GScanDetails->Data.ExtensionSpread[t].Count), TRQuantityWidth, L' ') + L"  " +
+										Formatting::AddLeading(Convert::DoubleToPercent((double)GScanDetails->Data.ExtensionSpread[t].Count / (double)GScanDetails->Data.FileCount), TRAsPercentWidth, L' ') + L"  " +
+										Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.ExtensionSpread[t].Size), TRSizeWidth, L' ') + L"  ";
 
 					if (GScanDetails->Data.TotalSize != 0)
 					{
@@ -524,9 +524,9 @@ namespace ReportText
 								if (tfx.Quantity > 0)
 								{
 									std::wstring str  = Formatting::AddTrailing(L' ' + tfx.Name, TRDescriptionWidth, L' ') + 
-														Formatting::AddLeading(std::to_wstring(tfx.Quantity), TRQuantityWidth, ' ') +
-														Formatting::AddLeading(Convert::DoubleToPercent((double)tfx.Quantity / (double)GScanDetails->Data.FileCount), TRAsPercentWidth, ' ') +
-														Formatting::AddLeading(Convert::ConvertToUsefulUnit(tfx.Size), TRSizeWidth, L' ');
+														Formatting::AddLeading(std::to_wstring(tfx.Quantity), TRQuantityWidth, ' ') + L"  " +
+														Formatting::AddLeading(Convert::DoubleToPercent((double)tfx.Quantity / (double)GScanDetails->Data.FileCount), TRAsPercentWidth, ' ') + L"  " +
+														Formatting::AddLeading(Convert::ConvertToUsefulUnit(tfx.Size), TRSizeWidth, L' ') + L"  ";
 
 									if (GScanDetails->Data.TotalSize != 0)
 									{
@@ -549,9 +549,9 @@ namespace ReportText
 							if (GFileExtensionHandler->Extensions[z].Category == __Category_Other)
 							{
 								std::wstring str  = Formatting::AddTrailing(L' ' + GFileExtensionHandler->Extensions[z].Name, TRDescriptionWidth, L' ') +
-													Formatting::AddLeading(std::to_wstring(GFileExtensionHandler->Extensions[z].Quantity), TRQuantityWidth, L' ') +
-													Formatting::AddLeading(Convert::DoubleToPercent((double)GFileExtensionHandler->Extensions[z].Quantity / (double)GScanDetails->Data.FileCount), TRAsPercentWidth, L' ') +
-													Formatting::AddLeading(Convert::ConvertToUsefulUnit(GFileExtensionHandler->Extensions[z].Size), TRSizeWidth, L' ');
+													Formatting::AddLeading(std::to_wstring(GFileExtensionHandler->Extensions[z].Quantity), TRQuantityWidth, L' ') + L"  " +
+													Formatting::AddLeading(Convert::DoubleToPercent((double)GFileExtensionHandler->Extensions[z].Quantity / (double)GScanDetails->Data.FileCount), TRAsPercentWidth, L' ') + L"  " +
+													Formatting::AddLeading(Convert::ConvertToUsefulUnit(GFileExtensionHandler->Extensions[z].Size), TRSizeWidth, L' ') + L"  ";
 
 								if (GScanDetails->Data.TotalSize != 0)
 								{
@@ -644,7 +644,7 @@ namespace ReportText
 				std::wstring str  = Formatting::AddTrailing(L' ' + GScanDetails->Data.Users[t].Name, TRDescriptionWidth, L' ') +
 									Formatting::AddLeading(std::to_wstring(GScanDetails->Data.Users[t].Count), TRQuantityWidth, L' ') + L"  " +
 									Formatting::AddLeading(Convert::DoubleToPercent((double)GScanDetails->Data.Users[t].Count / (double)GScanDetails->Data.FileCount), TRAsPercentWidth, L' ') + L"  " +
-									Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.Users[t].Size), TRSizeWidth, L' ');
+									Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanDetails->Data.Users[t].Size), TRSizeWidth, L' ') + L"  ";
 
 				if (GScanDetails->Data.TotalSize != 0)
 				{

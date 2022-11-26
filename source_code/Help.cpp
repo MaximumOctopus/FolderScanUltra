@@ -30,28 +30,28 @@ extern SystemGlobal* GSystemGlobal;
 
 namespace Help
 {
-	void OutputHelpOption(int option)
+	void OutputHelpOption(HelpType option)
 	{
 		switch (option)
 		{
-		case __HelpSimple:
+		case HelpType::Simple:
 			OutputSimple();   // /version
 			break;
-		case __HelpHelp:
+		case HelpType::About:
 			OutputHelp();     // default
 			break;
-		case __HelpUsage:
+		case HelpType::Usage:
 			OutputUsage();    // /? or /h
 			break;
-		case __HelpStats:
+		case HelpType::Stats:
 			Stats();          // /stats
 			break;
-		case __HelpCat:       // cats :)
+		case HelpType::Cats:       // cats :)
 			Cat();
 			break;
 
 		default:
-			std::wcout << L"Unknown help type ?!?! " << option << L"\n";
+			std::wcout << L"Unknown help type ?!?!\n";
 		}
 	}
 
@@ -109,11 +109,11 @@ namespace Help
 		std::wcout << L"    /deephtml;options;filename : output HTML with extra information to <filename>\n";
 		std::wcout << L"    /deeptext;options;filename : output Text with extra information to <filename>\n";
 		std::wcout << "\n";
-		std::wcout << "       deepscan includes information on the second level of folders (and heirarchy) \n";
-		std::wcout << "       this is likely to be more use than just a root folder listing. \n";
+		std::wcout << "       deepscan includes information on the second level of folders (and heirarchy)\n";
+		std::wcout << "       this is likely to be more use than just a root folder listing.\n";
 		std::wcout << "\n";
 		std::wcout << L"    filename is optional. default is:\n";
-		std::wcout << L"      <install>\\data\\reports\\computername\\type\\fsu_yyyymmdd_hhmmss.xyz \n";
+		std::wcout << L"      <install>\\data\\reports\\computername\\type\\fsu_yyyymmdd_hhmmss.xyz\n";
 		std::wcout << "\n";
 		std::wcout << L"    /sum                       : output simple summory to console\n";
 		std::wcout << L"    /top20                     : output top 20 largest files to console\n";
@@ -122,10 +122,17 @@ namespace Help
 		std::wcout << L"    /old20                     : output top 20 oldest files to console\n";
 		std::wcout << L"    /folderstop20              : output top 20 folders in root, ordered by size\n";
 		std::wcout << "\n";
+		std::wcout << L"    /attributes                : show attribute statistics\n";
+		std::wcout << L"    /categories                : show category statistics for all categories\n";
+		std::wcout << L"    /extensions                : show extension statistics for all categories\n";
+		std::wcout << L"    /filedates                 : show file date statistics\n";
+		std::wcout << L"    /users                     : show user statistics\n";
+		std::wcout << "\n";
 		std::wcout << L"    /allfolders                : output all folders in root, ordered by size\n";
 		std::wcout << "\n";
 		std::wcout << L"    /allowvirtual              : enable processing of virtual files\n";
 		std::wcout << "\n";
+		#ifdef __XINORBIS
 		std::wcout << L"    /updatefolderhistory       : update the folder history database\n";
 		std::wcout << L"    /ODBC                      : folder history is via ODBC\n";
 		std::wcout << L"    /sqlite                    : folder history is SQlite\n";
@@ -134,6 +141,7 @@ namespace Help
 		std::wcout << L"    /systemtable;name          : use with above, set system table name\n";
 		std::wcout << L"    /datatable;name            : use with above, set data table name\n";
 		std::wcout << L"    /updatescanhistory         : update the scan history file\n";
+		#endif	
 		std::wcout << "\n";
         std::wcout << L"  Saves to default output folder if file name not specified.\n";
         std::wcout << L"    <FolderScanUltra install>\\data\\reports\\\n";
@@ -196,7 +204,11 @@ namespace Help
 
 	void Header()
 	{
+		#ifdef __XINORBIS
+		std::wcout << L"\n  FolderScanUltra " << __FSUVersion << " (Database) / " << __FSUDate << "\n\n";
+		#else
 		std::wcout << L"\n  FolderScanUltra " << __FSUVersion << " / " << __FSUDate << "\n\n";
+		#endif
 		std::wcout << L"    (c) Paul Alan Freshney 2011-" << Utility::CurrentYear() << "\n\n";
 		std::wcout << L"      https://github.com/MaximumOctopus/FolderScanUltra\n";
 		std::wcout << L"      paul@freshney.org\n\n";

@@ -11,6 +11,8 @@
 
 #pragma once
 
+#ifdef __XINORBIS
+
 
 #include <string>
 #include "sqlite3.h"
@@ -45,3 +47,5 @@ public:
 	DatabaseSQlite(std::wstring);
 	~DatabaseSQlite();
 };
+
+#endif

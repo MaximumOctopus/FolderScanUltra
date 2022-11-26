@@ -12,16 +12,12 @@
 #pragma once
 
 
-const static int __HelpSimple = 0;
-const static int __HelpHelp   = 1;
-const static int __HelpUsage  = 2;
-const static int __HelpStats  = 3;
-const static int __HelpCat    = 4;
+enum class HelpType { None = 0, Simple = 1, About = 2, Usage = 3, Stats = 4, Cats = 5 };
 
 
 namespace Help
 {
-	void OutputHelpOption(int);
+	void OutputHelpOption(HelpType);
 
     void OutputSimple();
     void OutputHelp();

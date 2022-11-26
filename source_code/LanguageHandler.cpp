@@ -166,7 +166,9 @@ void LanguageHandler::SetReportText()
 	TextReport[17] = Text[rsTextReport18];
 	TextReport[18] = Text[rsTextReport19];
 	TextReport[19] = Text[rsTextReport20];
-
+	TextReport[20] = Text[rsTextReport21];
+	TextReport[21] = Text[rsTextReport22];
+	
 	LanguageTypes[0] = Text[rsHidden];
 	LanguageTypes[1] = Text[rsSystem];
 	LanguageTypes[2] = Text[rsArchive];

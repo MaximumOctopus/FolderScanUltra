@@ -16,10 +16,9 @@
 #include <vector>
 
 #include "Constants.h"
+#include "Help.h"
 #include "ParameterDetails.h"
 
-
-const static int kReportParametersCount = 15;
 
 const static std::wstring kConsole = L"/console";
 const static std::wstring kNoUsers = L"/nouser";
@@ -59,6 +58,13 @@ const static std::wstring kNewTwenty = L"/new20";
 const static std::wstring kOldTwenty = L"/old20";
 const static std::wstring kFolderTopTwenty = L"/folderstop20";
 
+const static std::wstring kAttributes = L"/attributes";
+const static std::wstring kCategories = L"/categories";
+const static std::wstring kExtensions = L"/extensions";
+const static std::wstring kFileDates = L"/filedates";
+const static std::wstring kMagnitude = L"/magnitude";
+const static std::wstring kUsers = L"/users";
+
 const static std::wstring kAllFolders = L"/allfolders";
 const static std::wstring kAllowVirtual = L"/allowvirtual";
 
@@ -78,22 +84,30 @@ enum class ParameterOption {
 	None = 0, ScanFolder = 1, Cats = 2,
 	LoadConfig = 3, SaveConfig = 4,
 	CSVReport = 5, HTMLReport = 6, TextReport = 7, TreeReport = 8, XMLReport = 9, XMLFullListReport = 10, XinorbisReport = 11, DeepHTMLReport = 12, DeepTextReport = 13,
-	Summary = 14, TopTwenty = 15, BottomTwenty = 16, NewTwenty = 17, OldTwenty = 18, FolderTopTwenty = 19, AllTwenty = 20,
-	AllFolders = 21, AllVirtual = 22,
-	UpdateFolderHistory = 23, ODBC = 24, SQLite = 25, DBStructured = 26, SystemTable = 27, DataTable = 28, UpdateScanHistory = 29,
-	NoUsers = 30, NoProcess = 31, NoTemp = 32, Test = 33, VersionCheck = 34,
-	SetContextMenu = 35, DeleteContextMenu = 36, Pause = 37,
-	Console = 38, Version = 39, Help = 40, Statistics = 41, ListRoot = 42, NoOutput = 43
+	Summary = 14, TopTwenty = 15, BottomTwenty = 16, NewTwenty = 17, OldTwenty = 18, FolderTopTwenty = 19, AllTwenty = 20, ReportCategories = 21, ReportUsers = 22,
+	AllFolders = 23, AllVirtual = 24,
+	UpdateFolderHistory = 25, ODBC = 26, SQLite = 27, DBStructured = 28, SystemTable = 29, DataTable = 30, UpdateScanHistory = 31,
+	NoUsers = 32, NoProcess = 33, NoTemp = 34, Test = 35, VersionCheck = 36,
+	SetContextMenu = 37, DeleteContextMenu = 38, Pause = 39,
+	Console = 40, Version = 41, Help = 42, Statistics = 43, ListRoot = 44, NoOutput = 45,
+	ReportExtensions = 46, ReportFileDates = 47, ReportMagnitude = 48, ReportAttributes = 49
 };
 
-static const int kCommandListCount = 42;
+#ifdef __XINORBIS
+static const int kCommandListCount = 48;
+#else
+static const int kCommandListCount = 41;
+#endif
+
 
 static const std::wstring CommandList[kCommandListCount] = {
 	kCats, kLoadConfig, kSaveConfig,
 	kCSVReport, kHTMLReport, kTextReport, kTreeReport, kXMLReport, kXFLReport, kXinorbisReport, kDeepHTMLReport, kDeepTextReport,
-	kSummary, kTopTwenty, kBottomTwenty, kNewTwenty, kOldTwenty, kFolderTopTwenty, kAllTwenty,
+	kSummary, kTopTwenty, kBottomTwenty, kNewTwenty, kOldTwenty, kFolderTopTwenty, kAllTwenty, kAttributes, kCategories, kExtensions, kFileDates, kMagnitude, kUsers,
 	kAllFolders, kAllowVirtual,
+	#ifdef __XINORBIS
 	kUpdateFolderHistory, kODBC, kSQLite, kDBStructured, kSystemTable, kDataTable, kUpdateScanHistory,
+	#endif
 	kNoUsers, kNoProcess, kNoTemp, kTest, kVersionCheck,
 	kSetContextMenu, kDeleteContextMenu, kPause,
 	kConsole, kVersion, kHelp, kStatistics, kListRoot, kNoOutput
@@ -102,22 +116,24 @@ static const std::wstring CommandList[kCommandListCount] = {
 static const ParameterOption ParameterReference[kCommandListCount] = {
 	ParameterOption::Cats, ParameterOption::LoadConfig, ParameterOption::SaveConfig,
 	ParameterOption::CSVReport, ParameterOption::HTMLReport, ParameterOption::TextReport, ParameterOption::TreeReport, ParameterOption::XMLReport, ParameterOption::XMLFullListReport, ParameterOption::XinorbisReport, ParameterOption::DeepHTMLReport, ParameterOption::DeepTextReport,
-	ParameterOption::Summary, ParameterOption::TopTwenty, ParameterOption::BottomTwenty, ParameterOption::NewTwenty, ParameterOption::OldTwenty, ParameterOption::FolderTopTwenty, ParameterOption::AllTwenty,
+	ParameterOption::Summary, ParameterOption::TopTwenty, ParameterOption::BottomTwenty, ParameterOption::NewTwenty, ParameterOption::OldTwenty, ParameterOption::FolderTopTwenty, ParameterOption::AllTwenty, 
+	ParameterOption::ReportAttributes, ParameterOption::ReportCategories, ParameterOption::ReportExtensions, ParameterOption::ReportFileDates, ParameterOption::ReportMagnitude, ParameterOption::ReportUsers,
 	ParameterOption::AllFolders, ParameterOption::AllVirtual,
+	#ifdef __XINORBIS
 	ParameterOption::UpdateFolderHistory, ParameterOption::ODBC, ParameterOption::SQLite, ParameterOption::DBStructured, ParameterOption::SystemTable, ParameterOption::DataTable, ParameterOption::UpdateScanHistory,
+	#endif	
 	ParameterOption::NoUsers, ParameterOption::NoProcess, ParameterOption::NoTemp, ParameterOption::Test, ParameterOption::VersionCheck,
 	ParameterOption::SetContextMenu, ParameterOption::DeleteContextMenu, ParameterOption::Pause,
 	ParameterOption::Console, ParameterOption::Version, ParameterOption::Help, ParameterOption::Statistics, ParameterOption::ListRoot, ParameterOption::NoOutput
 };
 
+const static int kReportParametersCount = 21;
 
 const static std::wstring ReportCommandList[kReportParametersCount] = {
 	kCSVReport, kHTMLReport, kSummary, kTreeReport, kTextReport, kXMLReport, kXFLReport, kXinorbisReport,
-	kTopTwenty, kBottomTwenty, kNewTwenty, kOldTwenty, kAllTwenty, kDeepTextReport, kDeepHTMLReport };
-
-const static ParameterOption RreportParameterReference[kReportParametersCount] = {
-	ParameterOption::CSVReport, ParameterOption::HTMLReport, ParameterOption::Summary, ParameterOption::TreeReport, ParameterOption::TextReport, ParameterOption::XMLReport, ParameterOption::XMLFullListReport, ParameterOption::XinorbisReport,
-	ParameterOption::TopTwenty, ParameterOption::BottomTwenty, ParameterOption::NewTwenty, ParameterOption::OldTwenty, ParameterOption::AllTwenty, ParameterOption::DeepTextReport, ParameterOption::DeepHTMLReport
+	kTopTwenty, kBottomTwenty, kNewTwenty, kOldTwenty, kAllTwenty, 
+	kAttributes, kCategories, kExtensions, kFileDates, kMagnitude, kUsers,
+	kDeepTextReport, kDeepHTMLReport
 };
 
 
@@ -191,7 +207,7 @@ public:
 	
 	void ParametersForReport(ParameterData&);
 
-	int HelpSwitch(std::wstring);
+	HelpType HelpSwitch(std::wstring);
 
 	std::wstring DefaultFileName(ParameterOption);
 	std::wstring DefaultOptions(ParameterOption);

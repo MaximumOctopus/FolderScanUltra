@@ -14,6 +14,7 @@
 
 static const int __FileCategoriesCount = 20;
 static const int __FileCategoriesOther = 9;
+static const int __FileCategoriesCustom1 = 10;
 
 static const int __TextReportOptionsCount = 11;
 static const int __TreeReportOptionsCount = 6;

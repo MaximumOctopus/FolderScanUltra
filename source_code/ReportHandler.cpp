@@ -227,6 +227,30 @@ namespace ReportHandler
 					break;
 				}
 
+				case ParameterOption::ReportAttributes:
+					ReportConsole::Attributes();
+					break;
+
+				case ParameterOption::ReportCategories:
+					ReportConsole::Categories();
+					break;
+
+				case ParameterOption::ReportExtensions:
+					ReportConsole::Extensions();
+					break;
+
+				case ParameterOption::ReportFileDates:
+					ReportConsole::FileDates();
+					break;
+
+				case ParameterOption::ReportMagnitude:
+					ReportConsole::Magnitude();
+					break;
+
+				case ParameterOption::ReportUsers:
+					ReportConsole::Users();
+					break;
+
 				case ParameterOption::DeepTextReport:
 				{
 					TextReportOptions trOptions;
@@ -275,6 +299,7 @@ namespace ReportHandler
 
 					break;
 				}
+
 
 				default:
 					std::wcout << L"Unknown report type \n\n";

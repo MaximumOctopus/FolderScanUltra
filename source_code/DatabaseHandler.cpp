@@ -9,6 +9,7 @@
 // 
 // 
 
+#ifdef __XINORBIS
 
 #include <algorithm>
 #include <fstream>
@@ -495,3 +496,5 @@ bool DatabaseHandler::UpdateFolderScanUltraScanHistoryRegistry(const std::wstrin
 
 	return false;
 }
+
+#endif

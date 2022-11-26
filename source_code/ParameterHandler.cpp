@@ -295,7 +295,12 @@ bool ParameterHandler::IsDatabaseSwitch(ParameterOption option)
 	case ParameterOption::SystemTable:
 	case ParameterOption::DataTable:
 	case ParameterOption::UpdateScanHistory:
+		#ifdef __XINORBIS
 		return true;
+		#else
+		std::wcout << L"This version does not support database access.\n";
+		std::wcout << L"Download the database-enabled version from \"https://github.com/MaximumOctopus/FolderScanUltra\".\n";
+		#endif	
 	}
 
 	return false;
@@ -327,11 +332,13 @@ bool ParameterHandler::IsFileDateReport(ParameterOption option)
 	case ParameterOption::XinorbisReport:
 	case ParameterOption::DeepTextReport:
 	case ParameterOption::DeepHTMLReport:
+	case ParameterOption::ReportFileDates:
 		return true;
 	}
 
 	return false;
 }
+
 
 bool ParameterHandler::IsSizeReport(ParameterOption option)
 {
@@ -407,6 +414,12 @@ void ParameterHandler::ProcessForOptimisations()
 		case ParameterOption::DeepTextReport:
 		case ParameterOption::DeepHTMLReport:
 		case ParameterOption::UpdateScanHistory:
+		case ParameterOption::ReportAttributes:
+		case ParameterOption::ReportCategories:
+		case ParameterOption::ReportExtensions:
+		case ParameterOption::ReportFileDates:
+		case ParameterOption::ReportMagnitude:
+		case ParameterOption::ReportUsers:
 			Optimisations.UseFastAnalysis = false;
 			Optimisations.GetUserDetails = true;
 
@@ -416,28 +429,28 @@ void ParameterHandler::ProcessForOptimisations()
 }
 
 
-int ParameterHandler::HelpSwitch(std::wstring help)
+HelpType ParameterHandler::HelpSwitch(std::wstring help)
 {
 	std::transform(help.begin(), help.end(), help.begin(), ::tolower);
 
 	if (help == kHelp)
 	{
-		return __HelpUsage;
+		return HelpType::Usage;
 	}
 	else if (help == kVersion)
 	{
-		return __HelpSimple;
+		return HelpType::Simple;
 	}
 	else if (help == kStatistics)
 	{
-		return __HelpStats;
+		return HelpType::Stats;
 	}
 	else if (help == kCats)
 	{
-		return __HelpCat;
+		return HelpType::Cats;
 	}
 
-	return __HelpHelp;
+	return HelpType::About;
 }
 
 

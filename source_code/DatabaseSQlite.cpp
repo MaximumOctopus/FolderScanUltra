@@ -10,6 +10,9 @@
 // 
 
 
+#ifdef __XINORBIS
+
+
 #include <iostream> 
 #include <string.h>
 
@@ -422,3 +425,6 @@ bool DatabaseSQlite::PopulateSystemTable(const std::wstring table_name, const st
 
 	return true;
 }
+
+
+#endif

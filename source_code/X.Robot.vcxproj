@@ -105,6 +105,7 @@
     <ClInclude Include="SearchConstants.h" />
     <ClInclude Include="SearchCriteriaObject.h" />
     <ClInclude Include="SearchUtility.h" />
+    <ClInclude Include="sqlite3.h" />
     <ClInclude Include="StatusConstants.h" />
     <ClInclude Include="Errors.h" />
     <ClInclude Include="ExtensionSearch.h" />
@@ -145,7 +146,6 @@
     <ClInclude Include="ScanHistoryObject.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="SizeOfFolder.h" />
-    <ClInclude Include="sqlite3.h" />
     <ClInclude Include="SystemGlobal.h" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="UserData.h" />
@@ -198,9 +198,6 @@
     <ClCompile Include="WindowsUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="sqlite3.lib" />
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="X.Robot.rc" />
   </ItemGroup>
   <ItemGroup>
@@ -208,6 +205,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="_custom.ini" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="sqlite3.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -18,9 +18,8 @@
 #include <string>
 
 #include "CommandHandler.h"
-#include "DatabaseHandler.h"
 #include "Errors.h"
-#include "GlobalObjects.h"+
+#include "GlobalObjects.h"
 #include "Help.h"
 #include "ParameterHandler.h"
 #include "ReportConsole.h"
@@ -33,6 +32,10 @@
 #include "WindowsUtility.h"
 #include "VersionCheck.h"
 
+#ifdef __XINORBIS
+#include "DatabaseHandler.h"
+#endif
+
 
 extern CommandHandler* GCommandHandler;
 extern ParameterHandler* GParameterHandler;
@@ -41,8 +44,9 @@ extern SystemGlobal* GSystemGlobal;
 extern Settings* GSettings;
 
 
+#ifdef __XINORBIS
 void Database()
-{
+{	
 	if (GSettings->Database.UpdateFolderHistory || GSettings->Database.UpdateScanHistory)
 	{
 		std::wstring dbParameter;
@@ -93,6 +97,7 @@ void Database()
 		delete GDatabaseHandler;
 	}
 }
+#endif
 
 
 void ProcessSettingsFromCommandLine()
@@ -142,7 +147,7 @@ int wmain(int argc, wchar_t* argv[])
 
 	if (argc == 1)
 	{
-		Help::OutputHelpOption(__HelpSimple);
+		Help::OutputHelpOption(HelpType::Simple);
 
 		#ifdef _DEBUG
 		system("pause");
@@ -200,7 +205,9 @@ int wmain(int argc, wchar_t* argv[])
 
 									ProcessConsoleReport();
 
+									#ifdef __XINORBIS
 									Database();
+									#endif			
 								}
 							}
 						}
@@ -285,12 +292,12 @@ int wmain(int argc, wchar_t* argv[])
 		std::wstring ufa = L"Used standard analysis";
 		std::wstring gud = L"No processing of user details";
 
-		if (GSettings->Optimisations.UseFastAnalysis)
+		if (GParameterHandler->Optimisations.UseFastAnalysis)
 		{
 			ufa = L"Used fast analysis";
 		}
 
-		if (GSettings->Optimisations.GetUserDetails)
+		if (GParameterHandler->Optimisations.GetUserDetails)
 		{
 			gud = L"Processed user details";
 		}

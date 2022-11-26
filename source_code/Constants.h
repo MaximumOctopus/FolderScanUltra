@@ -17,12 +17,12 @@
 
 
 #ifdef _DEBUG
-static const std::wstring __FSUVersion = L"5.6 (debug)";
+static const std::wstring __FSUVersion = L"5.7 (debug)";
 #else
-static const std::wstring __FSUVersion = L"5.6";
+static const std::wstring __FSUVersion = L"5.7";
 #endif
 
-static const std::wstring __FSUDate    = L"November 1st 2022";
+static const std::wstring __FSUDate    = L"November 25th 2022";
 
 // ===========================================================================
 // == Categories =============================================================
@@ -90,6 +90,12 @@ static const int __FileType_Reparsepoint = 18;
 static const int __FileType_NotContentI = 19;
 
 static const int __FileType_Virtual = 20;
+
+// ===========================================================================
+// == Database ===============================================================
+// ===========================================================================
+
+enum class DBMode { None = 0, SQLite = 1, ODBC = 2 };
 
 // ===========================================================================
 // == Language ===============================================================
@@ -888,8 +894,10 @@ static const int  rsScanStoppedBeforeComplete = 782;
 static const int  rsIgnoreVirtualFolders = 783;
 static const int  rsDeepScan = 784;
 static const int  rsTextReport20 = 785;
+static const int  rsTextReport21 = 786;
+static const int  rsTextReport22 = 787;
 
-static const int  rsLanguageConstantsCount = 786;
+static const int  rsLanguageConstantsCount = 788;
 
 static const int  rsUnitB = 0;
 static const int  rsUnitKB = 1;
