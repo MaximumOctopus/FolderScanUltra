@@ -28,12 +28,13 @@ In 2022 I decided to rename it and add it to my pool of applications receiving r
 5.7 / November 25th 2022
 
 Added: The following console output options (based on the text report sections of the same name):
-       /attributes
-       /categories
-       /extensions
-       /filedates
-       /magnitude
-       /users
+
+	/attributes
+	/categories
+	/extensions
+	/filedates
+	/magnitude
+	/users
 
 Fixed: File Dates section in text reports being incorrectly titled
 
