@@ -62,7 +62,7 @@ void Settings::SetDefaults()
 
 	Database.UpdateFolderHistory = false;
 
-	Database.ODBCConnectionString = L"";
+	Database.ODBCConnectionString.clear();
 	
 	Optimisations.ProcessData    = true;
 	Optimisations.GetTempFiles   = false;
@@ -108,7 +108,7 @@ void Settings::ProcessDatabaseSetting(ParameterOption option, const std::wstring
 	case ParameterOption::SystemTable:
 		Database.SystemTable = true;
 
-		if (value != L"")
+		if (!value.empty())
 		{
 			Database.SystemTableName = value;
 		}
@@ -116,7 +116,7 @@ void Settings::ProcessDatabaseSetting(ParameterOption option, const std::wstring
 	case ParameterOption::DataTable:
 		Database.DataTable = true;
 
-		if (value != L"")
+		if (!value.empty())
 		{
 			Database.DataTableName = value;
 		}
@@ -193,7 +193,7 @@ bool Settings::LoadCustomSettings()
 {
 	if (WindowsUtility::FileExists(GSystemGlobal->AppPath + L"custom.ini"))
 	{
-		Ini* IniFile = new Ini(GSystemGlobal->AppPath + L"custom.ini");
+		std::unique_ptr<Ini> IniFile = std::make_unique<Ini>(GSystemGlobal->AppPath + L"custom.ini");
 
 		if (IniFile->Loaded)
 		{
@@ -214,7 +214,7 @@ bool Settings::LoadCustomSettings()
 
 				Database.ODBCConnectionString = IniFile->ReadString(L"Main", L"connectionstring", L"");
 
-				if (Database.ODBCConnectionString == L"")
+				if (Database.ODBCConnectionString.empty())
 				{
 					std::wcout << L"ODBC mode active, but connection string invalid (empty). Exiting.\n";
 
@@ -222,8 +222,6 @@ bool Settings::LoadCustomSettings()
 				}
 			}
 		}
-
-		delete IniFile;
 	}
 
 	return true;

@@ -24,7 +24,7 @@
 #include "ParameterHandler.h"
 #include "ReportConsole.h"
 #include "ReportHandler.h"
-#include "ScanDetails.h"
+#include "ScanEngine.h"
 #include "Settings.h"
 #include "SystemGlobal.h"
 #include "Test.h"
@@ -39,7 +39,7 @@
 
 extern CommandHandler* GCommandHandler;
 extern ParameterHandler* GParameterHandler;
-extern ScanDetails* GScanDetails;
+extern ScanEngine* GScanEngine;
 extern SystemGlobal* GSystemGlobal;
 extern Settings* GSettings;
 
@@ -66,7 +66,7 @@ void Database()
 			return;
 		}
 
-		DatabaseHandler* GDatabaseHandler = new DatabaseHandler(GSettings->Database.DatabaseMode, dbParameter);
+		std::unique_ptr<DatabaseHandler> GDatabaseHandler = std::make_unique<>(GSettings->Database.DatabaseMode, dbParameter);
 
 		if (GDatabaseHandler->initOK)
 		{
@@ -93,8 +93,6 @@ void Database()
 				}
 			}
 		}
-
-		delete GDatabaseHandler;
 	}
 }
 #endif
@@ -168,7 +166,7 @@ int wmain(int argc, wchar_t* argv[])
 		{
 			if (GParameterHandler->FindParameter(kAllowVirtual))
 			{
-				GScanDetails->AllowVirtualFiles = true;
+				GScanEngine->AllowVirtualFiles = true;
 			}
 
 			if (GParameterHandler->FindParameter(kTest))
@@ -185,15 +183,15 @@ int wmain(int argc, wchar_t* argv[])
 					{
 						ProcessSettingsFromCommandLine();
 
-						if (GScanDetails->Path.Set)
+						if (GScanEngine->Path.Set)
 						{
 							if (GParameterHandler->FindParameter(kListRoot))
 							{
-								GScanDetails->ListRoot();
+								GScanEngine->ListRoot();
 							}
 							else
 							{
-								if (GScanDetails->Scan(GSettings->Optimisations.ProcessData,
+								if (GScanEngine->Scan(GSettings->Optimisations.ProcessData,
 									GParameterHandler->NeedToProcessTopSizeLists(),
 									GParameterHandler->NeedToProcessTopDateLists(),									
 									GParameterHandler->NeedToProcessFileDates()))
@@ -259,7 +257,7 @@ int wmain(int argc, wchar_t* argv[])
 	{
 		std::wcout << "\n  Console (\"exit\" to close)\n\n";
 
-		GCommandHandler = new CommandHandler();
+		std::unique_ptr<CommandHandler> GCommandHandler = std::make_unique<CommandHandler>();
 		
 		std::wstring input;
 
@@ -274,8 +272,6 @@ int wmain(int argc, wchar_t* argv[])
 			c = GCommandHandler->ProcessCommand(input);
 
 		} while (c.primary != PrimaryCommand::Exit);
-
-		delete GCommandHandler;
 	}
 
 	// ==========================================================================================

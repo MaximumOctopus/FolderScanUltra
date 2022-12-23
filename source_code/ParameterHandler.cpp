@@ -37,16 +37,16 @@ ParameterHandler::ParameterHandler(int argc, wchar_t *argv[], std::wstring DataP
 		{
 			std::wstring FileName = Formatting::AffixFileExtension(GetParameterValue(first), L".fsuproject");
 
-			if (FileName != L"")
+			if (!FileName.empty())
 			{
 				if (!Load(FileName))
 				{
-					std::wcout << L"Unable to load file \"" + FileName + L"\", file does not exist.";
+					std::wcout << L"\nUnable to load configuration file \"" + FileName + L"\", file does not exist.\n";
 				}
 			}
 			else
 			{
-				std::wcout << L"Cannot load configuration, file name is blank!\n";
+				std::wcout << L"\nCannot load configuration, file name is blank!\n";
 			}
 		}
 
@@ -65,9 +65,10 @@ ParameterHandler::ParameterHandler(int argc, wchar_t *argv[], std::wstring DataP
 			std::wcout << L"Parameter: " << Parameters[t].OriginalInput << "\n";
 			#endif		
 
-			if (Parameters[t].Parameter == ParameterOption::SaveConfig)
+			switch (Parameters[t].Parameter)
 			{
-				if (Parameters[t].Value != L"")
+			case ParameterOption::SaveConfig:
+				if (!Parameters[t].Value.empty())
 				{
 					Save(Formatting::AffixFileExtension(Parameters[t].Value, L".fsuproject"));
 				}
@@ -75,20 +76,38 @@ ParameterHandler::ParameterHandler(int argc, wchar_t *argv[], std::wstring DataP
 				{
 					std::wcout << L"Cannot save configuration, file name is blank!\n";
 				}
-			}
-			else if (Parameters[t].Parameter == ParameterOption::SetContextMenu)
-			{
+				break;
+
+			case ParameterOption::SetContextMenu:
 				if (!WindowsUtility::AddToContextMenu(argv[0]))
 				{
 					std::wcout << L"Cannot add FolderScanUltra to context menu!\n";
 				}
-			}
-			else if (Parameters[t].Parameter == ParameterOption::DeleteContextMenu)
-			{
+				break;
+
+			case ParameterOption::DeleteContextMenu:
 				if (!WindowsUtility::RemoveFromContextMenu())
 				{
 					std::wcout << L"Cannot remove FolderScanUltra from context menu!\n";
 				}
+				break;
+
+			case ParameterOption::ExcludeHidden:
+				break;
+			case ParameterOption::ExcludeReadOnly:
+				break;
+			case ParameterOption::ExcludeTemp:
+				break;
+
+			case ParameterOption::ExcludeFolder:
+			{
+				std::wstring folder(Parameters[t].Value);
+
+				std::transform(folder.begin(), folder.end(), folder.begin(), ::tolower);
+
+				ExcludeFolders.push_back(folder);
+				break;
+			}
 			}
 		}
 
@@ -361,7 +380,7 @@ void ParameterHandler::ParametersForReport(ParameterData& option)
 
 	option.FileName = DefaultFileName(option.Parameter);
 
-	if (option.FileName != L"")
+	if (!option.FileName.empty())
 	{
 		std::wstring options = DefaultOptions(option.Parameter);
 
@@ -663,7 +682,7 @@ bool ParameterHandler::Load(std::wstring file_name)
 
 		while (std::getline(file, s))
 		{
-			if (s != L"")
+			if (!s.empty())
 			{
 				if (s[0] != L'#')
 				{

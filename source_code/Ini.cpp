@@ -34,7 +34,7 @@ bool Ini::LoadFile(const std::wstring file_name)
 
 		while (std::getline(file, s))
 		{
-			if (s != L"")
+			if (!s.empty())
 			{
 				Lines.push_back(s);
 			}
@@ -122,7 +122,7 @@ std::wstring Ini::ReadString(std::wstring section, std::wstring key, const std::
 		{
 			if (inSection)
 			{
-				if (Lines[i] != L"")
+				if (!Lines[i].empty())
 				{
 					if ((Lines[i][0] != L';') && (Lines[i][0] != L'/'))
 					{

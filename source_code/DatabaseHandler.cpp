@@ -270,11 +270,9 @@ bool DatabaseHandler::UpdateFolderHistoryStructured(const std::wstring table_sys
 
 bool DatabaseHandler::UpdateFolderHistoryFile(void)
 {
-	FolderHistoryHandler* GFolderHistoryHandler = new FolderHistoryHandler();
+	std::unique_ptr<FolderHistoryHandler> GFolderHistoryHandler = std::make_unique<FolderHistoryHandler>();
 
 	GFolderHistoryHandler->UpdateFolderHistoryFile();
-
-	delete GFolderHistoryHandler;
 
 	return false;
 }

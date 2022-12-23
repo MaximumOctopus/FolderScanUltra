@@ -21,11 +21,11 @@
 #include "LanguageHandler.h"
 #include "ReportCSV.h"
 #include "ReportCSVReportOptions.h"
-#include "ScanDetails.h"
+#include "ScanEngine.h"
 
 
 extern LanguageHandler* GLanguageHandler;
-extern ScanDetails* GScanDetails;
+extern ScanEngine* GScanEngine;
 
 
 namespace ReportCSV
@@ -62,17 +62,17 @@ namespace ReportCSV
 			{
 				output = GLanguageHandler->TypeDescriptions[t] + separator +
 
-						  std::to_wstring(GScanDetails->Data.ExtensionSpread[t].Count) + separator +
+						  std::to_wstring(GScanEngine->Data.ExtensionSpread[t].Count) + separator +
 
-						  std::to_wstring(std::round(((double)GScanDetails->Data.ExtensionSpread[t].Count / (double)GScanDetails->Data.FileCount) * 100)) + L"\"" + separator +
+						  std::to_wstring(std::round(((double)GScanEngine->Data.ExtensionSpread[t].Count / (double)GScanEngine->Data.FileCount) * 100)) + L"\"" + separator +
 
-						  Convert::GetSizeString(options.Units, GScanDetails->Data.ExtensionSpread[t].Size) + L"\"" + separator +
+						  Convert::GetSizeString(options.Units, GScanEngine->Data.ExtensionSpread[t].Size) + L"\"" + separator +
 
-						  std::to_wstring(GScanDetails->Data.ExtensionSpread[t].Size) + L"\"" + separator;
+						  std::to_wstring(GScanEngine->Data.ExtensionSpread[t].Size) + L"\"" + separator;
 
-				if (GScanDetails->Data.TotalSize != 0)
+				if (GScanEngine->Data.TotalSize != 0)
 				{
-					output += L"\"" + std::to_wstring(std::round(((double)GScanDetails->Data.ExtensionSpread[t].Size / (double)GScanDetails->Data.TotalSize) * 100)) + L"\"";
+					output += L"\"" + std::to_wstring(std::round(((double)GScanEngine->Data.ExtensionSpread[t].Size / (double)GScanEngine->Data.TotalSize) * 100)) + L"\"";
 				}
 				else
 				{
@@ -128,12 +128,8 @@ namespace ReportCSV
 
 				ofile << Formatting::to_utf8(s + L"\n");
 			}
-
-			std::wstring ucFolder = GLanguageHandler->Text[rsFolder];
-			
-			std::transform(ucFolder.begin(), ucFolder.end(), ucFolder.begin(), ::toupper);
-
-			for (int t = 0; t < GScanDetails->Data.Files.size(); t++)
+		
+			for (int t = 0; t < GScanEngine->Data.Files.size(); t++)
 			{
 				bool AddToFile = false;
 
@@ -143,7 +139,7 @@ namespace ReportCSV
 				}
 				else
 				{
-					if (GScanDetails->Data.Files[t].Category == options.Category)
+					if (GScanEngine->Data.Files[t].Category == options.Category)
 					{
 						AddToFile = true;
 					}
@@ -151,71 +147,9 @@ namespace ReportCSV
 
 				if (AddToFile)
 				{ 
-					std::wstring output;
-					
-					if (GScanDetails->Data.Files[t].Attributes & FILE_ATTRIBUTE_DIRECTORY)
-					{
-					
-						output = L"\"" + GScanDetails->Data.Files[t].FileName + L"\"" + separator +
-							L"\"" + GScanDetails->Data.Folders[GScanDetails->Data.Files[t].FilePathIndex] + GScanDetails->Data.Files[t].FileName + L"\"" + separator +
-
-							ucFolder + separator +
-							L"-1" + separator +
-							L"-1" + separator +
-
-							Convert::IntDateToString(GScanDetails->Data.Files[t].FileDateC) + separator +
-							Convert::IntDateToString(GScanDetails->Data.Files[t].FileDateA) + separator +
-							Convert::IntDateToString(GScanDetails->Data.Files[t].FileDateM) + separator +
-
-							std::to_wstring(GScanDetails->Data.Files[t].FileTimeC) + separator +
-							std::to_wstring(GScanDetails->Data.Files[t].FileTimeA) + separator +
-							std::to_wstring(GScanDetails->Data.Files[t].FileTimeM) + separator +
-
-							ucFolder + separator +
-
-							L"99" + separator +
-
-							GScanDetails->Data.Users[GScanDetails->Data.Files[t].Owner].Name + separator +
-
-							Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_READONLY) + separator +
-							Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_HIDDEN) + separator +
-							Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_SYSTEM) + separator +
-							Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_ARCHIVE) + separator +
-							Convert::BoolToString(GScanDetails->Data.Files[t].Temp) + separator +
-							std::to_wstring(GScanDetails->Data.Files[t].Attributes);
-					}
-					else
-					{
-						output = L"\"" + GScanDetails->Data.Files[t].FileName + L"\"" + separator +
-							L"\"" + GScanDetails->Data.Folders[GScanDetails->Data.Files[t].FilePathIndex] + GScanDetails->Data.Files[t].FileName + L"\"" + separator +
-
-							L"\"" + Convert::GetSizeString(options.Units, GScanDetails->Data.Files[t].Size) + L"\"" + separator +
-							L"\"" + std::to_wstring(GScanDetails->Data.Files[t].Size) + L"\"" + separator +
-							L"\"" + std::to_wstring(GScanDetails->Data.Files[t].SizeOnDisk) + L"\"" + separator +
-
-							Convert::IntDateToString(GScanDetails->Data.Files[t].FileDateC) + separator +
-							Convert::IntDateToString(GScanDetails->Data.Files[t].FileDateA) + separator +
-							Convert::IntDateToString(GScanDetails->Data.Files[t].FileDateM) + separator +
-
-							std::to_wstring(GScanDetails->Data.Files[t].FileTimeC) + separator +
-							std::to_wstring(GScanDetails->Data.Files[t].FileTimeA) + separator +
-							std::to_wstring(GScanDetails->Data.Files[t].FileTimeM) + separator +
-
-							GLanguageHandler->TypeDescriptions[GScanDetails->Data.Files[t].Category] + separator +
-
-							std::to_wstring(GScanDetails->Data.Files[t].Category) + separator +
-
-							GScanDetails->Data.Users[GScanDetails->Data.Files[t].Owner].Name + separator +
-
-							Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_READONLY) + separator +
-							Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_HIDDEN) + separator +
-							Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_SYSTEM) + separator +
-							Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_ARCHIVE) + separator +
-							Convert::BoolToString(GScanDetails->Data.Files[t].Temp) + separator +
-							std::to_wstring(GScanDetails->Data.Files[t].Attributes);
-					}
-
-					ofile << Formatting::to_utf8(output + L"\n");
+					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].ToCSV(GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex],
+						                                                          GScanEngine->Data.Users[GScanEngine->Data.Files[t].Owner].Name, 
+																				  options.Units) + L"\n");				
 				}
 			}
 

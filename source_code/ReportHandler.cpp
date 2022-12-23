@@ -247,8 +247,24 @@ namespace ReportHandler
 					ReportConsole::Magnitude();
 					break;
 
+				case ParameterOption::ReportNullFiles:
+					ReportConsole::NullFiles();
+					break;
+
+				case ParameterOption::ReportTemporaryFiles:
+					ReportConsole::TemporaryFiles();
+					break;
+
 				case ParameterOption::ReportUsers:
 					ReportConsole::Users();
+					break;
+
+				case ParameterOption::ReportDuplicateFileName:
+					ReportConsole::DuplicateFileName();
+					break;
+
+				case ParameterOption::ReportDuplicateFileSize:
+					ReportConsole::DuplicateFileSize();
 					break;
 
 				case ParameterOption::DeepTextReport:

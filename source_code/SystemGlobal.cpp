@@ -124,24 +124,22 @@ std::wstring SystemGlobal::GetUsersPath(const std::wstring app_path)
 {
 	if (WindowsUtility::FileExists(app_path + L"custom.ini"))
 	{
-		Ini* config = new Ini(app_path + L"custom.ini");
+		std::unique_ptr<Ini> config = std::make_unique<Ini>(app_path + L"custom.ini");
 
 		std::wstring lDataPath = config->ReadString(L"FolderScanUltra", L"DataPath", L"");
 
-		if (lDataPath == L"")
+		if (lDataPath.empty())
 		{
 			lDataPath = config->ReadString(L"Main", L"DataPath", L"");
 		}
-
-		delete config;
 
 		// =========================================================================
 		// == Portable specific modes                                             ==
 		// =========================================================================
 
-		if (lDataPath != L"")
+		if (!lDataPath.empty())
 		{
-			if (lDataPath[lDataPath.length() - 1] != L'\\') { lDataPath += L'\\'; }
+			if (lDataPath.back() != L'\\') { lDataPath += L'\\'; }
 
 			// lets check for special variables
 			if (lDataPath.find(L"$xdrive") != std::wstring::npos)
@@ -166,7 +164,7 @@ std::wstring SystemGlobal::GetUsersPath(const std::wstring app_path)
 
 					std::wstring envValue = WindowsUtility::GetEnvVariable(envName);
 
-					if (envValue != L"")
+					if (!envValue.empty())
 					{
 						lDataPath = Utility::ReplaceString(lDataPath, L"<" + envName + L">", envValue);
 					}

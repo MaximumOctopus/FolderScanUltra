@@ -66,7 +66,7 @@ namespace SearchUtility
             ProcessIncludeFolder(sco, s);
         }
 
-        if (s != L"")
+        if (!s.empty())
         {
             if (s[0] == L'#')
             {
@@ -344,7 +344,7 @@ namespace SearchUtility
                 sco.Type = SearchType::FileExtensionEqual;
                 sco.StringValue = value;
 
-                if (sco.StringValue != L"")
+                if (!sco.StringValue.empty())
                 {
                     if (sco.StringValue[0] != L'.')
                     {
@@ -434,7 +434,7 @@ namespace SearchUtility
         {
             if (input.find(L'@' + SearchConstants::TypeTerms[t]) != std::wstring::npos)
             {
-                if (input[input.length() - 1] == L'-')
+                if (input.back() == L'-')
                 {
                     sco.Type = SearchType::NotFileType;
                 }
@@ -487,11 +487,11 @@ namespace SearchUtility
         std::wstring test = L"";
         int position = 0;
 
-        parameter = L"";
-        value = L"";
+        parameter.clear();
+        value.clear();
         test_type = TestType::EqualTo;
 
-        if (input != L"")
+        if (!input.empty())
         {
             if (input[0] == L'#')
             {
@@ -501,7 +501,7 @@ namespace SearchUtility
                 {
                     if (input.find(L'#' + SearchConstants::CategoryTerms[t]) != std::wstring::npos)
                     {
-                    if (input[input.length() - 1] == L'-')
+                    if (input.back() == L'-')
                     {
                         test_type = TestType::NotEqualTo;
                     }
@@ -522,7 +522,7 @@ namespace SearchUtility
                 {
                     if (input.find(L'@' + SearchConstants::TypeTerms[t]) != std::wstring::npos)
                     {
-                        if (input[input.length() - 1] == L'-')
+                        if (input.back() == L'-')
                         {
                             test_type = TestType::NotEqualTo;
                         }

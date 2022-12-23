@@ -168,6 +168,8 @@ void LanguageHandler::SetReportText()
 	TextReport[19] = Text[rsTextReport20];
 	TextReport[20] = Text[rsTextReport21];
 	TextReport[21] = Text[rsTextReport22];
+	TextReport[22] = Text[rsTextReport23];
+	TextReport[23] = Text[rsTextReport24];
 	
 	LanguageTypes[0] = Text[rsHidden];
 	LanguageTypes[1] = Text[rsSystem];
@@ -216,6 +218,7 @@ void LanguageHandler::SetReportText()
 	SummaryReport[12] = Text[rsSummReport13];
 	SummaryReport[13] = Text[rsSummReport14];
 	SummaryReport[14] = Text[rsSummReport15];
+	SummaryReport[15] = Text[rsSummReport16];
 
 	DriveReport[0]  = Text[rsDriveReport1];
 	DriveReport[1]  = Text[rsDriveReport2];

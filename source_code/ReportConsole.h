@@ -21,10 +21,18 @@ namespace ReportConsole
 	void NewFiles(int);
 	void OldFiles(int);
 
+	void FiveLineHeader(int, int);
+	void ThreeLineHeader(int);
+
 	void Attributes();
 	void Categories();
 	void Extensions();
 	void FileDates();
 	void Magnitude();
+	void NullFiles();
+	void TemporaryFiles();
 	void Users();
+
+	void DuplicateFileSize();
+	void DuplicateFileName();
 }

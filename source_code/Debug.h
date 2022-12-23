@@ -9,11 +9,13 @@
 // 
 // 
 
+#pragma once
 
-#include "Command.h"
+
+#include <string>
 
 
-std::wstring Command::GetFullCommand()
+namespace Debug
 {
-	return primarystr + L" " + fullcommandstr;
+	void Output(std::wstring);
 }

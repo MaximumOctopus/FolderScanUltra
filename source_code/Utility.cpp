@@ -172,7 +172,7 @@ namespace Utility
 
 		if (mode == 0)
 		{
-			return year + L"/" + month + L"/" + day + L" " + hour + L":" + min + L":" + sec;
+			return year + L"/" + month + L"/" + day + L" " + hour + L":" + min + L"." + sec;
 		}
 		else
 		{
@@ -201,7 +201,7 @@ namespace Utility
 
 	std::wstring GetFileExtension(const std::wstring& file_name)
 	{
-		size_t index = file_name.find_last_of(L".");
+		size_t index = file_name.rfind(L".");
 
 		if (index != std::wstring::npos)
 		{
@@ -224,7 +224,7 @@ namespace Utility
 
 		if (input.size() > 0)
 		{
-			if (input[input.size() - 1] == L'\\')
+			if (input.back() == L'\\')
 			{
 				int t = input.size() - 2;
 
@@ -424,7 +424,7 @@ namespace Utility
     {
         size_t found;
 
-        found = str.find_last_of(L"/\\");
+        found = str.rfind(L"\\");
 
         return str.substr(0, found);
     }

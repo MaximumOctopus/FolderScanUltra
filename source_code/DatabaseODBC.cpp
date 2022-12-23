@@ -16,11 +16,11 @@
 #include "Convert.h"
 #include "DatabaseODBC.h"
 #include "LanguageHandler.h"
-#include "ScanDetails.h"
+#include "ScanEngine.h"
 
 
 extern LanguageHandler* GLanguageHandler;
-extern ScanDetails* GScanDetails;
+extern ScanEngine* GScanEngine;
 
 
 DatabaseODBC::DatabaseODBC(std::wstring & connection_string)
@@ -160,24 +160,24 @@ bool DatabaseODBC::PopulateFileTable(const std::wstring table_name)
 	std::wstring stem = L"INSERT INTO \"" + table_name + L"\" (FilePath, FilePathIdx, FileName, FileSize, FileSizeDisk, FileDateC, FileDateA, FileDateM, Category, Directory, Readonly, Hidden, System, Archive, Temp, Owner) VALUES (";
 	std::wstring sql;
 
-	for (int t = 0; t < GScanDetails->Data.Folders.size(); t++)
+	for (int t = 0; t < GScanEngine->Data.Folders.size(); t++)
 	{
-		sql = stem + L"\"" + GScanDetails->Data.Folders[GScanDetails->Data.Files[t].FilePathIndex] + L"\", " +
-			std::to_wstring(GScanDetails->Data.Files[t].FilePathIndex) + L", " +
-			L"\"" + GScanDetails->Data.Files[t].FileName + L"\", " +
-			std::to_wstring(GScanDetails->Data.Files[t].Size) + L", " +
-			std::to_wstring(GScanDetails->Data.Files[t].SizeOnDisk) + L", " +
-			std::to_wstring(GScanDetails->Data.Files[t].FileDateC) + L", " +
-			std::to_wstring(GScanDetails->Data.Files[t].FileDateA) + L", " +
-			std::to_wstring(GScanDetails->Data.Files[t].FileDateM) + L", " +
-			std::to_wstring(GScanDetails->Data.Files[t].Category) + L", " +
-			Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_DIRECTORY) + L", " +
-			Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_READONLY) + L", " +
-			Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_HIDDEN) + L", " +
-			Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_SYSTEM) + L", " +
-			Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_ARCHIVE) + L", " +
-			Convert::BoolToString(GScanDetails->Data.Files[t].Temp) + L", " +
-			L"\"" + GScanDetails->Data.Users[GScanDetails->Data.Files[t].Owner].Name + L"\");";
+		sql = stem + L"\"" + GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + L"\", " +
+			std::to_wstring(GScanEngine->Data.Files[t].FilePathIndex) + L", " +
+			L"\"" + GScanEngine->Data.Files[t].FileName + L"\", " +
+			std::to_wstring(GScanEngine->Data.Files[t].Size) + L", " +
+			std::to_wstring(GScanEngine->Data.Files[t].SizeOnDisk) + L", " +
+			std::to_wstring(GScanEngine->Data.Files[t].FileDateC) + L", " +
+			std::to_wstring(GScanEngine->Data.Files[t].FileDateA) + L", " +
+			std::to_wstring(GScanEngine->Data.Files[t].FileDateM) + L", " +
+			std::to_wstring(GScanEngine->Data.Files[t].Category) + L", " +
+			Convert::AttributeToIntAsString(GScanEngine->Data.Files[t].Attributes, FILE_ATTRIBUTE_DIRECTORY) + L", " +
+			Convert::AttributeToIntAsString(GScanEngine->Data.Files[t].Attributes, FILE_ATTRIBUTE_READONLY) + L", " +
+			Convert::AttributeToIntAsString(GScanEngine->Data.Files[t].Attributes, FILE_ATTRIBUTE_HIDDEN) + L", " +
+			Convert::AttributeToIntAsString(GScanEngine->Data.Files[t].Attributes, FILE_ATTRIBUTE_SYSTEM) + L", " +
+			Convert::AttributeToIntAsString(GScanEngine->Data.Files[t].Attributes, FILE_ATTRIBUTE_ARCHIVE) + L", " +
+			Convert::BoolToString(GScanEngine->Data.Files[t].Temp) + L", " +
+			L"\"" + GScanEngine->Data.Users[GScanEngine->Data.Files[t].Owner].Name + L"\");";
 
 		if (SQL_SUCCESS == SQLExecDirect(hSqlStatement, (SQLWCHAR *)sql.c_str(), SQL_NTS))
 		{
@@ -199,9 +199,9 @@ bool DatabaseODBC::PopulateFolderTable(const std::wstring table_name)
 	std::wstring sql;
 
 
-	for (int t = 0; t < GScanDetails->Data.Folders.size(); t++)
+	for (int t = 0; t < GScanEngine->Data.Folders.size(); t++)
 	{
-		sql = stem + GScanDetails->Data.Folders[t] + L"\");";
+		sql = stem + GScanEngine->Data.Folders[t] + L"\");";
 
 		if (SQL_SUCCESS == SQLExecDirect(hSqlStatement, (SQLWCHAR *)sql.c_str(), SQL_NTS))
 		{
@@ -275,24 +275,24 @@ bool DatabaseODBC::PopulateDataTable(const std::wstring table_name)
 	std::wstring sql;
 
 
-	for (int t = 0; t < GScanDetails->Data.Folders.size(); t++)
+	for (int t = 0; t < GScanEngine->Data.Folders.size(); t++)
 	{
-		sql = stem + L"\"" + GScanDetails->Data.Folders[GScanDetails->Data.Files[t].FilePathIndex] + L"\", " +
-			L"\"" + GScanDetails->Data.Files[t].FileName + L"\", " +
-			std::to_wstring(GScanDetails->Data.Files[t].Size) + L", " +
-			std::to_wstring(GScanDetails->Data.Files[t].SizeOnDisk) + L", " +
-			std::to_wstring(GScanDetails->Data.Files[t].FileDateC) + L", " +
-			std::to_wstring(GScanDetails->Data.Files[t].FileDateA) + L", " +
-			std::to_wstring(GScanDetails->Data.Files[t].FileDateM) + L", " +
-			std::to_wstring(GScanDetails->Data.Files[t].Category) + L", " +
-			Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_DIRECTORY) + L", " +
-			Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_READONLY) + L", " +
-			Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_HIDDEN) + L", " +
-			Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_SYSTEM) + L", " +
-			Convert::AttributeToIntAsString(GScanDetails->Data.Files[t].Attributes, FILE_ATTRIBUTE_ARCHIVE) + L", " +
-			Convert::BoolToString(GScanDetails->Data.Files[t].Temp) + L", " +
-			L"\"" + GScanDetails->Data.Users[GScanDetails->Data.Files[t].Owner].Name + L"\", " +
-			GScanDetails->Path.DateInt + L");";
+		sql = stem + L"\"" + GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + L"\", " +
+			L"\"" + GScanEngine->Data.Files[t].FileName + L"\", " +
+			std::to_wstring(GScanEngine->Data.Files[t].Size) + L", " +
+			std::to_wstring(GScanEngine->Data.Files[t].SizeOnDisk) + L", " +
+			std::to_wstring(GScanEngine->Data.Files[t].FileDateC) + L", " +
+			std::to_wstring(GScanEngine->Data.Files[t].FileDateA) + L", " +
+			std::to_wstring(GScanEngine->Data.Files[t].FileDateM) + L", " +
+			std::to_wstring(GScanEngine->Data.Files[t].Category) + L", " +
+			Convert::AttributeToIntAsString(GScanEngine->Data.Files[t].Attributes, FILE_ATTRIBUTE_DIRECTORY) + L", " +
+			Convert::AttributeToIntAsString(GScanEngine->Data.Files[t].Attributes, FILE_ATTRIBUTE_READONLY) + L", " +
+			Convert::AttributeToIntAsString(GScanEngine->Data.Files[t].Attributes, FILE_ATTRIBUTE_HIDDEN) + L", " +
+			Convert::AttributeToIntAsString(GScanEngine->Data.Files[t].Attributes, FILE_ATTRIBUTE_SYSTEM) + L", " +
+			Convert::AttributeToIntAsString(GScanEngine->Data.Files[t].Attributes, FILE_ATTRIBUTE_ARCHIVE) + L", " +
+			Convert::BoolToString(GScanEngine->Data.Files[t].Temp) + L", " +
+			L"\"" + GScanEngine->Data.Users[GScanEngine->Data.Files[t].Owner].Name + L"\", " +
+			GScanEngine->Path.DateInt + L");";
 
 		if (SQL_SUCCESS == SQLExecDirect(hSqlStatement, (SQLWCHAR *)sql.c_str(), SQL_NTS))
 		{
@@ -315,15 +315,15 @@ bool DatabaseODBC::PopulateSystemTable(const std::wstring table_name, const std:
 	std::wstring sql;
 
 
-	for (int t = 0; t < GScanDetails->Data.Folders.size(); t++)
+	for (int t = 0; t < GScanEngine->Data.Folders.size(); t++)
 	{
 		sql = stem + L"\"" + data_table_name + L"\", " +
-			L"\"" + GScanDetails->Path.String + L"\", " +
-			L"\"" + Convert::ConvertToUsefulUnit(GScanDetails->Data.TotalSize) + L"\", " +
-			std::to_wstring(GScanDetails->Data.TotalSize) + L", " +
-			std::to_wstring(GScanDetails->Data.FileCount) + L", " +
-			std::to_wstring(GScanDetails->Data.FolderCount) + L", " +
-			GScanDetails->Path.DateInt + L");";
+			L"\"" + GScanEngine->Path.String + L"\", " +
+			L"\"" + Convert::ConvertToUsefulUnit(GScanEngine->Data.TotalSize) + L"\", " +
+			std::to_wstring(GScanEngine->Data.TotalSize) + L", " +
+			std::to_wstring(GScanEngine->Data.FileCount) + L", " +
+			std::to_wstring(GScanEngine->Data.FolderCount) + L", " +
+			GScanEngine->Path.DateInt + L");";
 
 		if (SQL_SUCCESS == SQLExecDirect(hSqlStatement, (SQLWCHAR *)sql.c_str(), SQL_NTS))
 		{

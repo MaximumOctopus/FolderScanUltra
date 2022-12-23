@@ -121,10 +121,13 @@
     <ClCompile Include="SystemGlobal.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="ScanDetails.cpp">
+    <ClCompile Include="ScanEngine.cpp">
       <Filter>Source Files\Scan</Filter>
     </ClCompile>
     <ClCompile Include="VersionCheck.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
   </ItemGroup>
@@ -306,11 +309,14 @@
     <ClInclude Include="VersionCheck.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="ScanDetails.h">
+    <ClInclude Include="ScanEngine.h">
       <Filter>Header Files\Scan</Filter>
     </ClInclude>
     <ClInclude Include="sqlite3.h">
       <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug.h">
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

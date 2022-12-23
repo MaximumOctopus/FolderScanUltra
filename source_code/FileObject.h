@@ -38,4 +38,7 @@ public:
     int Owner = 0;
 
 	FileObject();
+
+    std::wstring ToCSV(const std::wstring folder, const std::wstring user, int units);
+    std::wstring ToXml(const std::wstring folder, const std::wstring user);
 };

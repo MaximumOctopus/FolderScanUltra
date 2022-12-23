@@ -24,6 +24,7 @@ namespace ReportHTML
 	void CreateDeepReport(std::ofstream&, HTMLReportOptions);
 
 	void ReportHeader(std::ofstream &ofile, HTMLReportOptions, std::wstring);
+	void ReportExclude(std::ofstream&, HTMLReportOptions);
 	void ReportFileCategory(std::ofstream &, HTMLReportOptions);
 	void ReportFileAttributesTable(std::ofstream &, HTMLReportOptions);
 	void ReportUsers(std::ofstream &, HTMLReportOptions);

@@ -17,14 +17,14 @@
 #include "FileExtensionHandler.h"
 #include "Help.h"
 #include "LanguageHandler.h"
-#include "ScanDetails.h"
+#include "ScanEngine.h"
 #include "SystemGlobal.h"
 #include "Utility.h"
 
 
 extern FileExtensionHandler* GFileExtensionHandler;
 extern LanguageHandler* GLanguageHandler;
-extern ScanDetails* GScanDetails;
+extern ScanEngine* GScanEngine;
 extern SystemGlobal* GSystemGlobal;
 
 
@@ -46,7 +46,7 @@ namespace Help
 		case HelpType::Stats:
 			Stats();          // /stats
 			break;
-		case HelpType::Cats:       // cats :)
+		case HelpType::Cats:  // cats :)
 			Cat();
 			break;
 
@@ -88,11 +88,14 @@ namespace Help
 		std::wcout << L"  AppPath : " + GSystemGlobal->AppPath << "\n";
 		std::wcout << L"  DataPath: " + GSystemGlobal->DataPath << "\n";
         std::wcout << "\n";
-        std::wcout << L"  Usage, options and file name are optional:\n";
+        std::wcout << L"  Usage; options, and file name are optional:\n";
         std::wcout << "\n";
         std::wcout << L"      fsu folder_to_scan\n";
 		std::wcout << L"      fsu folder_to_scan /html\n";
-        std::wcout << "\n";
+		std::wcout << "\n";
+		std::wcout << L"    /xd;text                   : exclude folders containing \"text\".\n";
+		std::wcout << L"                               : use one parameter per exclusion.\n";
+		std::wcout << "\n";
 		std::wcout << L"    /save;file_name            : save parameter list to a file\n";
 		std::wcout << L"    /load;file_name            : load parameter list from a file\n";
 		std::wcout << "\n";
@@ -128,6 +131,9 @@ namespace Help
 		std::wcout << L"    /filedates                 : show file date statistics\n";
 		std::wcout << L"    /users                     : show user statistics\n";
 		std::wcout << "\n";
+		std::wcout << L"    /dn                        : show duplicate files by name\n";
+		std::wcout << L"    /ds                        : show duplicate files by size`\n";
+		std::wcout << "\n";
 		std::wcout << L"    /allfolders                : output all folders in root, ordered by size\n";
 		std::wcout << "\n";
 		std::wcout << L"    /allowvirtual              : enable processing of virtual files\n";
@@ -156,10 +162,10 @@ namespace Help
 		std::wcout << L"  AppPath           : " + GSystemGlobal->AppPath << "\n";
 		std::wcout << L"  DataPath          : " + GSystemGlobal->DataPath << "\n";
 		std::wcout << "\n";
-		std::wcout << L"  Size of Scan      : " + Convert::ConvertToUsefulUnit(GScanDetails->Data.TotalSize) << "\n";
+		std::wcout << L"  Size of Scan      : " + Convert::ConvertToUsefulUnit(GScanEngine->Data.TotalSize) << "\n";
 		std::wcout << "\n";
-		std::wcout << L"  Files             : " + GScanDetails->Data.FileCount << "\n";
-		std::wcout << L"  Average file size : " + Convert::ConvertToUsefulUnit(GScanDetails->Data.AverageFileSize) << "\n";
+		std::wcout << L"  Files             : " + GScanEngine->Data.FileCount << "\n";
+		std::wcout << L"  Average file size : " + Convert::ConvertToUsefulUnit(GScanEngine->Data.AverageFileSize) << "\n";
 		std::wcout << "\n";
 		std::wcout << L"  Language          : " << GLanguageHandler->GetLanguageSymbol() << "\n";
 		std::wcout << L"  File Extensions   : " << GFileExtensionHandler->Extensions.size() << "\n";

@@ -48,8 +48,8 @@ public:
 
 	std::wstring LanguageTypes[13];
 
-	std::wstring TextReport[22];
-	std::wstring SummaryReport[15];
+	std::wstring TextReport[24];
+	std::wstring SummaryReport[16];
 	std::wstring DriveReport[11];
 	std::wstring GenericReportItems[17];
 	std::wstring OtherReportItems[9];

@@ -48,7 +48,7 @@ bool FileExtensionHandler::LoadDefaultFileExtensions()
 			{
 				FileExtension file_extension;
 
-				if (s.find_first_of('\n') != std::string::npos)
+				if (s.find('\n') != std::string::npos)
 				{
 					s.erase(std::remove(s.begin(), s.end(), '\n'), s.begin()); // to do, does it contain \n? do we need it?!
 				}

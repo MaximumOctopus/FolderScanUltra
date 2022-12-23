@@ -17,12 +17,12 @@
 
 
 #ifdef _DEBUG
-static const std::wstring __FSUVersion = L"5.7 (debug)";
+static const std::wstring __FSUVersion = L"5.8 (debug)";
 #else
-static const std::wstring __FSUVersion = L"5.7";
+static const std::wstring __FSUVersion = L"5.8";
 #endif
 
-static const std::wstring __FSUDate    = L"November 25th 2022";
+static const std::wstring __FSUDate    = L"December 23rd 2022";
 
 // ===========================================================================
 // == Categories =============================================================
@@ -896,8 +896,11 @@ static const int  rsDeepScan = 784;
 static const int  rsTextReport20 = 785;
 static const int  rsTextReport21 = 786;
 static const int  rsTextReport22 = 787;
+static const int  rsSummReport16 = 788;
+static const int  rsTextReport23 = 789;
+static const int  rsTextReport24 = 790;
 
-static const int  rsLanguageConstantsCount = 788;
+static const int  rsLanguageConstantsCount = 791;
 
 static const int  rsUnitB = 0;
 static const int  rsUnitKB = 1;

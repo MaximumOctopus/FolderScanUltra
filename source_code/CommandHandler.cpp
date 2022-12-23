@@ -19,16 +19,16 @@
 #include "ReportConsole.h"
 #include "ReportHandler.h"
 #include "ReportSummary.h"
-#include "ScanDetails.h"
+#include "ScanEngine.h"
 
 
 CommandHandler* GCommandHandler;
-extern ScanDetails* GScanDetails;
+extern ScanEngine* GScanEngine;
 
 
 Command CommandHandler::ProcessCommand(std::wstring input)
 {
-	if (input != L"")
+	if (!input.empty())
 	{
 		CreateTokens(input);
 
@@ -51,7 +51,7 @@ Command CommandHandler::ProcessTokens()
 
 	c.primarystr = CommandTokens[0];
 
-	c.fullcommandstr = L"";
+	c.fullcommandstr.clear();
 
 	if (CommandTokens.size() > 1)
 	{
@@ -112,7 +112,7 @@ void CommandHandler::CreateTokens(const std::wstring input)
 			{
 				CommandTokens.push_back(token);
 
-				token = L"";
+				token.clear();
 			}
 			else
 			{
@@ -125,7 +125,7 @@ void CommandHandler::CreateTokens(const std::wstring input)
 		}
 	}
 
-	if (token != L"")
+	if (!token.empty())
 	{
 		CommandTokens.push_back(token);
 	}
@@ -147,7 +147,7 @@ void CommandHandler::ExecuteCommand(Command c)
 	{
 		int count = 20;
 
-		if (c.tertiary != L"")
+		if (!c.tertiary.empty())
 		{
 			try
 			{
@@ -208,18 +208,18 @@ void CommandHandler::ExecuteCommand(Command c)
 	}
 
 	case PrimaryCommand::Search:
-		GScanDetails->Search(c);
+		GScanEngine->Search(c);
 		break;
 
 	case PrimaryCommand::Filter:
 	{
-		int count = GScanDetails->Filter(c);
+		int count = GScanEngine->Filter(c);
 
 		break;
 	}
 
 	case PrimaryCommand::Save:
-		GScanDetails->SaveSearchResults(c);
+		GScanEngine->SaveSearchResults(c);
 		break;
 
 	default:

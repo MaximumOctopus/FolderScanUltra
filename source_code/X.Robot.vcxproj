@@ -99,6 +99,7 @@
     <ClInclude Include="DatabaseHandler.h" />
     <ClInclude Include="DatabaseODBC.h" />
     <ClInclude Include="DatabaseSQlite.h" />
+    <ClInclude Include="Debug.h" />
     <ClInclude Include="ReportTree.h" />
     <ClInclude Include="ReportTreeOptions.h" />
     <ClInclude Include="ReportUtility.h" />
@@ -142,7 +143,7 @@
     <ClInclude Include="ReportXMLReportOptions.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RootFolder.h" />
-    <ClInclude Include="ScanDetails.h" />
+    <ClInclude Include="ScanEngine.h" />
     <ClInclude Include="ScanHistoryObject.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="SizeOfFolder.h" />
@@ -159,6 +160,7 @@
     <ClCompile Include="DatabaseHandler.cpp" />
     <ClCompile Include="DatabaseODBC.cpp" />
     <ClCompile Include="DatabaseSQlite.cpp" />
+    <ClCompile Include="Debug.cpp" />
     <ClCompile Include="Errors.cpp" />
     <ClCompile Include="FileDateObject.cpp" />
     <ClCompile Include="FileExtension.cpp" />
@@ -185,7 +187,7 @@
     <ClCompile Include="ReportUtility.cpp" />
     <ClCompile Include="ReportXinorbis.cpp" />
     <ClCompile Include="ReportXML.cpp" />
-    <ClCompile Include="ScanDetails.cpp" />
+    <ClCompile Include="ScanEngine.cpp" />
     <ClCompile Include="SearchCriteriaObject.cpp" />
     <ClCompile Include="SearchUtility.cpp" />
     <ClCompile Include="Settings.cpp" />

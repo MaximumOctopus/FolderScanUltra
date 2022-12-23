@@ -283,7 +283,7 @@ namespace Test
 						break;
 					case ParameterOption::SystemTable:
 					{
-						if (pd.Value != L"")
+						if (!pd.Value.empty())
 						{
 							std::wcout << L"      Specified system table name \"" + pd.Value + L"\".\n";
 						}
@@ -298,7 +298,7 @@ namespace Test
 					}
 					case ParameterOption::DataTable:
 					{
-						if (pd.Value != L"")
+						if (!pd.Value.empty())
 						{
 							std::wcout << L"      Specified data table name \"" + pd.Value + L"\".\n";
 						}
@@ -912,15 +912,15 @@ namespace Test
 		{
 			std::wcout << L"\n    Custom.ini found\n\n";
 
-			Ini* iniFile = new Ini(GSystemGlobal->AppPath + L"custom.ini");
+			std::unique_ptr<Ini> IniFile = std::make_unique<Ini>(GSystemGlobal->AppPath + L"custom.ini");
 
-			if (iniFile->Loaded)
+			if (IniFile->Loaded)
 			{
 				std::wcout << GSystemGlobal->AppPath + L"Loaded okay\n";
 
-				std::wstring pcm = iniFile->ReadString(L"Main", L"PortableMode", L"");
+				std::wstring pcm = IniFile->ReadString(L"Main", L"PortableMode", L"");
 
-				if (pcm == L"")
+				if (pcm.empty())
 				{
 					std::wcout << L"      Portable mode not specified\n";
 				}
@@ -929,9 +929,9 @@ namespace Test
 					std::wcout << L"      Portable mode set to: " << pcm << L"\n"; 
 				}
 
-				pcm = iniFile->ReadString(L"Main", L"useodbc", L"");
+				pcm = IniFile->ReadString(L"Main", L"useodbc", L"");
 
-				if (pcm == L"")
+				if (pcm.empty())
 				{
 					std::wcout << L"      ODBC mode not specified\n";
 				}
@@ -940,9 +940,9 @@ namespace Test
 					std::wcout << L"      ODBC mode set to: " << pcm << L"\n"; 
 				}
 				
-				pcm = iniFile->ReadString(L"Main", L"connectionstring", L"");
+				pcm = IniFile->ReadString(L"Main", L"connectionstring", L"");
 
-				if (pcm == L"")
+				if (pcm.empty())
 				{
 					std::wcout << L"      Connection string not specified\n";
 				}
@@ -957,8 +957,6 @@ namespace Test
 			{
 				std::wcout << GSystemGlobal->AppPath + L"Failure to load :(\n";
 			}
-				
-			delete iniFile;
 
 			return false;
 		}

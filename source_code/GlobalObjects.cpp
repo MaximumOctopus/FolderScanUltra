@@ -14,7 +14,7 @@
 #include "FileExtensionHandler.h"
 #include "LanguageHandler.h"
 #include "ParameterHandler.h"
-#include "ScanDetails.h"
+#include "ScanEngine.h"
 #include "StatusConstants.h"
 #include "SystemGlobal.h"
 #include "Settings.h"
@@ -24,7 +24,7 @@
 extern FileExtensionHandler* GFileExtensionHandler;
 extern LanguageHandler* GLanguageHandler;
 extern ParameterHandler* GParameterHandler;
-extern ScanDetails* GScanDetails;
+extern ScanEngine* GScanEngine;
 extern Settings* GSettings;
 extern SystemGlobal* GSystemGlobal;
 
@@ -48,11 +48,19 @@ namespace GlobalObjects
 			{
 				GFileExtensionHandler = new FileExtensionHandler();
 
-				GScanDetails = new ScanDetails(GParameterHandler->GetScanFolder());
+				GScanEngine = new ScanEngine(GParameterHandler->GetScanFolder());
 
 				if (GParameterHandler->FindParameter(kNoOutput) && !GParameterHandler->FindParameter(kTest))
 				{
 					std::wcout.setstate(std::ios_base::failbit);
+				}
+
+				if (GParameterHandler->ExcludeFolders.size() != 0)
+				{
+					for (int t = 0; t < GParameterHandler->ExcludeFolders.size(); t++)
+					{
+						GScanEngine->AddToExcludeList(GParameterHandler->ExcludeFolders[t]);
+					}					
 				}
 
 				return InitStatus::Success;
@@ -79,7 +87,7 @@ namespace GlobalObjects
 		
 		if (GFileExtensionHandler != nullptr)	delete GFileExtensionHandler;
 		
-		if (GScanDetails != nullptr)			delete GScanDetails;
+		if (GScanEngine != nullptr)			delete GScanEngine;
 
 		if (GParameterHandler != nullptr)		delete GParameterHandler;
 

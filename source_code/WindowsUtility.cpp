@@ -286,7 +286,7 @@ std::wstring WindowsUtility::GetUserFromWindows()
 // drive_root shoud be in the format n:
 std::wstring WindowsUtility::GetDiskTypeString(const std::wstring& drive_root)
 {
-	if (drive_root != L"" && drive_root != L"\\\\")
+	if (!drive_root.empty() && drive_root != L"\\\\")
 	{
 		LPCWSTR cname;
 		cname = drive_root.c_str() + '\\';
@@ -314,7 +314,7 @@ DriveDetails WindowsUtility::GetDriveDetails(const std::wstring& drive_root)
 {
 	DriveDetails dd;
 
-	if (drive_root != L"" && drive_root != L"\\\\")
+	if (!drive_root.empty() && drive_root != L"\\\\")
 	{
 		DWORD SectorsPerCluster, BytesPerSector, NumberOfFreeClusters, TotalNumberOfClusters;
 

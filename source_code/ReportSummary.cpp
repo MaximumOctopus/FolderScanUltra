@@ -14,14 +14,14 @@
 #include "Formatting.h"
 #include "LanguageHandler.h"
 #include "ReportSummary.h"
-#include "ScanDetails.h"
+#include "ScanEngine.h"
 #include "Utility.h"
 #include <iomanip>
 #include <iostream>
 #include <string>
 
 
-extern ScanDetails* GScanDetails;
+extern ScanEngine* GScanEngine;
 extern LanguageHandler* GLanguageHandler;
 
 
@@ -31,26 +31,40 @@ namespace ReportSummary
 	{
 		std::wcout << "\n";
 
-		std::wcout << std::format(L"{0} \"{1}\"\n", GLanguageHandler->SummaryReport[0], GScanDetails->Path.String);
+		std::wcout << std::format(L"{0} \"{1}\"\n", GLanguageHandler->SummaryReport[0], GScanEngine->Path.String);
 
 		std::wcout << Formatting::AddLeading(L"", GLanguageHandler->SummaryReport[0].size(), L' ') + Utility::GetDate(DateTimeFormat::Display) + L", " + Utility::GetTime(DateTimeFormat::Display) << "\n";
 		std::wcout << "\n";
-		std::wcout << GLanguageHandler->SummaryReport[1] + L" " << GScanDetails->Data.FileCount << "\n";
-		std::wcout << GLanguageHandler->SummaryReport[2] + L" " << GScanDetails->Data.FolderCount << "\n";
-		std::wcout << GLanguageHandler->SummaryReport[3] + L" " << Convert::ConvertToUsefulUnit(GScanDetails->Data.TotalSize) << "\n";
+		std::wcout << GLanguageHandler->SummaryReport[1] + L" " << GScanEngine->Data.FileCount << "\n";
+		std::wcout << GLanguageHandler->SummaryReport[2] + L" " << GScanEngine->Data.FolderCount << "\n";
+		std::wcout << GLanguageHandler->SummaryReport[3] + L" " << Convert::ConvertToUsefulUnit(GScanEngine->Data.TotalSize) << "\n";
 
 		std::wcout << "\n";
 
-		if (GScanDetails->Data.FileCount != 0)
+		if (GScanEngine->Data.FileCount != 0)
 		{
-			std::wcout << GLanguageHandler->SummaryReport[8] + L" " + Convert::ConvertToUsefulUnit(GScanDetails->Data.AverageFileSize) << "\n";
+			std::wcout << GLanguageHandler->SummaryReport[8] + L" " + Convert::ConvertToUsefulUnit(GScanEngine->Data.AverageFileSize) << "\n";
 		}
 
-		if (GScanDetails->Data.FolderCount != 0)
+		if (GScanEngine->Data.FolderCount != 0)
 		{
-			std::wcout << GLanguageHandler->SummaryReport[9] + L" " << std::setprecision(3) << GScanDetails->Data.AverageFilesPerFolder << "\n";
+			std::wcout << GLanguageHandler->SummaryReport[9] + L" " << std::setprecision(3) << GScanEngine->Data.AverageFilesPerFolder << "\n";
 		}
 
 		std::wcout << "\n";
+
+		if (GScanEngine->Path.ExcludeFolders)
+		{
+			for (int t = 0; t < GScanEngine->ExcludeCount(); t++)
+			{
+				std::wcout << GLanguageHandler->SummaryReport[15] + L" " << GScanEngine->GetExcludeItem(t) << "\n";
+			}
+
+			std::wcout << "\n";
+
+			std::wcout << Formatting::AddLeading(L"", GLanguageHandler->SummaryReport[15].size(), L' ') << L" Excluded " << GScanEngine->Path.ExcludedFolderCount << " folders.\n";
+
+			std::wcout << "\n";
+		}
 	}
 }

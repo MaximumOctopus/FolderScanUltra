@@ -11,11 +11,11 @@
 
 #include <iostream>
 #include "ReportDeep.h"
-#include "ScanDetails.h"
+#include "ScanEngine.h"
 #include "SizeOfFolder.h"
 
 
-extern ScanDetails* GScanDetails;
+extern ScanEngine* GScanEngine;
 
 
 ReportDeep::ReportDeep()
@@ -38,16 +38,16 @@ bool ReportDeep::ProcessFolder(int folder_index)
     largestSize = 0;
     largestCount = 0;
 
-    for (int f = 0; f < GScanDetails->Data.Files.size(); f++)
+    for (int f = 0; f < GScanEngine->Data.Files.size(); f++)
     {
-        if (GScanDetails->Data.Files[f].FilePathIndex == folder_index)
+        if (GScanEngine->Data.Files[f].FilePathIndex == folder_index)
         {
-            if (GScanDetails->Data.Files[f].Category == __FileCategoryDirectory)
+            if (GScanEngine->Data.Files[f].Category == __FileCategoryDirectory)
             {
 			    //std::wcout << L"      " << GScanDetails->Folders[GScanDetails->Files[f].FilePathIndex] + GScanDetails->Files[f].FileName << "\n";
 
-                SizeOfFolder sof = GScanDetails->GetSizeOfFolder(GScanDetails->Data.Folders[GScanDetails->Data.Files[f].FilePathIndex] + GScanDetails->Data.Files[f].FileName,
-                                                                 GScanDetails->Data.Files[f].FileName);
+                SizeOfFolder sof = GScanEngine->GetSizeOfFolder(GScanEngine->Data.Folders[GScanEngine->Data.Files[f].FilePathIndex] + GScanEngine->Data.Files[f].FileName,
+                                                                 GScanEngine->Data.Files[f].FileName);
 
                 FolderData.push_back(sof);
 
