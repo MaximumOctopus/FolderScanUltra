@@ -1,4 +1,4 @@
-# FolderScanUltra 5.7
+# FolderScanUltra 5.8
 
 (c) Paul Alan Freshney 2019-2022
 
@@ -24,6 +24,18 @@ This was originally a Delphi application, released as part of the Xinorbis tools
 In 2022 I decided to rename it and add it to my pool of applications receiving regular updates (two applications now, so maybe a puddle, not a pool). It'll be distanced somewhat from xinorbis and become better for it. Many updates are planned.
 
 # Release History
+
+5.8 / December 23rd 2022
+
+Added: Exclude folders with pattern matching
+       /xd:pattern
+Added: Excluded folder patterns to HTML, Text, and console outputs
+Added: The following extra console output options (based on the text report sections of the same name):
+	   /nullfiles
+	   /tempfiles
+Added: Duplicate listing to console:
+       Duplicates by file name: /dn
+	   Duplicates by file size: /ds
 
 5.7 / November 25th 2022
 
