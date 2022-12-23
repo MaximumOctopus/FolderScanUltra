@@ -72,6 +72,8 @@ jpg
 jps
 jpx
 lbm
+lrcat
+lrdata
 lwo
 lws
 lxo
