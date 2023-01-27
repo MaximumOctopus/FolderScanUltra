@@ -1,4 +1,4 @@
-# FolderScanUltra 5.8
+# FolderScanUltra 5.9
 
 (c) Paul Alan Freshney 2019-2022
 
@@ -24,6 +24,13 @@ This was originally a Delphi application, released as part of the Xinorbis tools
 In 2022 I decided to rename it and add it to my pool of applications receiving regular updates (two applications now, so maybe a puddle, not a pool). It'll be distanced somewhat from xinorbis and become better for it. Many updates are planned.
 
 # Release History
+
+5.9 / January 27th 2023
+
+Added: JSON report:
+       /json	   
+
+Saves the full file list (with all parameters) to a JSON file.
 
 5.8 / December 23rd 2022
 
