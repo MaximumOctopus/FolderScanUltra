@@ -12,7 +12,6 @@ bmx
 c
 cbl
 cbp
-cbproj
 cc
 class
 cob
@@ -59,7 +58,6 @@ mrc
 o
 pas
 pch
-pdi
 php
 php3
 php4
@@ -92,7 +90,6 @@ vbp
 vbproj
 vbs
 vcproj
-vcxproj
 vdproj
 vip
 xcodeproj

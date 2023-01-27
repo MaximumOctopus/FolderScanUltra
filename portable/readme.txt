@@ -1,16 +1,16 @@
-==================================================================================
-FolderScanUltra 5.7
-(c) Paul Alan Freshney 2019-2022
+====================================================================================================================================
+FolderScanUltra 5.9
+(c) Paul Alan Freshney 2019-2023
 
 paul@freshney.org
 
 Source code and portable install
   https://github.com/MaximumOctopus/FolderScanUltra
-==================================================================================
+====================================================================================================================================
 
 FSU is a powerful console-based folder/drive analysis tool for creating highly detailed reports on the composition of any folder/drive/network storage/etc.
 
-It can generate CSV, XML, Text, Tree, and summary reports.
+It can generate CSV, HTML, JSON, XML, Text, Tree, and summary reports.
 
 The included sqlite3.dll and sqlite3.lib files are x64 versions. They can only be used to compile the 64-bit version.
 
@@ -21,15 +21,36 @@ Compiled with C++ 20 in Visual Studio 2022.
 May require C++ runtime if you get an error when starting:
     https://www.microsoft.com/en-gb/download/details.aspx?id=48145
 
+====================================================================================================================================
+
 History
 
 This was originally a Delphi application, released as part of the Xinorbis toolset, called XCom, it was renamed X.Robot many years ago, and received a C++ rewrite in 2019.
 
 In 2022 I decided to rename it and add it to my pool of applications receiving regular updates (two applications now, so maybe a puddle, not a pool). It'll be distanced somewhat from xinorbis and become better for it. Many (exciting!?) updates are planned.
 
-==================================================================================
+====================================================================================================================================
+
+ Credits:
+
+   All coding       : Paul A Freshney
+   Development Cats : Rutherford, Freeman, and Maxwell
+   Icon             : https://icon-icons.com
+
+   Dedicated to Julie, Adam, and Dyanne.
+
+All of my software is free and open source; please consider donating to a local cat charity or shelter. Thanks.
+
+====================================================================================================================================
 
 Release History
+
+5.9 / January 27th 2023
+
+Added: JSON report:
+       /json
+	   
+	   Saves the full file list (with all parameters) to a JSON file.
 
 5.8 / December 23rd 2022
 
@@ -75,8 +96,7 @@ Added: Text root folder sections sorted by size and file count.
 Added: HTML root folder by size, alphabetical (if number of root folders >20)
 
 Fixed: Issue where charts won't appear in HTML reports if ' is present in a folder name.
-	   	   
-
+  	   
 5.5 / September 25th 2022
 
 Fixed an issue where adding a final \ to the end of scan path (eg e:\cats\) would cause a "folder does not exist error".
