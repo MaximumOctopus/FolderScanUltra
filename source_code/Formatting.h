@@ -1,7 +1,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2022
+// (c) Paul Alan Freshney 2019-2023
 //
 // paul@freshney.org
 // 
@@ -24,6 +24,8 @@ namespace Formatting
 	[[nodiscard]] std::wstring InsertElement(const std::wstring, std::wstring, int);
 	[[nodiscard]] std::wstring ReplaceEntitiesForXML(std::wstring);
 	[[nodiscard]] std::wstring TrimFileNameForOutput(const std::wstring);
+
+	[[nodiscard]] std::wstring ReplaceForJSON(std::wstring);
 
 	[[nodiscard]] std::wstring GetAttributeAsString(int);
 

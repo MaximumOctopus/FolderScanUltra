@@ -1,7 +1,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2022
+// (c) Paul Alan Freshney 2019-2023
 //
 // paul@freshney.org
 // 
@@ -19,6 +19,7 @@
 #include "ReportHandler.h"
 #include "ReportHTML.h"
 #include "ReportHTMLReportOptions.h"
+#include "ReportJSON.h"
 #include "ReportSummary.h"
 #include "ReportText.h"
 #include "ReportTextReportOptions.h"
@@ -90,6 +91,14 @@ namespace ReportHandler
 					}
 
 					ReportHTML::GenerateReport(trOptions);
+
+					reportCount++;
+
+					break;
+				}
+				case ParameterOption::JSONReport:
+				{
+					ReportJSON::FullFileList(FileName);
 
 					reportCount++;
 

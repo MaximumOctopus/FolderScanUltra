@@ -1,7 +1,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2022
+// (c) Paul Alan Freshney 2019-2023
 //
 // paul@freshney.org
 // 
@@ -74,6 +74,8 @@ bool SystemGlobal::CheckFolderStructure()
 
 	if (!WindowsUtility::DirectoryExists(DataPath + L"Reports\\" + cName + L"\\HTML"))        { failCount += WindowsUtility::CreateFolder(DataPath + L"Reports\\" + cName + L"\\HTML"); }
 	if (!WindowsUtility::DirectoryExists(DataPath + L"Reports\\" + cName + L"\\HTML\\data"))  { failCount += WindowsUtility::CreateFolder(DataPath + L"Reports\\" + cName + L"\\HTML\\data"); }
+
+	if (!WindowsUtility::DirectoryExists(DataPath + L"Reports\\" + cName + L"\\JSON"))        { failCount += WindowsUtility::CreateFolder(DataPath + L"Reports\\" + cName + L"\\JSON"); }
 
 	if (!WindowsUtility::DirectoryExists(DataPath + L"Reports\\" + cName + L"\\Xinorbis"))    { failCount += WindowsUtility::CreateFolder(DataPath + L"Reports\\" + cName + L"\\Xinorbis"); }
 

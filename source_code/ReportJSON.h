@@ -11,14 +11,8 @@
 
 #pragma once
 
-#include <string>
-#include "ReportConstants.h"
 
-
-struct TreeReportOptions
+namespace ReportJSON
 {
-	std::wstring FileName = L"";
-
-	bool IncludeSize = true;
-	bool IncludeAttributes = true;
-};
+	void FullFileList(const std::wstring);
+}

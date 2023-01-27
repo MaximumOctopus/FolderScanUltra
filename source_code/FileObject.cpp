@@ -1,7 +1,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2022
+// (c) Paul Alan Freshney 2019-2023
 //
 // paul@freshney.org
 // 
@@ -92,6 +92,55 @@ std::wstring FileObject::ToCSV(const std::wstring folder, const std::wstring use
 	}
 
 	return output;
+}
+
+
+std::wstring FileObject::ToJSON(const std::wstring folder, const std::wstring user)
+{
+	std::wstring output = L"{";
+
+	output += L"\"FileName\":\"" + FileName + L"\", ";
+	output += L"\"Path\":\"" + Formatting::ReplaceForJSON(folder) + L"\", ";
+
+	if (Attributes & FILE_ATTRIBUTE_DIRECTORY)
+	{
+		output += L"\"SizeWords\":\"-1\", ";
+		output += L"\"SizeBytes\":\"-1\", ";
+		output += L"\"SizeOnDiskWords\":\"-1\", ";
+		output += L"\"SizeOnDiskBytes\":\"-1\", ";
+	}
+	else
+	{
+		output += L"\"SizeWords\":\"" + Convert::ConvertToUsefulUnit(Size) + L"\", ";
+		output += L"\"SizeBytes\":\"" + std::to_wstring(Size) + L"\", ";
+		output += L"\"SizeOnDiskWords\":\"" + Convert::ConvertToUsefulUnit(SizeOnDisk) + L"\", ";
+		output += L"\"SizeOnDiskBytes\":\"" + std::to_wstring(SizeOnDisk) + L"\", ";
+	}
+
+	output += L"\"Owner\":\"" + user + L"\", ";
+
+	output += L"\"TimeCreated\":\"" + std::to_wstring(FileTimeC) + L"\", ";
+	output += L"\"TimeModified\":\"" + std::to_wstring(FileTimeM) + L"\", ";
+	output += L"\"TimeAccessed\":\"" + std::to_wstring(FileTimeA) + L"\", ";
+
+	output += L"\"DateCreated\":\"" + Convert::IntDateToString(FileDateC) + L"\", ";
+	output += L"\"DateModified\":\"" + Convert::IntDateToString(FileDateM) + L"\", ";
+	output += L"\"DateAccessed\":\"" + Convert::IntDateToString(FileDateA) + L"\", ";
+
+	output += L"\"DateCreatedYYYYMMDD\":\"" + std::to_wstring(FileDateC) + L"\", ";
+	output += L"\"DateModifiedYYYYMMDD\":\"" + std::to_wstring(FileDateM) + L"\", ";
+	output += L"\"DateAccessedYYYYMMDD\":\"" + std::to_wstring(FileDateA) + L"\", ";
+
+	output += L"\"Category\":\"" + std::to_wstring(Category) + L"\", ";
+	output += L"\"Folder\":\"" + Convert::AttributeToIntAsString(Attributes, FILE_ATTRIBUTE_DIRECTORY) + L"\", ";
+	output += L"\"Readonly\":\"" + Convert::AttributeToIntAsString(Attributes, FILE_ATTRIBUTE_READONLY) + L"\", ";
+	output += L"\"Hidden\":\"" + Convert::AttributeToIntAsString(Attributes, FILE_ATTRIBUTE_HIDDEN) + L"\", ";
+	output += L"\"System\":\"" + Convert::AttributeToIntAsString(Attributes, FILE_ATTRIBUTE_SYSTEM) + L"\", ";
+	output += L"\"Archive\":\"" + Convert::AttributeToIntAsString(Attributes, FILE_ATTRIBUTE_ARCHIVE) + L"\", ";
+	output += L"\"Temp\":\"" + Convert::BoolToString(Temp) + L"\", ";
+	output += L"\"Attributes\":\"" + std::to_wstring(Attributes) + L"\"";
+
+	return output + L"}";
 }
 
 

@@ -1,7 +1,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2022
+// (c) Paul Alan Freshney 2019-2023
 //
 // paul@freshney.org
 // 
@@ -40,5 +40,6 @@ public:
 	FileObject();
 
     std::wstring ToCSV(const std::wstring folder, const std::wstring user, int units);
+    std::wstring ToJSON(const std::wstring folder, const std::wstring user);
     std::wstring ToXml(const std::wstring folder, const std::wstring user);
 };

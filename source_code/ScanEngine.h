@@ -1,7 +1,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2022
+// (c) Paul Alan Freshney 2019-2023
 //
 // paul@freshney.org
 // 
@@ -187,4 +187,8 @@ public:
 
 	void Search(Command);
 	[[nodiscard]] int Filter(Command);
+
+	// ======================================================================
+
+	std::wstring ToJSON();
 };

@@ -1,7 +1,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2022
+// (c) Paul Alan Freshney 2019-2023
 //
 // paul@freshney.org
 // 
@@ -44,6 +44,7 @@ const static std::wstring kSaveConfig = L"/save";
 
 const static std::wstring kCSVReport = L"/csv";
 const static std::wstring kHTMLReport = L"/html";
+const static std::wstring kJSONReport = L"/json";
 const static std::wstring kTextReport = L"/txt";
 const static std::wstring kTreeReport = L"/tree";
 const static std::wstring kXMLReport = L"/xml";
@@ -97,29 +98,29 @@ const static std::wstring kDeleteContextMenu = L"/deletecontextmenu";
 enum class ParameterOption {
 	None = 0, ScanFolder = 1, Cats = 2,
 	LoadConfig = 3, SaveConfig = 4,
-	CSVReport = 5, HTMLReport = 6, TextReport = 7, TreeReport = 8, XMLReport = 9, XMLFullListReport = 10, XinorbisReport = 11, DeepHTMLReport = 12, DeepTextReport = 13,
-	Summary = 14, TopTwenty = 15, BottomTwenty = 16, NewTwenty = 17, OldTwenty = 18, FolderTopTwenty = 19, AllTwenty = 20, ReportCategories = 21, ReportUsers = 22,
-	ReportDuplicateFileName = 23, ReportDuplicateFileSize = 24,
-	AllFolders = 24, AllVirtual = 25,
-	UpdateFolderHistory = 26, ODBC = 27, SQLite = 28, DBStructured = 29, SystemTable = 30, DataTable = 31, UpdateScanHistory = 32,
-	NoUsers = 33, NoProcess = 34, NoTemp = 35, Test = 36, VersionCheck = 37,
-	SetContextMenu = 38, DeleteContextMenu = 39, Pause = 40,
-	Console = 41, Version = 42, Help = 43, Statistics = 44, ListRoot = 45, NoOutput = 46,
-	ReportExtensions = 47, ReportFileDates = 48, ReportMagnitude = 49, ReportAttributes = 50,
-	ReportNullFiles = 51, ReportTemporaryFiles = 52,
-	ExcludeHidden = 53, ExcludeReadOnly = 54, ExcludeTemp = 55, ExcludeFolder = 56, ExcludeFile = 57
+	CSVReport = 5, HTMLReport = 6, JSONReport = 7, TextReport = 8, TreeReport = 9, XMLReport = 10, XMLFullListReport = 11, XinorbisReport = 12, DeepHTMLReport = 13, DeepTextReport = 14,
+	Summary = 15, TopTwenty = 16, BottomTwenty = 17, NewTwenty = 18, OldTwenty = 19, FolderTopTwenty = 20, AllTwenty = 21, ReportCategories = 22, ReportUsers = 23,
+	ReportDuplicateFileName = 24, ReportDuplicateFileSize = 25,
+	AllFolders = 26, AllVirtual = 27,
+	UpdateFolderHistory = 28, ODBC = 29, SQLite = 30, DBStructured = 31, SystemTable = 32, DataTable = 33, UpdateScanHistory = 34,
+	NoUsers = 35, NoProcess = 36, NoTemp = 37, Test = 38, VersionCheck = 39,
+	SetContextMenu = 40, DeleteContextMenu = 41, Pause = 42,
+	Console = 43, Version = 44, Help = 45, Statistics = 46, ListRoot = 47, NoOutput = 48,
+	ReportExtensions = 49, ReportFileDates = 50, ReportMagnitude = 51, ReportAttributes = 52,
+	ReportNullFiles = 53, ReportTemporaryFiles = 54,
+	ExcludeHidden = 55, ExcludeReadOnly = 56, ExcludeTemp = 57, ExcludeFolder = 58, ExcludeFile = 59
 };
 
 #ifdef __XINORBIS
-static const int kCommandListCount = 57;
+static const int kCommandListCount = 58;
 #else
-static const int kCommandListCount = 50;
+static const int kCommandListCount = 51;
 #endif
 
 
 static const std::wstring CommandList[kCommandListCount] = {
 	kCats, kLoadConfig, kSaveConfig,
-	kCSVReport, kHTMLReport, kTextReport, kTreeReport, kXMLReport, kXFLReport, kXinorbisReport, kDeepHTMLReport, kDeepTextReport,
+	kCSVReport, kHTMLReport, kJSONReport, kTextReport, kTreeReport, kXMLReport, kXFLReport, kXinorbisReport, kDeepHTMLReport, kDeepTextReport,
 	kSummary, kTopTwenty, kBottomTwenty, kNewTwenty, kOldTwenty, kFolderTopTwenty, kAllTwenty, 
 	kAttributes, kCategories, kExtensions, kFileDates, kMagnitude, kNullFiles, kTemporaryFiles, kUsers,
 	kDuplicateFileName, kDuplicateFileSize,
@@ -135,7 +136,7 @@ static const std::wstring CommandList[kCommandListCount] = {
 
 static const ParameterOption ParameterReference[kCommandListCount] = {
 	ParameterOption::Cats, ParameterOption::LoadConfig, ParameterOption::SaveConfig,
-	ParameterOption::CSVReport, ParameterOption::HTMLReport, ParameterOption::TextReport, ParameterOption::TreeReport, ParameterOption::XMLReport, ParameterOption::XMLFullListReport, ParameterOption::XinorbisReport, ParameterOption::DeepHTMLReport, ParameterOption::DeepTextReport,
+	ParameterOption::CSVReport, ParameterOption::HTMLReport, ParameterOption::JSONReport, ParameterOption::TextReport, ParameterOption::TreeReport, ParameterOption::XMLReport, ParameterOption::XMLFullListReport, ParameterOption::XinorbisReport, ParameterOption::DeepHTMLReport, ParameterOption::DeepTextReport,
 	ParameterOption::Summary, ParameterOption::TopTwenty, ParameterOption::BottomTwenty, ParameterOption::NewTwenty, ParameterOption::OldTwenty, ParameterOption::FolderTopTwenty, ParameterOption::AllTwenty,
 	ParameterOption::ReportAttributes, ParameterOption::ReportCategories, ParameterOption::ReportExtensions, ParameterOption::ReportFileDates, ParameterOption::ReportMagnitude, ParameterOption::ReportNullFiles, ParameterOption::ReportTemporaryFiles, ParameterOption::ReportUsers,
 	ParameterOption::ReportDuplicateFileName, ParameterOption::ReportDuplicateFileSize,
@@ -149,10 +150,10 @@ static const ParameterOption ParameterReference[kCommandListCount] = {
 	ParameterOption::ExcludeHidden, ParameterOption::ExcludeReadOnly, ParameterOption::ExcludeTemp, ParameterOption::ExcludeFolder, ParameterOption::ExcludeFile
 };
 
-const static int kReportParametersCount = 25;
+const static int kReportParametersCount = 26;
 
 const static std::wstring ReportCommandList[kReportParametersCount] = {
-	kCSVReport, kHTMLReport, kSummary, kTreeReport, kTextReport, kXMLReport, kXFLReport, kXinorbisReport,
+	kCSVReport, kHTMLReport, kJSONReport, kSummary, kTreeReport, kTextReport, kXMLReport, kXFLReport, kXinorbisReport,
 	kTopTwenty, kBottomTwenty, kNewTwenty, kOldTwenty, kAllTwenty, 
 	kAttributes, kCategories, kExtensions, kFileDates, kMagnitude, kNullFiles, kTemporaryFiles, kUsers,
 	kDuplicateFileName, kDuplicateFileSize,

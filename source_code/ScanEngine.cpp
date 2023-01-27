@@ -1,7 +1,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2022
+// (c) Paul Alan Freshney 2019-2023
 //
 // paul@freshney.org
 // 
@@ -554,7 +554,6 @@ bool ScanEngine::Analyse()
 				std::transform(s.begin(), s.end(), s.begin(), ::toupper);
 
 				bool found = false;
-
 
 				while ((!found) && (z < GFileExtensionHandler->Extensions.size()))
 				{
@@ -2419,4 +2418,10 @@ int ScanEngine::Filter(Command command)
 	}
 
 	return FoundCount;
+}
+
+
+std::wstring ScanEngine::ToJSON()
+{
+	return L"\"scan\":[{\"path\":\"" + Formatting::ReplaceForJSON(GScanEngine->Path.String) + L"\", \"filecount\":\"" + std::to_wstring(GScanEngine->Data.FileCount) + L"\", \"foldercount\":\"" + std::to_wstring(GScanEngine->Data.FolderCount) + L"\", \"sizebytes\":\"" + std::to_wstring(GScanEngine->Data.TotalSize) + L"\", \"date\":\"" + Utility::GetDate(DateTimeFormat::Display) + L"\", \"time\":\"" + Utility::GetTime(DateTimeFormat::Display) + L"\"}],\n";
 }

@@ -1,7 +1,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2022
+// (c) Paul Alan Freshney 2019-2023
 //
 // paul@freshney.org
 // 
@@ -330,6 +330,7 @@ bool ParameterHandler::IsDateReport(ParameterOption option)
 {
 	switch (option)
 	{
+	case ParameterOption::JSONReport:
 	case ParameterOption::TreeReport:
 	case ParameterOption::XMLFullListReport:
 	case ParameterOption::TopTwenty:
@@ -346,6 +347,7 @@ bool ParameterHandler::IsFileDateReport(ParameterOption option)
 	switch (option)
 	{
 	case ParameterOption::HTMLReport:
+	case ParameterOption::JSONReport:
 	case ParameterOption::TextReport:
 	case ParameterOption::XMLReport:
 	case ParameterOption::XinorbisReport:
@@ -363,6 +365,7 @@ bool ParameterHandler::IsSizeReport(ParameterOption option)
 {
 	switch (option)
 	{
+	case ParameterOption::JSONReport:
 	case ParameterOption::TreeReport:
 	case ParameterOption::XMLFullListReport:
 	case ParameterOption::NewTwenty:
@@ -427,6 +430,7 @@ void ParameterHandler::ProcessForOptimisations()
 		case ParameterOption::CSVReport:
 		case ParameterOption::TextReport:
 		case ParameterOption::HTMLReport:
+		case ParameterOption::JSONReport:
 		case ParameterOption::XinorbisReport:
 		case ParameterOption::XMLReport:
 		case ParameterOption::XMLFullListReport:
@@ -516,6 +520,8 @@ std::wstring ParameterHandler::DefaultFileName(ParameterOption option)
 			return SystemDataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\CSV\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.csv";
 		case ParameterOption::HTMLReport:
 			return SystemDataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\HTML\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.html";
+		case ParameterOption::JSONReport:
+			return SystemDataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\JSON\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.json";
 		case ParameterOption::Summary:
 			return SystemDataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\Text\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.txt";
 		case ParameterOption::TextReport:
@@ -551,6 +557,7 @@ std::wstring ParameterHandler::DefaultOptions(ParameterOption option)
 	case ParameterOption::CSVReport:
 		return L"110";
 	case ParameterOption::HTMLReport:
+	case ParameterOption::JSONReport:
 	case ParameterOption::DeepHTMLReport:
 		return L"1111111111120";
 	case ParameterOption::Summary:

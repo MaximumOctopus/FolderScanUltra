@@ -1,7 +1,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2022
+// (c) Paul Alan Freshney 2019-2023
 //
 // paul@freshney.org
 // 
@@ -87,7 +87,7 @@ namespace GlobalObjects
 		
 		if (GFileExtensionHandler != nullptr)	delete GFileExtensionHandler;
 		
-		if (GScanEngine != nullptr)			delete GScanEngine;
+		if (GScanEngine != nullptr)			    delete GScanEngine;
 
 		if (GParameterHandler != nullptr)		delete GParameterHandler;
 

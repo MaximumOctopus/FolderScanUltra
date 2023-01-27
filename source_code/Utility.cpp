@@ -1,7 +1,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2022
+// (c) Paul Alan Freshney 2019-2023
 //
 // paul@freshney.org
 // 
@@ -145,7 +145,7 @@ namespace Utility
 		std::wstring min   = std::to_wstring(ltm->tm_min);
 		std::wstring sec   = std::to_wstring(ltm->tm_sec);
 
-		if (ltm->tm_mon < 10)
+		if (ltm->tm_mon + 1 < 10)
 		{
 			month = L"0" + month;
 		}

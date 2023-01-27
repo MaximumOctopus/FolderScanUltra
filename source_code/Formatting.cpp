@@ -1,7 +1,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2022
+// (c) Paul Alan Freshney 2019-2023
 //
 // paul@freshney.org
 // 
@@ -111,6 +111,23 @@ namespace Formatting
 
 		std::wstring searchFor   = L"&";
 		std::wstring replaceWith = L"&amp;";
+
+		while ((pos = content.find(searchFor, pos)) != std::wstring::npos)
+		{
+			content.replace(pos, searchFor.length(), replaceWith);
+
+			pos += replaceWith.length();
+		}
+
+		return content;
+	}
+
+	std::wstring ReplaceForJSON(std::wstring content)
+	{
+		size_t pos = 0;
+
+		std::wstring searchFor = L"\\";
+		std::wstring replaceWith = L"\\\\";
 
 		while ((pos = content.find(searchFor, pos)) != std::wstring::npos)
 		{

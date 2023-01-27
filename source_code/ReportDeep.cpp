@@ -1,7 +1,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2022
+// (c) Paul Alan Freshney 2019-2023
 //
 // paul@freshney.org
 // 
@@ -47,7 +47,7 @@ bool ReportDeep::ProcessFolder(int folder_index)
 			    //std::wcout << L"      " << GScanDetails->Folders[GScanDetails->Files[f].FilePathIndex] + GScanDetails->Files[f].FileName << "\n";
 
                 SizeOfFolder sof = GScanEngine->GetSizeOfFolder(GScanEngine->Data.Folders[GScanEngine->Data.Files[f].FilePathIndex] + GScanEngine->Data.Files[f].FileName,
-                                                                 GScanEngine->Data.Files[f].FileName);
+                                                                GScanEngine->Data.Files[f].FileName);
 
                 FolderData.push_back(sof);
 

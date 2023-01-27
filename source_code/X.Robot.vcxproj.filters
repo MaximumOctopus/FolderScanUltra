@@ -130,6 +130,9 @@
     <ClCompile Include="Debug.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
+    <ClCompile Include="ReportJSON.cpp">
+      <Filter>Source Files\Reports</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DatabaseHandler.h">
@@ -317,6 +320,9 @@
     </ClInclude>
     <ClInclude Include="Debug.h">
       <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="ReportJSON.h">
+      <Filter>Header Files\Reports</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

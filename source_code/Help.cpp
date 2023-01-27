@@ -1,7 +1,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2022
+// (c) Paul Alan Freshney 2019-2023
 //
 // paul@freshney.org
 // 
@@ -101,16 +101,17 @@ namespace Help
 		std::wcout << "\n";
 		std::wcout << L"                                 extension \".fsuproject.\" added automatically.\n";
 		std::wcout << "\n";
-        std::wcout << L"    /csv;options;file_name     : output CSV to <filename>\n";
-        std::wcout << L"    /html;options;file_name    : output HTML to <filename>\n";
-        std::wcout << L"    /txt;options;file_name     : output Text to <filename>\n";
-		std::wcout << L"    /tree;options;file_name    : output Tree structure to <filename>\n";
-        std::wcout << L"    /xml;options;file_name     : output XML to <filename>\n";
-		std::wcout << L"    /xfl;options;file_name     : output XML file list to <filename>\n";
-		std::wcout << L"    /xin;options;file_name     : output xinorbis report to <filename>\n";
+        std::wcout << L"    /csv;options;file_name     : save CSV report to <filename>\n";
+        std::wcout << L"    /html;options;file_name    : save HTML report to <filename>\n";
+		std::wcout << L"    /json;file_name            : save JSON report to <filename>\n";
+        std::wcout << L"    /txt;options;file_name     : save Text report to <filename>\n";
+		std::wcout << L"    /tree;options;file_name    : save Tree report structure to <filename>\n";
+        std::wcout << L"    /xml;options;file_name     : save XML report to <filename>\n";
+		std::wcout << L"    /xfl;options;file_name     : save XML report file list to <filename>\n";
+		std::wcout << L"    /xin;options;file_name     : save xinorbis report to <filename>\n";
 		std::wcout << "\n";
-		std::wcout << L"    /deephtml;options;filename : output HTML with extra information to <filename>\n";
-		std::wcout << L"    /deeptext;options;filename : output Text with extra information to <filename>\n";
+		std::wcout << L"    /deephtml;options;filename : save HTML with extra information to <filename>\n";
+		std::wcout << L"    /deeptext;options;filename : save Text with extra information to <filename>\n";
 		std::wcout << "\n";
 		std::wcout << "       deepscan includes information on the second level of folders (and heirarchy)\n";
 		std::wcout << "       this is likely to be more use than just a root folder listing.\n";

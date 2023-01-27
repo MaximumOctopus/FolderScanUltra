@@ -100,6 +100,7 @@
     <ClInclude Include="DatabaseODBC.h" />
     <ClInclude Include="DatabaseSQlite.h" />
     <ClInclude Include="Debug.h" />
+    <ClInclude Include="ReportJSON.h" />
     <ClInclude Include="ReportTree.h" />
     <ClInclude Include="ReportTreeOptions.h" />
     <ClInclude Include="ReportUtility.h" />
@@ -181,6 +182,7 @@
     <ClCompile Include="ReportHandler.cpp" />
     <ClCompile Include="ReportHTML.cpp" />
     <ClCompile Include="ReportDeep.cpp" />
+    <ClCompile Include="ReportJSON.cpp" />
     <ClCompile Include="ReportSummary.cpp" />
     <ClCompile Include="ReportText.cpp" />
     <ClCompile Include="ReportTree.cpp" />
