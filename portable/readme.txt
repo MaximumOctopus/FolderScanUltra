@@ -1,5 +1,5 @@
 ====================================================================================================================================
-FolderScanUltra 5.9
+FolderScanUltra 5.10
 (c) Paul Alan Freshney 2019-2023
 
 paul@freshney.org
@@ -45,12 +45,31 @@ All of my software is free and open source; please consider donating to a local 
 
 Release History
 
+5.10 / August 10th 2023
+
+Added: /filter:n where n is a category, to filter the scan by the specified category
+       Valid n as follows:
+	   
+       Program files      PROG
+       System files       SYS or SYSTEM
+       Graphic files      GFX or GRAPHIC
+       Movie files        MOVIE or FILM
+       Audio files        SND or SOUND
+       Programming files  COD or CODE
+       Compressed files   COM or ZIP
+       Other files        OTH or OTHER
+       Custom             Ci where i is 1 to 10 for custom category 1 to 10
+
+Added: /benford
+       Outputs a Benford's Law distribution to the console
+
+A few tweaks and minor bug fixes.
+
 5.9 / January 27th 2023
 
 Added: JSON report:
        /json
-	   
-	   Saves the full file list (with all parameters) to a JSON file.
+       Saves the full file list (with all parameters) to a JSON file.
 
 5.8 / December 23rd 2022
 
@@ -62,7 +81,7 @@ Added: The following extra console output options (based on the text report sect
 	   /tempfiles
 Added: Duplicate listing to console:
        Duplicates by file name: /dn
-	   Duplicates by file size: /ds
+       Duplicates by file size: /ds
 
 5.7 / November 25th 2022
 
@@ -84,11 +103,11 @@ the sql dll. This will be the default.
 Added: /load and /save to save command-line parameters for easy reuse
 
        /load:file_name
-	   Must be the first command after fsu. 
-	   No extension needed. Other parameters can be added after the load command if required.
+       Must be the first command after fsu. 
+       No extension needed. Other parameters can be added after the load command if required.
 	   
-	   /save:file_name
-	   No extension needed.
+       /save:file_name
+       No extension needed.
 	   
 Added: HTML root folder lists are now sorted by size and file count.
 Added: HTML root folder by size, alphabetical.
