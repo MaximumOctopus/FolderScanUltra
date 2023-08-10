@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,7 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// =====================================================================
 
 #include <fstream>
 #include <iostream>
@@ -192,6 +193,17 @@ namespace ReportText
 	void ReportSummary(std::ofstream &ofile)
 	{
 		ofile << Formatting::to_utf8(GLanguageHandler->SummaryReport[0] + L" \"" + GScanEngine->Path.String + L"\"\n");
+
+		if (GScanEngine->FilterCategory != -1)
+		{
+			ofile << Formatting::to_utf8(L"                  (filtered by category \"" + __FileExtensionFileName[GScanEngine->FilterCategory] + L"\")\n");
+		}
+
+		if (GScanEngine->Data.Source == ScanSource::CSVImport)
+		{
+			ofile << Formatting::to_utf8(L"                  (from CSV import \"" + GScanEngine->Path.CSVSource + L"\")\n");
+		}
+
 		ofile << Formatting::to_utf8(Formatting::AddLeading(L"", GLanguageHandler->SummaryReport[0].size() + 1, L' ') + Utility::GetDate(DateTimeFormat::Display) + L", " + Utility::GetTime(DateTimeFormat::Display) + L"\n\n");
 		ofile << Formatting::to_utf8(GLanguageHandler->SummaryReport[1] + L" " + std::to_wstring(GScanEngine->Data.FileCount) + L"\n");
 		ofile << Formatting::to_utf8(GLanguageHandler->SummaryReport[2] + L" " + std::to_wstring(GScanEngine->Data.FolderCount) + L"\n");
@@ -298,10 +310,10 @@ namespace ReportText
 
 			ofile << "\n";
 			
-			std::wstring str =	Formatting::AddTrailing(L' ' + GLanguageHandler->Text[rsTemporary], TRDescriptionWidth, L' ') +
-								Formatting::AddLeading(std::to_wstring(GScanEngine->Data.ExtensionSpread[0].Count), TRQuantityWidth, L' ') + L"  " +
-								Formatting::AddLeading(Convert::DoubleToPercent((double)GScanEngine->Data.ExtensionSpread[0].Count / (double)GScanEngine->Data.FileCount), TRAsPercentWidth, L' ') + L"  " +
-								Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanEngine->Data.ExtensionSpread[0].Size), TRSizeWidth, L' ') + L"  ";
+			std::wstring str = Formatting::AddTrailing(L' ' + GLanguageHandler->Text[rsTemporary], TRDescriptionWidth, L' ') +
+							   Formatting::AddLeading(std::to_wstring(GScanEngine->Data.ExtensionSpread[0].Count), TRQuantityWidth, L' ') + L"  " +
+							   Formatting::AddLeading(Convert::DoubleToPercent((double)GScanEngine->Data.ExtensionSpread[0].Count / (double)GScanEngine->Data.FileCount), TRAsPercentWidth, L' ') + L"  " +
+							   Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanEngine->Data.ExtensionSpread[0].Size), TRSizeWidth, L' ') + L"  ";
 
 			if (GScanEngine->Data.TotalSize != 0)
 			{
@@ -331,10 +343,10 @@ namespace ReportText
 			{
 				for (int t = 0; t < GScanEngine->Data.RootFolders.size(); t++)
 				{
-					std::wstring str =	Formatting::AddTrailing(L' ' + GScanEngine->Data.RootFolders[t].Name, TRDescriptionWidth, L' ') +
-										Formatting::AddLeading(std::to_wstring(GScanEngine->Data.RootFolders[t].Count), TRQuantityWidth, L' ') + L"  " +
-										Formatting::AddLeading(Convert::DoubleToPercent((double)GScanEngine->Data.RootFolders[t].Count / (double)GScanEngine->Data.FileCount), TRAsPercentWidth, L' ') + L"  " +
-										Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanEngine->Data.RootFolders[t].Size), TRSizeWidth, L' ');
+					std::wstring str = Formatting::AddTrailing(L' ' + GScanEngine->Data.RootFolders[t].Name, TRDescriptionWidth, L' ') +
+									   Formatting::AddLeading(std::to_wstring(GScanEngine->Data.RootFolders[t].Count), TRQuantityWidth, L' ') + L"  " +
+									   Formatting::AddLeading(Convert::DoubleToPercent((double)GScanEngine->Data.RootFolders[t].Count / (double)GScanEngine->Data.FileCount), TRAsPercentWidth, L' ') + L"  " +
+									   Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanEngine->Data.RootFolders[t].Size), TRSizeWidth, L' ');
 
 					if (GScanEngine->Data.TotalSize != 0)
 					{
@@ -682,9 +694,9 @@ namespace ReportText
 
 		for (int t = 0; t < GScanEngine->Data.Top100Large.size(); t++)
 		{
-			ofile << Formatting::to_utf8(Formatting::AddLeading(Convert::IntDateToString(GScanEngine->Data.Top100Large[t].FileDateC), 9, L' ') + L" " +
+			ofile << Formatting::to_utf8(Formatting::AddLeading(Convert::IntDateToString(GScanEngine->Data.Top100Large[t].DateCreated), 9, L' ') + L" " +
 					Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanEngine->Data.Top100Large[t].Size), 14, L' ') + L" " +
-					GScanEngine->Data.Folders[GScanEngine->Data.Top100Large[t].FilePathIndex] + GScanEngine->Data.Top100Large[t].FileName + L"\n");
+					GScanEngine->Data.Folders[GScanEngine->Data.Top100Large[t].FilePathIndex] + GScanEngine->Data.Top100Large[t].Name + L"\n");
 		}
 
 		ofile << "\n";
@@ -697,9 +709,9 @@ namespace ReportText
 
 		for (int t = 0; t < GScanEngine->Data.Top100Large.size(); t++)
 		{
-			ofile << Formatting::to_utf8(Formatting::AddLeading(Convert::IntDateToString(GScanEngine->Data.Top100Small[t].FileDateC), 9, ' ') + L" " +
+			ofile << Formatting::to_utf8(Formatting::AddLeading(Convert::IntDateToString(GScanEngine->Data.Top100Small[t].DateCreated), 9, ' ') + L" " +
 					Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanEngine->Data.Top100Small[t].Size), 14, ' ') + L" " +
-					GScanEngine->Data.Folders[GScanEngine->Data.Top100Small[t].FilePathIndex] + GScanEngine->Data.Top100Small[t].FileName + L"\n");
+					GScanEngine->Data.Folders[GScanEngine->Data.Top100Small[t].FilePathIndex] + GScanEngine->Data.Top100Small[t].Name + L"\n");
 		}
 
 		ofile << "\n";
@@ -712,9 +724,9 @@ namespace ReportText
 
 		for (int t = 0; t < GScanEngine->Data.Top100Newest.size(); t++)
 		{
-			ofile << Formatting::to_utf8(Formatting::AddLeading(Convert::IntDateToString(GScanEngine->Data.Top100Newest[t].FileDateC), 9, ' ') + L" " +
+			ofile << Formatting::to_utf8(Formatting::AddLeading(Convert::IntDateToString(GScanEngine->Data.Top100Newest[t].DateCreated), 9, ' ') + L" " +
 				Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanEngine->Data.Top100Newest[t].Size), 14, ' ') + L" " +
-				GScanEngine->Data.Folders[GScanEngine->Data.Top100Newest[t].FilePathIndex] + GScanEngine->Data.Top100Newest[t].FileName + L"\n");
+				GScanEngine->Data.Folders[GScanEngine->Data.Top100Newest[t].FilePathIndex] + GScanEngine->Data.Top100Newest[t].Name + L"\n");
 		}
 
 		ofile << "\n";
@@ -727,9 +739,9 @@ namespace ReportText
 
 		for (int t = 0; t < GScanEngine->Data.Top100Oldest.size(); t++)
 		{
-			ofile << Formatting::to_utf8(Formatting::AddLeading(Convert::IntDateToString(GScanEngine->Data.Top100Oldest[t].FileDateC), 9, ' ') + L" " +
+			ofile << Formatting::to_utf8(Formatting::AddLeading(Convert::IntDateToString(GScanEngine->Data.Top100Oldest[t].DateCreated), 9, ' ') + L" " +
 				Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanEngine->Data.Top100Oldest[t].Size), 14, ' ') + L" " +
-				GScanEngine->Data.Folders[GScanEngine->Data.Top100Oldest[t].FilePathIndex] + GScanEngine->Data.Top100Oldest[t].FileName + L"\n");
+				GScanEngine->Data.Folders[GScanEngine->Data.Top100Oldest[t].FilePathIndex] + GScanEngine->Data.Top100Oldest[t].Name + L"\n");
 		}
 
 		ofile << "\n";

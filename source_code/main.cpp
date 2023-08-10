@@ -1,4 +1,5 @@
-﻿//
+﻿// =====================================================================
+//
 // FolderScanUltra 5
 //
 // (c) Paul Alan Freshney 2019-2023
@@ -7,7 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// =====================================================================
 
 #pragma comment(lib, "crypt32.lib") 
 
@@ -191,10 +192,11 @@ int wmain(int argc, wchar_t* argv[])
 							}
 							else
 							{
-								if (GScanEngine->Scan(GSettings->Optimisations.ProcessData,
+								if (GScanEngine->Execute(GSettings->Optimisations.ProcessData,
 									GParameterHandler->NeedToProcessTopSizeLists(),
 									GParameterHandler->NeedToProcessTopDateLists(),									
-									GParameterHandler->NeedToProcessFileDates()))
+									GParameterHandler->NeedToProcessFileDates(),
+									GParameterHandler->Filter.Category))
 								{
 									if (ReportHandler::GenerateReports() == 0)
 									{

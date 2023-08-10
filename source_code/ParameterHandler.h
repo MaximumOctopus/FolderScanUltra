@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,7 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// =====================================================================
 
 #pragma once
 
@@ -37,7 +38,7 @@ const static std::wstring kVersion = L"/version";
 //const static std::wstring k L"/p") != std::wstring::npos) { return 0x01; }
 //const static std::wstring k L"/o") != std::wstring::npos) { return 0x02; }
 
-const static std::wstring kCats = L"/cats";
+const static std::wstring kCats = L"/meow";
 const static std::wstring kPause = L"/pause";
 const static std::wstring kLoadConfig = L"/load";
 const static std::wstring kSaveConfig = L"/save";
@@ -69,12 +70,15 @@ const static std::wstring kMagnitude = L"/magnitude";
 const static std::wstring kNullFiles = L"/nullfiles";
 const static std::wstring kTemporaryFiles = L"/tempfiles";
 const static std::wstring kUsers = L"/users";
+const static std::wstring kBenford = L"/benford";
 
 const static std::wstring kDuplicateFileName = L"/dn";
 const static std::wstring kDuplicateFileSize = L"/ds";
 
 const static std::wstring kAllFolders = L"/allfolders";
 const static std::wstring kAllowVirtual = L"/allowvirtual";
+
+const static std::wstring kFilterCategory = L"/filter";
 
 const static std::wstring kExcludeFile = L"/xf";
 const static std::wstring kExcludeFolder = L"/xd";
@@ -108,13 +112,15 @@ enum class ParameterOption {
 	Console = 43, Version = 44, Help = 45, Statistics = 46, ListRoot = 47, NoOutput = 48,
 	ReportExtensions = 49, ReportFileDates = 50, ReportMagnitude = 51, ReportAttributes = 52,
 	ReportNullFiles = 53, ReportTemporaryFiles = 54,
-	ExcludeHidden = 55, ExcludeReadOnly = 56, ExcludeTemp = 57, ExcludeFolder = 58, ExcludeFile = 59
+	ExcludeHidden = 55, ExcludeReadOnly = 56, ExcludeTemp = 57, ExcludeFolder = 58, ExcludeFile = 59,
+	CSVImportFile = 60, FilterCategory = 61,
+	BenfordsLaw = 62
 };
 
 #ifdef __XINORBIS
-static const int kCommandListCount = 58;
+static const int kCommandListCount = 60;
 #else
-static const int kCommandListCount = 51;
+static const int kCommandListCount = 53;
 #endif
 
 
@@ -131,7 +137,9 @@ static const std::wstring CommandList[kCommandListCount] = {
 	kNoUsers, kNoProcess, kNoTemp, kTest, kVersionCheck,
 	kSetContextMenu, kDeleteContextMenu, kPause,
 	kConsole, kVersion, kHelp, kStatistics, kListRoot, kNoOutput,
-	kExcludeHidden, kExcludeReadOnly, kExcludeTemp, kExcludeFolder, kExcludeFile
+	kExcludeHidden, kExcludeReadOnly, kExcludeTemp, kExcludeFolder, kExcludeFile,
+	kFilterCategory,
+	kBenford
 };
 
 static const ParameterOption ParameterReference[kCommandListCount] = {
@@ -147,17 +155,20 @@ static const ParameterOption ParameterReference[kCommandListCount] = {
 	ParameterOption::NoUsers, ParameterOption::NoProcess, ParameterOption::NoTemp, ParameterOption::Test, ParameterOption::VersionCheck,
 	ParameterOption::SetContextMenu, ParameterOption::DeleteContextMenu, ParameterOption::Pause,
 	ParameterOption::Console, ParameterOption::Version, ParameterOption::Help, ParameterOption::Statistics, ParameterOption::ListRoot, ParameterOption::NoOutput,
-	ParameterOption::ExcludeHidden, ParameterOption::ExcludeReadOnly, ParameterOption::ExcludeTemp, ParameterOption::ExcludeFolder, ParameterOption::ExcludeFile
+	ParameterOption::ExcludeHidden, ParameterOption::ExcludeReadOnly, ParameterOption::ExcludeTemp, ParameterOption::ExcludeFolder, ParameterOption::ExcludeFile,
+	ParameterOption::FilterCategory,
+	ParameterOption::BenfordsLaw
 };
 
-const static int kReportParametersCount = 26;
+const static int kReportParametersCount = 27;
 
 const static std::wstring ReportCommandList[kReportParametersCount] = {
 	kCSVReport, kHTMLReport, kJSONReport, kSummary, kTreeReport, kTextReport, kXMLReport, kXFLReport, kXinorbisReport,
 	kTopTwenty, kBottomTwenty, kNewTwenty, kOldTwenty, kAllTwenty, 
 	kAttributes, kCategories, kExtensions, kFileDates, kMagnitude, kNullFiles, kTemporaryFiles, kUsers,
 	kDuplicateFileName, kDuplicateFileSize,
-	kDeepTextReport, kDeepHTMLReport
+	kDeepTextReport, kDeepHTMLReport,
+	kBenford
 };
 
 
@@ -186,6 +197,12 @@ struct OptimisationsData
 {
 	bool UseFastAnalysis = true;
 	bool GetUserDetails = false;
+};
+
+
+struct StructFilter
+{
+	int Category = -1;
 };
 
 
@@ -219,6 +236,8 @@ private:
 	bool IsSizeReport(ParameterOption);
 
 public:
+
+	StructFilter Filter;
 
 	std::vector<std::wstring> ExcludeFolders;
 

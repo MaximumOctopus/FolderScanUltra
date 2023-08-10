@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,7 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// =====================================================================
 
 #include <fstream>
 #include <iostream>
@@ -117,6 +118,18 @@ namespace ReportXML
 		ofile << Formatting::to_utf8(Formatting::InsertElement(L"numberfolders", std::to_wstring(GScanEngine->Data.FolderCount), 1) + L"\n");
 		ofile << Formatting::to_utf8(Formatting::InsertElement(L"sizeoffiles", Convert::ConvertToUsefulUnit(GScanEngine->Data.TotalSize), 1) + L"\n");
 		ofile << Formatting::to_utf8(Formatting::InsertElement(L"drivetype", WindowsUtility::GetDiskTypeString(GScanEngine->GetDrive()), 1) + L"\n");
+
+		if (GScanEngine->Data.Source == ScanSource::CSVImport)
+		{
+			ofile << Formatting::to_utf8(Formatting::InsertElement(L"csvsource", Formatting::ReplaceEntitiesForXML(GScanEngine->Path.CSVSource), 1) + L"\n");
+		}
+
+		if (GScanEngine->FilterCategory != -1)
+		{
+			ofile << Formatting::to_utf8(Formatting::InsertElement(L"filtercategory", std::to_wstring(GScanEngine->FilterCategory), 1) + L"\n");
+			ofile << Formatting::to_utf8(Formatting::InsertElement(L"filtercategoryname", __FileExtensionFileName[GScanEngine->FilterCategory], 1) + L"\n");
+		}
+
 		//ofile << Formatting::InsertElement(L"sectorspercluster", std::to_wstring(Tmp_SectorsPerCluster), 1) << "\n";
 		//ofile << Formatting::InsertElement(L"bytespersector", std::to_wstring(Tmp_BytesPerSector), 1) << "\n";
 		//ofile << Formatting::InsertElement(L"freeclusters", std::to_wstring(Tmp_FreeClusters), 1) << "\n";
@@ -134,6 +147,12 @@ namespace ReportXML
 		{
 			ofile << Formatting::to_utf8(Formatting::InsertElement(L"diskspacefree", L"0", 1) + L"\n");
 			ofile << Formatting::to_utf8(Formatting::InsertElement(L"diskspacemax", L"0", 1) + L"\n");
+		}
+
+		if (GScanEngine->FilterCategory != -1)
+		{
+			ofile << Formatting::to_utf8(Formatting::InsertElement(L"filtercategory", std::to_wstring(GScanEngine->FilterCategory), 1) + L"\n");
+			ofile << Formatting::to_utf8(Formatting::InsertElement(L"filtercategoryname", __FileExtensionFileName[GScanEngine->FilterCategory], 1) + L"\n");
 		}
 
 		ofile << Formatting::to_utf8(L"</information>\n");
@@ -472,7 +491,7 @@ namespace ReportXML
 		for (int t = 0; t <GScanEngine->Data.Top100Large.size(); t++)
 		{
 			ofile << Formatting::to_utf8(L"  <top101large sizebytes=\"" + std::to_wstring(GScanEngine->Data.Top100Large[t].Size) + L"\">" +
-				Formatting::ReplaceEntitiesForXML(GScanEngine->Data.Folders[GScanEngine->Data.Top100Large[t].FilePathIndex] + GScanEngine->Data.Top100Large[t].FileName) +
+				Formatting::ReplaceEntitiesForXML(GScanEngine->Data.Folders[GScanEngine->Data.Top100Large[t].FilePathIndex] + GScanEngine->Data.Top100Large[t].Name) +
 				L"</top101large>\n");
 		}
 
@@ -487,7 +506,7 @@ namespace ReportXML
 		for (int t = 0; t < GScanEngine->Data.Top100Large.size(); t++)
 		{
 			ofile << Formatting::to_utf8(L"  <top5101small sizebytes=\"" + std::to_wstring(GScanEngine->Data.Top100Small[t].Size) + L"\">" +
-				Formatting::ReplaceEntitiesForXML(GScanEngine->Data.Folders[GScanEngine->Data.Top100Small[t].FilePathIndex] + GScanEngine->Data.Top100Small[t].FileName) +
+				Formatting::ReplaceEntitiesForXML(GScanEngine->Data.Folders[GScanEngine->Data.Top100Small[t].FilePathIndex] + GScanEngine->Data.Top100Small[t].Name) +
 				L"</top101small>\n");
 		}
 
@@ -501,11 +520,11 @@ namespace ReportXML
 
 		for (int t = 0; t < GScanEngine->Data.Top100Newest.size(); t++)
 		{
-			ofile << Formatting::to_utf8(L"  <top101new date=\"" + Convert::IntDateToString(GScanEngine->Data.Top100Newest[t].FileDateC) + L"\" " +
+			ofile << Formatting::to_utf8(L"  <top101new date=\"" + Convert::IntDateToString(GScanEngine->Data.Top100Newest[t].DateCreated) + L"\" " +
 				L"sizebytes=\"" + std::to_wstring(GScanEngine->Data.Top100Newest[t].Size) + L"\" " +
 				L"size=\"" + Convert::ConvertToUsefulUnit(GScanEngine->Data.Top100Newest[t].Size) + L"\" " +
 				L"owner=\"" + GScanEngine->Data.Users[GScanEngine->Data.Top100Newest[t].Owner].Name + L"\">" +
-				Formatting::ReplaceEntitiesForXML(GScanEngine->Data.Folders[GScanEngine->Data.Top100Newest[t].FilePathIndex] + GScanEngine->Data.Top100Newest[t].FileName) +
+				Formatting::ReplaceEntitiesForXML(GScanEngine->Data.Folders[GScanEngine->Data.Top100Newest[t].FilePathIndex] + GScanEngine->Data.Top100Newest[t].Name) +
 				L"</top101new>\n");
 		}
 		
@@ -519,11 +538,11 @@ namespace ReportXML
 
 		for (int t = 0; t < GScanEngine->Data.Top100Oldest.size(); t++)
 		{
-			ofile << Formatting::to_utf8(L"  <top101old date=\"" + Convert::IntDateToString(GScanEngine->Data.Top100Oldest[t].FileDateC) + L"\" " +
+			ofile << Formatting::to_utf8(L"  <top101old date=\"" + Convert::IntDateToString(GScanEngine->Data.Top100Oldest[t].DateCreated) + L"\" " +
 				L"sizebytes=\"" + std::to_wstring(GScanEngine->Data.Top100Oldest[t].Size) + L"\" " +
 				L"size=\"" + Convert::ConvertToUsefulUnit(GScanEngine->Data.Top100Oldest[t].Size) + L"\" " +
 				L"owner=\"" + GScanEngine->Data.Users[GScanEngine->Data.Top100Oldest[t].Owner].Name + L"\">" +
-				Formatting::ReplaceEntitiesForXML(GScanEngine->Data.Folders[GScanEngine->Data.Top100Oldest[t].FilePathIndex] + GScanEngine->Data.Top100Oldest[t].FileName) +
+				Formatting::ReplaceEntitiesForXML(GScanEngine->Data.Folders[GScanEngine->Data.Top100Oldest[t].FilePathIndex] + GScanEngine->Data.Top100Oldest[t].Name) +
 				L"</top101old>\n");
 		}
 

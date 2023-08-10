@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,7 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// =====================================================================
 
 #include <algorithm>
 #include <fstream>
@@ -170,6 +171,7 @@ void LanguageHandler::SetReportText()
 	TextReport[21] = Text[rsTextReport22];
 	TextReport[22] = Text[rsTextReport23];
 	TextReport[23] = Text[rsTextReport24];
+	TextReport[24] = Text[rsTextReport25];
 	
 	LanguageTypes[0] = Text[rsHidden];
 	LanguageTypes[1] = Text[rsSystem];

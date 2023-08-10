@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,7 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// =====================================================================
 
 #include <algorithm>
 #include <fstream>
@@ -18,6 +19,7 @@
 #include "help.h"
 #include "ParameterDetails.h"
 #include "ParameterHandler.h"
+#include "SearchConstants.h"
 #include "Utility.h"
 #include "WindowsUtility.h"
 
@@ -57,7 +59,7 @@ ParameterHandler::ParameterHandler(int argc, wchar_t *argv[], std::wstring DataP
 			ProcessCommandLineParameter(input);
 		}
 
-	// == post processing ========================================================
+		// == post processing ========================================================
 
 		for (int t = 0; t < Parameters.size(); t++)
 		{
@@ -108,6 +110,25 @@ ParameterHandler::ParameterHandler(int argc, wchar_t *argv[], std::wstring DataP
 				ExcludeFolders.push_back(folder);
 				break;
 			}
+
+			case ParameterOption::FilterCategory:
+			{
+				std::wstring cat(Parameters[t].Value);
+
+				std::transform(cat.begin(), cat.end(), cat.begin(), ::toupper);
+
+				for (int t = 0; t < SearchConstants::CategoryTermCount; t++)
+				{
+					if (cat == SearchConstants::CategoryTerms[t])
+					{
+						Filter.Category = SearchConstants::CategoryValues[t];
+
+						break;
+					}
+				}
+
+				break;
+			}
 			}
 		}
 
@@ -135,7 +156,14 @@ void ParameterHandler::ProcessCommandLineParameter(std::wstring input)
 	case ParameterOption::None:
 		if (input[0] != L'/')
 		{
-			pd.Parameter = ParameterOption::ScanFolder;
+			if (Utility::GetFileExtension(input) == L"csv")
+			{
+				pd.Parameter = ParameterOption::CSVImportFile;
+			}
+			else
+			{
+				pd.Parameter = ParameterOption::ScanFolder;
+			}
 
 			Parameters.push_back(pd);
 		}
@@ -326,6 +354,7 @@ bool ParameterHandler::IsDatabaseSwitch(ParameterOption option)
 }
 
 
+// reports that require the acquisition of created date (not gathered by default)
 bool ParameterHandler::IsDateReport(ParameterOption option)
 {
 	switch (option)
@@ -342,6 +371,7 @@ bool ParameterHandler::IsDateReport(ParameterOption option)
 }
 
 
+// reports that require the acquisition of file dates (not gathered by default)
 bool ParameterHandler::IsFileDateReport(ParameterOption option)
 {
 	switch (option)

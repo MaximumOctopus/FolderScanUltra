@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,8 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
-
+// =====================================================================
 
 #pragma once
 
@@ -22,16 +22,16 @@ class FileObject
 public:
     int FilePathIndex = 0;
     
-    std::wstring FileName = L"";
+    std::wstring Name = L"";
 	unsigned __int64 Size = 0;
 
     int SizeOnDisk = 0;
-    int FileDateC = 0;	// yyyymmdd
-    int FileDateA = 0;	// yyyymmdd
-    int FileDateM = 0;	// yyyymmdd
-    int FileTimeC = 0;	// hhmmss
-    int FileTimeA = 0;	// hhmmss
-    int FileTimeM = 0;	// hhmmss
+    int DateCreated = 0;	// yyyymmdd
+    int DateAccessed = 0;	// yyyymmdd
+    int DateModified = 0;	// yyyymmdd
+    int TimeCreated = 0;	// hhmmss
+    int TimeAccessed = 0;	// hhmmss
+    int TimeModified = 0;	// hhmmss
 	int Category = 0;
     DWORD Attributes = 0;
     bool Temp = false;

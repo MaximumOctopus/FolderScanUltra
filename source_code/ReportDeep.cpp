@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,7 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// =====================================================================
 
 #include <iostream>
 #include "ReportDeep.h"
@@ -46,8 +47,8 @@ bool ReportDeep::ProcessFolder(int folder_index)
             {
 			    //std::wcout << L"      " << GScanDetails->Folders[GScanDetails->Files[f].FilePathIndex] + GScanDetails->Files[f].FileName << "\n";
 
-                SizeOfFolder sof = GScanEngine->GetSizeOfFolder(GScanEngine->Data.Folders[GScanEngine->Data.Files[f].FilePathIndex] + GScanEngine->Data.Files[f].FileName,
-                                                                GScanEngine->Data.Files[f].FileName);
+                SizeOfFolder sof = GScanEngine->GetSizeOfFolder(GScanEngine->Data.Folders[GScanEngine->Data.Files[f].FilePathIndex] + GScanEngine->Data.Files[f].Name,
+                                                                GScanEngine->Data.Files[f].Name);
 
                 FolderData.push_back(sof);
 

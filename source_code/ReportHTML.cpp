@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,7 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// =====================================================================
 
 // uses the Google Graph API
 // https://developers.google.com/chart/
@@ -266,6 +267,21 @@ namespace ReportHTML
 		ofile << Formatting::to_utf8(L"<tr class=\"C4C\">\n");
 		ofile << Formatting::to_utf8(L"<td>" + GLanguageHandler->Text[rsAnalysedAt] + L" <b>" + Utility::GetTime(DateTimeFormat::Display) + L"</b>, <b>" + Utility::GetDate(DateTimeFormat::Display) + L"</b>.</td>\n");
 		ofile << Formatting::to_utf8(L"</tr>\n");
+
+		if (GScanEngine->Data.Source == ScanSource::CSVImport)
+		{
+			ofile << Formatting::to_utf8(L"<tr class=\"C4C\">\n");
+			ofile << Formatting::to_utf8(L"<td>CSV Source: <b>" + GScanEngine->Path.CSVSource + L"</b>.</td>\n");
+			ofile << Formatting::to_utf8(L"</tr>\n");
+		}
+
+		if (GScanEngine->FilterCategory != -1)
+		{
+			ofile << Formatting::to_utf8(L"<tr class=\"C4C\">\n");
+			ofile << Formatting::to_utf8(L"<td>Filtered by category <b>" + __FileExtensionFileName[GScanEngine->FilterCategory] + L"</b>.</td>\n");
+			ofile << Formatting::to_utf8(L"</tr>\n");
+		}
+	
 		ofile << Formatting::to_utf8(L"</table>\n");
 
 		InsertSpacingTable(ofile);
@@ -1059,7 +1075,7 @@ namespace ReportHTML
 			}
 
 			FourColumnTableRow(ofile, t, 
-				GScanEngine->Data.Folders[GScanEngine->Data.Top100Large[t].FilePathIndex] + GScanEngine->Data.Top100Large[t].FileName,
+				GScanEngine->Data.Folders[GScanEngine->Data.Top100Large[t].FilePathIndex] + GScanEngine->Data.Top100Large[t].Name,
 				Convert::GetSizeString(options.Units, GScanEngine->Data.Top100Large[t].Size),
 				GScanEngine->Data.Users[GScanEngine->Data.Top100Large[t].Owner].Name,
 				GSettings->Reports.HTMLColours[4],
@@ -1093,7 +1109,7 @@ namespace ReportHTML
 				ofile << Formatting::to_utf8(L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[10]) + L"\">\n");
 			}
 			
-			ofile << Formatting::to_utf8(L"<td height=\"13\" width=\"685\">" + GScanEngine->Data.Folders[GScanEngine->Data.Top100Small[t].FilePathIndex] + GScanEngine->Data.Top100Small[t].FileName + L"</td>\n");
+			ofile << Formatting::to_utf8(L"<td height=\"13\" width=\"685\">" + GScanEngine->Data.Folders[GScanEngine->Data.Top100Small[t].FilePathIndex] + GScanEngine->Data.Top100Small[t].Name + L"</td>\n");
 			ofile << Formatting::to_utf8(L"<td height=\"13\" width=\"85\"><div align=\"" + options.Align + L"\">" + Convert::GetSizeString(options.Units, GScanEngine->Data.Top100Small[t].Size) + L"</div></td>\n");
 			ofile << Formatting::to_utf8(L"</tr>\n");
 		}
@@ -1114,8 +1130,8 @@ namespace ReportHTML
 
 		for (int t = 0; t < GScanEngine->Data.Top100Newest.size(); t++)
 		{
-			FourColumnTableDoubleTitleNoGraphRow(ofile, t, GScanEngine->Data.Top100Newest[t].FileName,
-				Convert::IntDateToString(GScanEngine->Data.Top100Newest[t].FileDateC),
+			FourColumnTableDoubleTitleNoGraphRow(ofile, t, GScanEngine->Data.Top100Newest[t].Name,
+				Convert::IntDateToString(GScanEngine->Data.Top100Newest[t].DateCreated),
 				Convert::GetSizeString(options.Units, GScanEngine->Data.Top100Newest[t].Size),
 				GScanEngine->Data.Users[GScanEngine->Data.Top100Newest[t].Owner].Name
 			);		
@@ -1137,8 +1153,8 @@ namespace ReportHTML
 
 		for (int t = 0; t < GScanEngine->Data.Top100Oldest.size(); t++)
 		{
-			FourColumnTableDoubleTitleNoGraphRow(ofile, t, GScanEngine->Data.Top100Newest[t].FileName,
-				Convert::IntDateToString(GScanEngine->Data.Top100Oldest[t].FileDateC),
+			FourColumnTableDoubleTitleNoGraphRow(ofile, t, GScanEngine->Data.Top100Newest[t].Name,
+				Convert::IntDateToString(GScanEngine->Data.Top100Oldest[t].DateCreated),
 				Convert::GetSizeString(options.Units, GScanEngine->Data.Top100Oldest[t].Size),
 				GScanEngine->Data.Users[GScanEngine->Data.Top100Oldest[t].Owner].Name
 			);

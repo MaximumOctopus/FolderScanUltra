@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,8 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
-
+// =====================================================================
 
 #pragma once
 
@@ -17,12 +17,12 @@
 
 
 #ifdef _DEBUG
-static const std::wstring __FSUVersion = L"5.9 (debug)";
+static const std::wstring __FSUVersion = L"5.10 (debug)";
 #else
-static const std::wstring __FSUVersion = L"5.9";
+static const std::wstring __FSUVersion = L"5.10";
 #endif
 
-static const std::wstring __FSUDate    = L"January 27th 2023";
+static const std::wstring __FSUDate    = L"August 10th 2023";
 
 // ===========================================================================
 // == Categories =============================================================
@@ -899,8 +899,9 @@ static const int  rsTextReport22 = 787;
 static const int  rsSummReport16 = 788;
 static const int  rsTextReport23 = 789;
 static const int  rsTextReport24 = 790;
+static const int  rsTextReport25 = 791;	// benford's law
 
-static const int  rsLanguageConstantsCount = 791;
+static const int  rsLanguageConstantsCount = 792;
 
 static const int  rsUnitB = 0;
 static const int  rsUnitKB = 1;

@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,7 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// =====================================================================
 
 #include "ReportConstants.h"
 #include "FileExtension.h"
@@ -63,6 +64,12 @@ bool FileExtensionHandler::LoadDefaultFileExtensions()
 		}
 	}
 
+	std::ranges::sort(Extensions, {}, &FileExtension::Name);
+	
+	#ifdef _DEBUG
+	ReportDuplicates();
+	#endif
+
 	return true;
 }
 
@@ -75,7 +82,7 @@ int FileExtensionHandler::GetExtensionCategoryIDFromName(const std::wstring file
 
 	if (exi.Found)
 	{
-		return exi.RawCategory;
+		return exi.Category;
 	}
 
 	return __FileCategoriesOther;
@@ -86,25 +93,40 @@ ExtensionSearch FileExtensionHandler::GetExtensionCategoryID(const std::wstring 
 {
 	ExtensionSearch extension_search;
 
-	for (int t = 0; t < __FileCategoriesCount; t++)
-	{
-		extension_search.Category[t] = -1;
-	}
-
 	for (int z = 0; z < Extensions.size(); z++)
 	{
 		if (Extensions[z].Name == extension)
 		{
-			extension_search.Found                            = true;
-			extension_search.Category[Extensions[z].Category] = z;
-			extension_search.RawCategory                      = z;
+			extension_search.Found       = true;
+			extension_search.Category    = Extensions[z].Category;
+			extension_search.Extension   = z;
 
 			return extension_search;
 		}
 	}
 
-	extension_search.Found       = false;
-	extension_search.RawCategory = __FileCategoriesOther;
+	extension_search.Found    = false;
+	extension_search.Category = __FileCategoriesOther;
 
 	return extension_search;
+}
+
+
+void FileExtensionHandler::ReportDuplicates()
+{
+	bool found = false;
+
+	for (int z = 0; z < Extensions.size() - 1; z++)
+	{
+		int index = z + 1;
+
+		while (index < Extensions.size() && Extensions[index].Name == Extensions[z].Name)
+		{
+			std::wcout << L"Duplicate extension: " << Extensions[z].Name << L" : " << __FileExtensionFileName[Extensions[z].Category] << L" & " << __FileExtensionFileName[Extensions[index].Category] << "\n";
+
+			index++;
+
+			found = true;
+		}
+	}
 }

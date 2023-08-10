@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,7 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// =====================================================================
 
 #include "Constants.h"
 #include "Convert.h"
@@ -32,6 +33,16 @@ namespace ReportSummary
 		std::wcout << "\n";
 
 		std::wcout << std::format(L"{0} \"{1}\"\n", GLanguageHandler->SummaryReport[0], GScanEngine->Path.String);
+
+		if (GScanEngine->Data.Source == ScanSource::CSVImport)
+		{
+			std::wcout << L"                           (from CSV import \"" + GScanEngine->Path.CSVSource + L"\")\n";			
+		}
+
+		if (GScanEngine->FilterCategory != -1)
+		{
+			std::wcout << L"                           (filtered by category \"" + __FileExtensionFileName[GScanEngine->FilterCategory] + L"\")\n";
+		}
 
 		std::wcout << Formatting::AddLeading(L"", GLanguageHandler->SummaryReport[0].size(), L' ') + Utility::GetDate(DateTimeFormat::Display) + L", " + Utility::GetTime(DateTimeFormat::Display) << "\n";
 		std::wcout << "\n";

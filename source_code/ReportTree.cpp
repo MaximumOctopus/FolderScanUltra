@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,7 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// =====================================================================
 
 #include <algorithm>
 #include <fstream>
@@ -32,8 +33,8 @@ namespace ReportTree
     // this might be quite slow... will optimise!
     bool sortByPath(const FileObject& lhs, const FileObject& rhs) 
     { 
-        std::wstring l = GScanEngine->Data.Folders[lhs.FilePathIndex] + lhs.FileName;
-        std::wstring r = GScanEngine->Data.Folders[rhs.FilePathIndex] + rhs.FileName;
+        std::wstring l = GScanEngine->Data.Folders[lhs.FilePathIndex] + lhs.Name;
+        std::wstring r = GScanEngine->Data.Folders[rhs.FilePathIndex] + rhs.Name;
 
         std::transform(l.begin(), l.end(), l.begin(), ::tolower);
         std::transform(r.begin(), r.end(), r.begin(), ::tolower);
@@ -70,17 +71,22 @@ namespace ReportTree
 
             file << Formatting::to_utf8(GScanEngine->Path.String + L"\n");
 
+            if (GScanEngine->Data.Source == ScanSource::CSVImport)
+            {
+                file << Formatting::to_utf8(L"    (from CSV import \"" + GScanEngine->Path.CSVSource + L"\")\n");
+            }
+
             for (int t = 0; t < GScanEngine->Data.Files.size(); t++)
             {
                 if (FILE_ATTRIBUTE_DIRECTORY & GScanEngine->Data.Files[t].Attributes)
                 {
-                    if (GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + GScanEngine->Data.Files[t].FileName != OldPath)
+                    if (GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + GScanEngine->Data.Files[t].Name != OldPath)
                     {
                         file << "\n";
 
-                        OldPath = GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + GScanEngine->Data.Files[t].FileName;
+                        OldPath = GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + GScanEngine->Data.Files[t].Name;
 
-                        Indent = GetIndent(GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + GScanEngine->Data.Files[t].FileName);
+                        Indent = GetIndent(GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + GScanEngine->Data.Files[t].Name);
 
                         if (options.IncludeAttributes)
                         {
@@ -91,7 +97,7 @@ namespace ReportTree
                             Optional.clear();
                         }
 
-                        file << Formatting::to_utf8(Formatting::StringOfCharacters(Indent * 4, L" ") + L"\\ " + Utility::LastFolder(GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + GScanEngine->Data.Files[t].FileName) + Optional + L"\n");
+                        file << Formatting::to_utf8(Formatting::StringOfCharacters(Indent * 4, L" ") + L"\\ " + Utility::LastFolder(GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + GScanEngine->Data.Files[t].Name) + Optional + L"\n");
                     }
                 }
                 else
@@ -102,7 +108,7 @@ namespace ReportTree
 
                         OldPath = GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex];
 
-                        Indent = GetIndent(GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + GScanEngine->Data.Files[t].FileName);
+                        Indent = GetIndent(GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + GScanEngine->Data.Files[t].Name);
                     }
 
                     Optional.clear();
@@ -117,7 +123,7 @@ namespace ReportTree
                         Optional += Formatting::GetAttributeAsString(GScanEngine->Data.Files[t].Attributes) + L" ";
                     }
 
-                    file << Formatting::to_utf8(Formatting::StringOfCharacters(Indent * 4, L" ") + Optional + GScanEngine->Data.Files[t].FileName + L"\n");
+                    file << Formatting::to_utf8(Formatting::StringOfCharacters(Indent * 4, L" ") + Optional + GScanEngine->Data.Files[t].Name + L"\n");
                 }
             }
         }

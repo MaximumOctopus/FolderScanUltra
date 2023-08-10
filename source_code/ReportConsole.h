@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,7 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// =====================================================================
 
 #pragma once
 
@@ -35,4 +36,6 @@ namespace ReportConsole
 
 	void DuplicateFileSize();
 	void DuplicateFileName();
+
+	void BenfordsLaw();
 }

@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,8 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
-
+// =====================================================================
 
 #pragma once
 
@@ -19,6 +19,16 @@
 struct ExtensionSearch
 {
 	bool Found = false;
-	int Category[__FileCategoriesCount] = { 0 };
+	int Category = -1;
+	int Extension = -1;
+};
+
+/*
+struct ExtensionSearch
+{
+	bool Found = false;
+	int Category[__FileCategoriesCount] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 	int RawCategory = 0;
 };
+*/

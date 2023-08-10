@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,7 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// =====================================================================
 
 #include <iostream>
 
@@ -16,7 +17,7 @@
 
 namespace Debug
 {
-	void Output(std::wstring text)
+	void Output(const std::wstring text)
 	{
 		#ifdef _DEBUG
 		time_t now = time(0);

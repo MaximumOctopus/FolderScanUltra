@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,7 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// =====================================================================
 
 #include <iostream>
 
@@ -324,6 +325,10 @@ namespace ReportHandler
 
 					break;
 				}
+
+				case ParameterOption::BenfordsLaw:
+					ReportConsole::BenfordsLaw();
+					break;
 
 
 				default:

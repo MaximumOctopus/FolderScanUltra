@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,14 +8,14 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// =====================================================================
 
 #include "FileDateObject.h"
 
 
 FileDateObject::FileDateObject(int oYear)
 {
-	Year = oYear;
+	Year  = oYear;
 
 	Count = 0;
 	Size  = 0;

@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,7 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// =====================================================================
 
 #pragma once
 
@@ -48,7 +49,7 @@ public:
 
 	std::wstring LanguageTypes[13];
 
-	std::wstring TextReport[24];
+	std::wstring TextReport[25];
 	std::wstring SummaryReport[16];
 	std::wstring DriveReport[11];
 	std::wstring GenericReportItems[17];

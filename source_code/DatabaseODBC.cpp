@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,8 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
-
+// =====================================================================
 
 #include <iostream> 
 #include <string.h>
@@ -164,12 +164,12 @@ bool DatabaseODBC::PopulateFileTable(const std::wstring table_name)
 	{
 		sql = stem + L"\"" + GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + L"\", " +
 			std::to_wstring(GScanEngine->Data.Files[t].FilePathIndex) + L", " +
-			L"\"" + GScanEngine->Data.Files[t].FileName + L"\", " +
+			L"\"" + GScanEngine->Data.Files[t].Name + L"\", " +
 			std::to_wstring(GScanEngine->Data.Files[t].Size) + L", " +
 			std::to_wstring(GScanEngine->Data.Files[t].SizeOnDisk) + L", " +
-			std::to_wstring(GScanEngine->Data.Files[t].FileDateC) + L", " +
-			std::to_wstring(GScanEngine->Data.Files[t].FileDateA) + L", " +
-			std::to_wstring(GScanEngine->Data.Files[t].FileDateM) + L", " +
+			std::to_wstring(GScanEngine->Data.Files[t].DateCreated) + L", " +
+			std::to_wstring(GScanEngine->Data.Files[t].DateAccessed) + L", " +
+			std::to_wstring(GScanEngine->Data.Files[t].DateModified) + L", " +
 			std::to_wstring(GScanEngine->Data.Files[t].Category) + L", " +
 			Convert::AttributeToIntAsString(GScanEngine->Data.Files[t].Attributes, FILE_ATTRIBUTE_DIRECTORY) + L", " +
 			Convert::AttributeToIntAsString(GScanEngine->Data.Files[t].Attributes, FILE_ATTRIBUTE_READONLY) + L", " +
@@ -278,12 +278,12 @@ bool DatabaseODBC::PopulateDataTable(const std::wstring table_name)
 	for (int t = 0; t < GScanEngine->Data.Folders.size(); t++)
 	{
 		sql = stem + L"\"" + GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + L"\", " +
-			L"\"" + GScanEngine->Data.Files[t].FileName + L"\", " +
+			L"\"" + GScanEngine->Data.Files[t].Name + L"\", " +
 			std::to_wstring(GScanEngine->Data.Files[t].Size) + L", " +
 			std::to_wstring(GScanEngine->Data.Files[t].SizeOnDisk) + L", " +
-			std::to_wstring(GScanEngine->Data.Files[t].FileDateC) + L", " +
-			std::to_wstring(GScanEngine->Data.Files[t].FileDateA) + L", " +
-			std::to_wstring(GScanEngine->Data.Files[t].FileDateM) + L", " +
+			std::to_wstring(GScanEngine->Data.Files[t].DateCreated) + L", " +
+			std::to_wstring(GScanEngine->Data.Files[t].DateAccessed) + L", " +
+			std::to_wstring(GScanEngine->Data.Files[t].DateModified) + L", " +
 			std::to_wstring(GScanEngine->Data.Files[t].Category) + L", " +
 			Convert::AttributeToIntAsString(GScanEngine->Data.Files[t].Attributes, FILE_ATTRIBUTE_DIRECTORY) + L", " +
 			Convert::AttributeToIntAsString(GScanEngine->Data.Files[t].Attributes, FILE_ATTRIBUTE_READONLY) + L", " +

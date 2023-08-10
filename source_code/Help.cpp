@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,7 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// =====================================================================
 
 #include <iostream>
 #include <string>
@@ -88,18 +89,33 @@ namespace Help
 		std::wcout << L"  AppPath : " + GSystemGlobal->AppPath << "\n";
 		std::wcout << L"  DataPath: " + GSystemGlobal->DataPath << "\n";
         std::wcout << "\n";
-        std::wcout << L"  Usage; options, and file name are optional:\n";
+        std::wcout << L"  Usage: options, and file name are optional:\n";
         std::wcout << "\n";
         std::wcout << L"      fsu folder_to_scan\n";
 		std::wcout << L"      fsu folder_to_scan /html\n";
 		std::wcout << "\n";
+		std::wcout << L"      fsu file_to_import.csv\n";
+		std::wcout << L"          (must be in FSU csv format)\n";
+		std::wcout << "\n";
 		std::wcout << L"    /xd;text                   : exclude folders containing \"text\".\n";
 		std::wcout << L"                               : use one parameter per exclusion.\n";
+		std::wcout << "\n";
+		std::wcout << L"    /filter;name               : limit to a category, specified by \"name\":\n";
+		std::wcout << L"                                   \"PROG\" for program files\n";
+		std::wcout << L"                                   \"SYS\" or \"SYSTEM\" for system files\n";
+		std::wcout << L"                                   \"GFX\" or \"GRAPHIC\" for graphic files\n";
+		std::wcout << L"                                   \"MOVIE\" or \"FILM\" for movie files\n";
+		std::wcout << L"                                   \"SND\" or \"SOUND\" for audio files\n";
+		std::wcout << L"                                   \"COD\" or \"CODE\" for programming files\n";
+		std::wcout << L"                                   \"COM\" or \"ZIP\" for compressed files\n";
+		std::wcout << L"                                   \"OTH\" or \"OTHER\" for other files\n";
+		std::wcout << L"                                   \"Cn\" where n is 1 to 10 for custom 1..10\n";
+		//std::wcout << L"                                   \"CX\" for all custom categories\n";
 		std::wcout << "\n";
 		std::wcout << L"    /save;file_name            : save parameter list to a file\n";
 		std::wcout << L"    /load;file_name            : load parameter list from a file\n";
 		std::wcout << "\n";
-		std::wcout << L"                                 extension \".fsuproject.\" added automatically.\n";
+		std::wcout << L"                                 extension \".fsuproject\" added automatically.\n";
 		std::wcout << "\n";
         std::wcout << L"    /csv;options;file_name     : save CSV report to <filename>\n";
         std::wcout << L"    /html;options;file_name    : save HTML report to <filename>\n";
@@ -125,6 +141,8 @@ namespace Help
 		std::wcout << L"    /new20                     : output top 20 newest files to console\n";
 		std::wcout << L"    /old20                     : output top 20 oldest files to console\n";
 		std::wcout << L"    /folderstop20              : output top 20 folders in root, ordered by size\n";
+		std::wcout << L"    /benford                   : show a Benford's Law distribution of file sizes\n";
+		std::wcout << L"                                 https://en.wikipedia.org/wiki/Benford%27s_law \n";
 		std::wcout << "\n";
 		std::wcout << L"    /attributes                : show attribute statistics\n";
 		std::wcout << L"    /categories                : show category statistics for all categories\n";
@@ -160,13 +178,13 @@ namespace Help
 	{
 		std::wcout << L"Stats\n";
 		std::wcout << "\n";
-		std::wcout << L"  AppPath           : " + GSystemGlobal->AppPath << "\n";
-		std::wcout << L"  DataPath          : " + GSystemGlobal->DataPath << "\n";
+		std::wcout << L"  AppPath           : " << GSystemGlobal->AppPath << "\n";
+		std::wcout << L"  DataPath          : " << GSystemGlobal->DataPath << "\n";
 		std::wcout << "\n";
-		std::wcout << L"  Size of Scan      : " + Convert::ConvertToUsefulUnit(GScanEngine->Data.TotalSize) << "\n";
+		std::wcout << L"  Size of Scan      : " << Convert::ConvertToUsefulUnit(GScanEngine->Data.TotalSize) << "\n";
 		std::wcout << "\n";
-		std::wcout << L"  Files             : " + GScanEngine->Data.FileCount << "\n";
-		std::wcout << L"  Average file size : " + Convert::ConvertToUsefulUnit(GScanEngine->Data.AverageFileSize) << "\n";
+		std::wcout << L"  Files             : " << GScanEngine->Data.FileCount << "\n";
+		std::wcout << L"  Average file size : " << Convert::ConvertToUsefulUnit(GScanEngine->Data.AverageFileSize) << "\n";
 		std::wcout << "\n";
 		std::wcout << L"  Language          : " << GLanguageHandler->GetLanguageSymbol() << "\n";
 		std::wcout << L"  File Extensions   : " << GFileExtensionHandler->Extensions.size() << "\n";

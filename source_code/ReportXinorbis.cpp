@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,7 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// =====================================================================
 
 #include <algorithm>
 #include <fstream>
@@ -68,16 +69,16 @@ namespace ReportXinorbis
 				{
 					ofile << Formatting::to_utf8(L"{file\n");
 
-					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].FileName + L"\n");
+					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].Name + L"\n");
 					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].FilePathIndex + L"\n");
 					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].Size + L"\n");
 					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].SizeOnDisk + L"\n");
-					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].FileDateC + L"\n");
-					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].FileDateA + L"\n");
-					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].FileDateM + L"\n");
-					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].FileTimeC + L"\n");
-					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].FileTimeA + L"\n");
-					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].FileTimeM + L"\n");
+					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].DateCreated + L"\n");
+					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].DateAccessed + L"\n");
+					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].DateModified + L"\n");
+					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].TimeCreated + L"\n");
+					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].TimeAccessed + L"\n");
+					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].TimeModified + L"\n");
 					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].Category + L"\n");
 					ofile << Formatting::to_utf8((GScanEngine->Data.Files[t].Attributes & FILE_ATTRIBUTE_READONLY) + L"\n");
 					ofile << Formatting::to_utf8((GScanEngine->Data.Files[t].Attributes & FILE_ATTRIBUTE_HIDDEN) + L"\n");

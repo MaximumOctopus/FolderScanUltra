@@ -1,4 +1,5 @@
-﻿//
+﻿// =====================================================================
+//
 // FolderScanUltra 5
 //
 // (c) Paul Alan Freshney 2019-2023
@@ -7,7 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// =====================================================================
 
 // https://en.wikipedia.org/wiki/Block_Elements
 
@@ -20,7 +21,7 @@ namespace ReportUtility
 	{
 		int bar_count = 40;
 
-		if (percent == 100)
+		if (percent >= 100)
 		{
 
 		}

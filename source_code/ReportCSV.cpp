@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,8 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
-
+// =====================================================================
 
 #include <algorithm>
 #include <fstream>
@@ -107,9 +107,13 @@ namespace ReportCSV
 			{
 				std::wstring s = GLanguageHandler->Text[rsFileName] + separator +
 					GLanguageHandler->Text[rsFilePath] + separator +
+					GLanguageHandler->Text[rsFolder] + separator +
 					GLanguageHandler->Text[rsSize] + separator +
 					GLanguageHandler->Text[rsSizeOfFilesBytes] + separator +
 					GLanguageHandler->Text[rsSizeOnDisk] + separator +
+					GLanguageHandler->Text[rsCreatedDate] + separator +
+					GLanguageHandler->Text[rsAccessedDate] + separator +
+					GLanguageHandler->Text[rsModifiedDate] + separator +
 					GLanguageHandler->Text[rsCreatedDate] + separator +
 					GLanguageHandler->Text[rsAccessedDate] + separator +
 					GLanguageHandler->Text[rsModifiedDate] + separator +
