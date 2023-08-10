@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,7 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// =====================================================================
 
 #pragma once
 
@@ -26,7 +27,7 @@ namespace Utility
 	[[nodiscard]] int TodayAsInteger();
 	
 	[[nodiscard]] std::wstring GetMD5(std::wstring);
-	[[nodiscard]] std::wstring GetFileExtension(const std::wstring &);
+	[[nodiscard]] std::wstring GetFileExtension(const std::wstring&);
 	[[nodiscard]] std::wstring ProcessFileName(const std::wstring &);
 	[[nodiscard]] std::wstring ReplaceString(const std::wstring, const std::wstring&, const std::wstring&);
 	[[nodiscard]] std::wstring SplitFilename(const std::wstring&);

@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,7 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// =====================================================================
 
 #pragma once
 
@@ -19,7 +20,7 @@
 
 namespace SearchConstants
 {
-    static const int CategoryTermCount = 27;
+    static const int CategoryTermCount = 29;
     static const int TypeTermCount = 21;
 
     static const std::wstring CategoryTerms[CategoryTermCount] = {
@@ -29,9 +30,9 @@ namespace SearchConstants
         L"MOVIE", L"FILM",
         L"SND", L"SOUND", L"AUDIO",
         L"OFF", L"OFFICE",
-        L"COD",
+        L"COD", L"CODE",
         L"COM", L"ZIP",
-        L"OTH",
+        L"OTH", L"OTHER",
         L"C1", L"C2", L"C3", L"C4", L"C5", L"C6",
         L"C7", L"C8", L"C9", L"C10", L"CX"
     };
@@ -43,9 +44,9 @@ namespace SearchConstants
         __Category_Movie, __Category_Movie,
         __Category_Sound, __Category_Sound, __Category_Sound,
         __Category_Office, __Category_Office,
-        __Category_Code,
+        __Category_Code, __Category_Code,
         __Category_Compressed, __Category_Compressed,
-        __Category_Other,
+        __Category_Other, __Category_Other,
         __Category_Custom_1, __Category_Custom_2, __Category_Custom_3,
         __Category_Custom_4, __Category_Custom_5, __Category_Custom_6,
         __Category_Custom_7, __Category_Custom_8, __Category_Custom_9,

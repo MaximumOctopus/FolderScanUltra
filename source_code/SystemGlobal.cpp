@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,7 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// =====================================================================
 
 #include <iostream>
 #include <string>
@@ -90,7 +91,6 @@ bool SystemGlobal::CheckFolderStructure()
 	if (!WindowsUtility::DirectoryExists(DataPath + L"Database\\"))                           { failCount += WindowsUtility::CreateFolder(DataPath + L"Database"); }
 	
 	if (!WindowsUtility::DirectoryExists(DataPath + L"" + cName))                             { failCount += WindowsUtility::CreateFolder(DataPath + L"" + cName); }
-
 	
 	if (!WindowsUtility::DirectoryExists(AppPath + L"system\\"))
 	{

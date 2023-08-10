@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,7 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// ===================================================================== 
 
 #pragma once
 
@@ -25,6 +26,9 @@
 #include "ScanEngine.h"
 #include "SizeOfFolder.h"
 #include "UserData.h"
+
+
+enum class ScanSource { None = 0, LiveScan = 1, CSVImport = 2 };
 
 
 struct Disk
@@ -54,7 +58,8 @@ struct SearchData
 	int FolderCount = 0;
 	unsigned __int64 TotalSize = 0;
 
-	void Clear() {
+	void Clear() 
+	{
 		Files.clear();
 
 		FileCount = 0;
@@ -66,6 +71,10 @@ struct SearchData
 
 struct ScanData
 {
+	int RootFolderIndex = 0;
+
+	ScanSource Source = ScanSource::None;
+
 	int FileCount = 0;
 	int FolderCount = 0;
 	unsigned __int64 TotalSize = 0;
@@ -101,6 +110,8 @@ struct ScanData
 
 struct ScanPath
 {
+	std::wstring CSVSource = L"";
+
 	std::wstring String = L"";
 	std::wstring DateStr = L"";
 	std::wstring DateInt = L"";
@@ -125,6 +136,13 @@ private:
 
 	void PopulateDiskStat();
 
+	FileObject ImportRow(const std::wstring);
+	bool ImportFromCSV(const std::wstring);
+	std::wstring GetScanPathFromFolderList();
+
+	[[nodiscard]] bool Import(bool, bool, bool, bool);
+	[[nodiscard]] bool Scan(bool, bool, bool, bool);
+
 	void ScanFolder(const std::wstring&);
 	void ScanFolderExt(const std::wstring&);
 	void PostScan();
@@ -144,6 +162,8 @@ private:
 
 public:
 
+	int FilterCategory = -1;
+
 	ScanData Data;
 	SearchData SearchData;
 
@@ -157,13 +177,13 @@ public:
 	
 	// ======================================================================
 
-	ScanEngine(std::wstring);
+	ScanEngine(const std::wstring);
 
 	void ClearData();
 
 	[[nodiscard]] int FindUser(std::wstring);
 
-	[[nodiscard]] bool Scan(bool, bool, bool, bool);
+	bool Execute(bool, bool, bool, bool, int);
 
 	void ListRoot();
 

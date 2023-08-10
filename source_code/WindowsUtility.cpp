@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,7 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// =====================================================================
 
 #include "accctrl.h"
 #include "aclapi.h"
@@ -119,19 +120,46 @@ bool WindowsUtility::RemoveFromContextMenu()
 // returns 0 on success, 1 on fail
 bool WindowsUtility::CreateFolder(const std::wstring& folder_name)
 {
-	return std::filesystem::create_directory(folder_name);
+	try
+	{
+		return std::filesystem::create_directory(folder_name);
+	}
+	catch (const std::exception& e)
+	{
+		std::wcout << e.what() << L"\n";
+
+		return false;
+	}
 }
 
 
 bool WindowsUtility::DirectoryExists(const std::wstring& folder_name)
 {
-	return std::filesystem::exists(folder_name);
+	try
+	{
+		return std::filesystem::exists(folder_name);
+	}
+	catch (const std::exception& e)
+	{
+		std::wcout << e.what() << L"\n";
+
+		return false;
+	}
 }
 
 
 bool WindowsUtility::FileExists(const std::wstring& file_name)
 {
-	return std::filesystem::exists(file_name);
+	try
+	{
+		return std::filesystem::exists(file_name);
+	}
+	catch (const std::exception& e)
+	{
+		std::wcout << e.what() << L"\n";
+
+		return false;
+	}
 }
 
 

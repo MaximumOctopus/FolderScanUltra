@@ -1,3 +1,4 @@
+// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -7,7 +8,7 @@
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
-// 
+// =====================================================================
 
 #include <algorithm>
 #include <ctime>
@@ -181,7 +182,7 @@ namespace Utility
 	}
 
 
-	std::wstring Utility::GetMD5(std::wstring input)
+	std::wstring GetMD5(std::wstring input)
 	{
 		std::string str(input.begin(), input.end());
 
@@ -211,10 +212,8 @@ namespace Utility
 
 			return ext;
 		}
-		else
-		{
-			return L"";
-		}
+
+		return L"";
 	}
 
 
