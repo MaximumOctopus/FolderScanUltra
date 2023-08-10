@@ -781,11 +781,12 @@ No data to export: i iz sad :(
 (Dis reportz can b importy in 2 Xinorbis at latr datez)
 Warnin, dis scan haz contain virtual or offline filez
 Warnin, scan waz stopped before it haz completez
-Ignore virtual or offline folders
+Ignore virtual or offline folderz
 Deep scan
--- Temporary Files -------------------------------------------------------------
+-- Temporary Filez -------------------------------------------------------------
 -- File Datez ------------------------------------------------------------------
 Year --------------------------------------- Qty --- As % ----- Size --- As % --
  Excluded Folder Pattern :
 -- Dupli catz (Name) -----------------------------------------------------------
 -- Dupli catz (Size) -----------------------------------------------------------
+-- Benford'z Lawz --------------------------------------------------------------
