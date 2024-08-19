@@ -1,11 +1,11 @@
 ====================================================================================================================================
-FolderScanUltra 5.10
-(c) Paul Alan Freshney 2019-2023
+    FolderScanUltra 5.12
+    (c) Paul Alan Freshney 2019-2024
 
-paul@freshney.org
+    paul@freshney.org
 
-Source code and portable install
-  https://github.com/MaximumOctopus/FolderScanUltra
+    Source code and portable install
+      https://github.com/MaximumOctopus/FolderScanUltra
 ====================================================================================================================================
 
 FSU is a powerful console-based folder/drive analysis tool for creating highly detailed reports on the composition of any folder/drive/network storage/etc.
@@ -23,7 +23,7 @@ May require C++ runtime if you get an error when starting:
 
 ====================================================================================================================================
 
-History
+ History
 
 This was originally a Delphi application, released as part of the Xinorbis toolset, called XCom, it was renamed X.Robot many years ago, and received a C++ rewrite in 2019.
 
@@ -44,6 +44,12 @@ All of my software is free and open source; please consider donating to a local 
 ====================================================================================================================================
 
 Release History
+
+5.12 / August 19th 2024
+
+Added: /compare:folder
+
+       Compares "folder" to the primary folder being scanned. Will output new and missing files, date and size changes.
 
 5.10 / August 10th 2023
 
