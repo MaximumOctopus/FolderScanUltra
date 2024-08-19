@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2023
+// (c) Paul Alan Freshney 2019-2024
 //
 // paul@freshney.org
 // 
@@ -148,7 +148,7 @@ bool Settings::OpenSettings(bool read_only)
             LONG dwRet;
 
             dwRet = RegOpenKeyEx(HKEY_CURRENT_USER,
-                                 L"\\software\\maximumoctopus\\FolderScanUltra",
+                                 L"software\\maximumoctopus\\FolderScanUltra",
                                  NULL,
                                  KEY_QUERY_VALUE,
                                  &hKey);

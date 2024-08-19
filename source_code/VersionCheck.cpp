@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2023
+// (c) Paul Alan Freshney 2019-2024
 //
 // paul@freshney.org
 // 
@@ -38,7 +38,7 @@ bool VersionCheck::IsNewVersion(std::wstring current_version)
 
     std::wcout << L"Getting FolderScanUltra version information from MaximumOctopus.com...\n\n";
 
-    if(SUCCEEDED(CoInitialize(NULL))) {
+    if (SUCCEEDED(CoInitialize(NULL))) {
 
         if (SUCCEEDED(URLOpenBlockingStream(NULL, url.c_str(), &lpStream, 0, NULL))) {
 
@@ -82,12 +82,12 @@ bool VersionCheck::IsNewVersion(std::wstring current_version)
             }
             else
             {
-                std::wcout << L"... error with download.\n";
+                std::wcout << L"... error with download :(\n";
             }
         }
         else
         {
-            std::wcout << L"... error downloading version file.\n";
+            std::wcout << L"... error downloading version file :(\n";
         }
 
         CoUninitialize();
