@@ -93,6 +93,7 @@
   <ItemGroup>
     <ClInclude Include="Command.h" />
     <ClInclude Include="CommandHandler.h" />
+    <ClInclude Include="Compare.h" />
     <ClInclude Include="Consolidated.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Convert.h" />
@@ -100,6 +101,7 @@
     <ClInclude Include="DatabaseODBC.h" />
     <ClInclude Include="DatabaseSQlite.h" />
     <ClInclude Include="Debug.h" />
+    <ClInclude Include="FileObjectSorted.h" />
     <ClInclude Include="ReportJSON.h" />
     <ClInclude Include="ReportTree.h" />
     <ClInclude Include="ReportTreeOptions.h" />
@@ -158,6 +160,7 @@
   <ItemGroup>
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandHandler.cpp" />
+    <ClCompile Include="Compare.cpp" />
     <ClCompile Include="DatabaseHandler.cpp" />
     <ClCompile Include="DatabaseODBC.cpp" />
     <ClCompile Include="DatabaseSQlite.cpp" />

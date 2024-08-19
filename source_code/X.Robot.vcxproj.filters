@@ -133,6 +133,9 @@
     <ClCompile Include="ReportJSON.cpp">
       <Filter>Source Files\Reports</Filter>
     </ClCompile>
+    <ClCompile Include="Compare.cpp">
+      <Filter>Source Files\Compare</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DatabaseHandler.h">
@@ -179,9 +182,6 @@
     </ClInclude>
     <ClInclude Include="ReportXMLReportOptions.h">
       <Filter>Header Files\Reports</Filter>
-    </ClInclude>
-    <ClInclude Include="Constants.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FileDateObject.h">
       <Filter>Header Files\Data Classes</Filter>
@@ -270,9 +270,6 @@
     <ClInclude Include="DriveDetails.h">
       <Filter>Header Files\Data Classes</Filter>
     </ClInclude>
-    <ClInclude Include="StatusConstants.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ReportTree.h">
       <Filter>Header Files\Reports</Filter>
     </ClInclude>
@@ -323,6 +320,18 @@
     </ClInclude>
     <ClInclude Include="ReportJSON.h">
       <Filter>Header Files\Reports</Filter>
+    </ClInclude>
+    <ClInclude Include="Compare.h">
+      <Filter>Header Files\Compare</Filter>
+    </ClInclude>
+    <ClInclude Include="FileObjectSorted.h">
+      <Filter>Header Files\Data Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Constants.h">
+      <Filter>Header Files\Constants</Filter>
+    </ClInclude>
+    <ClInclude Include="StatusConstants.h">
+      <Filter>Header Files\Constants</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -403,6 +412,15 @@
     </Filter>
     <Filter Include="Header Files\Scan">
       <UniqueIdentifier>{f872cb41-4ace-4acd-8597-8793d974cdc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Compare">
+      <UniqueIdentifier>{42a515cf-743a-4ad2-b060-00907d847855}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Compare">
+      <UniqueIdentifier>{82dc1127-e7d1-45f7-a929-333380ff91f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Constants">
+      <UniqueIdentifier>{70766a2c-c15b-460f-ade3-e271dcb93c02}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
