@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2023
+// (c) Paul Alan Freshney 2019-2024
 //
 // paul@freshney.org
 // 
@@ -13,7 +13,7 @@
 #pragma once
 
 
-enum class HelpType { None = 0, Simple = 1, About = 2, Usage = 3, Stats = 4, Cats = 5 };
+enum class HelpType { None = 0, Simple = 1, About = 2, Usage = 3, Stats = 4, StatsCompare = 5, Cats = 6 };
 
 
 namespace Help
@@ -25,6 +25,7 @@ namespace Help
     void OutputUsage();
 
 	void Stats();
+	void StatsCompare();
 
 	void Cat(); // meow
 

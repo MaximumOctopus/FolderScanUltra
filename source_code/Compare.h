@@ -13,22 +13,14 @@
 #pragma once
 
 
-#include <string>
-
-
-struct DriveDetails
+class Compare
 {
-	bool Valid = false;
 
-	std::wstring VolumeName = L"";
-	std::wstring FileSystem = L"";
-	std::wstring SerialNumber = L"";
-	std::wstring SerialNumberHex = L"";
+public:
 
-	int SectorsPerCluster = 0;
-	int BytesPerSector = 0;
-	int FreeClusters = 0;
-	int Clusters = 0;
+	Compare();
 
-	int SectorSize = 0;
+	void Execute();
+
+	void SimpleStats();
 };

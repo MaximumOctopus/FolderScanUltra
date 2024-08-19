@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2023
+// (c) Paul Alan Freshney 2019-2024
 //
 // paul@freshney.org
 // 
@@ -26,8 +26,11 @@ extern FileExtensionHandler* GFileExtensionHandler;
 extern LanguageHandler* GLanguageHandler;
 extern ParameterHandler* GParameterHandler;
 extern ScanEngine* GScanEngine;
+extern ScanEngine* GScanEngineCompare;
 extern Settings* GSettings;
 extern SystemGlobal* GSystemGlobal;
+
+extern ScanEngine* GScanEngineCompare;
 
 
 namespace GlobalObjects
@@ -51,6 +54,11 @@ namespace GlobalObjects
 
 				GScanEngine = new ScanEngine(GParameterHandler->GetScanFolder());
 
+				if (GParameterHandler->Compare.Enabled)
+				{
+					GScanEngineCompare = new ScanEngine(GParameterHandler->Compare.Path);
+				}
+
 				if (GParameterHandler->FindParameter(kNoOutput) && !GParameterHandler->FindParameter(kTest))
 				{
 					std::wcout.setstate(std::ios_base::failbit);
@@ -61,6 +69,11 @@ namespace GlobalObjects
 					for (int t = 0; t < GParameterHandler->ExcludeFolders.size(); t++)
 					{
 						GScanEngine->AddToExcludeList(GParameterHandler->ExcludeFolders[t]);
+
+						if (GParameterHandler->Compare.Enabled)
+						{
+							GScanEngineCompare->AddToExcludeList(GParameterHandler->ExcludeFolders[t]);
+						}
 					}					
 				}
 
@@ -89,6 +102,7 @@ namespace GlobalObjects
 		if (GFileExtensionHandler != nullptr)	delete GFileExtensionHandler;
 		
 		if (GScanEngine != nullptr)			    delete GScanEngine;
+		if (GScanEngineCompare != nullptr)      delete GScanEngineCompare;
 
 		if (GParameterHandler != nullptr)		delete GParameterHandler;
 

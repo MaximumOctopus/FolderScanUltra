@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2023
+// (c) Paul Alan Freshney 2019-2024
 //
 // paul@freshney.org
 // 
@@ -14,13 +14,15 @@
 
 
 #include <chrono>
+#include <set>
 #include <string>
 #include <vector>
 
 #include "Command.h"
 #include "Consolidated.h"
-#include "FileObject.h"
 #include "FileDateObject.h"
+#include "FileObject.h"
+#include "FileObjectSorted.h"
 #include "ReportConstants.h"
 #include "RootFolder.h"
 #include "ScanEngine.h"
@@ -162,6 +164,8 @@ private:
 
 public:
 
+	std::set<FileObjectSorted> SortedFiles;
+
 	int FilterCategory = -1;
 
 	ScanData Data;
@@ -200,6 +204,8 @@ public:
 	void AddToExcludeList(const std::wstring);
 	std::wstring GetExcludeItem(int);
 	int ExcludeCount();
+
+	void PopulateSortedFiles();
 
 	// ======================================================================
 

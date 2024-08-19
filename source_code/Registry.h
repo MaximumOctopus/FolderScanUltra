@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2023
+// (c) Paul Alan Freshney 2019-2024
 //
 // paul@freshney.org
 // 

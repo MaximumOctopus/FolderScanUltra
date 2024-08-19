@@ -2,13 +2,15 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2023
+// (c) Paul Alan Freshney 2019-2024
 //
 // paul@freshney.org
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
 // =====================================================================
+
+// command handler for the in-built console
 
 #include <algorithm>
 #include <iostream>
@@ -214,7 +216,6 @@ void CommandHandler::ExecuteCommand(Command c)
 	case PrimaryCommand::Filter:
 	{
 		int count = GScanEngine->Filter(c);
-
 		break;
 	}
 
@@ -223,7 +224,10 @@ void CommandHandler::ExecuteCommand(Command c)
 		break;
 
 	default:
-		std::wcout << L"  Unknown command \"" << c.primarystr << "\".\n";
+		std::wcout << L"  Unknown command:\n";
+		
+		c.Print();
+
 		break;
 	}
 }

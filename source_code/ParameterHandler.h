@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2023
+// (c) Paul Alan Freshney 2019-2024
 //
 // paul@freshney.org
 // 
@@ -22,6 +22,8 @@
 
 
 const static std::wstring kConsole = L"/console";
+
+const static std::wstring kCompare = L"/compare";
 
 const static std::wstring kNoUsers = L"/nouser";
 const static std::wstring kNoProcess = L"/noprocess";
@@ -114,13 +116,14 @@ enum class ParameterOption {
 	ReportNullFiles = 53, ReportTemporaryFiles = 54,
 	ExcludeHidden = 55, ExcludeReadOnly = 56, ExcludeTemp = 57, ExcludeFolder = 58, ExcludeFile = 59,
 	CSVImportFile = 60, FilterCategory = 61,
-	BenfordsLaw = 62
+	BenfordsLaw = 62,
+	Compare = 63
 };
 
 #ifdef __XINORBIS
 static const int kCommandListCount = 60;
 #else
-static const int kCommandListCount = 53;
+static const int kCommandListCount = 54;
 #endif
 
 
@@ -139,7 +142,8 @@ static const std::wstring CommandList[kCommandListCount] = {
 	kConsole, kVersion, kHelp, kStatistics, kListRoot, kNoOutput,
 	kExcludeHidden, kExcludeReadOnly, kExcludeTemp, kExcludeFolder, kExcludeFile,
 	kFilterCategory,
-	kBenford
+	kBenford,
+	kCompare
 };
 
 static const ParameterOption ParameterReference[kCommandListCount] = {
@@ -157,7 +161,8 @@ static const ParameterOption ParameterReference[kCommandListCount] = {
 	ParameterOption::Console, ParameterOption::Version, ParameterOption::Help, ParameterOption::Statistics, ParameterOption::ListRoot, ParameterOption::NoOutput,
 	ParameterOption::ExcludeHidden, ParameterOption::ExcludeReadOnly, ParameterOption::ExcludeTemp, ParameterOption::ExcludeFolder, ParameterOption::ExcludeFile,
 	ParameterOption::FilterCategory,
-	ParameterOption::BenfordsLaw
+	ParameterOption::BenfordsLaw,
+	ParameterOption::Compare
 };
 
 const static int kReportParametersCount = 27;
@@ -190,6 +195,13 @@ struct ParameterData
 	bool IsDateReport = false;
 	bool IsFileDateReport = false;
 	bool IsSizeReport = false;
+};
+
+
+struct CompareData
+{
+	bool Enabled = false;
+	std::wstring Path = L"";
 };
 
 
@@ -241,6 +253,7 @@ public:
 
 	std::vector<std::wstring> ExcludeFolders;
 
+	CompareData Compare;
 	OptimisationsData Optimisations;
 
     ParameterHandler(int argc, wchar_t *argv[], std::wstring);

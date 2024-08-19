@@ -16,19 +16,15 @@
 #include <string>
 
 
-struct DriveDetails
+class FileObjectSorted
 {
-	bool Valid = false;
+public:
+    int index = 0;
 
-	std::wstring VolumeName = L"";
-	std::wstring FileSystem = L"";
-	std::wstring SerialNumber = L"";
-	std::wstring SerialNumberHex = L"";
+    std::wstring Name = L"";
 
-	int SectorsPerCluster = 0;
-	int BytesPerSector = 0;
-	int FreeClusters = 0;
-	int Clusters = 0;
-
-	int SectorSize = 0;
+    bool operator<(const FileObjectSorted& rhs) const
+    {
+        return Name < rhs.Name;
+    }
 };

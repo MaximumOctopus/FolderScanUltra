@@ -2,13 +2,15 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2023
+// (c) Paul Alan Freshney 2019-2024
 //
 // paul@freshney.org
 // 
 // https://github.com/MaximumOctopus/FolderScanUltra
 // 
 // =====================================================================
+
+// available commands for the in-built console
 
 #pragma once
 
@@ -39,4 +41,6 @@ struct Command
 	std::wstring quaternary = L"";
 
 	std::wstring GetFullCommand();
+
+	void Print();
 };

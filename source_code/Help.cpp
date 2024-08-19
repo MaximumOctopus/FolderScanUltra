@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2023
+// (c) Paul Alan Freshney 2019-2024
 //
 // paul@freshney.org
 // 
@@ -26,6 +26,7 @@
 extern FileExtensionHandler* GFileExtensionHandler;
 extern LanguageHandler* GLanguageHandler;
 extern ScanEngine* GScanEngine;
+extern ScanEngine* GScanEngineCompare;
 extern SystemGlobal* GSystemGlobal;
 
 
@@ -46,6 +47,9 @@ namespace Help
 			break;
 		case HelpType::Stats:
 			Stats();          // /stats
+			break;
+		case HelpType::StatsCompare:
+			StatsCompare();   // /stats (if compare mode is active)
 			break;
 		case HelpType::Cats:  // cats :)
 			Cat();
@@ -100,6 +104,10 @@ namespace Help
 		std::wcout << L"    /xd;text                   : exclude folders containing \"text\".\n";
 		std::wcout << L"                               : use one parameter per exclusion.\n";
 		std::wcout << "\n";
+		std::wcout << L"    /compare;folder            : compares \"folder\" to the scanned folder.\n";
+		std::wcout << L"                                 Uses the scanned folder as the master, and \n";
+		std::wcout << L"                                 shows differences in \"folder\".\n";
+		std::wcout << "\n";
 		std::wcout << L"    /filter;name               : limit to a category, specified by \"name\":\n";
 		std::wcout << L"                                   \"PROG\" for program files\n";
 		std::wcout << L"                                   \"SYS\" or \"SYSTEM\" for system files\n";
@@ -135,7 +143,7 @@ namespace Help
 		std::wcout << L"    filename is optional. default is:\n";
 		std::wcout << L"      <install>\\data\\reports\\computername\\type\\fsu_yyyymmdd_hhmmss.xyz\n";
 		std::wcout << "\n";
-		std::wcout << L"    /sum                       : output simple summory to console\n";
+		std::wcout << L"    /sum                       : output simple summary to console\n";
 		std::wcout << L"    /top20                     : output top 20 largest files to console\n";
 		std::wcout << L"    /bottom20                  : output bottom 20 smallest files to console\n";
 		std::wcout << L"    /new20                     : output top 20 newest files to console\n";
@@ -191,19 +199,41 @@ namespace Help
 		std::wcout << "\n";
 	}
 
+
+	void StatsCompare()
+	{
+		std::wcout << L"Stats (Compare)\n";
+		std::wcout << "\n";
+		std::wcout << L"  AppPath               : " << GSystemGlobal->AppPath << "\n";
+		std::wcout << L"  DataPath              : " << GSystemGlobal->DataPath << "\n";
+		std::wcout << "\nP";
+		std::wcout << L"  Size of Scan (primary): " << Convert::ConvertToUsefulUnit(GScanEngine->Data.TotalSize) << "\n";
+		std::wcout << L"  Size of Scan (target) : " << Convert::ConvertToUsefulUnit(GScanEngineCompare->Data.TotalSize) << "\n";
+		std::wcout << "\n";
+		std::wcout << L"  Files (primary)       : " << GScanEngine->Data.FileCount << "\n";
+		std::wcout << L"  Files (target)        : " << GScanEngine->Data.FileCount << "\n";
+		std::wcout << "\n";
+		std::wcout << L"  Average size (primary): " << Convert::ConvertToUsefulUnit(GScanEngine->Data.AverageFileSize) << "\n";		
+		std::wcout << L"  Average size (target) : " << Convert::ConvertToUsefulUnit(GScanEngine->Data.AverageFileSize) << "\n";
+		std::wcout << "\n";
+		std::wcout << L"  Language              : " << GLanguageHandler->GetLanguageSymbol() << "\n";
+		std::wcout << L"  File Extensions       : " << GFileExtensionHandler->Extensions.size() << "\n";
+		std::wcout << "\n";
+	}
+
 	
 	// all of my software is now free and open source. 
 	// please donate to your local cat charity or shelter.
 	void Cat()
 	{
 		std::wcout << "\n";
-		std::wcout << L"               *        ,MMM8&&&.            *\n";
-		std::wcout << L"                       MMMM88&&&&&    .\n";
-		std::wcout << L"                      MMMM88&&&&&&&\n";
-		std::wcout << L"       *              MMM88&&&&&&&&\n";
-		std::wcout << L"                      MMM88&&&&&&&&\n";
-		std::wcout << L"                      'MMM88&&&&&&'\n";
-		std::wcout << L"                        'MMM8&&&'      *\n";
+		std::wcout << L"               *          ,MMM8&&&.            *\n";
+		std::wcout << L"                         MMMM88&&&&&    .\n";
+		std::wcout << L"                        MMMM88&&&&&&&\n";
+		std::wcout << L"       *                MMM88&&&&&&&&\n";
+		std::wcout << L"                        MMM88&&&&&&&&\n";
+		std::wcout << L"                        'MMM88&&&&&&'\n";
+		std::wcout << L"                          'MMM8&&&'      *\n";
 		std::wcout << L"            |\\___/|\n";
 		std::wcout << L"            )     (             .              \n";
 		std::wcout << L"           =\\     /=\n";
@@ -220,7 +250,7 @@ namespace Help
 		std::wcout << L"    |  |  |  |  |  |  |  |  |  |  |  |  |  |  |\n";
 		std::wcout << "\n";
 		std::wcout << L"please donate to your local cat charity or shelter.\n\n";
-		std::wcout << L"A big thanks to my cats, Rutherford, Freeman, and Maxwell\n";
+		std::wcout << L"A big thanks to my cats: Rutherford, Freeman, and Maxwell\n";
 		std::wcout << "\n";
 		std::wcout << L"        www.maximumoctopus.com/developmentcats.htm\n";
 		std::wcout << "\n";
@@ -235,8 +265,8 @@ namespace Help
 		std::wcout << L"\n  FolderScanUltra " << __FSUVersion << " / " << __FSUDate << "\n\n";
 		#endif
 		std::wcout << L"    (c) Paul Alan Freshney 2011-" << Utility::CurrentYear() << "\n\n";
-		std::wcout << L"      https://github.com/MaximumOctopus/FolderScanUltra\n";
-		std::wcout << L"      paul@freshney.org\n\n";
+		std::wcout << L"        https://github.com/MaximumOctopus/FolderScanUltra\n";
+		std::wcout << L"        paul@freshney.org\n\n";
 	}
 
 

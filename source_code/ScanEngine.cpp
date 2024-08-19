@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2023
+// (c) Paul Alan Freshney 2019-2024
 //
 // paul@freshney.org
 // 
@@ -34,8 +34,8 @@ extern FileExtensionHandler* GFileExtensionHandler;
 extern LanguageHandler* GLanguageHandler;
 extern Settings* GSettings;
 
-
 ScanEngine* GScanEngine;
+ScanEngine* GScanEngineCompare;
 
 
 bool sortBySize(const FileObject &lhs, const FileObject &rhs) { return lhs.Size < rhs.Size; }
@@ -2599,6 +2599,19 @@ int ScanEngine::Filter(Command command)
 	}
 
 	return FoundCount;
+}
+
+
+void ScanEngine::PopulateSortedFiles()
+{
+	for (int t = 0; t < Data.Files.size(); t++)
+	{
+		std::wstring n = Data.Folders[Data.Files[t].FilePathIndex] + Data.Files[t].Name;
+
+		FileObjectSorted fso(t, n.substr(Path.String.length()));
+
+		SortedFiles.insert(fso);
+	}
 }
 
 

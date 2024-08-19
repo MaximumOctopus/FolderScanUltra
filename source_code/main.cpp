@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2023
+// (c) Paul Alan Freshney 2019-2024
 //
 // paul@freshney.org
 // 
@@ -19,6 +19,7 @@
 #include <string>
 
 #include "CommandHandler.h"
+#include "Compare.h"
 #include "Errors.h"
 #include "GlobalObjects.h"
 #include "Help.h"
@@ -41,6 +42,7 @@
 extern CommandHandler* GCommandHandler;
 extern ParameterHandler* GParameterHandler;
 extern ScanEngine* GScanEngine;
+extern ScanEngine* GScanEngineCompare;
 extern SystemGlobal* GSystemGlobal;
 extern Settings* GSettings;
 
@@ -131,6 +133,75 @@ void ProcessConsoleReport()
 }
 
 
+void RunScan()
+{
+	if (GScanEngine->Execute(GSettings->Optimisations.ProcessData,
+		GParameterHandler->NeedToProcessTopSizeLists(),
+		GParameterHandler->NeedToProcessTopDateLists(),
+		GParameterHandler->NeedToProcessFileDates(),
+		GParameterHandler->Filter.Category))
+	{
+		if (ReportHandler::GenerateReports() == 0)
+		{
+			ReportHandler::ShowDefaultOutput();
+		}
+
+		ProcessConsoleReport();
+
+		#ifdef __XINORBIS
+		Database();
+		#endif			
+	}
+}
+
+
+void RunCompare()
+{
+	if (GScanEngine->Execute(GSettings->Optimisations.ProcessData,
+		GParameterHandler->NeedToProcessTopSizeLists(),
+		GParameterHandler->NeedToProcessTopDateLists(),
+		GParameterHandler->NeedToProcessFileDates(),
+		GParameterHandler->Filter.Category))
+	{
+		if (GScanEngineCompare->Execute(GSettings->Optimisations.ProcessData,
+			GParameterHandler->NeedToProcessTopSizeLists(),
+			GParameterHandler->NeedToProcessTopDateLists(),
+			GParameterHandler->NeedToProcessFileDates(),
+			GParameterHandler->Filter.Category))
+		{
+			Compare* c = new Compare();
+
+			c->Execute();
+		}
+	}
+}
+
+
+void RunConsole(bool has_error)
+{
+	if (GParameterHandler->FindParameter(kConsole) && !has_error)
+	{
+		std::wcout << "\n  Console (\"exit\" to close)\n\n";
+
+		std::unique_ptr<CommandHandler> GCommandHandler = std::make_unique<CommandHandler>();
+
+		std::wstring input;
+
+		Command c;
+
+		do
+		{
+			std::wcout << L"> ";
+
+			std::getline(std::wcin, input);
+
+			c = GCommandHandler->ProcessCommand(input);
+
+		} while (c.primary != PrimaryCommand::Exit);
+	}
+}
+
+
 int wmain(int argc, wchar_t* argv[])
 {
 	bool HasError = false;
@@ -192,22 +263,13 @@ int wmain(int argc, wchar_t* argv[])
 							}
 							else
 							{
-								if (GScanEngine->Execute(GSettings->Optimisations.ProcessData,
-									GParameterHandler->NeedToProcessTopSizeLists(),
-									GParameterHandler->NeedToProcessTopDateLists(),									
-									GParameterHandler->NeedToProcessFileDates(),
-									GParameterHandler->Filter.Category))
+								if (GParameterHandler->Compare.Enabled)
 								{
-									if (ReportHandler::GenerateReports() == 0)
-									{
-										ReportHandler::ShowDefaultOutput();
-									}
-
-									ProcessConsoleReport();
-
-									#ifdef __XINORBIS
-									Database();
-									#endif			
+									RunCompare();
+								}
+								else
+								{
+									RunScan();
 								}
 							}
 						}
@@ -255,26 +317,7 @@ int wmain(int argc, wchar_t* argv[])
 	// ==========================================================================================
 	// ==========================================================================================
 
-	if (GParameterHandler->FindParameter(kConsole) && !HasError)
-	{
-		std::wcout << "\n  Console (\"exit\" to close)\n\n";
-
-		std::unique_ptr<CommandHandler> GCommandHandler = std::make_unique<CommandHandler>();
-		
-		std::wstring input;
-
-		Command c;
-
-		do
-		{
-			std::wcout << L"> ";
-
-			std::getline(std::wcin, input);
-
-			c = GCommandHandler->ProcessCommand(input);
-
-		} while (c.primary != PrimaryCommand::Exit);
-	}
+	RunConsole(HasError);
 
 	// ==========================================================================================
 	// ==========================================================================================

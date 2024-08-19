@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2023
+// (c) Paul Alan Freshney 2019-2024
 //
 // paul@freshney.org
 // 
@@ -129,6 +129,11 @@ ParameterHandler::ParameterHandler(int argc, wchar_t *argv[], std::wstring DataP
 
 				break;
 			}
+			
+			case ParameterOption::Compare:
+				Compare.Enabled = true;
+				Compare.Path = Parameters[t].Value;
+				break;
 			}
 		}
 
@@ -496,7 +501,14 @@ HelpType ParameterHandler::HelpSwitch(std::wstring help)
 	}
 	else if (help == kStatistics)
 	{
-		return HelpType::Stats;
+		if (Compare.Enabled)
+		{
+			return HelpType::Stats;
+		}
+		else
+		{
+			return HelpType::StatsCompare;
+		}
 	}
 	else if (help == kCats)
 	{
