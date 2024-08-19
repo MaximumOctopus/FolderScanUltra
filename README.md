@@ -1,6 +1,6 @@
-# FolderScanUltra 5.10
+# FolderScanUltra 5.12
 
-(c) Paul Alan Freshney 2019-2023
+(c) Paul Alan Freshney 2019-2024
 
 paul@freshney.org
 
@@ -24,6 +24,12 @@ This was originally a Delphi application, released as part of the Xinorbis tools
 In 2022 I decided to rename it and add it to my pool of applications receiving regular updates (two applications now, so maybe a puddle, not a pool). It'll be distanced somewhat from xinorbis and become better for it. Many updates are planned.
 
 # Release History
+
+5.12 / August 19th 2024
+
+Added: /compare:folder
+
+       Compares "folder" to the primary folder being scanned. Will output new and missing files, date and size changes.
 
 5.10 / August 10th 2023
 
