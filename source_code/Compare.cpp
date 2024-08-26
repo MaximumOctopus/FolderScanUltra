@@ -47,6 +47,11 @@ void Compare::Execute()
 	GScanEngineCompare->PopulateSortedFiles();
 
 	int differences = 0;
+	int missing_files = 0;
+	int new_files = 0;
+	unsigned __int64 missing_files_size = 0;
+	unsigned __int64 new_files_size = 0;
+	unsigned __int64 size_delta = 0;
 
 	for (FileObjectSorted s : GScanEngine->SortedFiles)
 	{
@@ -56,9 +61,12 @@ void Compare::Execute()
 
 		if (pos == GScanEngineCompare->SortedFiles.end())
 		{
-			std::wcout << L" Missing file   : " << s.Name << L"\n";
+			std::wcout << L" Missing file   : " << s.Name << L" (" << Convert::ConvertToUsefulUnit(GScanEngine->Data.Files[s.index].Size) << L"\n";
 
 			differences++;
+			missing_files++;
+
+			missing_files_size += GScanEngine->Data.Files[s.index].Size;
 		}
 		else
 		{
@@ -67,6 +75,15 @@ void Compare::Execute()
 			if (GScanEngine->Data.Files[s.index].Size != GScanEngineCompare->Data.Files[fos.index].Size)
 			{
 				std::wcout << L" Size not equal : " << s.Name << L" (" << std::to_wstring(GScanEngine->Data.Files[s.index].Size) << L" vs " << GScanEngineCompare->Data.Files[fos.index].Size << L")\n";
+
+				if (GScanEngine->Data.Files[s.index].Size > GScanEngineCompare->Data.Files[fos.index].Size)
+				{
+					size_delta += GScanEngine->Data.Files[s.index].Size - GScanEngineCompare->Data.Files[fos.index].Size;
+				}
+				else
+				{
+					size_delta += GScanEngineCompare->Data.Files[fos.index].Size - GScanEngine->Data.Files[s.index].Size;
+				}
 
 				differences++;
 			}
@@ -90,11 +107,39 @@ void Compare::Execute()
 
 		if (pos == GScanEngine->SortedFiles.end())
 		{
-			std::wcout << L" New file       : " << s.Name << L"\n";
+			std::wcout << L" New file       : " << s.Name << L" (" << Convert::ConvertToUsefulUnit(GScanEngineCompare->Data.Files[s.index].Size) << L"\n";
 
 			differences++;
+			new_files++;
+
+			new_files_size += GScanEngineCompare->Data.Files[s.index].Size;
 		}
 	}
 
-	std::wcout << L"\nFound " << differences << L" differences.\n\n";
+	std::wcout << L"\n";
+
+	if (size_delta != 0)
+	{
+		std::wcout << L"Size difference " << Convert::ConvertToUsefulUnit(size_delta) << L".\n";
+	}
+
+	if (missing_files != 0)
+	{
+		std::wcout << L"Found " << missing_files << L" missing files (" << Convert::ConvertToUsefulUnit(missing_files_size) << L").\n";
+	}
+	else
+	{ 
+		std::wcout << L"No missing files found.\n";
+	}
+
+	if (new_files != 0)
+	{
+		std::wcout << L"Found " << new_files << L" new files (" << Convert::ConvertToUsefulUnit(new_files_size) << L").\n";
+	}
+	else
+	{
+		std::wcout << L"No new files found.\n";
+	}
+
+	std::wcout << L"\nTotal of " << differences << L" differences.\n\n";
 }
