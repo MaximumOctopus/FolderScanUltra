@@ -105,10 +105,21 @@ ExtensionSearch FileExtensionHandler::GetExtensionCategoryID(const std::wstring 
 		}
 	}
 
-	extension_search.Found    = false;
-	extension_search.Category = __FileCategoriesOther;
-
 	return extension_search;
+}
+
+
+int FileExtensionHandler::GetExtensionCategory(const std::wstring extension)
+{
+	for (int z = 0; z < Extensions.size(); z++)
+	{
+		if (Extensions[z].Name == extension)
+		{
+			return Extensions[z].Category;
+		}
+	}
+
+	return __FileCategoriesOther;
 }
 
 

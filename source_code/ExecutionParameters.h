@@ -13,12 +13,11 @@
 #pragma once
 
 
-#include "ReportConstants.h"
-
-
-struct ExtensionSearch
+struct ExecutionParameters
 {
-	bool Found = false;
-	int Category = __FileCategoriesOther;
-	int Extension = -1;
+	bool ProcessTop100Size = false;
+	bool ProcessTop100Date = false;
+	bool ProcessFileDates = false;
+
+	int FilterByCategory = -1;
 };

@@ -17,6 +17,7 @@
 #include <vector>
 
 #include "Constants.h"
+#include "ExecutionParameters.h"
 #include "Help.h"
 #include "ParameterDetails.h"
 
@@ -266,6 +267,8 @@ public:
 	std::wstring GetScanFolder();
 	
 	void ParametersForReport(ParameterData&);
+
+	ExecutionParameters GetExecutionParameters();
 
 	HelpType HelpSwitch(std::wstring);
 

@@ -20,6 +20,7 @@
 
 #include "Command.h"
 #include "Consolidated.h"
+#include "ExecutionParameters.h"
 #include "FileDateObject.h"
 #include "FileObject.h"
 #include "FileObjectSorted.h"
@@ -187,7 +188,7 @@ public:
 
 	[[nodiscard]] int FindUser(std::wstring);
 
-	bool Execute(bool, bool, bool, bool, int);
+	bool Execute(bool, ExecutionParameters);
 
 	void ListRoot();
 

@@ -201,7 +201,7 @@ int ScanEngine::FindUser(std::wstring name)
 void ScanEngine::PopulateDiskStat()
 {
 	#ifdef _DEBUG
-	Debug::Output(L"ScanDetails::PopulateDiskStat()");
+	Debug::Output(L"ScanEngine::PopulateDiskStat()");
 	#endif
 
 	ULARGE_INTEGER available;
@@ -221,17 +221,17 @@ void ScanEngine::PopulateDiskStat()
 }
 
 
-bool ScanEngine::Execute(bool process_data, bool process_top_100_size, bool process_top_100_date, bool process_file_dates, int filter_by_category)
+bool ScanEngine::Execute(bool process_data, ExecutionParameters ex)
 {
-	FilterCategory = filter_by_category;
+	FilterCategory = ex.FilterByCategory;
 
 	switch (Data.Source)
 	{
 	case ScanSource::None:
 	case ScanSource::LiveScan:
-		return Scan(process_data, process_top_100_size, process_top_100_date, process_file_dates);
+		return Scan(process_data, ex.ProcessTop100Size, ex.ProcessTop100Date, ex.ProcessFileDates);
 	case ScanSource::CSVImport:
-		return Import(process_data, process_top_100_size, process_top_100_date, process_file_dates);
+		return Import(process_data, ex.ProcessTop100Size, ex.ProcessTop100Date, ex.ProcessFileDates);
 	}
 
 	return false;
@@ -301,7 +301,7 @@ bool ScanEngine::Import(bool process_data, bool process_top_100_size, bool proce
 
 	if (!success)
 	{
-		std::wcout << L"  Unable to import from \"" << Path.CSVSource << L"\"\n";
+		std::wcout << L"  Unable to import from \"" << Path.CSVSource << L"\".\n";
 
 		return false;
 	}
@@ -344,7 +344,7 @@ bool ScanEngine::Import(bool process_data, bool process_top_100_size, bool proce
 bool ScanEngine::Analyse()
 {
 	#ifdef _DEBUG
-	Debug::Output(L"ScanDetails::Analyse()");
+	Debug::Output(L"ScanEngine::Analyse()");
     #endif
 
 	for (int t = 0; t < Data.Files.size(); t++)
@@ -381,8 +381,6 @@ bool ScanEngine::Analyse()
 			
 					rfd.Name       = s.substr(idx + 1);
 					rfd.Attributes = Data.Files[t].Attributes;
-					rfd.Size       = 0;
-					rfd.Count      = 0;
 					
 					Data.RootFolders.push_back(rfd);
 				}
@@ -482,7 +480,7 @@ bool ScanEngine::Analyse()
 				// Magnitude
 				// ============================================================================
 
-				if ((Data.Files[t].Size >= 0) && (Data.Files[t].Size <= 1024))
+				if (Data.Files[t].Size <= 1024)
 				{
 					Data.Magnitude[0].Count++;
 					Data.Magnitude[0].Size += Data.Files[t].Size;
@@ -494,57 +492,57 @@ bool ScanEngine::Analyse()
 						Data.NullFiles.push_back(Data.Folders[Data.Files[t].FilePathIndex] + Data.Files[t].Name);
 					}
 				}
-				else if ((Data.Files[t].Size > 1024) && (Data.Files[t].Size <= 1048576))
+				else if (Data.Files[t].Size <= 1048576)
 				{
 					Data.Magnitude[1].Count++;
 					Data.Magnitude[1].Size += Data.Files[t].Size;
 				}
-				else if ((Data.Files[t].Size > 1048576) && (Data.Files[t].Size <= 10485760))
+				else if (Data.Files[t].Size <= 10485760)
 				{
 					Data.Magnitude[2].Count++;
 					Data.Magnitude[2].Size += Data.Files[t].Size;
 				}
-				else if ((Data.Files[t].Size > 10485760) && (Data.Files[t].Size <= 52428800))
+				else if (Data.Files[t].Size <= 52428800)
 				{
 					Data.Magnitude[3].Count++;
 					Data.Magnitude[3].Size += Data.Files[t].Size;
 				}
-				else if ((Data.Files[t].Size > 52428800) && (Data.Files[t].Size <= 104857600))
+				else if (Data.Files[t].Size <= 104857600)
 				{
 					Data.Magnitude[4].Count++;
 					Data.Magnitude[4].Size += Data.Files[t].Size;
 				}
-				else if ((Data.Files[t].Size > 104857600) && (Data.Files[t].Size <= 157286400))
+				else if (Data.Files[t].Size <= 157286400)
 				{
 					Data.Magnitude[5].Count++;
 					Data.Magnitude[5].Size += Data.Files[t].Size;
 				}
-				else if ((Data.Files[t].Size > 157286400) && (Data.Files[t].Size <= 209715200))
+				else if (Data.Files[t].Size <= 209715200)
 				{
 					Data.Magnitude[6].Count++;
 					Data.Magnitude[6].Size += Data.Files[t].Size;
 				}
-				else if ((Data.Files[t].Size > 209715200) && (Data.Files[t].Size <= 262144000))
+				else if (Data.Files[t].Size <= 262144000)
 				{
 					Data.Magnitude[7].Count++;
 					Data.Magnitude[7].Size += Data.Files[t].Size;
 				}
-				else if ((Data.Files[t].Size > 262144000) && (Data.Files[t].Size <= 524288000))
+				else if (Data.Files[t].Size <= 524288000)
 				{
 					Data.Magnitude[8].Count++;
 					Data.Magnitude[8].Size += Data.Files[t].Size;
 				}
-				else if ((Data.Files[t].Size > 524288000) && (Data.Files[t].Size <= 1048576000))
+				else if (Data.Files[t].Size <= 1048576000)
 				{
 					Data.Magnitude[9].Count++;
 					Data.Magnitude[9].Size += Data.Files[t].Size;
 				}
-				else if ((Data.Files[t].Size > 1048576000) && (Data.Files[t].Size <= 2097152000))
+				else if (Data.Files[t].Size <= 2097152000)
 				{
 					Data.Magnitude[10].Count++;
 					Data.Magnitude[10].Size += Data.Files[t].Size;
 				}
-				else if ((Data.Files[t].Size > 2097152000) && (Data.Files[t].Size <= 5242880000))
+				else if (Data.Files[t].Size <= 5242880000)
 				{
 					Data.Magnitude[11].Count++;
 					Data.Magnitude[11].Size += Data.Files[t].Size;
@@ -592,7 +590,7 @@ bool ScanEngine::Analyse()
 
 				std::wstring ext = Utility::GetFileExtension(Data.Files[t].Name);
 
-				tfx.Category     = GFileExtensionHandler->GetExtensionCategoryID(ext).Category;
+				tfx.Category     = GFileExtensionHandler->GetExtensionCategory(ext);
 
 				Data.RootFiles.push_back(tfx);
 			}
@@ -604,7 +602,7 @@ bool ScanEngine::Analyse()
 			{
 				int z = 0;
 
-				std::wstring s = GScanEngine->Data.Folders[Data.Files[t].FilePathIndex] + Data.Files[t].Name;
+				std::wstring s = Data.Folders[Data.Files[t].FilePathIndex] + Data.Files[t].Name;
 				
 				std::transform(s.begin(), s.end(), s.begin(), ::toupper);
 
@@ -615,9 +613,7 @@ bool ScanEngine::Analyse()
 					FileExtension tfx = GFileExtensionHandler->Extensions[z];
 
 					if (tfx.Category == __Category_Temp) 
-					{
-						//found:=MatchesMask(s, tfx.Name);
-						
+					{					
 						std::wstring tx = tfx.Name;
 
 						std::transform(tx.begin(), tx.end(), tx.begin(), ::toupper);
@@ -670,17 +666,15 @@ bool ScanEngine::Analyse()
 
 				if (found)
 				{
-					Data.TemporaryFiles.push_back(GScanEngine->Data.Folders[Data.Files[t].FilePathIndex] + Data.Files[t].Name);
+					Data.TemporaryFiles.push_back(Data.Folders[Data.Files[t].FilePathIndex] + Data.Files[t].Name);
 
 					GFileExtensionHandler->Extensions[__Category_Temp].Quantity++;
 					GFileExtensionHandler->Extensions[__Category_Temp].Size += Data.Files[t].Size;
 
-					Data.Files[t].Temp = true;
+					
 				}
-				else
-				{
-					Data.Files[t].Temp = false;
-				}
+
+				Data.Files[t].Temp = found;
 			}
 		}
 	}
@@ -704,7 +698,7 @@ bool ScanEngine::Analyse()
 bool ScanEngine::AnalyseFast()
 {
 	#ifdef _DEBUG
-	Debug::Output(L"ScanDetails::AnalyseFast()");
+	Debug::Output(L"ScanEngine::AnalyseFast()");
 	#endif
 
 	for (int t = 0; t < Data.Files.size(); t++)
@@ -740,8 +734,6 @@ bool ScanEngine::AnalyseFast()
 
 					rfd.Name = s.substr(idx + 1);
 					rfd.Attributes = Data.Files[t].Attributes;
-					rfd.Size = 0;
-					rfd.Count = 0;
 
 					Data.RootFolders.push_back(rfd);
 				}
@@ -818,7 +810,7 @@ int ScanEngine::RootIndex()
 void ScanEngine::AnalyseRootFolders()
 {
 	#ifdef _DEBUG
-	Debug::Output(L"ScanDetails::AnalyseRootFolders()");
+	Debug::Output(L"ScanEngine::AnalyseRootFolders()");
 	#endif
 
 	if (Data.RootFolders.size() != 0)
@@ -878,7 +870,7 @@ void ScanEngine::AnalyseRootFolders()
 void ScanEngine::ScanFolder(const std::wstring &folder)
 {
 	#ifdef _DEBUG
-	Debug::Output(L"ScanDetails::ScanFolder(" + folder + L")");
+	Debug::Output(L"ScanEngine::ScanFolder(" + folder + L")");
 	#endif
 
 	std::wstring tmp = folder + L"*";
@@ -969,21 +961,6 @@ void ScanEngine::ScanFolder(const std::wstring &folder)
 				else
 				{
 					file_object.Category = exi.Category;
-
-					/*for (int i = 1; i < __FileCategoriesCount; i++)
-					{
-						if (exi.Category[i] != -1)
-						{
-							Data.ExtensionSpread[i].Count++;
-							Data.ExtensionSpread[i].Size += file_object.Size;
-
-							GFileExtensionHandler->Extensions[exi.Category[i]].Quantity++;
-							GFileExtensionHandler->Extensions[exi.Category[i]].Size += file_object.Size;
-
-							file_object.Category = i;
-						}
-					}
-					*/
 
 					if (FilterCategory != -1 && FilterCategory != file_object.Category)
 						continue;
@@ -1086,7 +1063,7 @@ void ScanEngine::ScanFolder(const std::wstring &folder)
 void ScanEngine::ScanFolderExt(const std::wstring& folder)
 {
 	#ifdef _DEBUG
-	Debug::Output(L"ScanDetails::ScanFolderExt(" + folder + L")");
+	Debug::Output(L"ScanEngine::ScanFolderExt(" + folder + L")");
 	#endif
 
 	std::vector<FileObject> FolderList;
@@ -1144,7 +1121,7 @@ void ScanEngine::ScanFolderExt(const std::wstring& folder)
 						Path.ExcludedFolderCount++;
 
 						#ifdef _DEBUG
-						Debug::Output(L"ScanDetails::ScanFolderExt(" + folder + file.cFileName + L") (EXCLUDED)");
+						Debug::Output(L"ScanEngine::ScanFolderExt(" + folder + file.cFileName + L") (EXCLUDED)");
 						#endif				
 
 						break;
@@ -1308,7 +1285,7 @@ void ScanEngine::PostScan()
 void ScanEngine::BuildFileDates()
 {
 	#ifdef _DEBUG
-	Debug::Output(L"ScanDetails::BuildFileDates()");
+	Debug::Output(L"ScanEngine::BuildFileDates()");
 	#endif	
 
 	int currentYear = Utility::CurrentYearI();
@@ -1342,7 +1319,7 @@ void ScanEngine::BuildFileDates()
 void ScanEngine::BuildTop100SizeLists()
 {
 	#ifdef _DEBUG		
-	Debug::Output(L"ScanDetails::BuildTop100SizeLists()");
+	Debug::Output(L"ScanEngine::BuildTop100SizeLists()");
 	#endif
 
 	Data.Top100Large.clear();
@@ -1368,7 +1345,7 @@ void ScanEngine::BuildTop100SizeLists()
 void ScanEngine::BuildTop100DateLists()
 {
 	#ifdef _DEBUG
-	Debug::Output(L"ScanDetails::BuildTop100DateLists()");
+	Debug::Output(L"ScanEngine::BuildTop100DateLists()");
 	#endif
 
 	Data.Top100Newest.clear();
@@ -1485,9 +1462,9 @@ void ScanEngine::SortRootBySize()
 void ScanEngine::ShowSearchStats()
 {
 	std::wcout << "\n";
-	std::wcout << std::format(L"Folders: {0}\n", GScanEngine->SearchData.FolderCount);
-	std::wcout << std::format(L"Files  : {0}\n", GScanEngine->SearchData.FileCount);
-	std::wcout << std::format(L"Size   : {0}\n\n", Convert::ConvertToUsefulUnit(GScanEngine->SearchData.TotalSize));
+	std::wcout << std::format(L"Folders: {0}\n", SearchData.FolderCount);
+	std::wcout << std::format(L"Files  : {0}\n", SearchData.FileCount);
+	std::wcout << std::format(L"Size   : {0}\n\n", Convert::ConvertToUsefulUnit(SearchData.TotalSize));
 }
 
 
@@ -1536,64 +1513,64 @@ void ScanEngine::SaveSearchResults(Command command)
 			{
 				std::wstring output;
 
-				if (GScanEngine->Data.Files[t].Attributes & FILE_ATTRIBUTE_DIRECTORY)
+				if (Data.Files[t].Attributes & FILE_ATTRIBUTE_DIRECTORY)
 				{
 
-					output = L"\"" + GScanEngine->Data.Files[t].Name + L"\"" + L',' +
-						L"\"" + GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + GScanEngine->Data.Files[t].Name + L"\"" + L',' +
+					output = L"\"" + Data.Files[t].Name + L"\"" + L',' +
+						L"\"" + Data.Folders[Data.Files[t].FilePathIndex] + Data.Files[t].Name + L"\"" + L',' +
 
 						ucFolder + L',' +
 						L"-1" + L',' +
 
-						Convert::IntDateToString(GScanEngine->Data.Files[t].DateCreated) + L',' +
-						Convert::IntDateToString(GScanEngine->Data.Files[t].DateAccessed) + L',' +
-						Convert::IntDateToString(GScanEngine->Data.Files[t].DateModified) + L',' +
+						Convert::IntDateToString(Data.Files[t].DateCreated) + L',' +
+						Convert::IntDateToString(Data.Files[t].DateAccessed) + L',' +
+						Convert::IntDateToString(Data.Files[t].DateModified) + L',' +
 
-						std::to_wstring(GScanEngine->Data.Files[t].TimeCreated) + L',' +
-						std::to_wstring(GScanEngine->Data.Files[t].TimeAccessed) + L',' +
-						std::to_wstring(GScanEngine->Data.Files[t].TimeModified) + L',' +
+						std::to_wstring(Data.Files[t].TimeCreated) + L',' +
+						std::to_wstring(Data.Files[t].TimeAccessed) + L',' +
+						std::to_wstring(Data.Files[t].TimeModified) + L',' +
 
 						ucFolder + L',' +
 
 						L"99" + L',' +
 
-						GScanEngine->Data.Users[GScanEngine->Data.Files[t].Owner].Name + L',' +
+						Data.Users[Data.Files[t].Owner].Name + L',' +
 
-						Convert::AttributeToIntAsString(GScanEngine->Data.Files[t].Attributes, FILE_ATTRIBUTE_READONLY) + L',' +
-						Convert::AttributeToIntAsString(GScanEngine->Data.Files[t].Attributes, FILE_ATTRIBUTE_HIDDEN) + L',' +
-						Convert::AttributeToIntAsString(GScanEngine->Data.Files[t].Attributes, FILE_ATTRIBUTE_SYSTEM) + L',' +
-						Convert::AttributeToIntAsString(GScanEngine->Data.Files[t].Attributes, FILE_ATTRIBUTE_ARCHIVE) + L',' +
-						Convert::BoolToString(GScanEngine->Data.Files[t].Temp) + L',' +
-						std::to_wstring(GScanEngine->Data.Files[t].Attributes);
+						Convert::AttributeToIntAsString(Data.Files[t].Attributes, FILE_ATTRIBUTE_READONLY) + L',' +
+						Convert::AttributeToIntAsString(Data.Files[t].Attributes, FILE_ATTRIBUTE_HIDDEN) + L',' +
+						Convert::AttributeToIntAsString(Data.Files[t].Attributes, FILE_ATTRIBUTE_SYSTEM) + L',' +
+						Convert::AttributeToIntAsString(Data.Files[t].Attributes, FILE_ATTRIBUTE_ARCHIVE) + L',' +
+						Convert::BoolToString(Data.Files[t].Temp) + L',' +
+						std::to_wstring(Data.Files[t].Attributes);
 				}
 				else
 				{
-					output = L"\"" + GScanEngine->Data.Files[t].Name + L"\"" + L',' +
-						L"\"" + GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + GScanEngine->Data.Files[t].Name + L"\"" + L',' +
+					output = L"\"" + Data.Files[t].Name + L"\"" + L',' +
+						L"\"" + Data.Folders[Data.Files[t].FilePathIndex] + Data.Files[t].Name + L"\"" + L',' +
 
-						L"\"" + Convert::GetSizeString(0, GScanEngine->Data.Files[t].Size) + L"\"" + L',' +
-						L"\"" + std::to_wstring(GScanEngine->Data.Files[t].Size) + L"\"" + L',' +
+						L"\"" + Convert::GetSizeString(0, Data.Files[t].Size) + L"\"" + L',' +
+						L"\"" + std::to_wstring(Data.Files[t].Size) + L"\"" + L',' +
 
-						Convert::IntDateToString(GScanEngine->Data.Files[t].DateCreated) + L',' +
-						Convert::IntDateToString(GScanEngine->Data.Files[t].DateAccessed) + L',' +
-						Convert::IntDateToString(GScanEngine->Data.Files[t].DateModified) + L',' +
+						Convert::IntDateToString(Data.Files[t].DateCreated) + L',' +
+						Convert::IntDateToString(Data.Files[t].DateAccessed) + L',' +
+						Convert::IntDateToString(Data.Files[t].DateModified) + L',' +
 
-						std::to_wstring(GScanEngine->Data.Files[t].TimeCreated) + L',' +
-						std::to_wstring(GScanEngine->Data.Files[t].TimeAccessed) + L',' +
-						std::to_wstring(GScanEngine->Data.Files[t].TimeModified) + L',' +
+						std::to_wstring(Data.Files[t].TimeCreated) + L',' +
+						std::to_wstring(Data.Files[t].TimeAccessed) + L',' +
+						std::to_wstring(Data.Files[t].TimeModified) + L',' +
 
-						GLanguageHandler->TypeDescriptions[GScanEngine->Data.Files[t].Category] + L',' +
+						GLanguageHandler->TypeDescriptions[Data.Files[t].Category] + L',' +
 
-						std::to_wstring(GScanEngine->Data.Files[t].Category) + L',' +
+						std::to_wstring(Data.Files[t].Category) + L',' +
 
-						GScanEngine->Data.Users[GScanEngine->Data.Files[t].Owner].Name + L',' +
+						Data.Users[Data.Files[t].Owner].Name + L',' +
 
-						Convert::AttributeToIntAsString(GScanEngine->Data.Files[t].Attributes, FILE_ATTRIBUTE_READONLY) + L',' +
-						Convert::AttributeToIntAsString(GScanEngine->Data.Files[t].Attributes, FILE_ATTRIBUTE_HIDDEN) + L',' +
-						Convert::AttributeToIntAsString(GScanEngine->Data.Files[t].Attributes, FILE_ATTRIBUTE_SYSTEM) + L',' +
-						Convert::AttributeToIntAsString(GScanEngine->Data.Files[t].Attributes, FILE_ATTRIBUTE_ARCHIVE) + L',' +
-						Convert::BoolToString(GScanEngine->Data.Files[t].Temp) + L',' +
-						std::to_wstring(GScanEngine->Data.Files[t].Attributes);
+						Convert::AttributeToIntAsString(Data.Files[t].Attributes, FILE_ATTRIBUTE_READONLY) + L',' +
+						Convert::AttributeToIntAsString(Data.Files[t].Attributes, FILE_ATTRIBUTE_HIDDEN) + L',' +
+						Convert::AttributeToIntAsString(Data.Files[t].Attributes, FILE_ATTRIBUTE_SYSTEM) + L',' +
+						Convert::AttributeToIntAsString(Data.Files[t].Attributes, FILE_ATTRIBUTE_ARCHIVE) + L',' +
+						Convert::BoolToString(Data.Files[t].Temp) + L',' +
+						std::to_wstring(Data.Files[t].Attributes);
 				}
 
 				ofile << Formatting::to_utf8(output + L"\n");
@@ -2869,9 +2846,9 @@ std::wstring ScanEngine::ToJSON()
 	case ScanSource::None:
 		return L"\"scan\":[{\"error\":\"invalid scan source\"}],\n";
 	case ScanSource::LiveScan:
-		return L"\"scan\":[{\"path\":\"" + Formatting::ReplaceForJSON(GScanEngine->Path.String) + L"\", \"filecount\":\"" + std::to_wstring(GScanEngine->Data.FileCount) + L"\", \"foldercount\":\"" + std::to_wstring(GScanEngine->Data.FolderCount) + L"\", \"sizebytes\":\"" + std::to_wstring(GScanEngine->Data.TotalSize) + L"\", \"date\":\"" + Utility::GetDate(DateTimeFormat::Display) + L"\", \"time\":\"" + Utility::GetTime(DateTimeFormat::Display) + L"\"}],\n";
+		return L"\"scan\":[{\"path\":\"" + Formatting::ReplaceForJSON(Path.String) + L"\", \"filecount\":\"" + std::to_wstring(Data.FileCount) + L"\", \"foldercount\":\"" + std::to_wstring(Data.FolderCount) + L"\", \"sizebytes\":\"" + std::to_wstring(Data.TotalSize) + L"\", \"date\":\"" + Utility::GetDate(DateTimeFormat::Display) + L"\", \"time\":\"" + Utility::GetTime(DateTimeFormat::Display) + L"\"}],\n";
 	case ScanSource::CSVImport:
-		return L"\"scan\":[{\"path\":\"" + Formatting::ReplaceForJSON(GScanEngine->Path.String) + L"\", \"csvsource\":\"" + Formatting::ReplaceForJSON(GScanEngine->Path.CSVSource) + L"\", \"filecount\":\"" + std::to_wstring(GScanEngine->Data.FileCount) + L"\", \"foldercount\":\"" + std::to_wstring(GScanEngine->Data.FolderCount) + L"\", \"sizebytes\":\"" + std::to_wstring(GScanEngine->Data.TotalSize) + L"\", \"date\":\"" + Utility::GetDate(DateTimeFormat::Display) + L"\", \"time\":\"" + Utility::GetTime(DateTimeFormat::Display) + L"\"}],\n";
+		return L"\"scan\":[{\"path\":\"" + Formatting::ReplaceForJSON(Path.String) + L"\", \"csvsource\":\"" + Formatting::ReplaceForJSON(Path.CSVSource) + L"\", \"filecount\":\"" + std::to_wstring(Data.FileCount) + L"\", \"foldercount\":\"" + std::to_wstring(Data.FolderCount) + L"\", \"sizebytes\":\"" + std::to_wstring(Data.TotalSize) + L"\", \"date\":\"" + Utility::GetDate(DateTimeFormat::Display) + L"\", \"time\":\"" + Utility::GetTime(DateTimeFormat::Display) + L"\"}],\n";
 	}
 
 	return L"";

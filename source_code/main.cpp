@@ -136,10 +136,7 @@ void ProcessConsoleReport()
 void RunScan()
 {
 	if (GScanEngine->Execute(GSettings->Optimisations.ProcessData,
-		GParameterHandler->NeedToProcessTopSizeLists(),
-		GParameterHandler->NeedToProcessTopDateLists(),
-		GParameterHandler->NeedToProcessFileDates(),
-		GParameterHandler->Filter.Category))
+		                     GParameterHandler->GetExecutionParameters()))
 	{
 		if (ReportHandler::GenerateReports() == 0)
 		{
@@ -158,20 +155,16 @@ void RunScan()
 void RunCompare()
 {
 	if (GScanEngine->Execute(GSettings->Optimisations.ProcessData,
-		GParameterHandler->NeedToProcessTopSizeLists(),
-		GParameterHandler->NeedToProcessTopDateLists(),
-		GParameterHandler->NeedToProcessFileDates(),
-		GParameterHandler->Filter.Category))
+		                     GParameterHandler->GetExecutionParameters()))
 	{
 		if (GScanEngineCompare->Execute(GSettings->Optimisations.ProcessData,
-			GParameterHandler->NeedToProcessTopSizeLists(),
-			GParameterHandler->NeedToProcessTopDateLists(),
-			GParameterHandler->NeedToProcessFileDates(),
-			GParameterHandler->Filter.Category))
+			                            GParameterHandler->GetExecutionParameters()))
 		{
 			Compare* c = new Compare();
 
 			c->Execute();
+
+			delete c;
 		}
 	}
 }

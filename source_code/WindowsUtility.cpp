@@ -275,13 +275,13 @@ std::wstring WindowsUtility::GetFileOwner(std::wstring file_name)
 	}
 
 	// Second call to LookupAccountSid to get the account name.
-	bRtnBool = LookupAccountSid(NULL,                   // name of local or remote computer
-								pSidOwner,              // security identifier
-								AcctName,               // account name buffer
-								(LPDWORD)&dwAcctName,   // size of account name buffer 
-								DomainName,             // domain name
-								(LPDWORD)&dwDomainName, // size of domain name buffer
-								&eUse);                 // SID type
+	bRtnBool = LookupAccountSidW(NULL,                   // name of local or remote computer
+							 	 pSidOwner,              // security identifier
+								 AcctName,               // account name buffer
+								 (LPDWORD)&dwAcctName,   // size of account name buffer 
+								 DomainName,             // domain name
+								 (LPDWORD)&dwDomainName, // size of domain name buffer
+								 &eUse);                 // SID type
 
 	// Check GetLastError for LookupAccountSid error condition.
 	if (bRtnBool == FALSE) 
@@ -304,10 +304,8 @@ std::wstring WindowsUtility::GetUserFromWindows()
 
 		return wname;
 	}
-	else
-	{
-		return L"Unknown";
-	}
+
+	return L"Unknown";
 } 
 
 

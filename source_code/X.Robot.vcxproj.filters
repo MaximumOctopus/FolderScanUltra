@@ -333,6 +333,9 @@
     <ClInclude Include="StatusConstants.h">
       <Filter>Header Files\Constants</Filter>
     </ClInclude>
+    <ClInclude Include="ExecutionParameters.h">
+      <Filter>Header Files\Data Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="X.Robot.rc" />

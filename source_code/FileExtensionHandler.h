@@ -12,16 +12,17 @@
 
 #pragma once
 
+#include <vector>
 
 #include "Constants.h"
 #include "ExtensionSearch.h"
 #include "FileExtension.h"
-#include <vector>
 
 
 class FileExtensionHandler
 {
 public:
+
 	std::vector<FileExtension> Extensions;
 
 	FileExtensionHandler();
@@ -30,6 +31,7 @@ public:
 
 	int GetExtensionCategoryIDFromName(const std::wstring);
 	ExtensionSearch GetExtensionCategoryID(const std::wstring);
+	int GetExtensionCategory(const std::wstring);
 
 	void ReportDuplicates();
 };

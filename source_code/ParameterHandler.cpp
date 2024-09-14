@@ -131,8 +131,15 @@ ParameterHandler::ParameterHandler(int argc, wchar_t *argv[], std::wstring DataP
 			}
 			
 			case ParameterOption::Compare:
-				Compare.Enabled = true;
-				Compare.Path = Parameters[t].Value;
+				if (WindowsUtility::DirectoryExists(Parameters[t].Value))
+				{
+					Compare.Enabled = true;
+					Compare.Path = Parameters[t].Value;
+				}
+				else
+				{
+					std::wcout << L"Compare folder does not exist \"" << Parameters[t].Value << L"\".\n";
+				}
 				break;
 			}
 		}
@@ -484,6 +491,20 @@ void ParameterHandler::ProcessForOptimisations()
 			return;
 		}
 	}
+}
+
+
+ExecutionParameters ParameterHandler::GetExecutionParameters()
+{
+	ExecutionParameters ex;
+
+	ex.ProcessTop100Size = NeedToProcessTopSizeLists();
+	ex.ProcessTop100Date = NeedToProcessTopDateLists();
+	ex.ProcessFileDates = NeedToProcessFileDates();
+
+	ex.FilterByCategory = Filter.Category;
+
+	return ex;
 }
 
 

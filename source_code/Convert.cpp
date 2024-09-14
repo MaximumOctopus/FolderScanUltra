@@ -61,9 +61,9 @@ namespace Convert
 	{
 		if (value < 0)
 		{	
-			return L"0";
+			return L"0 " + GLanguageHandler->Text[rsBytes];
 		}
-		else if ((value >= 0) && (value < 1024))
+		else if (value < 1024)
 		{
 			return std::to_wstring(value) + L" " + GLanguageHandler->Text[rsBytes];
 		}
@@ -368,9 +368,7 @@ namespace Convert
 
 			FileTimeToSystemTime(file_time, &lpSystemTime);
 
-			int date = 0;
-
-			date += lpSystemTime.wDay;
+			int date = lpSystemTime.wDay;
 
 			date += lpSystemTime.wMonth * 100;
 
@@ -393,9 +391,7 @@ namespace Convert
 
 			FileTimeToSystemTime(file_time, &lpSystemTime);
 
-			int time = 0;
-
-			time += lpSystemTime.wMinute;
+			int time = lpSystemTime.wMinute;
 
 			time += lpSystemTime.wHour * 100;
 

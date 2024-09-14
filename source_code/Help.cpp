@@ -1,4 +1,4 @@
-// =====================================================================
+﻿// =====================================================================
 //
 // FolderScanUltra 5
 //
@@ -65,9 +65,9 @@ namespace Help
     {
 		Header();
 
-		std::wcout << L"  Use \"FolderScanUltra /?\" for simple help.\n";
-		std::wcout << L"  Use \"FolderScanUltra /u\" to open the usage document.\n\n";
-		std::wcout << L"  Use \"FolderScanUltra /versioncheck\" to check for a new version.\n";
+		std::wcout << L" Use \"FolderScanUltra /?\" for simple help.\n";
+		std::wcout << L" Use \"FolderScanUltra /u\" to open the usage document.\n\n";
+		std::wcout << L" Use \"FolderScanUltra /versioncheck\" to check for a new version.\n";
 		std::wcout << "\n";
     }
 
@@ -76,12 +76,12 @@ namespace Help
     {
 		Header();
 
-        std::wcout << L"  AppPath : " + GSystemGlobal->AppPath << "\n";
+		std::wcout << L"  AppPath : " + GSystemGlobal->AppPath << "\n";
         std::wcout << L"  DataPath: " + GSystemGlobal->DataPath << "\n";
-        std::wcout << "\n";
-        std::wcout << L"  Use \"FolderScanUltra /?\" for simple help.\n";
-		std::wcout << L"  Use \"FolderScanUltra /u\" to open the usage document.\n\n";
-		std::wcout << L"  Use \"FolderScanUltra /versioncheck\" to check for a new version.\n";
+        std::wcout << L"\n";
+        std::wcout << L" Use \"FolderScanUltra /?\" for simple help.\n";
+		std::wcout << L" Use \"FolderScanUltra /u\" to open the usage document.\n\n";
+		std::wcout << L" Use \"FolderScanUltra /versioncheck\" to check for a new version.\n";
 		std::wcout << "\n";
     }
 
@@ -162,6 +162,7 @@ namespace Help
 		std::wcout << L"    /ds                        : show duplicate files by size`\n";
 		std::wcout << "\n";
 		std::wcout << L"    /allfolders                : output all folders in root, ordered by size\n";
+		std::wcout << L"                                 with a nice little graph!\n";
 		std::wcout << "\n";
 		std::wcout << L"    /allowvirtual              : enable processing of virtual files\n";
 		std::wcout << "\n";
@@ -259,14 +260,15 @@ namespace Help
 
 	void Header()
 	{
+   	    std::wcout << L"\n ███ ███ █ █\n";
 		#ifdef __XINORBIS
-		std::wcout << L"\n  FolderScanUltra " << __FSUVersion << " (Database) / " << __FSUDate << "\n\n";
+		std::wcout << L" █   █   █ █  FolderScanUltra " << __FSUVersion << " (Database) / " << __FSUDate << "\n\n";
 		#else
-		std::wcout << L"\n  FolderScanUltra " << __FSUVersion << " / " << __FSUDate << "\n\n";
+		std::wcout << L" █   █   █ █  FolderScanUltra " << __FSUVersion << " / " << __FSUDate << "\n\n";
 		#endif
-		std::wcout << L"    (c) Paul Alan Freshney 2011-" << Utility::CurrentYear() << "\n\n";
-		std::wcout << L"        https://github.com/MaximumOctopus/FolderScanUltra\n";
-		std::wcout << L"        paul@freshney.org\n\n";
+		std::wcout << L" ██  ███ █ █   (c) Paul Alan Freshney 2011-" << Utility::CurrentYear() << "\n\n";
+		std::wcout << L" █     █ █ █      https://github.com/MaximumOctopus/FolderScanUltra\n";
+		std::wcout << L" █   ███ ███      paul@freshney.org\n\n";
 	}
 
 

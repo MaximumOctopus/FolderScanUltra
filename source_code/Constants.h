@@ -19,10 +19,10 @@
 #ifdef _DEBUG
 static const std::wstring __FSUVersion = L"5.12 (debug)";
 #else
-static const std::wstring __FSUVersion = L"5.12";
+static const std::wstring __FSUVersion = L"5.13";
 #endif
 
-static const std::wstring __FSUDate    = L"August 19th 2024";
+static const std::wstring __FSUDate    = L"September 14th 2024";
 
 // ===========================================================================
 // == Categories =============================================================
@@ -57,7 +57,7 @@ static const std::wstring __FileExtensionFileName[] = { L"Temp", L"Programs", L"
 			  
 static const std::wstring __MagniLabels3[] = { L"less than 1K", L"1K - 1MB", L"1MB - 10MB", L"10MB - 50MB", L"50MB - 100MB",
 										     L"100MB - 150MB", L"150MB - 200MB", L"200MB - 250MB", L"250MB - 500MB", L"500MB - 1GB",
-										     L"1GB - 2GB", L"2GB -5GB", L"5GB+" };
+										     L"1GB - 2GB", L"2GB - 5GB", L"5GB+" };
 
 static const std::wstring __MagniLabels[]  = { L"<=1K", L"1K < x <=1MB", L"1MB < x <=10MB", L"10MB < x <=50MB", L"50MB < x <=100MB", L"100MB < x <=150MB",
 											 L"150MB < x <=200MB", L"200MB < x <=250MB", L"250MB < x <=500MB", L"500MB < x <=1GB", L"1GB < x <=2GB",
