@@ -1,5 +1,5 @@
 ====================================================================================================================================
-    FolderScanUltra 5.12
+    FolderScanUltra 5.13
     (c) Paul Alan Freshney 2019-2024
 
     paul@freshney.org
@@ -11,6 +11,10 @@
 FSU is a powerful console-based folder/drive analysis tool for creating highly detailed reports on the composition of any folder/drive/network storage/etc.
 
 It can generate CSV, HTML, JSON, XML, Text, Tree, and summary reports.
+
+This is how I use it, unless I need specific information:
+
+  fsu <folder> /allfolders
 
 The included sqlite3.dll and sqlite3.lib files are x64 versions. They can only be used to compile the 64-bit version.
 
@@ -44,6 +48,10 @@ All of my software is free and open source; please consider donating to a local 
 ====================================================================================================================================
 
 Release History
+
+5.13 / September 14th 2024
+
+A few minor optimisations, tweaks, and refactoring.
 
 5.12 / August 19th 2024
 
