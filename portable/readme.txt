@@ -1,6 +1,6 @@
 ====================================================================================================================================
-    FolderScanUltra 5.13
-    (c) Paul Alan Freshney 2019-2024
+    FolderScanUltra 5.14
+    (c) Paul Alan Freshney 2019-2025
 
     paul@freshney.org
 
@@ -49,6 +49,12 @@ All of my software is free and open source; please consider donating to a local 
 
 Release History
 
+5.14 / April 5th 2025
+
+Split the JSON report in to two separate reports: path/file list, and detailed files and parameters.
+
+A few minor tweaks.
+
 5.13 / September 14th 2024
 
 A few minor optimisations, tweaks, and refactoring.
@@ -57,7 +63,7 @@ A few minor optimisations, tweaks, and refactoring.
 
 Added: /compare:folder
 
-       Compares "folder" to the primary folder being scanned. Will output new and missing files, date and size changes.
+       Compares "folder" to the primary folder being scanned. Will output new and missing files, date, and size changes.
 
 5.10 / August 10th 2023
 
