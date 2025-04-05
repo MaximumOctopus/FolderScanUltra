@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2024
+// (c) Paul Alan Freshney 2019-2025
 //
 // paul@freshney.org
 // 
@@ -99,7 +99,14 @@ namespace ReportHandler
 				}
 				case ParameterOption::JSONReport:
 				{
-					ReportJSON::FullFileList(FileName);
+					if (pd.ReportOptions[0] == L'1')
+					{
+						ReportJSON::DetailedFileList(FileName);
+					}
+					else
+					{
+						ReportJSON::SimpleFileList(FileName); 
+					}
 
 					reportCount++;
 

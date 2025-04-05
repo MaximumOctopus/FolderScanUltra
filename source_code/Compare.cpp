@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2024
+// (c) Paul Alan Freshney 2019-2025
 //
 // paul@freshney.org
 // 
@@ -120,12 +120,12 @@ void Compare::Execute()
 
 	if (size_delta != 0)
 	{
-		std::wcout << L"Size difference " << Convert::ConvertToUsefulUnit(size_delta) << L".\n";
+		std::wcout << std::format(L"Size difference {0}.\n", Convert::ConvertToUsefulUnit(size_delta));
 	}
 
 	if (missing_files != 0)
 	{
-		std::wcout << L"Found " << missing_files << L" missing files (" << Convert::ConvertToUsefulUnit(missing_files_size) << L").\n";
+		std::wcout << std::format(L"Found {0} missing files ({1}).\n", missing_files, Convert::ConvertToUsefulUnit(missing_files_size));
 	}
 	else
 	{ 
@@ -134,12 +134,12 @@ void Compare::Execute()
 
 	if (new_files != 0)
 	{
-		std::wcout << L"Found " << new_files << L" new files (" << Convert::ConvertToUsefulUnit(new_files_size) << L").\n";
+		std::wcout << std::format(L"Found {0} new files ({1}).\n", new_files, Convert::ConvertToUsefulUnit(new_files_size));
 	}
 	else
 	{
 		std::wcout << L"No new files found.\n";
 	}
 
-	std::wcout << L"\nTotal of " << differences << L" differences.\n\n";
+	std::wcout << std::format(L"\nFound a total of {0} differences across the two folders.\n\n", differences);
 }

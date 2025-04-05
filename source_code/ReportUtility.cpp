@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2024
+// (c) Paul Alan Freshney 2019-2025
 //
 // paul@freshney.org
 // 
@@ -21,11 +21,7 @@ namespace ReportUtility
 	{
 		int bar_count = 40;
 
-		if (percent >= 100)
-		{
-
-		}
-		else
+		if (percent < 100)
 		{
 			bar_count = static_cast<int>((double)percent / 2.5f);
 		}

@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2024
+// (c) Paul Alan Freshney 2019-2025
 //
 // paul@freshney.org
 // 
@@ -174,7 +174,7 @@ namespace ReportText
 			}
 			else
 			{
-				std::wcout << " Error cannot find folder \"" << folder << "\"\n";
+				std::wcout << " Error: cannot find folder \"" << folder << "\"\n";
 			}
 		}
 	}

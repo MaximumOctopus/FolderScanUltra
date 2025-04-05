@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2024
+// (c) Paul Alan Freshney 2019-2025
 //
 // paul@freshney.org
 // 
@@ -28,9 +28,9 @@ extern ScanEngine* GScanEngine;
 
 namespace ReportJSON
 {
-	void FullFileList(const std::wstring file_name)
+	void DetailedFileList(const std::wstring file_name)
 	{
-		std::wcout << GLanguageHandler->Text[rsSavingReports] + L" (JSON):\n\n";
+		std::wcout << GLanguageHandler->Text[rsSavingReports] + L" (JSON, Detailed):\n\n";
 
 		std::ofstream ofile(file_name);
 
@@ -48,11 +48,45 @@ namespace ReportJSON
 
 				if (t == GScanEngine->Data.Files.size() - 1)
 				{
-					ofile << "    " << Formatting::to_utf8(json + L"\n");
+					ofile << Formatting::to_utf8(L"    " + json + L"\n");
 				}
 				else
 				{
-					ofile << "    " << Formatting::to_utf8(json + L",\n");
+					ofile << Formatting::to_utf8(L"    " + json + L",\n");
+				}
+			}
+
+			ofile << Formatting::to_utf8(L"]\n");
+			ofile << Formatting::to_utf8(L"}\n");
+
+			ofile.close();
+		}
+	}
+	
+
+	void SimpleFileList(const std::wstring file_name)
+	{
+		std::wcout << GLanguageHandler->Text[rsSavingReports] + L" (JSON, Simple):\n\n";
+
+		std::ofstream ofile(file_name);
+
+		if (ofile)
+		{
+			ofile << Formatting::to_utf8(L"{\n");
+
+			ofile << Formatting::to_utf8(GScanEngine->ToJSON());
+
+			ofile << Formatting::to_utf8(L"\"files\":[\n");
+
+			for (int t = 0; t < GScanEngine->Data.Files.size(); t++)
+			{
+				if (t == GScanEngine->Data.Files.size() - 1)
+				{
+					ofile << Formatting::to_utf8(L"    { \"file\": \"" + Formatting::ReplaceForJSON(GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + GScanEngine->Data.Files[t].Name) + L"\" }\n");
+				}
+				else
+				{
+					ofile << Formatting::to_utf8(L"    { \"file\": \"" + Formatting::ReplaceForJSON(GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + GScanEngine->Data.Files[t].Name) + L"\" },\n");
 				}
 			}
 

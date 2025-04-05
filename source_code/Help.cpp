@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2024
+// (c) Paul Alan Freshney 2019-2025
 //
 // paul@freshney.org
 // 
@@ -127,7 +127,7 @@ namespace Help
 		std::wcout << "\n";
         std::wcout << L"    /csv;options;file_name     : save CSV report to <filename>\n";
         std::wcout << L"    /html;options;file_name    : save HTML report to <filename>\n";
-		std::wcout << L"    /json;file_name            : save JSON report to <filename>\n";
+		std::wcout << L"    /json;options;file_name    : save JSON report to <filename>\n";
         std::wcout << L"    /txt;options;file_name     : save Text report to <filename>\n";
 		std::wcout << L"    /tree;options;file_name    : save Tree report structure to <filename>\n";
         std::wcout << L"    /xml;options;file_name     : save XML report to <filename>\n";

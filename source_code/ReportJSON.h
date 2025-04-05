@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2024
+// (c) Paul Alan Freshney 2019-2025
 //
 // paul@freshney.org
 // 
@@ -15,5 +15,7 @@
 
 namespace ReportJSON
 {
-	void FullFileList(const std::wstring);
+	void DetailedFileList(const std::wstring);
+
+	void SimpleFileList(const std::wstring);
 }

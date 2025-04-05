@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2024
+// (c) Paul Alan Freshney 2019-2025
 //
 // paul@freshney.org
 // 
@@ -122,7 +122,7 @@ enum class ParameterOption {
 };
 
 #ifdef __XINORBIS
-static const int kCommandListCount = 60;
+static const int kCommandListCount = 61;
 #else
 static const int kCommandListCount = 54;
 #endif

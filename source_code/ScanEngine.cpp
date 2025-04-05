@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2024
+// (c) Paul Alan Freshney 2019-2025
 //
 // paul@freshney.org
 // 
@@ -1582,7 +1582,7 @@ void ScanEngine::SaveSearchResults(Command command)
 		}
 		else
 		{
-			std::wcout << L"    Error saving file.\n";
+			std::wcout << L"    Error: unable to save file.\n";
 		}
 	}
 	else

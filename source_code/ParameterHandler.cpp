@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2024
+// (c) Paul Alan Freshney 2019-2025
 //
 // paul@freshney.org
 // 
@@ -620,7 +620,9 @@ std::wstring ParameterHandler::DefaultOptions(ParameterOption option)
 	case ParameterOption::CSVReport:
 		return L"110";
 	case ParameterOption::HTMLReport:
+		return L"1111111111120";
 	case ParameterOption::JSONReport:
+		return L"00";
 	case ParameterOption::DeepHTMLReport:
 		return L"1111111111120";
 	case ParameterOption::Summary:
