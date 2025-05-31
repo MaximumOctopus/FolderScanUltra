@@ -33,6 +33,8 @@ Added two new reports for outputting files split by month or year.
 
   /datey
 
+See the included pdf for more information on customising report output.
+
 5.14 / April 4th 2025
 
 Split the JSON report in to two separate reports: path/file list, and detailed files and parameters.
