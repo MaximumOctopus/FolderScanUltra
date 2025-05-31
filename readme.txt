@@ -1,5 +1,5 @@
 ====================================================================================================================================
-    FolderScanUltra 5.14
+    FolderScanUltra 5.15
     (c) Paul Alan Freshney 2019-2025
 
     paul@freshney.org
@@ -48,6 +48,16 @@ All of my software is free and open source; please consider donating to a local 
 ====================================================================================================================================
 
 Release History
+
+5.15 / May 31st 2025
+
+Added two new reports for outputting files split by month or year.
+
+  /datem
+
+  /datey
+
+See the included pdf for more information on customising report output.
 
 5.14 / April 5th 2025
 
