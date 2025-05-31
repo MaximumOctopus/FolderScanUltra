@@ -94,7 +94,7 @@ namespace Convert
 	}
 
 
-	unsigned __int64 ConvertUsefulUnitToInteger(std::wstring input)
+	unsigned __int64 ConvertUsefulUnitToInteger(const std::wstring input)
 	{
 		int output = 0;
 
@@ -353,10 +353,8 @@ namespace Convert
 		
 			return std::format(L"{0:.2f}%", value * 100);
 		}
-		else
-		{
-			return L"0%";
-		}
+
+		return L"0%";
 	}
 
 
@@ -376,10 +374,8 @@ namespace Convert
 
 			return date;
 		}
-		else
-		{
-			return 19000101;
-		}
+	
+		return 19000101;
 	}
 
 
@@ -397,10 +393,8 @@ namespace Convert
 
 			return time;
 		}
-		else
-		{
-			return 1200;
-		}
+
+		return 1200;
 	}
 
 
@@ -478,7 +472,7 @@ namespace Convert
 	}
 
 
-	int TimeFromAnyFormatToHHMM(std::wstring input)
+	int TimeFromAnyFormatToHHMM(const std::wstring input)
 	{
 		try
 		{
@@ -494,6 +488,22 @@ namespace Convert
 		return 1200;
 	}
 
+
+	std::wstring YYYYMMDDToMonthYear(int date)
+	{
+		std::wstring yyyymmdd = std::to_wstring(date);
+
+		int mm = std::stoi(yyyymmdd.substr(4, 2));
+		
+		return GLanguageHandler->Months[mm - 1] + L" " + yyyymmdd.substr(0, 4);
+	}
+
+	std::wstring YYYYMMDDToMonth(int date)
+	{
+		std::wstring yyyymmdd = std::to_wstring(date);
+
+		return yyyymmdd.substr(0, 4);
+	}
 
 	// RGB -> BGR
 	std::wstring WebColour(int colour)

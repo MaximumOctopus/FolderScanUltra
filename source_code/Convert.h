@@ -21,7 +21,7 @@ namespace Convert
 {
 	[[nodiscard]] std::wstring AttributeToIntAsString(int, int);
 	[[nodiscard]] std::wstring ConvertToUsefulUnit(unsigned __int64);
-	[[nodiscard]] unsigned __int64 ConvertUsefulUnitToInteger(std::wstring);
+	[[nodiscard]] unsigned __int64 ConvertUsefulUnitToInteger(const std::wstring);
 	[[nodiscard]] std::wstring DoubleToPercent(double);
 	[[nodiscard]] std::wstring GetSizeString(int, unsigned __int64);
 
@@ -34,8 +34,11 @@ namespace Convert
 	[[nodiscard]] int DateToYYYYMMDD(const std::wstring);
 	[[nodiscard]] int TodayPlusDaysToYYYYMMDD(int days);
 
-	[[nodiscard]] int DateFromAnyFormatToYYYYMMDD(std::wstring);
-	[[nodiscard]] int TimeFromAnyFormatToHHMM(std::wstring);
+	[[nodiscard]] int DateFromAnyFormatToYYYYMMDD(const std::wstring);
+	[[nodiscard]] int TimeFromAnyFormatToHHMM(const std::wstring);
+
+	[[nodiscard]] std::wstring YYYYMMDDToMonthYear(int);
+	[[nodiscard]] std::wstring YYYYMMDDToMonth(int);
 
 	[[nodiscard]] std::wstring WebColour(int);
 

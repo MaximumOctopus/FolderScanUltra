@@ -17,6 +17,8 @@
 #include "ReportConsole.h"
 #include "ReportCSV.h"
 #include "ReportCSVReportOptions.h"
+#include "ReportDates.h"
+#include "ReportDateOptions.h"
 #include "ReportHandler.h"
 #include "ReportHTML.h"
 #include "ReportHTMLReportOptions.h"
@@ -105,7 +107,7 @@ namespace ReportHandler
 					}
 					else
 					{
-						ReportJSON::SimpleFileList(FileName); 
+						ReportJSON::SimpleFileList(FileName);
 					}
 
 					reportCount++;
@@ -337,6 +339,34 @@ namespace ReportHandler
 					ReportConsole::BenfordsLaw();
 					break;
 
+				case ParameterOption::DateReportMonth:
+				{
+					DateReportOptions drOptions;
+
+					drOptions.Month = true;
+					drOptions.FileName = FileName;
+					drOptions.Created = Utility::StringToBool(pd.ReportOptions[0]);
+
+					ReportDates::ReportDates(drOptions);
+
+					reportCount++;
+
+					break;
+				}
+				case ParameterOption::DateReportYear:
+				{
+					DateReportOptions drOptions;
+
+					drOptions.Year = true;
+					drOptions.FileName = FileName;
+					drOptions.Created = Utility::StringToBool(pd.ReportOptions[0]);
+
+					ReportDates::ReportDates(drOptions);
+
+					reportCount++;
+
+					break;
+				}
 
 				default:
 					std::wcout << L"Unknown report type \n\n";

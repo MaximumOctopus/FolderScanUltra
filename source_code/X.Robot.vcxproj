@@ -103,6 +103,8 @@
     <ClInclude Include="Debug.h" />
     <ClInclude Include="ExecutionParameters.h" />
     <ClInclude Include="FileObjectSorted.h" />
+    <ClInclude Include="ReportDateOptions.h" />
+    <ClInclude Include="ReportDates.h" />
     <ClInclude Include="ReportJSON.h" />
     <ClInclude Include="ReportTree.h" />
     <ClInclude Include="ReportTreeOptions.h" />
@@ -183,6 +185,7 @@
     <ClCompile Include="Registry.cpp" />
     <ClCompile Include="ReportConsole.cpp" />
     <ClCompile Include="ReportCSV.cpp" />
+    <ClCompile Include="ReportDates.cpp" />
     <ClCompile Include="ReportHandler.cpp" />
     <ClCompile Include="ReportHTML.cpp" />
     <ClCompile Include="ReportDeep.cpp" />

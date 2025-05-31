@@ -19,7 +19,9 @@
 
 class FileObject
 {
+
 public:
+
     int FilePathIndex = 0;
     
     std::wstring Name = L"";

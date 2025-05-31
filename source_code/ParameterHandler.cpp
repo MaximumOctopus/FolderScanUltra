@@ -396,6 +396,8 @@ bool ParameterHandler::IsFileDateReport(ParameterOption option)
 	case ParameterOption::DeepTextReport:
 	case ParameterOption::DeepHTMLReport:
 	case ParameterOption::ReportFileDates:
+	case ParameterOption::DateReportMonth:
+	case ParameterOption::DateReportYear:
 		return true;
 	}
 
@@ -607,6 +609,11 @@ std::wstring ParameterHandler::DefaultFileName(ParameterOption option)
 		case ParameterOption::DeepHTMLReport:
 			return SystemDataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\HTML\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts.html";
 
+		case ParameterOption::DateReportMonth:
+			return SystemDataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\Text\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts_month.txt";
+		case ParameterOption::DateReportYear:
+			return SystemDataPath + L"Reports\\" + WindowsUtility::GetComputerNetName() + L"\\Text\\" + L"fsu_$yyyy$mm$dd_$Th$Tm$Ts_year.txt";
+
 		default:
 			return L"";
 	}
@@ -642,6 +649,11 @@ std::wstring ParameterHandler::DefaultOptions(ParameterOption option)
 	case ParameterOption::NewTwenty:
 	case ParameterOption::OldTwenty:
 		return L"1";
+
+	case ParameterOption::DateReportMonth:
+		return L"11";
+	case ParameterOption::DateReportYear:
+		return L"11";
 
 	default:
 		return L"";

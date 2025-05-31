@@ -182,7 +182,7 @@ namespace Utility
 	}
 
 
-	std::wstring GetMD5(std::wstring input)
+	std::wstring GetMD5(const std::wstring input)
 	{
 		std::string str(input.begin(), input.end());
 
