@@ -22,6 +22,7 @@ struct DateReportOptions
 	bool Created = true;
 	bool OutputSorted = false;
 
+	bool Day = false;
 	bool Month = false;
 	bool Year = false;
 };

@@ -37,6 +37,7 @@ namespace Convert
 	[[nodiscard]] int DateFromAnyFormatToYYYYMMDD(const std::wstring);
 	[[nodiscard]] int TimeFromAnyFormatToHHMM(const std::wstring);
 
+	[[nodiscard]] std::wstring YYYYMMDDToMonthDayYear(int);
 	[[nodiscard]] std::wstring YYYYMMDDToMonthYear(int);
 	[[nodiscard]] std::wstring YYYYMMDDToMonth(int);
 

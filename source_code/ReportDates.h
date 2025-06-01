@@ -17,6 +17,7 @@
 
 class ReportDates
 {
+	void Day(DateReportOptions);
 	void Month(DateReportOptions);
 	void Year(DateReportOptions);
 

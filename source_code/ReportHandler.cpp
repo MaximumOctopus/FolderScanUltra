@@ -339,6 +339,20 @@ namespace ReportHandler
 					ReportConsole::BenfordsLaw();
 					break;
 
+				case ParameterOption::DateReportDay:
+				{
+					DateReportOptions drOptions;
+
+					drOptions.Day = true;
+					drOptions.FileName = FileName;
+					drOptions.Created = Utility::StringToBool(pd.ReportOptions[0]);
+
+					ReportDates::ReportDates(drOptions);
+
+					reportCount++;
+
+					break;
+				}
 				case ParameterOption::DateReportMonth:
 				{
 					DateReportOptions drOptions;

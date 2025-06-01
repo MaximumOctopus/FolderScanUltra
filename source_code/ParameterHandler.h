@@ -57,6 +57,7 @@ const static std::wstring kXinorbisReport = L"/xin";
 const static std::wstring kDeepHTMLReport = L"/deephtml";
 const static std::wstring kDeepTextReport = L"/deeptext";
 
+const static std::wstring kDateReportDay = L"/dated";
 const static std::wstring kDateReportMonth = L"/datem";
 const static std::wstring kDateReportYear = L"/datey";
 
@@ -121,13 +122,13 @@ enum class ParameterOption {
 	ExcludeHidden = 55, ExcludeReadOnly = 56, ExcludeTemp = 57, ExcludeFolder = 58, ExcludeFile = 59,
 	CSVImportFile = 60, FilterCategory = 61,
 	BenfordsLaw = 62,
-	Compare = 63, DateReportMonth = 64, DateReportYear = 65
+	Compare = 63, DateReportDay = 64, DateReportMonth = 65, DateReportYear = 66
 };
 
 #ifdef __XINORBIS
-static const int kCommandListCount = 63;
+static const int kCommandListCount = 64;
 #else
-static const int kCommandListCount = 56;
+static const int kCommandListCount = 57;
 #endif
 
 
@@ -147,7 +148,7 @@ static const std::wstring CommandList[kCommandListCount] = {
 	kExcludeHidden, kExcludeReadOnly, kExcludeTemp, kExcludeFolder, kExcludeFile,
 	kFilterCategory,
 	kBenford,
-	kCompare, kDateReportMonth, kDateReportYear
+	kCompare, kDateReportDay, kDateReportMonth, kDateReportYear
 };
 
 static const ParameterOption ParameterReference[kCommandListCount] = {
@@ -166,10 +167,10 @@ static const ParameterOption ParameterReference[kCommandListCount] = {
 	ParameterOption::ExcludeHidden, ParameterOption::ExcludeReadOnly, ParameterOption::ExcludeTemp, ParameterOption::ExcludeFolder, ParameterOption::ExcludeFile,
 	ParameterOption::FilterCategory,
 	ParameterOption::BenfordsLaw,
-	ParameterOption::Compare, ParameterOption::DateReportMonth, ParameterOption::DateReportYear
+	ParameterOption::Compare, ParameterOption::DateReportDay, ParameterOption::DateReportMonth, ParameterOption::DateReportYear
 };
 
-const static int kReportParametersCount = 29;
+const static int kReportParametersCount = 30;
 
 const static std::wstring ReportCommandList[kReportParametersCount] = {
 	kCSVReport, kHTMLReport, kJSONReport, kSummary, kTreeReport, kTextReport, kXMLReport, kXFLReport, kXinorbisReport,
@@ -177,7 +178,7 @@ const static std::wstring ReportCommandList[kReportParametersCount] = {
 	kAttributes, kCategories, kExtensions, kFileDates, kMagnitude, kNullFiles, kTemporaryFiles, kUsers,
 	kDuplicateFileName, kDuplicateFileSize,
 	kDeepTextReport, kDeepHTMLReport,
-	kBenford, kDateReportMonth, kDateReportYear
+	kBenford, kDateReportDay, kDateReportMonth, kDateReportYear
 };
 
 

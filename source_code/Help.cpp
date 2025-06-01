@@ -134,6 +134,7 @@ namespace Help
 		std::wcout << L"    /xfl;options;file_name     : save XML report file list to <filename>\n";
 		std::wcout << L"    /xin;options;file_name     : save xinorbis report to <filename>\n";
 		std::wcout << "\n";
+		std::wcout << L"    /dated;options;file_name   : save files by date (day)\n";
 		std::wcout << L"    /datem;options;file_name   : save files by date (month)\n";
 		std::wcout << L"    /datey;options;file_name   : save files by date (year)\n";
 		std::wcout << "\n";

@@ -28,6 +28,20 @@ extern ScanEngine* GScanEngine;
 
 ReportDates::ReportDates(DateReportOptions options)
 {
+	if (options.Created)
+	{
+		std::ranges::sort(GScanEngine->Data.Files, {}, &FileObject::DateCreated);
+	}
+	else
+	{
+		std::ranges::sort(GScanEngine->Data.Files, {}, &FileObject::DateModified);
+	}
+
+	if (options.Day)
+	{
+		Day(options);
+	}
+
 	if (options.Month)
 	{
 		Month(options);
@@ -36,6 +50,71 @@ ReportDates::ReportDates(DateReportOptions options)
 	if (options.Year)
 	{
 		Year(options);
+	}
+}
+
+
+void ReportDates::Day(DateReportOptions options)
+{
+	std::ofstream ofile(options.FileName);
+
+	if (ofile)
+	{
+		std::wcout << GLanguageHandler->Text[rsSavingReports] << L" (Dates::Day):\n\n";
+
+		if (GScanEngine->Data.Files.size() != 0)
+		{
+			ofile << Formatting::to_utf8(L"    FolderScanUltra: Dates::Day \"" + GScanEngine->Path.String + L"\"\n");
+			ofile << Formatting::to_utf8(L"        " + GLanguageHandler->Text[rsAnalysedAt] + L" " + Utility::GetTime(DateTimeFormat::Display) + L", " + Utility::GetDate(DateTimeFormat::Display) + L"\n\n");
+
+			int lastdate = 0;
+			std::wstring date(L"");
+
+			for (int t = 0; t < GScanEngine->Data.Files.size(); t++)
+			{
+				if (options.Created)
+				{
+					if (GScanEngine->Data.Files[t].DateCreated != lastdate)
+					{
+						ofile << Formatting::to_utf8(L"\n " + Convert::YYYYMMDDToMonthDayYear(GScanEngine->Data.Files[t].DateCreated) + L"\n\n");
+
+						lastdate = GScanEngine->Data.Files[t].DateCreated;
+
+						date = std::to_wstring(GScanEngine->Data.Files[t].DateCreated);
+					}
+				}
+				else
+				{
+					if (GScanEngine->Data.Files[t].DateModified != lastdate)
+					{
+						ofile << Formatting::to_utf8(L"\n " + Convert::YYYYMMDDToMonthDayYear(GScanEngine->Data.Files[t].DateModified) + L"\n\n");
+
+						lastdate = GScanEngine->Data.Files[t].DateModified;
+
+						date = std::to_wstring(GScanEngine->Data.Files[t].DateModified);
+					}
+				}
+
+				if (GScanEngine->Data.Files[t].Attributes & FILE_ATTRIBUTE_DIRECTORY)
+				{
+					ofile << Formatting::to_utf8(L"  " +
+						date + L"  " +
+						L"      [FOLDER] " +
+						GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + GScanEngine->Data.Files[t].Name + L"\n");
+				}
+				else
+				{
+					ofile << Formatting::to_utf8(L"  " +
+						date + L"  " +
+						Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanEngine->Data.Files[t].Size), 14, L' ') + L" " +
+						GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + GScanEngine->Data.Files[t].Name + L"\n");
+				}
+			}
+		}
+
+		ofile.close();
+
+		std::wcout << GLanguageHandler->Text[rsTextReportSavedAs] << L" " << options.FileName << L"\n\n";
 	}
 }
 
@@ -56,15 +135,6 @@ void ReportDates::Month(DateReportOptions options)
 			int lastmonth = 99;
 			std::wstring date(L"");
 
-			if (options.Created)
-			{
-				std::ranges::sort(GScanEngine->Data.Files, {}, &FileObject::DateCreated);
-			}
-			else
-			{
-				std::ranges::sort(GScanEngine->Data.Files, {}, &FileObject::DateModified);
-			}
-
 			for (int t = 0; t < GScanEngine->Data.Files.size(); t++)
 			{
 				if (options.Created)
@@ -75,7 +145,7 @@ void ReportDates::Month(DateReportOptions options)
 
 					if (fm != lastmonth)
 					{
-						ofile << Formatting::to_utf8(L"\n" + Convert::YYYYMMDDToMonthYear(GScanEngine->Data.Files[t].DateCreated) + L"\n\n");
+						ofile << Formatting::to_utf8(L"\n " + Convert::YYYYMMDDToMonthYear(GScanEngine->Data.Files[t].DateCreated) + L"\n\n");
 
 						lastmonth = fm;
 					}
@@ -90,7 +160,7 @@ void ReportDates::Month(DateReportOptions options)
 
 					if (fm != lastmonth)
 					{
-						ofile << Formatting::to_utf8(L"\n" + Convert::YYYYMMDDToMonthYear(GScanEngine->Data.Files[t].DateModified) + L"\n\n");
+						ofile << Formatting::to_utf8(L"\n " + Convert::YYYYMMDDToMonthYear(GScanEngine->Data.Files[t].DateModified) + L"\n\n");
 
 						lastmonth = fm;
 					}
@@ -138,15 +208,6 @@ void ReportDates::Year(DateReportOptions options)
 			int lastyear = 0;
 			std::wstring date(L"");
 
-			if (options.Created)
-			{
-				std::ranges::sort(GScanEngine->Data.Files, {}, &FileObject::DateCreated);
-			}
-			else
-			{
-				std::ranges::sort(GScanEngine->Data.Files, {}, &FileObject::DateModified);
-			}
-
 			for (int t = 0; t < GScanEngine->Data.Files.size(); t++)
 			{
 				if (options.Created)
@@ -157,7 +218,7 @@ void ReportDates::Year(DateReportOptions options)
 
 					if (fy != lastyear)
 					{
-						ofile << Formatting::to_utf8(L"\n" + Convert::YYYYMMDDToMonthYear(GScanEngine->Data.Files[t].DateCreated) + L"\n\n");
+						ofile << Formatting::to_utf8(L"\n " + Convert::YYYYMMDDToMonthYear(GScanEngine->Data.Files[t].DateCreated) + L"\n\n");
 
 						lastyear = fy;
 					}
@@ -172,7 +233,7 @@ void ReportDates::Year(DateReportOptions options)
 
 					if (fy != lastyear)
 					{
-						ofile << Formatting::to_utf8(L"\n" + Convert::YYYYMMDDToMonthYear(GScanEngine->Data.Files[t].DateModified) + L"\n\n");
+						ofile << Formatting::to_utf8(L"\n " + Convert::YYYYMMDDToMonthYear(GScanEngine->Data.Files[t].DateModified) + L"\n\n");
 
 						lastyear = fy;
 					}

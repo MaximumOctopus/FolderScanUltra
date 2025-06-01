@@ -488,6 +488,14 @@ namespace Convert
 		return 1200;
 	}
 
+	std::wstring YYYYMMDDToMonthDayYear(int date)
+	{
+		std::wstring yyyymmdd = std::to_wstring(date);
+
+		int mm = std::stoi(yyyymmdd.substr(4, 2));
+		
+		return GLanguageHandler->Months[mm - 1] + L" " + yyyymmdd.substr(6, 2) + L" " + yyyymmdd.substr(0, 4);
+	}
 
 	std::wstring YYYYMMDDToMonthYear(int date)
 	{
