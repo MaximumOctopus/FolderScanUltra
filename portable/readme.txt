@@ -1,5 +1,5 @@
 ====================================================================================================================================
-    FolderScanUltra 5.15
+    FolderScanUltra 5.16
     (c) Paul Alan Freshney 2019-2025
 
     paul@freshney.org
@@ -48,6 +48,12 @@ All of my software is free and open source; please consider donating to a local 
 ====================================================================================================================================
 
 Release History
+
+5.16 / June 1st 2025
+
+Added additional split-by-date method, day:
+
+  /dated
 
 5.15 / May 31st 2025
 
