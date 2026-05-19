@@ -1,6 +1,6 @@
-# FolderScanUltra 5.15
+# FolderScanUltra 5.17
 
-(c) Paul Alan Freshney 2019-2025
+(c) Paul Alan Freshney 2019-2026
 
 paul@freshney.org
 
@@ -24,6 +24,21 @@ This was originally a Delphi application, released as part of the Xinorbis tools
 In 2022 I decided to rename it and add it to my pool of applications receiving regular updates (two applications now, so maybe a puddle, not a pool). It'll be distanced somewhat from xinorbis and become better for it. Many updates are planned.
 
 # Release History
+
+5.17 / May 19th 2026
+
+Fixed a couple of minor bugs.
+
+Improved auto-optimisation for a few report types (eg /extensions) as they will no longer gather
+user name information from each file (which is very slow).
+
+Added extra extensions to the default file extension lists.
+
+5.16 / June 1st 2025
+
+Added additional split-by-date method, day:
+
+  /dated
 
 5.15 / May 31st 2025
 
