@@ -1,8 +1,10 @@
 bin
 cfg
 dat
+db
 dll
 drv
+ds_store
 inf
 ini
 lib

@@ -23,6 +23,7 @@ css
 csv
 cwk
 dbk
+diz
 doc
 docm
 docx
@@ -45,9 +46,12 @@ htm
 html
 hwp
 hwpml
+json
 key
 keynote
 laccdb
+lcdk
+lcpk
 lwp
 maf
 maq
@@ -83,8 +87,6 @@ pcl
 pdax
 pdf
 pez
-php
-php3
 pld
 pot
 potm
@@ -102,6 +104,7 @@ pst
 qpw
 quox
 rpt
+rtf
 sdc
 sdd
 sdw
@@ -126,6 +129,7 @@ troff
 txt
 uof
 uoml
+url
 vc
 vdx
 via
