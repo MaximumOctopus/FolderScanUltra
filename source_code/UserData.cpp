@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2025
+// (c) Paul Alan Freshney 2019-2026
 //
 // paul@freshney.org
 // 
@@ -13,9 +13,9 @@
 #include "UserData.h"
 
 
-UserData::UserData(void)
+UserData::UserData(const std::wstring name)
 {
-    Name = L"";
+    Name = name;
     Count = 0;
     Size = 0;
 

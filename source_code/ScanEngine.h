@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2025
+// (c) Paul Alan Freshney 2019-2026
 //
 // paul@freshney.org
 // 
@@ -190,13 +190,13 @@ public:
 
 	bool Execute(bool, ExecutionParameters);
 
-	void ListRoot();
+	void ListRoot() const;
 
 	void AddUserNotSpecified();
 
 	[[nodiscard]] SizeOfFolder GetSizeOfFolder(const std::wstring, const std::wstring);
 
-	[[nodiscard]] std::wstring GetDrive();
+	[[nodiscard]] std::wstring GetDrive() const;
 
 	[[nodiscard]] int GetFolderIndex(const std::wstring);
 
