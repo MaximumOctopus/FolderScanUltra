@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2025
+// (c) Paul Alan Freshney 2019-2026
 //
 // paul@freshney.org
 // 
@@ -13,11 +13,16 @@
 #pragma comment(lib, "crypt32.lib") 
 
 
+#include <chrono>
+#include <cstdio>
+#include <cstdlib>
 #include <io.h>
 #include <fcntl.h>
 #include <iostream>
+#include <memory>
 #include <string>
 
+#include "Command.h"
 #include "CommandHandler.h"
 #include "Compare.h"
 #include "Errors.h"
@@ -28,9 +33,9 @@
 #include "ReportHandler.h"
 #include "ScanEngine.h"
 #include "Settings.h"
+#include "StatusConstants.h"
 #include "SystemGlobal.h"
 #include "Test.h"
-#include "Utility.h"
 #include "WindowsUtility.h"
 #include "VersionCheck.h"
 
@@ -48,7 +53,7 @@ extern Settings* GSettings;
 
 
 #ifdef __XINORBIS
-void Database()
+void static Database()
 {	
 	if (GSettings->Database.UpdateFolderHistory || GSettings->Database.UpdateScanHistory)
 	{
@@ -101,7 +106,17 @@ void Database()
 #endif
 
 
-void ProcessSettingsFromCommandLine()
+void static ShowProcessingTime(std::chrono::system_clock::time_point StartTime)
+{
+	std::chrono::system_clock::time_point EndTime = std::chrono::system_clock::now();
+
+	std::chrono::duration<double> elapsed_seconds = EndTime - StartTime;
+
+	std::wcout << L"  Scan took " << elapsed_seconds.count() << L" seconds.\n\n";
+}
+
+
+void static ProcessSettingsFromCommandLine()
 {
 	for (int t = 0; t < GParameterHandler->Count(); t++)
 	{
@@ -120,7 +135,7 @@ void ProcessSettingsFromCommandLine()
 }
 
 
-void ProcessConsoleReport()
+void static ProcessConsoleReport()
 {
 	if (GParameterHandler->FindParameter(kFolderTopTwenty))
 	{
@@ -133,8 +148,10 @@ void ProcessConsoleReport()
 }
 
 
-void RunScan()
+void static RunScan()
 {
+	std::chrono::system_clock::time_point StartTime = std::chrono::system_clock::now();
+
 	if (GScanEngine->Execute(GSettings->Optimisations.ProcessData,
 		                     GParameterHandler->GetExecutionParameters()))
 	{
@@ -148,12 +165,16 @@ void RunScan()
 		#ifdef __XINORBIS
 		Database();
 		#endif			
+
+		ShowProcessingTime(StartTime);
 	}
 }
 
 
-void RunCompare()
+void static RunCompare()
 {
+	std::chrono::system_clock::time_point StartTime = std::chrono::system_clock::now();
+
 	if (GScanEngine->Execute(GSettings->Optimisations.ProcessData,
 		                     GParameterHandler->GetExecutionParameters()))
 	{
@@ -165,12 +186,14 @@ void RunCompare()
 			c->Execute();
 
 			delete c;
+
+			ShowProcessingTime(StartTime);
 		}
 	}
 }
 
 
-void RunConsole(bool has_error)
+void static RunConsole(bool has_error)
 {
 	if (GParameterHandler->FindParameter(kConsole) && !has_error)
 	{

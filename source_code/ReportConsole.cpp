@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2025
+// (c) Paul Alan Freshney 2019-2026
 //
 // paul@freshney.org
 // 
@@ -11,14 +11,21 @@
 // =====================================================================
 
 #include <algorithm>
+#include <cmath>
+#include <format>
 #include <iostream>
+#include <string>
+#include <Windows.h>
 
 #include "Constants.h"
 #include "Convert.h"
+#include "FileExtension.h"
 #include "FileExtensionHandler.h"
+#include "FileObject.h"
 #include "Formatting.h"
 #include "LanguageHandler.h"
 #include "ReportConsole.h"
+#include "ReportConstants.h"
 #include "ReportUtility.h"
 #include "ScanEngine.h"
 using namespace std;
@@ -299,7 +306,6 @@ namespace ReportConsole
 			{
 				if (t < __FileCategoriesCustom1 || (t >= __FileCategoriesCustom1 && GScanEngine->Data.ExtensionSpread[t].Count != 0))
 				{
-
 					std::wcout << GLanguageHandler->TextReport[2] << L"\n";
 
 					std::wstring str = Formatting::AddTrailing(L' ' + GLanguageHandler->TypeDescriptions[t], TRDescriptionWidth, L' ') +

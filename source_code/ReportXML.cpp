@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2025
+// (c) Paul Alan Freshney 2019-2026
 //
 // paul@freshney.org
 // 
@@ -10,19 +10,26 @@
 // 
 // =====================================================================
 
+#include <cmath>
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <Windows.h>
 
 #include "Constants.h"
 #include "Convert.h"
+#include "FileDateObject.h"
+#include "FileExtension.h"
 #include "FileExtensionHandler.h"
+#include "FileObject.h"
 #include "Formatting.h"
 #include "LanguageHandler.h"
 #include "ReportConstants.h"
 #include "ReportXML.h"
 #include "ReportXMLReportOptions.h"
+#include "RootFolder.h"
 #include "ScanEngine.h"
+#include "UserData.h"
 #include "Utility.h"
 #include "WindowsUtility.h"
 
@@ -226,17 +233,17 @@ namespace ReportXML
 
 		if (GScanEngine->Data.FileCount != 0)
 		{
-			for (int t = 0; t < GScanEngine->Data.RootFolders.size(); t++)
+			for (RootFolder folder : GScanEngine->Data.RootFolders)
 			{
-				ofile << Formatting::to_utf8(L"  <folder name=\"" + GScanEngine->Data.RootFolders[t].Name + L"\" hidden=\"" + Utility::BoolToString((GScanEngine->Data.RootFolders[t].Attributes & FILE_ATTRIBUTE_HIDDEN) == FILE_ATTRIBUTE_HIDDEN) + L"\">\n");
+				ofile << Formatting::to_utf8(L"  <folder name=\"" + folder.Name + L"\" hidden=\"" + Utility::BoolToString((folder.Attributes & FILE_ATTRIBUTE_HIDDEN) == FILE_ATTRIBUTE_HIDDEN) + L"\">\n");
 
-				ofile << Formatting::to_utf8(Formatting::InsertElement(L"numberoffiles", std::to_wstring(GScanEngine->Data.RootFolders[t].Count), 2) + L"\n");
-				ofile << Formatting::to_utf8(Formatting::InsertElement(L"numberoffilesaspercent", std::to_wstring(std::round(((double)GScanEngine->Data.RootFolders[t].Count / (double)GScanEngine->Data.FileCount) * 100)), 2) + L"\n");
-				ofile << Formatting::to_utf8(Formatting::InsertElement(L"sizeoffiles", Convert::ConvertToUsefulUnit(GScanEngine->Data.RootFolders[t].Size), 2) + L"\n");
+				ofile << Formatting::to_utf8(Formatting::InsertElement(L"numberoffiles", std::to_wstring(folder.Count), 2) + L"\n");
+				ofile << Formatting::to_utf8(Formatting::InsertElement(L"numberoffilesaspercent", std::to_wstring(std::round(((double)folder.Count / (double)GScanEngine->Data.FileCount) * 100)), 2) + L"\n");
+				ofile << Formatting::to_utf8(Formatting::InsertElement(L"sizeoffiles", Convert::ConvertToUsefulUnit(folder.Size), 2) + L"\n");
 
 				if (GScanEngine->Data.TotalSize != 0)
 				{
-					ofile << Formatting::to_utf8(Formatting::InsertElement(L"sizeoffilesaspercent", std::to_wstring(std::round(((double)GScanEngine->Data.RootFolders[t].Size / (double)GScanEngine->Data.TotalSize) * 100)), 2) + L"\n");
+					ofile << Formatting::to_utf8(Formatting::InsertElement(L"sizeoffilesaspercent", std::to_wstring(std::round(((double)folder.Size / (double)GScanEngine->Data.TotalSize) * 100)), 2) + L"\n");
 				}
 				else
 				{
@@ -307,10 +314,8 @@ namespace ReportXML
 
 				if (t <= 9)
 				{
-					for (int z = 0; z < GFileExtensionHandler->Extensions.size(); z++)
+					for (FileExtension tfx : GFileExtensionHandler->Extensions)
 					{
-						FileExtension tfx = GFileExtensionHandler->Extensions[z];
-
 						if (tfx.Category == t)
 						{
 							//only include within report if number of files in extension > 0
@@ -337,18 +342,18 @@ namespace ReportXML
 				}
 				else
 				{
-					for (int z = 0; z < GFileExtensionHandler->Extensions.size(); z++)
+					for (FileExtension tfx : GFileExtensionHandler->Extensions)
 					{
-						if (GFileExtensionHandler->Extensions[z].Category == __Category_Other)
+						if (tfx.Category == __Category_Other)
 						{
-							ofile << Formatting::to_utf8(L"  <extension name=\"" + GFileExtensionHandler->Extensions[z].Name + L"\">\n");
-							ofile << Formatting::to_utf8(Formatting::InsertElement(L"numberoffiles", std::to_wstring(GFileExtensionHandler->Extensions[z].Quantity), 2) + L"\n");
-							ofile << Formatting::to_utf8(Formatting::InsertElement(L"numberoffilesaspercent", std::to_wstring(std::round(((double)GFileExtensionHandler->Extensions[z].Quantity / (double)GScanEngine->Data.FileCount) * 100)), 2) + L"\n");
-							ofile << Formatting::to_utf8(Formatting::InsertElement(L"sizeoffiles", Convert::ConvertToUsefulUnit(GFileExtensionHandler->Extensions[z].Size), 2) + L"\n");
+							ofile << Formatting::to_utf8(L"  <extension name=\"" + tfx.Name + L"\">\n");
+							ofile << Formatting::to_utf8(Formatting::InsertElement(L"numberoffiles", std::to_wstring(tfx.Quantity), 2) + L"\n");
+							ofile << Formatting::to_utf8(Formatting::InsertElement(L"numberoffilesaspercent", std::to_wstring(std::round(((double)tfx.Quantity / (double)GScanEngine->Data.FileCount) * 100)), 2) + L"\n");
+							ofile << Formatting::to_utf8(Formatting::InsertElement(L"sizeoffiles", Convert::ConvertToUsefulUnit(tfx.Size), 2) + L"\n");
 
 							if (GScanEngine->Data.TotalSize != 0)
 							{
-								ofile << Formatting::to_utf8(Formatting::InsertElement(L"sizeoffilesaspercent", std::to_wstring(std::round(((double)GFileExtensionHandler->Extensions[z].Size / (double)GScanEngine->Data.TotalSize) * 100)), 2) + L"\n");
+								ofile << Formatting::to_utf8(Formatting::InsertElement(L"sizeoffilesaspercent", std::to_wstring(std::round(((double)tfx.Size / (double)GScanEngine->Data.TotalSize) * 100)), 2) + L"\n");
 							}
 							else
 							{
@@ -372,9 +377,9 @@ namespace ReportXML
 		{
 			ofile << Formatting::to_utf8(L"<nullfiles>\n");
 
-			for (int t = 0; t < GScanEngine->Data.NullFiles.size(); t++)
+			for (std::wstring file : GScanEngine->Data.NullFiles)
 			{
-				ofile << Formatting::to_utf8(L"  <nullfile name=\"" + Formatting::ReplaceEntitiesForXML(GScanEngine->Data.NullFiles[t]) + L"\" />\n");
+				ofile << Formatting::to_utf8(L"  <nullfile name=\"" + Formatting::ReplaceEntitiesForXML(file) + L"\" />\n");
 			}
 
 			ofile << Formatting::to_utf8(L"</nullfiles>\n");
@@ -388,9 +393,9 @@ namespace ReportXML
 		{
 			ofile << Formatting::to_utf8(L"<nullfolders>\n");
 
-			for (int t = 0; t < GScanEngine->Data.NullFiles.size(); t++)
+			for (std::wstring folder : GScanEngine->Data.NullFolders)
 			{
-				ofile << Formatting::to_utf8(L"  <nullfolder name=\"" + Formatting::ReplaceEntitiesForXML(GScanEngine->Data.NullFolders[t]) + L"\" />\n");
+				ofile << Formatting::to_utf8(L"  <nullfolder name=\"" + Formatting::ReplaceEntitiesForXML(folder) + L"\" />\n");
 			}
 
 			ofile << Formatting::to_utf8(L"</nullfolders>\n");
@@ -408,9 +413,9 @@ namespace ReportXML
 		{
 			ofile << Formatting::to_utf8(L"<tempfiles>\n");
 
-			for (int t = 0; t < GScanEngine->Data.TemporaryFiles.size(); t++)
+			for (std::wstring file : GScanEngine->Data.TemporaryFiles)
 			{
-				ofile << Formatting::to_utf8(L"  <tempfile name=\"" + Formatting::ReplaceEntitiesForXML(GScanEngine->Data.TemporaryFiles[t]) + L"\" />\n");
+				ofile << Formatting::to_utf8(L"  <tempfile name=\"" + Formatting::ReplaceEntitiesForXML(file) + L"\" />\n");
 			}
 
 			ofile << Formatting::to_utf8(L"</tempfiles>\n");
@@ -428,17 +433,16 @@ namespace ReportXML
 
 		if (GScanEngine->Data.FileCount != 0)
 		{
-			for (int t = 0; t < GScanEngine->Data.FileDates.size(); t++)
+			for (FileDateObject fdo : GScanEngine->Data.FileDates)
 			{
-
-				if (GScanEngine->Data.FileDates[t].Count != 0)
+				if (fdo.Count != 0)
 				{
-					ofile << Formatting::to_utf8(L"  <filedate year=\"" + std::to_wstring(GScanEngine->Data.FileDates[t].Year) + L"\">\n");
-					ofile << Formatting::to_utf8(L"    <filecount percentage=\"" + Convert::DoubleToPercent((double)GScanEngine->Data.FileDates[t].Count / (double)GScanEngine->Data.FileCount) + L"\">" + std::to_wstring(GScanEngine->Data.FileDates[t].Count) + L"</filecount>\n");
+					ofile << Formatting::to_utf8(L"  <filedate year=\"" + std::to_wstring(fdo.Year) + L"\">\n");
+					ofile << Formatting::to_utf8(L"    <filecount percentage=\"" + Convert::DoubleToPercent((double)fdo.Count / (double)GScanEngine->Data.FileCount) + L"\">" + std::to_wstring(fdo.Count) + L"</filecount>\n");
 
 					if (GScanEngine->Data.TotalSize != 0)
 					{
-						ofile << Formatting::to_utf8(L"    <filesize percentage=\"" + Convert::DoubleToPercent((double)GScanEngine->Data.FileDates[t].Size / (double)GScanEngine->Data.TotalSize) + L"\">" + std::to_wstring(GScanEngine->Data.FileDates[t].Size) + L"</filesize>\n");
+						ofile << Formatting::to_utf8(L"    <filesize percentage=\"" + Convert::DoubleToPercent((double)fdo.Size / (double)GScanEngine->Data.TotalSize) + L"\">" + std::to_wstring(fdo.Size) + L"</filesize>\n");
 					}
 					else
 					{
@@ -460,16 +464,16 @@ namespace ReportXML
 
 		if (GScanEngine->Data.FileCount != 0)
 		{
-			for (int t = 0; t < GScanEngine->Data.Users.size(); t++)
+			for (UserData user : GScanEngine->Data.Users)
 			{
-				ofile << Formatting::to_utf8(L"<user name=\"" + GScanEngine->Data.Users[t].Name + L"\">\n");
-				ofile << Formatting::to_utf8(Formatting::InsertElement(L"numberfiles", std::to_wstring(GScanEngine->Data.Users[t].Count), 2) + L"\n");
-				ofile << Formatting::to_utf8(Formatting::InsertElement(L"numberfilesaspercent", Convert::DoubleToPercent((double)GScanEngine->Data.Users[t].Count / (double)GScanEngine->Data.FileCount), 2) + L"\n");
-				ofile << Formatting::to_utf8(Formatting::InsertElement(L"sizeoffiles", Convert::ConvertToUsefulUnit(GScanEngine->Data.Users[t].Size), 2) + L"\n");
+				ofile << Formatting::to_utf8(L"<user name=\"" + user.Name + L"\">\n");
+				ofile << Formatting::to_utf8(Formatting::InsertElement(L"numberfiles", std::to_wstring(user.Count), 2) + L"\n");
+				ofile << Formatting::to_utf8(Formatting::InsertElement(L"numberfilesaspercent", Convert::DoubleToPercent((double)user.Count / (double)GScanEngine->Data.FileCount), 2) + L"\n");
+				ofile << Formatting::to_utf8(Formatting::InsertElement(L"sizeoffiles", Convert::ConvertToUsefulUnit(user.Size), 2) + L"\n");
 
 				if (GScanEngine->Data.TotalSize != 0)
 				{
-					ofile << Formatting::to_utf8(Formatting::InsertElement(L"sizeoffilesaspercent", Convert::DoubleToPercent((double)GScanEngine->Data.Users[t].Size / (double)GScanEngine->Data.TotalSize), 2) + L"\n");
+					ofile << Formatting::to_utf8(Formatting::InsertElement(L"sizeoffilesaspercent", Convert::DoubleToPercent((double)user.Size / (double)GScanEngine->Data.TotalSize), 2) + L"\n");
 				}
 				else
 				{
@@ -488,10 +492,10 @@ namespace ReportXML
 	{
 		ofile << Formatting::to_utf8(L"<top101largest>\n");
 
-		for (int t = 0; t <GScanEngine->Data.Top100Large.size(); t++)
+		for (FileObject file : GScanEngine->Data.Top100Large)
 		{
-			ofile << Formatting::to_utf8(L"  <top101large sizebytes=\"" + std::to_wstring(GScanEngine->Data.Top100Large[t].Size) + L"\">" +
-				Formatting::ReplaceEntitiesForXML(GScanEngine->Data.Folders[GScanEngine->Data.Top100Large[t].FilePathIndex] + GScanEngine->Data.Top100Large[t].Name) +
+			ofile << Formatting::to_utf8(L"  <top101large sizebytes=\"" + std::to_wstring(file.Size) + L"\">" +
+				Formatting::ReplaceEntitiesForXML(GScanEngine->Data.Folders[file.FilePathIndex] + file.Name) +
 				L"</top101large>\n");
 		}
 
@@ -503,10 +507,10 @@ namespace ReportXML
 	{
 		ofile << Formatting::to_utf8(L"<top101smallest>\n");
 
-		for (int t = 0; t < GScanEngine->Data.Top100Large.size(); t++)
+		for (FileObject file : GScanEngine->Data.Top100Small)
 		{
-			ofile << Formatting::to_utf8(L"  <top5101small sizebytes=\"" + std::to_wstring(GScanEngine->Data.Top100Small[t].Size) + L"\">" +
-				Formatting::ReplaceEntitiesForXML(GScanEngine->Data.Folders[GScanEngine->Data.Top100Small[t].FilePathIndex] + GScanEngine->Data.Top100Small[t].Name) +
+			ofile << Formatting::to_utf8(L"  <top5101small sizebytes=\"" + std::to_wstring(file.Size) + L"\">" +
+				Formatting::ReplaceEntitiesForXML(GScanEngine->Data.Folders[file.FilePathIndex] + file.Name) +
 				L"</top101small>\n");
 		}
 
@@ -518,13 +522,13 @@ namespace ReportXML
 	{
 		ofile << Formatting::to_utf8(L"<top101newest>\n");
 
-		for (int t = 0; t < GScanEngine->Data.Top100Newest.size(); t++)
+		for (FileObject file : GScanEngine->Data.Top100Newest)
 		{
-			ofile << Formatting::to_utf8(L"  <top101new date=\"" + Convert::IntDateToString(GScanEngine->Data.Top100Newest[t].DateCreated) + L"\" " +
-				L"sizebytes=\"" + std::to_wstring(GScanEngine->Data.Top100Newest[t].Size) + L"\" " +
-				L"size=\"" + Convert::ConvertToUsefulUnit(GScanEngine->Data.Top100Newest[t].Size) + L"\" " +
-				L"owner=\"" + GScanEngine->Data.Users[GScanEngine->Data.Top100Newest[t].Owner].Name + L"\">" +
-				Formatting::ReplaceEntitiesForXML(GScanEngine->Data.Folders[GScanEngine->Data.Top100Newest[t].FilePathIndex] + GScanEngine->Data.Top100Newest[t].Name) +
+			ofile << Formatting::to_utf8(L"  <top101new date=\"" + Convert::IntDateToString(file.DateCreated) + L"\" " +
+				L"sizebytes=\"" + std::to_wstring(file.Size) + L"\" " +
+				L"size=\"" + Convert::ConvertToUsefulUnit(file.Size) + L"\" " +
+				L"owner=\"" + GScanEngine->Data.Users[file.Owner].Name + L"\">" +
+				Formatting::ReplaceEntitiesForXML(GScanEngine->Data.Folders[file.FilePathIndex] + file.Name) +
 				L"</top101new>\n");
 		}
 		
@@ -536,13 +540,13 @@ namespace ReportXML
 	{	
 		ofile << Formatting::to_utf8(L"<top101oldest>\n");
 
-		for (int t = 0; t < GScanEngine->Data.Top100Oldest.size(); t++)
+		for (FileObject file : GScanEngine->Data.Top100Oldest)
 		{
-			ofile << Formatting::to_utf8(L"  <top101old date=\"" + Convert::IntDateToString(GScanEngine->Data.Top100Oldest[t].DateCreated) + L"\" " +
-				L"sizebytes=\"" + std::to_wstring(GScanEngine->Data.Top100Oldest[t].Size) + L"\" " +
-				L"size=\"" + Convert::ConvertToUsefulUnit(GScanEngine->Data.Top100Oldest[t].Size) + L"\" " +
-				L"owner=\"" + GScanEngine->Data.Users[GScanEngine->Data.Top100Oldest[t].Owner].Name + L"\">" +
-				Formatting::ReplaceEntitiesForXML(GScanEngine->Data.Folders[GScanEngine->Data.Top100Oldest[t].FilePathIndex] + GScanEngine->Data.Top100Oldest[t].Name) +
+			ofile << Formatting::to_utf8(L"  <top101old date=\"" + Convert::IntDateToString(file.DateCreated) + L"\" " +
+				L"sizebytes=\"" + std::to_wstring(file.Size) + L"\" " +
+				L"size=\"" + Convert::ConvertToUsefulUnit(file.Size) + L"\" " +
+				L"owner=\"" + GScanEngine->Data.Users[file.Owner].Name + L"\">" +
+				Formatting::ReplaceEntitiesForXML(GScanEngine->Data.Folders[file.FilePathIndex] + file.Name) +
 				L"</top101old>\n");
 		}
 
@@ -566,10 +570,10 @@ namespace ReportXML
 			ofile << Formatting::to_utf8(L"<!--  -->\n");
 			ofile << Formatting::to_utf8(L"<folderscanultrafilelist>\n");
 
-			for (int t = 0; t < GScanEngine->Data.Files.size(); t++)
+			for (FileObject file : GScanEngine->Data.Files)
 			{
-				ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].ToXml(GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex],
-					GScanEngine->Data.Users[GScanEngine->Data.Files[t].Owner].Name));
+				ofile << Formatting::to_utf8(file.ToXml(GScanEngine->Data.Folders[file.FilePathIndex],
+					GScanEngine->Data.Users[file.Owner].Name));
 			}
 
 			ofile << Formatting::to_utf8(L"</folderscanultrafilelist>\n");

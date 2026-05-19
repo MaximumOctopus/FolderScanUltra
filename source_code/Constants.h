@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2025
+// (c) Paul Alan Freshney 2019-2026
 //
 // paul@freshney.org
 // 
@@ -17,12 +17,12 @@
 
 
 #ifdef _DEBUG
-static const std::wstring __FSUVersion = L"5.16 (debug)";
+static const std::wstring __FSUVersion = L"5.17 (debug)";
 #else
-static const std::wstring __FSUVersion = L"5.16";
+static const std::wstring __FSUVersion = L"5.17";
 #endif
 
-static const std::wstring __FSUDate    = L"June 1st 2025";
+static const std::wstring __FSUDate    = L"May 19th 2026";
 
 // ===========================================================================
 // == Categories =============================================================

@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2025
+// (c) Paul Alan Freshney 2019-2026
 //
 // paul@freshney.org
 // 
@@ -11,13 +11,14 @@
 // =====================================================================
 
 #include <algorithm>
+#include <cctype>
 #include <fstream>
 #include <iostream>
+#include <string>
 
-#include "Constants.h"
+#include "ExecutionParameters.h"
 #include "Formatting.h"
 #include "help.h"
-#include "ParameterDetails.h"
 #include "ParameterHandler.h"
 #include "SearchConstants.h"
 #include "Utility.h"
@@ -61,18 +62,18 @@ ParameterHandler::ParameterHandler(int argc, wchar_t *argv[], std::wstring DataP
 
 		// == post processing ========================================================
 
-		for (int t = 0; t < Parameters.size(); t++)
+		for (ParameterData parameter : Parameters)
 		{
 			#ifdef _DEBUG
 			std::wcout << L"Parameter: " << Parameters[t].OriginalInput << "\n";
 			#endif		
 
-			switch (Parameters[t].Parameter)
+			switch (parameter.Parameter)
 			{
 			case ParameterOption::SaveConfig:
-				if (!Parameters[t].Value.empty())
+				if (!parameter.Value.empty())
 				{
-					Save(Formatting::AffixFileExtension(Parameters[t].Value, L".fsuproject"));
+					Save(Formatting::AffixFileExtension(parameter.Value, L".fsuproject"));
 				}
 				else
 				{
@@ -103,7 +104,7 @@ ParameterHandler::ParameterHandler(int argc, wchar_t *argv[], std::wstring DataP
 
 			case ParameterOption::ExcludeFolder:
 			{
-				std::wstring folder(Parameters[t].Value);
+				std::wstring folder(parameter.Value);
 
 				std::transform(folder.begin(), folder.end(), folder.begin(), ::tolower);
 
@@ -113,7 +114,7 @@ ParameterHandler::ParameterHandler(int argc, wchar_t *argv[], std::wstring DataP
 
 			case ParameterOption::FilterCategory:
 			{
-				std::wstring cat(Parameters[t].Value);
+				std::wstring cat(parameter.Value);
 
 				std::transform(cat.begin(), cat.end(), cat.begin(), ::toupper);
 
@@ -131,14 +132,14 @@ ParameterHandler::ParameterHandler(int argc, wchar_t *argv[], std::wstring DataP
 			}
 			
 			case ParameterOption::Compare:
-				if (WindowsUtility::DirectoryExists(Parameters[t].Value))
+				if (WindowsUtility::DirectoryExists(parameter.Value))
 				{
 					Compare.Enabled = true;
-					Compare.Path = Parameters[t].Value;
+					Compare.Path = parameter.Value;
 				}
 				else
 				{
-					std::wcout << L"Compare folder does not exist \"" << Parameters[t].Value << L"\".\n";
+					std::wcout << L"Compare folder does not exist \"" << parameter.Value << L"\".\n";
 				}
 				break;
 			}
@@ -299,13 +300,13 @@ int ParameterHandler::Count()
 }
 
 
-bool ParameterHandler::FindParameter(std::wstring parameter)
+bool ParameterHandler::FindParameter(std::wstring findparameter)
 {
-	std::transform(parameter.begin(), parameter.end(), parameter.begin(), ::tolower);
+	std::transform(findparameter.begin(), findparameter.end(), findparameter.begin(), ::tolower);
 
-	for (int t = 0; t < Parameters.size(); t++)
+	for (ParameterData parameter : Parameters)
 	{
-		if (Parameters[t].Command == parameter)
+		if (parameter.Command == findparameter)
 		{
 			return true;
 		}
@@ -468,9 +469,9 @@ void ParameterHandler::ParametersForReport(ParameterData& option)
 
 void ParameterHandler::ProcessForOptimisations()
 {
-	for (int p = 0; p < Parameters.size(); p++)
+	for (ParameterData parameter : Parameters)
 	{
-		switch (Parameters[p].Parameter)
+		switch (parameter.Parameter)
 		{
 		case ParameterOption::CSVReport:
 		case ParameterOption::TextReport:
@@ -482,16 +483,14 @@ void ParameterHandler::ProcessForOptimisations()
 		case ParameterOption::DeepTextReport:
 		case ParameterOption::DeepHTMLReport:
 		case ParameterOption::UpdateScanHistory:
-		case ParameterOption::ReportAttributes:
-		case ParameterOption::ReportCategories:
-		case ParameterOption::ReportExtensions:
-		case ParameterOption::ReportFileDates:
-		case ParameterOption::ReportMagnitude:
 		case ParameterOption::ReportUsers:
 			Optimisations.UseFastAnalysis = false;
 			Optimisations.GetUserDetails = true;
-
-			return;
+			break;
+		case ParameterOption::ReportAttributes:
+		case ParameterOption::ReportMagnitude:
+			Optimisations.UseFastAnalysis = false;
+			break;
 		}
 	}
 }
@@ -690,9 +689,9 @@ bool ParameterHandler::HasScanFolder()
 // checks for reports, or sorted console output parameters
 bool ParameterHandler::NeedToProcessTopSizeLists()
 {
-	for (int t = 1; t < Parameters.size(); t++)
+	for (ParameterData parameter : Parameters)
 	{
-		if (Parameters[t].IsSizeReport)
+		if (parameter.IsSizeReport)
 		{
 			return true;
 		}
@@ -704,9 +703,9 @@ bool ParameterHandler::NeedToProcessTopSizeLists()
 
 bool ParameterHandler::NeedToProcessTopDateLists()
 {
-	for (int t = 1; t < Parameters.size(); t++)
+	for (ParameterData parameter : Parameters)
 	{
-		if (Parameters[t].IsDateReport)
+		if (parameter.IsDateReport)
 		{
 			return true;
 		}
@@ -718,9 +717,9 @@ bool ParameterHandler::NeedToProcessTopDateLists()
 
 bool ParameterHandler::NeedToProcessFileDates()
 {
-	for (int t = 1; t < Parameters.size(); t++)
+	for (ParameterData parameter : Parameters)
 	{
-		if (Parameters[t].IsFileDateReport)
+		if (parameter.IsFileDateReport)
 		{
 			return true;
 		}
@@ -742,11 +741,11 @@ bool ParameterHandler::Save(std::wstring file_name)
 		file << Formatting::to_utf8(L"# created: " + Utility::DateTime(0) + L"\n");
 		file << Formatting::to_utf8(L"#\n");
 	
-		for (int t = 0; t < Parameters.size(); t++)
+		for (ParameterData parameter : Parameters)
 		{
-			if (Parameters[t].Parameter != ParameterOption::LoadConfig && Parameters[t].Parameter != ParameterOption::SaveConfig)
+			if (parameter.Parameter != ParameterOption::LoadConfig && parameter.Parameter != ParameterOption::SaveConfig)
 			{
-				file << Formatting::to_utf8(Parameters[t].OriginalInput + L"\n");
+				file << Formatting::to_utf8(parameter.OriginalInput + L"\n");
 			}
 		}
 

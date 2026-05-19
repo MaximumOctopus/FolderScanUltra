@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2025
+// (c) Paul Alan Freshney 2019-2026
 //
 // paul@freshney.org
 // 
@@ -45,7 +45,7 @@ namespace ReportSummary
 			std::wcout << L"                           (filtered by category \"" << __FileExtensionFileName[GScanEngine->FilterCategory] << L"\")\n";
 		}
 
-		std::wcout << Formatting::AddLeading(L" ", GLanguageHandler->SummaryReport[0].size(), L' ') << Utility::GetDate(DateTimeFormat::Display) << L", " << Utility::GetTime(DateTimeFormat::Display) << "\n";
+		std::wcout << Formatting::AddLeading(L" ", GLanguageHandler->SummaryReport[0].size(), L' ') << L" " << Utility::GetDate(DateTimeFormat::Display) << L", " << Utility::GetTime(DateTimeFormat::Display) << "\n";
 		std::wcout << "\n";
 		std::wcout << GLanguageHandler->SummaryReport[1] << L" " << GScanEngine->Data.FileCount << "\n";
 		std::wcout << GLanguageHandler->SummaryReport[2] << L" " << GScanEngine->Data.FolderCount << "\n";

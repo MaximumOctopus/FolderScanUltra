@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2025
+// (c) Paul Alan Freshney 2019-2026
 //
 // paul@freshney.org
 // 
@@ -93,16 +93,16 @@ ExtensionSearch FileExtensionHandler::GetExtensionCategoryID(const std::wstring 
 {
 	ExtensionSearch extension_search;
 
-	for (int z = 0; z < Extensions.size(); z++)
-	{
-		if (Extensions[z].Name == extension)
-		{
-			extension_search.Found       = true;
-			extension_search.Category    = Extensions[z].Category;
-			extension_search.Extension   = z;
+	auto pos = std::find_if(Extensions.begin(), Extensions.end(), 
+						    [extension](const FileExtension& fx) { return fx.Name == extension; });
 
-			return extension_search;
-		}
+	if (pos != Extensions.end())
+	{
+		extension_search.Found = true;
+		extension_search.Category = pos->Category;
+		extension_search.Extension = std::distance(std::begin(Extensions), pos);
+
+		return extension_search;
 	}
 
 	return extension_search;
@@ -111,12 +111,12 @@ ExtensionSearch FileExtensionHandler::GetExtensionCategoryID(const std::wstring 
 
 int FileExtensionHandler::GetExtensionCategory(const std::wstring extension)
 {
-	for (int z = 0; z < Extensions.size(); z++)
+	auto pos = std::find_if(Extensions.begin(), Extensions.end(),
+							[extension](const FileExtension& fx) { return fx.Name == extension; });
+
+	if (pos != Extensions.end())
 	{
-		if (Extensions[z].Name == extension)
-		{
-			return Extensions[z].Category;
-		}
+		return pos->Category;
 	}
 
 	return __FileCategoriesOther;

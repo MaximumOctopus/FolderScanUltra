@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2025
+// (c) Paul Alan Freshney 2019-2026
 //
 // paul@freshney.org
 // 
@@ -13,10 +13,12 @@
 // command handler for the in-built console
 
 #include <algorithm>
+#include <cctype>
 #include <iostream>
+#include <string>
 
+#include "Command.h"
 #include "CommandHandler.h"
-#include "Convert.h"
 #include "Help.h"
 #include "ReportConsole.h"
 #include "ReportHandler.h"
@@ -60,7 +62,6 @@ Command CommandHandler::ProcessTokens()
 		for (int i = 1; i < CommandTokens.size(); i++)
 		{
 			c.fullcommandstr += CommandTokens[i] + L" ";
-
 		}
 	}
 

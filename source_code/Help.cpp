@@ -2,7 +2,7 @@
 //
 // FolderScanUltra 5
 //
-// (c) Paul Alan Freshney 2019-2025
+// (c) Paul Alan Freshney 2019-2026
 //
 // paul@freshney.org
 // 
@@ -90,10 +90,10 @@ namespace Help
     {
 		Header();
 
-		std::wcout << L"  AppPath : " + GSystemGlobal->AppPath << "\n";
-		std::wcout << L"  DataPath: " + GSystemGlobal->DataPath << "\n";
+		std::wcout << L"  AppPath  : " + GSystemGlobal->AppPath << "\n";
+		std::wcout << L"  DataPath : " + GSystemGlobal->DataPath << "\n";
         std::wcout << "\n";
-        std::wcout << L"  Usage: options, and file name are optional:\n";
+        std::wcout << L"  Usage: options, and file name, are optional:\n";
         std::wcout << "\n";
         std::wcout << L"      fsu folder_to_scan\n";
 		std::wcout << L"      fsu folder_to_scan /html\n";
@@ -211,7 +211,7 @@ namespace Help
 		std::wcout << "\n";
 		std::wcout << L"  AppPath               : " << GSystemGlobal->AppPath << "\n";
 		std::wcout << L"  DataPath              : " << GSystemGlobal->DataPath << "\n";
-		std::wcout << "\nP";
+		std::wcout << "\n";
 		std::wcout << L"  Size of Scan (primary): " << Convert::ConvertToUsefulUnit(GScanEngine->Data.TotalSize) << "\n";
 		std::wcout << L"  Size of Scan (target) : " << Convert::ConvertToUsefulUnit(GScanEngineCompare->Data.TotalSize) << "\n";
 		std::wcout << "\n";
@@ -254,7 +254,7 @@ namespace Help
 		std::wcout << L"    |  |  |  |  |  |  |  |  |  |  |  |  |  |  |\n";
 		std::wcout << L"    |  |  |  |  |  |  |  |  |  |  |  |  |  |  |\n";
 		std::wcout << "\n";
-		std::wcout << L"please donate to your local cat charity or shelter.\n\n";
+		std::wcout << L"Please donate to your local cat charity or shelter.\n\n";
 		std::wcout << L"A big thanks to my cats: Rutherford, Freeman, and Maxwell\n";
 		std::wcout << "\n";
 		std::wcout << L"        www.maximumoctopus.com/developmentcats.htm\n";
