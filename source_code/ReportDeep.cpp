@@ -42,14 +42,14 @@ bool ReportDeep::ProcessFolder(int folder_index)
 
     for (int f = 0; f < GScanEngine->Data.Files.size(); f++)
     {
-        if (GScanEngine->Data.Files[f].FilePathIndex == folder_index)
+        if (GScanEngine->Data.Files[f]->FilePathIndex == folder_index)
         {
-            if (GScanEngine->Data.Files[f].Category == __FileCategoryDirectory)
+            if (GScanEngine->Data.Files[f]->Category == __FileCategoryDirectory)
             {
 			    //std::wcout << L"      " << GScanDetails->Folders[GScanDetails->Files[f].FilePathIndex] + GScanDetails->Files[f].FileName << "\n";
 
-                SizeOfFolder sof = GScanEngine->GetSizeOfFolder(GScanEngine->Data.Folders[GScanEngine->Data.Files[f].FilePathIndex] + GScanEngine->Data.Files[f].Name,
-                                                                GScanEngine->Data.Files[f].Name);
+                SizeOfFolder sof = GScanEngine->GetSizeOfFolder(GScanEngine->Data.Folders[GScanEngine->Data.Files[f]->FilePathIndex] + GScanEngine->Data.Files[f]->Name,
+                                                                GScanEngine->Data.Files[f]->Name);
 
                 FolderData.push_back(sof);
 

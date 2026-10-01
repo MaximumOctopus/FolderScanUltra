@@ -69,24 +69,24 @@ namespace ReportXinorbis
 				{
 					ofile << Formatting::to_utf8(L"{file\n");
 
-					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].Name + L"\n");
-					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].FilePathIndex + L"\n");
-					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].Size + L"\n");
-					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].SizeOnDisk + L"\n");
-					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].DateCreated + L"\n");
-					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].DateAccessed + L"\n");
-					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].DateModified + L"\n");
-					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].TimeCreated + L"\n");
-					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].TimeAccessed + L"\n");
-					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].TimeModified + L"\n");
-					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].Category + L"\n");
-					ofile << Formatting::to_utf8((GScanEngine->Data.Files[t].Attributes & FILE_ATTRIBUTE_READONLY) + L"\n");
-					ofile << Formatting::to_utf8((GScanEngine->Data.Files[t].Attributes & FILE_ATTRIBUTE_HIDDEN) + L"\n");
-					ofile << Formatting::to_utf8((GScanEngine->Data.Files[t].Attributes & FILE_ATTRIBUTE_SYSTEM) + L"\n");
-					ofile << Formatting::to_utf8((GScanEngine->Data.Files[t].Attributes & FILE_ATTRIBUTE_ARCHIVE) + L"\n");
-					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].Temp + L"\n");
-					ofile << Formatting::to_utf8(GScanEngine->Data.Users[GScanEngine->Data.Files[t].Owner].Name + L"\n");
-					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].Attributes + L"\n");
+					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t]->Name + L"\n");
+					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t]->FilePathIndex + L"\n");
+					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t]->Size + L"\n");
+					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t]->SizeOnDisk + L"\n");
+					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t]->DateCreated + L"\n");
+					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t]->DateAccessed + L"\n");
+					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t]->DateModified + L"\n");
+					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t]->TimeCreated + L"\n");
+					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t]->TimeAccessed + L"\n");
+					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t]->TimeModified + L"\n");
+					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t]->Category + L"\n");
+					ofile << Formatting::to_utf8((GScanEngine->Data.Files[t]->Attributes & FILE_ATTRIBUTE_READONLY) + L"\n");
+					ofile << Formatting::to_utf8((GScanEngine->Data.Files[t]->Attributes & FILE_ATTRIBUTE_HIDDEN) + L"\n");
+					ofile << Formatting::to_utf8((GScanEngine->Data.Files[t]->Attributes & FILE_ATTRIBUTE_SYSTEM) + L"\n");
+					ofile << Formatting::to_utf8((GScanEngine->Data.Files[t]->Attributes & FILE_ATTRIBUTE_ARCHIVE) + L"\n");
+					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t]->Temp + L"\n");
+					ofile << Formatting::to_utf8(GScanEngine->Data.Users[GScanEngine->Data.Files[t]->Owner]->Name + L"\n");
+					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t]->Attributes + L"\n");
 
 					ofile << Formatting::to_utf8(L"}\n");
 				}

@@ -51,12 +51,12 @@ ScanEngine* GScanEngine;
 ScanEngine* GScanEngineCompare;
 
 
-bool static sortBySize(const FileObject &lhs, const FileObject &rhs) { return lhs.Size < rhs.Size; }
-bool static sortByDate(const FileObject &lhs, const FileObject &rhs) { return lhs.DateCreated < rhs.DateCreated; }
+bool static sortBySize(const FileObject *lhs, const FileObject *rhs) { return lhs->Size < rhs->Size; }
+bool static sortByDate(const FileObject *lhs, const FileObject *rhs) { return lhs->DateCreated < rhs->DateCreated; }
 
-bool static sortRootBySize(const RootFolder& lhs, const RootFolder& rhs) { return lhs.Size > rhs.Size; }
+bool static sortRootBySize(const RootFolder *lhs, const RootFolder *rhs) { return lhs->Size > rhs->Size; }
 
-bool static sortRootByLength(const RootFolder& lhs, const RootFolder& rhs) { return lhs.Name.length() > rhs.Name.length(); }
+bool static sortRootByLength(const RootFolder *lhs, const RootFolder *rhs) { return lhs->Name.length() > rhs->Name.length(); }
 
 
 ScanEngine::ScanEngine(const std::wstring input)
@@ -155,13 +155,13 @@ void ScanEngine::ClearData()
 		Data.ExtensionSpread[t].Size = 0;
 	}
 
-	RootFolder rfd;
+	RootFolder* rfd = new RootFolder();
 
-	rfd.Name        = L"\\ (root)";
-	rfd.Attributes  = 0;
-	rfd.Size        = 0;
-	rfd.Count       = 0;
-	rfd.FilesInRoot = true;
+	rfd->Name        = L"\\ (root)";
+	rfd->Attributes  = 0;
+	rfd->Size        = 0;
+	rfd->Count       = 0;
+	rfd->FilesInRoot = true;
 
 	Data.RootFolders.push_back(rfd);
 }
@@ -187,10 +187,10 @@ std::wstring ScanEngine::GetExcludeItem(int index)
 
 void ScanEngine::AddUserNotSpecified()
 {
-	UserData ud(GLanguageHandler->Text[rsNOT_SPECIFIED]);
+	UserData *ud = new UserData(GLanguageHandler->Text[rsNOT_SPECIFIED]);
 	
-	ud.Count = Data.FileCount;
-	ud.Size  = Data.TotalSize;
+	ud->Count = Data.FileCount;
+	ud->Size  = Data.TotalSize;
 
 	Data.Users.push_back(ud);
 }
@@ -200,7 +200,7 @@ int ScanEngine::FindUser(std::wstring name)
 {
 	for (int t = 0; t < Data.Users.size(); t++)
 	{
-		if (Data.Users[t].Name == name)
+		if (Data.Users[t]->Name == name)
 		{
 			return t;
 		}
@@ -359,40 +359,40 @@ bool ScanEngine::Analyse()
 	Debug::Output(L"ScanEngine::Analyse()");
     #endif
 
-	for (FileObject file : Data.Files)
+	for (FileObject *file : Data.Files)
 	{
 		// =======================================================================================================
 		// Folder
 		// =======================================================================================================
 
-		if (file.Attributes & FILE_ATTRIBUTE_DIRECTORY)
+		if (file->Attributes & FILE_ATTRIBUTE_DIRECTORY)
 		{
-			if (file.FilePathIndex == Data.RootFolderIndex) // (ScanPath == Folders[Files[t].FilePathIndex])
+			if (file->FilePathIndex == Data.RootFolderIndex) // (ScanPath == Folders[Files[t].FilePathIndex])
 			{
-				FileObject tfx;
+				FileObject* tfx = new FileObject();
 
-				tfx.Name           = file.Name;
-				tfx.FilePathIndex  = file.FilePathIndex;
-				tfx.Size	       = file.Size;
-				tfx.SizeOnDisk     = file.SizeOnDisk;
-				tfx.DateCreated    = file.DateCreated;
-				tfx.DateAccessed   = file.DateAccessed;
-				tfx.DateModified   = file.DateModified;
-				tfx.Attributes     = file.Attributes;
-				tfx.Owner          = file.Owner;
+				tfx->Name           = file->Name;
+				tfx->FilePathIndex  = file->FilePathIndex;
+				tfx->Size	        = file->Size;
+				tfx->SizeOnDisk     = file->SizeOnDisk;
+				tfx->DateCreated    = file->DateCreated;
+				tfx->DateAccessed   = file->DateAccessed;
+				tfx->DateModified   = file->DateModified;
+				tfx->Attributes     = file->Attributes;
+				tfx->Owner          = file->Owner;
 				
 				Data.RootFiles.push_back(tfx);
 
-				std::wstring s = Data.Folders[file.FilePathIndex] + file.Name;
+				std::wstring s = Data.Folders[file->FilePathIndex] + file->Name;
 
 				size_t idx = s.rfind(L"\\");
 
 				if (idx != std::wstring::npos)
 				{
-					RootFolder rfd;
+					RootFolder* rfd = new RootFolder();
 			
-					rfd.Name       = s.substr(idx + 1);
-					rfd.Attributes = file.Attributes;
+					rfd->Name       = s.substr(idx + 1);
+					rfd->Attributes = file->Attributes;
 					
 					Data.RootFolders.push_back(rfd);
 				}
@@ -407,162 +407,162 @@ bool ScanEngine::Analyse()
 			// File Attributes 
 			// ============================================================================
 
-			if (file.Attributes & FILE_ATTRIBUTE_HIDDEN)
+			if (file->Attributes & FILE_ATTRIBUTE_HIDDEN)
 			{
 				Data.FileAttributes[__FileType_Hidden].Count++;
-				Data.FileAttributes[__FileType_Hidden].Size += file.Size;
+				Data.FileAttributes[__FileType_Hidden].Size += file->Size;
 			}
 
-			if (file.Attributes & FILE_ATTRIBUTE_SYSTEM)
+			if (file->Attributes & FILE_ATTRIBUTE_SYSTEM)
 			{
 				Data.FileAttributes[__FileType_System].Count++;
-				Data.FileAttributes[__FileType_System].Size += file.Size;
+				Data.FileAttributes[__FileType_System].Size += file->Size;
 			}
 
-			if (file.Attributes & FILE_ATTRIBUTE_ARCHIVE)
+			if (file->Attributes & FILE_ATTRIBUTE_ARCHIVE)
 			{
 				Data.FileAttributes[__FileType_Archive].Count++;
-				Data.FileAttributes[__FileType_Archive].Size += file.Size;
+				Data.FileAttributes[__FileType_Archive].Size += file->Size;
 			}
 
-			if (file.Attributes & FILE_ATTRIBUTE_READONLY)
+			if (file->Attributes & FILE_ATTRIBUTE_READONLY)
 			{
 				Data.FileAttributes[__FileType_ReadOnly].Count++;
-				Data.FileAttributes[__FileType_ReadOnly].Size += file.Size;
+				Data.FileAttributes[__FileType_ReadOnly].Size += file->Size;
 			}
 
-			if (file.Attributes & FILE_ATTRIBUTE_COMPRESSED)
+			if (file->Attributes & FILE_ATTRIBUTE_COMPRESSED)
 			{
 				Data.FileAttributes[__FileType_Compressed].Count++;
-				Data.FileAttributes[__FileType_Compressed].Size += file.Size;
+				Data.FileAttributes[__FileType_Compressed].Size += file->Size;
 			}
 
-			if (file.Attributes & FILE_ATTRIBUTE_ENCRYPTED)
+			if (file->Attributes & FILE_ATTRIBUTE_ENCRYPTED)
 			{
 				Data.FileAttributes[__FileType_Encrypted].Count++;
-				Data.FileAttributes[__FileType_Encrypted].Size += file.Size;
+				Data.FileAttributes[__FileType_Encrypted].Size += file->Size;
 			}
 
-			if (file.Attributes & FILE_ATTRIBUTE_RECALL_ON_OPEN)
+			if (file->Attributes & FILE_ATTRIBUTE_RECALL_ON_OPEN)
 			{
 				Data.FileAttributes[__FileType_RecallOnOpen].Count++;
-				Data.FileAttributes[__FileType_RecallOnOpen].Size += file.Size;
+				Data.FileAttributes[__FileType_RecallOnOpen].Size += file->Size;
 			}
 
-			if (file.Attributes & FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS)
+			if (file->Attributes & FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS)
 			{
 				Data.FileAttributes[__FileType_RecallOnDataAccess].Count++;
-				Data.FileAttributes[__FileType_RecallOnDataAccess].Size += file.Size;
+				Data.FileAttributes[__FileType_RecallOnDataAccess].Size += file->Size;
 			}
 
-			if (file.Attributes & FILE_ATTRIBUTE_OFFLINE)
+			if (file->Attributes & FILE_ATTRIBUTE_OFFLINE)
 			{
 				Data.FileAttributes[__FileType_Offline].Count++;
-				Data.FileAttributes[__FileType_Offline].Size += file.Size;
+				Data.FileAttributes[__FileType_Offline].Size += file->Size;
 			}
 
-			if (file.DateCreated == TodayAsInteger)
+			if (file->DateCreated == TodayAsInteger)
 			{
 				Data.FileAttributes[__FileType_CreatedToday].Count++;
-				Data.FileAttributes[__FileType_CreatedToday].Size += file.Size;
+				Data.FileAttributes[__FileType_CreatedToday].Size += file->Size;
 			}
 
-			if (file.DateAccessed == TodayAsInteger)
+			if (file->DateAccessed == TodayAsInteger)
 			{
 				Data.FileAttributes[__FileType_AccessedToday].Count++;
-				Data.FileAttributes[__FileType_AccessedToday].Size += file.Size;
+				Data.FileAttributes[__FileType_AccessedToday].Size += file->Size;
 			}
 
-			if (file.DateModified == TodayAsInteger)
+			if (file->DateModified == TodayAsInteger)
 			{
 				Data.FileAttributes[__FileType_ModifiedToday].Count++;
-				Data.FileAttributes[__FileType_ModifiedToday].Size += file.Size;
+				Data.FileAttributes[__FileType_ModifiedToday].Size += file->Size;
 			}
 
 			if ((AllowVirtualFiles) ||
-				(!(file.Attributes & FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS) &&
-				(!(file.Attributes & FILE_ATTRIBUTE_RECALL_ON_OPEN) &&
-				(!(file.Attributes & FILE_ATTRIBUTE_OFFLINE)))))
+				(!(file->Attributes & FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS) &&
+				(!(file->Attributes & FILE_ATTRIBUTE_RECALL_ON_OPEN) &&
+				(!(file->Attributes & FILE_ATTRIBUTE_OFFLINE)))))
 			{
 
 				Data.FileCount++;
-				Data.TotalSize += file.Size;
+				Data.TotalSize += file->Size;
 
 				// ============================================================================
 				// Magnitude
 				// ============================================================================
 
-				if (file.Size <= 1024)
+				if (file->Size <= 1024)
 				{
 					Data.Magnitude[0].Count++;
-					Data.Magnitude[0].Size += file.Size;
+					Data.Magnitude[0].Size += file->Size;
 
-					if (file.Size == 0)
+					if (file->Size == 0)
 					{
 						Data.FileAttributes[__FileType_Null].Count++;
 
-						Data.NullFiles.push_back(Data.Folders[file.FilePathIndex] + file.Name);
+						Data.NullFiles.push_back(Data.Folders[file->FilePathIndex] + file->Name);
 					}
 				}
-				else if (file.Size <= 1048576)
+				else if (file->Size <= 1048576)
 				{
 					Data.Magnitude[1].Count++;
-					Data.Magnitude[1].Size += file.Size;
+					Data.Magnitude[1].Size += file->Size;
 				}
-				else if (file.Size <= 10485760)
+				else if (file->Size <= 10485760)
 				{
 					Data.Magnitude[2].Count++;
-					Data.Magnitude[2].Size += file.Size;
+					Data.Magnitude[2].Size += file->Size;
 				}
-				else if (file.Size <= 52428800)
+				else if (file->Size <= 52428800)
 				{
 					Data.Magnitude[3].Count++;
-					Data.Magnitude[3].Size += file.Size;
+					Data.Magnitude[3].Size += file->Size;
 				}
-				else if (file.Size <= 104857600)
+				else if (file->Size <= 104857600)
 				{
 					Data.Magnitude[4].Count++;
-					Data.Magnitude[4].Size += file.Size;
+					Data.Magnitude[4].Size += file->Size;
 				}
-				else if (file.Size <= 157286400)
+				else if (file->Size <= 157286400)
 				{
 					Data.Magnitude[5].Count++;
-					Data.Magnitude[5].Size += file.Size;
+					Data.Magnitude[5].Size += file->Size;
 				}
-				else if (file.Size <= 209715200)
+				else if (file->Size <= 209715200)
 				{
 					Data.Magnitude[6].Count++;
-					Data.Magnitude[6].Size += file.Size;
+					Data.Magnitude[6].Size += file->Size;
 				}
-				else if (file.Size <= 262144000)
+				else if (file->Size <= 262144000)
 				{
 					Data.Magnitude[7].Count++;
-					Data.Magnitude[7].Size += file.Size;
+					Data.Magnitude[7].Size += file->Size;
 				}
-				else if (file.Size <= 524288000)
+				else if (file->Size <= 524288000)
 				{
 					Data.Magnitude[8].Count++;
-					Data.Magnitude[8].Size += file.Size;
+					Data.Magnitude[8].Size += file->Size;
 				}
-				else if (file.Size <= 1048576000)
+				else if (file->Size <= 1048576000)
 				{
 					Data.Magnitude[9].Count++;
-					Data.Magnitude[9].Size += file.Size;
+					Data.Magnitude[9].Size += file->Size;
 				}
-				else if (file.Size <= 2097152000)
+				else if (file->Size <= 2097152000)
 				{
 					Data.Magnitude[10].Count++;
-					Data.Magnitude[10].Size += file.Size;
+					Data.Magnitude[10].Size += file->Size;
 				}
-				else if (file.Size <= 5242880000)
+				else if (file->Size <= 5242880000)
 				{
 					Data.Magnitude[11].Count++;
-					Data.Magnitude[11].Size += file.Size;
+					Data.Magnitude[11].Size += file->Size;
 				}
 				else
 				{
 					Data.Magnitude[12].Count++;
-					Data.Magnitude[12].Size += file.Size;
+					Data.Magnitude[12].Size += file->Size;
 				}
 
 				// =======================================================================
@@ -571,14 +571,14 @@ bool ScanEngine::Analyse()
 
 				if (GSettings->Optimisations.GetUserDetails)
 				{
-					if (file.Category != __FileCategoryDirectory)
+					if (file->Category != __FileCategoryDirectory)
 					{
-						Data.Users[file.Owner].CategoryDataQty[file.Category]++;
-						Data.Users[file.Owner].CategoryDataSize[file.Category] += file.Size;
+						Data.Users[file->Owner]->CategoryDataQty[file->Category]++;
+						Data.Users[file->Owner]->CategoryDataSize[file->Category] += file->Size;
 					}
 
-					Data.Users[file.Owner].Count++;
-					Data.Users[file.Owner].Size += file.Size;
+					Data.Users[file->Owner]->Count++;
+					Data.Users[file->Owner]->Size += file->Size;
 				}
 			}
 
@@ -586,23 +586,23 @@ bool ScanEngine::Analyse()
 			// process folder path ---------------------------------------------------
 			// =======================================================================
 
-			if (Path.String == Data.Folders[file.FilePathIndex])
+			if (Path.String == Data.Folders[file->FilePathIndex])
 			{
-				FileObject tfx;
+				FileObject* tfx = new FileObject();
 			
-				tfx.Name           = file.Name;
-				tfx.FilePathIndex  = file.FilePathIndex;
-				tfx.Size		   = file.Size;
-				tfx.SizeOnDisk     = file.SizeOnDisk;
-				tfx.DateCreated    = file.DateCreated;
-				tfx.DateAccessed   = file.DateAccessed;
-				tfx.DateModified   = file.DateModified;
-				tfx.Attributes     = file.Attributes;
-				tfx.Owner          = file.Owner;
+				tfx->Name           = file->Name;
+				tfx->FilePathIndex  = file->FilePathIndex;
+				tfx->Size		    = file->Size;
+				tfx->SizeOnDisk     = file->SizeOnDisk;
+				tfx->DateCreated    = file->DateCreated;
+				tfx->DateAccessed   = file->DateAccessed;
+				tfx->DateModified   = file->DateModified;
+				tfx->Attributes     = file->Attributes;
+				tfx->Owner          = file->Owner;
 
-				std::wstring ext = Utility::GetFileExtension(file.Name);
+				std::wstring ext = Utility::GetFileExtension(file->Name);
 
-				tfx.Category     = GFileExtensionHandler->GetExtensionCategory(ext);
+				tfx->Category     = GFileExtensionHandler->GetExtensionCategory(ext);
 
 				Data.RootFiles.push_back(tfx);
 			}
@@ -614,7 +614,7 @@ bool ScanEngine::Analyse()
 			{
 				int z = 0;
 
-				std::wstring s = Data.Folders[file.FilePathIndex] + file.Name;
+				std::wstring s = Data.Folders[file->FilePathIndex] + file->Name;
 				
 				std::transform(s.begin(), s.end(), s.begin(), ::toupper);
 
@@ -678,13 +678,13 @@ bool ScanEngine::Analyse()
 
 				if (found)
 				{
-					Data.TemporaryFiles.push_back(Data.Folders[file.FilePathIndex] + file.Name);
+					Data.TemporaryFiles.push_back(Data.Folders[file->FilePathIndex] + file->Name);
 
 					GFileExtensionHandler->Extensions[__Category_Temp].Quantity++;
-					GFileExtensionHandler->Extensions[__Category_Temp].Size += file.Size;
+					GFileExtensionHandler->Extensions[__Category_Temp].Size += file->Size;
 				}
 
-				file.Temp = found;
+				file->Temp = found;
 			}
 		}
 	}
@@ -711,39 +711,39 @@ bool ScanEngine::AnalyseFast()
 	Debug::Output(L"ScanEngine::AnalyseFast()");
 	#endif
 
-	for (FileObject file : Data.Files)
+	for (FileObject *file : Data.Files)
 	{
 		// =======================================================================================================
 		// Folder
 		// =======================================================================================================
-		if (file.Attributes & FILE_ATTRIBUTE_DIRECTORY)
+		if (file->Attributes & FILE_ATTRIBUTE_DIRECTORY)
 		{
-			if (file.FilePathIndex == Data.RootFolderIndex)
+			if (file->FilePathIndex == Data.RootFolderIndex)
 			{
-				FileObject tfx;
+				FileObject* tfx = new FileObject();
 
-				tfx.Name          = file.Name;
-				tfx.FilePathIndex = file.FilePathIndex;
-				tfx.Size          = file.Size;
-				tfx.SizeOnDisk    = file.SizeOnDisk;
-				tfx.DateCreated   = file.DateCreated;
-				tfx.DateAccessed  = file.DateAccessed;
-				tfx.DateModified  = file.DateModified;
-				tfx.Attributes    = file.Attributes;
-				tfx.Owner         = file.Owner;
+				tfx->Name          = file->Name;
+				tfx->FilePathIndex = file->FilePathIndex;
+				tfx->Size          = file->Size;
+				tfx->SizeOnDisk    = file->SizeOnDisk;
+				tfx->DateCreated   = file->DateCreated;
+				tfx->DateAccessed  = file->DateAccessed;
+				tfx->DateModified  = file->DateModified;
+				tfx->Attributes    = file->Attributes;
+				tfx->Owner         = file->Owner;
 
 				Data.RootFiles.push_back(tfx);
 
-				std::wstring s = Data.Folders[file.FilePathIndex] + file.Name;
+				std::wstring s = Data.Folders[file->FilePathIndex] + file->Name;
 
 				size_t idx = s.rfind(L"\\");
 
 				if (idx != std::wstring::npos)
 				{
-					RootFolder rfd;
+					RootFolder* rfd = new RootFolder();
 
-					rfd.Name = s.substr(idx + 1);
-					rfd.Attributes = file.Attributes;
+					rfd->Name = s.substr(idx + 1);
+					rfd->Attributes = file->Attributes;
 
 					Data.RootFolders.push_back(rfd);
 				}
@@ -755,35 +755,35 @@ bool ScanEngine::AnalyseFast()
 		else
 		{
 			if ((AllowVirtualFiles) ||
-				(!(file.Attributes & FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS) &&
-					(!(file.Attributes & FILE_ATTRIBUTE_RECALL_ON_OPEN) &&
-						(!(file.Attributes & FILE_ATTRIBUTE_OFFLINE)))))
+				(!(file->Attributes & FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS) &&
+				(!(file->Attributes & FILE_ATTRIBUTE_RECALL_ON_OPEN) &&
+				(!(file->Attributes & FILE_ATTRIBUTE_OFFLINE)))))
 			{
 
 				Data.FileCount++;
-				Data.TotalSize += file.Size;
+				Data.TotalSize += file->Size;
 			}
 
 			// =======================================================================
 			// process folder path ---------------------------------------------------
 			// =======================================================================
 
-			if (Path.String == Data.Folders[file.FilePathIndex])
+			if (Path.String == Data.Folders[file->FilePathIndex])
 			{
-				FileObject tfx;
+				FileObject* tfx = new FileObject();
 
-				tfx.Name          = file.Name;
-				tfx.FilePathIndex = file.FilePathIndex;
-				tfx.Size          = file.Size;
-				tfx.SizeOnDisk    = file.SizeOnDisk;
-				tfx.DateCreated   = file.DateCreated;
-				tfx.DateAccessed  = file.DateAccessed;
-				tfx.DateModified  = file.DateModified;
-				tfx.Attributes    = file.Attributes;
-				tfx.Owner         = file.Owner;
-				tfx.Category      = file.Category;
+				tfx->Name          = file->Name;
+				tfx->FilePathIndex = file->FilePathIndex;
+				tfx->Size          = file->Size;
+				tfx->SizeOnDisk    = file->SizeOnDisk;
+				tfx->DateCreated   = file->DateCreated;
+				tfx->DateAccessed  = file->DateAccessed;
+				tfx->DateModified  = file->DateModified;
+				tfx->Attributes    = file->Attributes;
+				tfx->Owner         = file->Owner;
+				tfx->Category      = file->Category;
 
-				std::wstring ext = Utility::GetFileExtension(file.Name);
+				std::wstring ext = Utility::GetFileExtension(file->Name);
 
 				Data.RootFiles.push_back(tfx);
 			}
@@ -807,7 +807,7 @@ int ScanEngine::RootIndex()
 {
 	for (int r = 0; r < Data.RootFolders.size(); r++)
 	{
-		if (Data.RootFolders[r].FilesInRoot)
+		if (Data.RootFolders[r]->FilesInRoot)
 		{
 			return r;
 		}
@@ -827,30 +827,30 @@ void ScanEngine::AnalyseRootFolders()
 	{
 		int SpecialRoot = RootIndex();
 
-		Data.RootFolders[SpecialRoot].Name.clear(); // enables correct sorting and folder size attribution
+		Data.RootFolders[SpecialRoot]->Name.clear(); // enables correct sorting and folder size attribution
 
 		std::sort(Data.RootFolders.begin(), Data.RootFolders.end(), sortRootByLength);
 
-		for (FileObject file : Data.Files)
+		for (FileObject *file : Data.Files)
 		{
 			// =======================================================================
 			// =================== Ony process files =================================
 			// =======================================================================
 
-			if (!(file.Attributes & FILE_ATTRIBUTE_DIRECTORY))
+			if (!(file->Attributes & FILE_ATTRIBUTE_DIRECTORY))
 			{
 				// == IS THIS FILE IN A ROOT FOLDER? ===================================
 				int selected = -1;
 				int index    = 0;
 
-				std::wstring filepath = Data.Folders[file.FilePathIndex] + file.Name;
+				std::wstring filepath = Data.Folders[file->FilePathIndex] + file->Name;
 
 				while ((selected == -1) && (index < Data.RootFolders.size()))
 				{
-					if (filepath.find(Path.String + Data.RootFolders[index].Name) != std::wstring::npos)
+					if (filepath.find(Path.String + Data.RootFolders[index]->Name) != std::wstring::npos)
 					{
-						Data.RootFolders[index].Count++;
-						Data.RootFolders[index].Size += file.Size;
+						Data.RootFolders[index]->Count++;
+						Data.RootFolders[index]->Size += file->Size;
 
 						selected = index;
 					}
@@ -861,8 +861,8 @@ void ScanEngine::AnalyseRootFolders()
 				//must be in root directory
 				if (selected == -1)
 				{
-					Data.RootFolders[SpecialRoot].Count++;
-					Data.RootFolders[SpecialRoot].Size += file.Size;
+					Data.RootFolders[SpecialRoot]->Count++;
+					Data.RootFolders[SpecialRoot]->Size += file->Size;
 				}
 			}
 		}
@@ -870,7 +870,7 @@ void ScanEngine::AnalyseRootFolders()
 		// sorting will have moved the root folder in the list, so let's find it again!
 		SpecialRoot = RootIndex();
 
-		Data.RootFolders[SpecialRoot].Name = L"\\ (root)";	// back to normal
+		Data.RootFolders[SpecialRoot]->Name = L"\\ (root)";	// back to normal
 	}
 }
 
@@ -900,17 +900,17 @@ void ScanEngine::ScanFolder(const std::wstring &folder)
 	{
 		do
 		{
-			FileObject file_object;
+			FileObject* file_object = new FileObject();
 
-			file_object.Name          = std::wstring(file.cFileName);
-			file_object.FilePathIndex = CurrentFolderIndex;
-			file_object.DateCreated   = Convert::FileTimeToDateInt(&file.ftCreationTime);
-			file_object.DateAccessed  = Convert::FileTimeToDateInt(&file.ftLastAccessTime);
-			file_object.DateModified  = Convert::FileTimeToDateInt(&file.ftLastWriteTime);
-			file_object.TimeCreated   = Convert::FileTimeToTimeInt(&file.ftCreationTime);
-			file_object.TimeAccessed  = Convert::FileTimeToTimeInt(&file.ftLastAccessTime);
-			file_object.TimeModified  = Convert::FileTimeToTimeInt(&file.ftLastWriteTime);
-			file_object.Attributes    = file.dwFileAttributes;
+			file_object->Name          = std::wstring(file.cFileName);
+			file_object->FilePathIndex = CurrentFolderIndex;
+			file_object->DateCreated   = Convert::FileTimeToDateInt(&file.ftCreationTime);
+			file_object->DateAccessed  = Convert::FileTimeToDateInt(&file.ftLastAccessTime);
+			file_object->DateModified  = Convert::FileTimeToDateInt(&file.ftLastWriteTime);
+			file_object->TimeCreated   = Convert::FileTimeToTimeInt(&file.ftCreationTime);
+			file_object->TimeAccessed  = Convert::FileTimeToTimeInt(&file.ftLastAccessTime);
+			file_object->TimeModified  = Convert::FileTimeToTimeInt(&file.ftLastWriteTime);
+			file_object->Attributes    = file.dwFileAttributes;
 
 			// =======================================================================================================
 			// Folder
@@ -921,7 +921,7 @@ void ScanEngine::ScanFolder(const std::wstring &folder)
 				if ((!lstrcmpW(file.cFileName, L".")) || (!lstrcmpW(file.cFileName, L"..")))
 					continue;
 
-				file_object.Category = __FileCategoryDirectory;
+				file_object->Category = __FileCategoryDirectory;
 
 				Data.Files.push_back(file_object);
 
@@ -937,49 +937,49 @@ void ScanEngine::ScanFolder(const std::wstring &folder)
 				// File Size
 				// ============================================================================
 
-				file_object.Size = file.nFileSizeHigh;
-				file_object.Size <<= sizeof(file.nFileSizeHigh) * 8;
-				file_object.Size |= file.nFileSizeLow;
+				file_object->Size = file.nFileSizeHigh;
+				file_object->Size <<= sizeof(file.nFileSizeHigh) * 8;
+				file_object->Size |= file.nFileSizeLow;
 
 				// ============================================================================
 				// File Extension / Category
 				// ============================================================================
 
-				std::wstring ext = Utility::GetFileExtension(file_object.Name);
+				std::wstring ext = Utility::GetFileExtension(file_object->Name);
 
 				ExtensionSearch exi = GFileExtensionHandler->GetExtensionCategoryID(ext);
 
 				if (exi.Category == __FileCategoriesOther)  // "other" extension
 				{
-					file_object.Category = __FileCategoriesOther;
+					file_object->Category = __FileCategoriesOther;
 
 					if (FilterCategory != -1 && FilterCategory != __FileCategoriesOther)
 						continue;
 
 					Data.ExtensionSpread[__FileCategoriesOther].Count++;
-					Data.ExtensionSpread[__FileCategoriesOther].Size += file_object.Size;
+					Data.ExtensionSpread[__FileCategoriesOther].Size += file_object->Size;
 
 					FileExtension tfx;
 
 					tfx.Name = ext;
 					tfx.Category = __Category_Other;
 					tfx.Quantity = 1;
-					tfx.Size = file_object.Size;
+					tfx.Size = file_object->Size;
 
 					GFileExtensionHandler->Extensions.push_back(tfx);
 				}
 				else
 				{
-					file_object.Category = exi.Category;
+					file_object->Category = exi.Category;
 
-					if (FilterCategory != -1 && FilterCategory != file_object.Category)
+					if (FilterCategory != -1 && FilterCategory != file_object->Category)
 						continue;
 
 					Data.ExtensionSpread[exi.Category].Count++;
-					Data.ExtensionSpread[exi.Category].Size += file_object.Size;
+					Data.ExtensionSpread[exi.Category].Size += file_object->Size;
 
 					GFileExtensionHandler->Extensions[exi.Extension].Quantity++;
-					GFileExtensionHandler->Extensions[exi.Extension].Size += file_object.Size;
+					GFileExtensionHandler->Extensions[exi.Extension].Size += file_object->Size;
 				}
 
 				// ============================================================================
@@ -988,7 +988,7 @@ void ScanEngine::ScanFolder(const std::wstring &folder)
 
 				if (GSettings->Optimisations.GetUserDetails)
 				{
-					std::wstring owner = WindowsUtility::GetFileOwner(CurrentFolder + file_object.Name);
+					std::wstring owner = WindowsUtility::GetFileOwner(CurrentFolder + file_object->Name);
 
 					if (owner.empty())
 					{
@@ -999,23 +999,23 @@ void ScanEngine::ScanFolder(const std::wstring &folder)
 
 					if (z == -1)
 					{
-						UserData newUser(owner);
+						UserData *newUser = new UserData(owner);
 
 						Data.Users.push_back(newUser);
 
 						z = Data.Users.size() - 1;
 					}
 					
-					file_object.Owner = z;
+					file_object->Owner = z;
 				}
 				else
 				{
-					file_object.Owner = 0;
+					file_object->Owner = 0;
 				}
 
 				Data.Files.push_back(file_object);
 
-				sizeOfFolder += file_object.Size;
+				sizeOfFolder += file_object->Size;
 			}
 			
 		} while (FindNextFileW(search_handle, &file));
@@ -1074,7 +1074,7 @@ void ScanEngine::ScanFolderExt(const std::wstring& folder)
 	Debug::Output(L"ScanEngine::ScanFolderExt(" + folder + L")");
 	#endif
 
-	std::vector<FileObject> FolderList;
+	std::vector<FileObject*> FolderList;
 
 	std::wstring tmp = folder + L"*";
 
@@ -1093,17 +1093,17 @@ void ScanEngine::ScanFolderExt(const std::wstring& folder)
 	{
 		do
 		{
-			FileObject file_object;
+			FileObject* file_object = new FileObject();
 
-			file_object.Name          = std::wstring(file.cFileName);
-			file_object.FilePathIndex = CurrentFolderIndex;
-			file_object.DateCreated   = Convert::FileTimeToDateInt(&file.ftCreationTime);
-			file_object.DateAccessed  = Convert::FileTimeToDateInt(&file.ftLastAccessTime);
-			file_object.DateModified  = Convert::FileTimeToDateInt(&file.ftLastWriteTime);
-			file_object.TimeCreated   = Convert::FileTimeToTimeInt(&file.ftCreationTime);
-			file_object.TimeAccessed  = Convert::FileTimeToTimeInt(&file.ftLastAccessTime);
-			file_object.TimeModified  = Convert::FileTimeToTimeInt(&file.ftLastWriteTime);
-			file_object.Attributes    = file.dwFileAttributes;
+			file_object->Name          = std::wstring(file.cFileName);
+			file_object->FilePathIndex = CurrentFolderIndex;
+			file_object->DateCreated   = Convert::FileTimeToDateInt(&file.ftCreationTime);
+			file_object->DateAccessed  = Convert::FileTimeToDateInt(&file.ftLastAccessTime);
+			file_object->DateModified  = Convert::FileTimeToDateInt(&file.ftLastWriteTime);
+			file_object->TimeCreated   = Convert::FileTimeToTimeInt(&file.ftCreationTime);
+			file_object->TimeAccessed  = Convert::FileTimeToTimeInt(&file.ftLastAccessTime);
+			file_object->TimeModified  = Convert::FileTimeToTimeInt(&file.ftLastWriteTime);
+			file_object->Attributes    = file.dwFileAttributes;
 
 			// =======================================================================================================
 			// Folder
@@ -1138,7 +1138,7 @@ void ScanEngine::ScanFolderExt(const std::wstring& folder)
 
 				if (skip) continue;
 
-				file_object.Category = __FileCategoryDirectory;
+				file_object->Category = __FileCategoryDirectory;
 
 				Data.Files.push_back(file_object);
 
@@ -1152,49 +1152,49 @@ void ScanEngine::ScanFolderExt(const std::wstring& folder)
 				// Files
 				// =======================================================================================================
 			{
-				file_object.Size = file.nFileSizeHigh;
-				file_object.Size <<= sizeof(file.nFileSizeHigh) * 8;
-				file_object.Size |= file.nFileSizeLow;
+				file_object->Size = file.nFileSizeHigh;
+				file_object->Size <<= sizeof(file.nFileSizeHigh) * 8;
+				file_object->Size |= file.nFileSizeLow;
 
 				// ============================================================================
 				// File Extension / Category
 				// ============================================================================
 
-				std::wstring ext = Utility::GetFileExtension(file_object.Name);
+				std::wstring ext = Utility::GetFileExtension(file_object->Name);
 
 				ExtensionSearch exi = GFileExtensionHandler->GetExtensionCategoryID(ext);
 
 				if (exi.Category == __FileCategoriesOther)  // uncategorised extension
 				{
-					file_object.Category = __FileCategoriesOther;
+					file_object->Category = __FileCategoriesOther;
 
 					if (FilterCategory != -1 && FilterCategory != __FileCategoriesOther)
 						continue;
 
 					Data.ExtensionSpread[__FileCategoriesOther].Count++;
-					Data.ExtensionSpread[__FileCategoriesOther].Size += file_object.Size;
+					Data.ExtensionSpread[__FileCategoriesOther].Size += file_object->Size;
 
 					FileExtension tfx;
 
 					tfx.Name = ext;
 					tfx.Category = __Category_Other;
 					tfx.Quantity = 1;
-					tfx.Size = file_object.Size;
+					tfx.Size = file_object->Size;
 
 					GFileExtensionHandler->Extensions.push_back(tfx);
 				}
 				else
 				{
-					file_object.Category = exi.Category;
+					file_object->Category = exi.Category;
 
-					if (FilterCategory != -1 && FilterCategory != file_object.Category)
+					if (FilterCategory != -1 && FilterCategory != file_object->Category)
 						continue;
 
 					Data.ExtensionSpread[exi.Category].Count++;
-					Data.ExtensionSpread[exi.Category].Size += file_object.Size;
+					Data.ExtensionSpread[exi.Category].Size += file_object->Size;
 
 					GFileExtensionHandler->Extensions[exi.Extension].Quantity++;
-					GFileExtensionHandler->Extensions[exi.Extension].Size += file_object.Size;
+					GFileExtensionHandler->Extensions[exi.Extension].Size += file_object->Size;
 				}
 
 				// ============================================================================
@@ -1203,7 +1203,7 @@ void ScanEngine::ScanFolderExt(const std::wstring& folder)
 
 				if (GSettings->Optimisations.GetUserDetails)
 				{
-					std::wstring owner = WindowsUtility::GetFileOwner(CurrentFolder + file_object.Name);
+					std::wstring owner = WindowsUtility::GetFileOwner(CurrentFolder + file_object->Name);
 
 					if (owner.empty())
 					{
@@ -1214,23 +1214,23 @@ void ScanEngine::ScanFolderExt(const std::wstring& folder)
 
 					if (z == -1)
 					{
-						UserData newUser(owner);
+						UserData *newUser = new UserData(owner);
 
 						Data.Users.push_back(newUser);
 
 						z = Data.Users.size() - 1;
 					}
 
-					file_object.Owner = z;
+					file_object->Owner = z;
 				}
 				else
 				{
-					file_object.Owner = 0;
+					file_object->Owner = 0;
 				}
 
 				Data.Files.push_back(file_object);
 
-				sizeOfFolder += file_object.Size;
+				sizeOfFolder += file_object->Size;
 			}
 
 		} while (FindNextFileW(search_handle, &file));
@@ -1249,11 +1249,11 @@ void ScanEngine::ScanFolderExt(const std::wstring& folder)
 
 	for (int t = 0; t < FolderList.size(); t++)
 	{
-		tmp = folder + std::wstring(FolderList[t].Name) + L"\\";
+		tmp = folder + std::wstring(FolderList[t]->Name) + L"\\";
 
 		if (!AllowVirtualFiles)
 		{
-			if (!(FolderList[t].Attributes & FILE_ATTRIBUTE_OFFLINE) && !(FolderList[t].Attributes & FILE_ATTRIBUTE_RECALL_ON_OPEN) && !(FolderList[t].Attributes & FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS))
+			if (!(FolderList[t]->Attributes & FILE_ATTRIBUTE_OFFLINE) && !(FolderList[t]->Attributes & FILE_ATTRIBUTE_RECALL_ON_OPEN) && !(FolderList[t]->Attributes & FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS))
 			{
 				ScanFolderExt(tmp);
 			}
@@ -1298,23 +1298,23 @@ void ScanEngine::BuildFileDates()
 
 	for (int y = 1980; y <= currentYear; y++)
 	{
-		FileDateObject fdo(y);
+		FileDateObject *fdo = new FileDateObject(y);
 
 		Data.FileDates.push_back(fdo);
 	}
 
 	if (Data.Files.size() != 0)
 	{
-		for (FileObject file : Data.Files)
+		for (FileObject *file : Data.Files)
 		{
-			if (!(file.Attributes & FILE_ATTRIBUTE_DIRECTORY))
+			if (!(file->Attributes & FILE_ATTRIBUTE_DIRECTORY))
 			{
-				int year = Convert::StrToIntDef(std::to_wstring(file.DateCreated).substr(0, 4), -1);
+				int year = Convert::StrToIntDef(std::to_wstring(file->DateCreated).substr(0, 4), -1);
 
 				if ((year >= 1980) && (year <= currentYear))
 				{
-					Data.FileDates[year - 1980].Count++;
-					Data.FileDates[year - 1980].Size += file.Size;
+					Data.FileDates[year - 1980]->Count++;
+					Data.FileDates[year - 1980]->Size += file->Size;
 				}
 			}
 		}
@@ -1421,14 +1421,14 @@ SizeOfFolder ScanEngine::GetSizeOfFolder(const std::wstring full_folder_name, co
 
 	sof.Folder = folder;
 
-	for (FileObject file : Data.Files)
+	for (FileObject *file : Data.Files)
 	{
-		if (file.Category != __FileCategoryDirectory)
+		if (file->Category != __FileCategoryDirectory)
 		{
-			if (Data.Folders[file.FilePathIndex].rfind(full_folder_name + L'\\', 0) == 0)
+			if (Data.Folders[file->FilePathIndex].rfind(full_folder_name + L'\\', 0) == 0)
 			{
-				sof.Size += file.Size;
-				sof.SizeOnDisk += file.SizeOnDisk;
+				sof.Size += file->Size;
+				sof.SizeOnDisk += file->SizeOnDisk;
 
 				sof.FileCount++;
 			}
@@ -1539,7 +1539,7 @@ void ScanEngine::SaveSearchResults(Command command)
 
 						L"99" + L',' +
 
-						Data.Users[search.Owner].Name + L',' +
+						Data.Users[search.Owner]->Name + L',' +
 
 						Convert::AttributeToIntAsString(search.Attributes, FILE_ATTRIBUTE_READONLY) + L',' +
 						Convert::AttributeToIntAsString(search.Attributes, FILE_ATTRIBUTE_HIDDEN) + L',' +
@@ -1568,7 +1568,7 @@ void ScanEngine::SaveSearchResults(Command command)
 
 						std::to_wstring(search.Category) + L',' +
 
-						Data.Users[search.Owner].Name + L',' +
+						Data.Users[search.Owner]->Name + L',' +
 
 						Convert::AttributeToIntAsString(search.Attributes, FILE_ATTRIBUTE_READONLY) + L',' +
 						Convert::AttributeToIntAsString(search.Attributes, FILE_ATTRIBUTE_HIDDEN) + L',' +
@@ -1607,11 +1607,11 @@ void ScanEngine::Search(Command command)
 
 	std::transform(term.begin(), term.end(), term.begin(), ::tolower);
 
-	for (FileObject file : Data.Files)
+	for (FileObject *file : Data.Files)
 	{
-		if (file.Name.find(term) != std::wstring::npos)
+		if (file->Name.find(term) != std::wstring::npos)
 		{
-			std::wcout << std::format(L"{0}  {1}{2}\n", Formatting::AddLeadingSpace(Convert::ConvertToUsefulUnit(file.Size), 8), Data.Folders[file.FilePathIndex], file.Name);
+			std::wcout << std::format(L"{0}  {1}{2}\n", Formatting::AddLeadingSpace(Convert::ConvertToUsefulUnit(file->Size), 8), Data.Folders[file->FilePathIndex], file->Name);
 
 			count++;
 		}
@@ -1846,7 +1846,7 @@ int ScanEngine::Filter(Command command)
 		// =========================================================================
 		// =========================================================================
 
-		for (FileObject file : Data.Files)
+		for (FileObject *file : Data.Files)
 		{
 			Found = false;
 
@@ -1861,7 +1861,7 @@ int ScanEngine::Filter(Command command)
 
 					for (std::wstring term : QuickTerms)
 					{
-						std::wstring filename(Data.Folders[file.FilePathIndex] + file.Name);
+						std::wstring filename(Data.Folders[file->FilePathIndex] + file->Name);
 
 						std::transform(filename.begin(), filename.end(), filename.begin(), ::toupper);
 
@@ -1885,9 +1885,9 @@ int ScanEngine::Filter(Command command)
 
 					if (z != std::wstring::npos)
 					{
-						if (!(file.Attributes & FILE_ATTRIBUTE_DIRECTORY))
+						if (!(file->Attributes & FILE_ATTRIBUTE_DIRECTORY))
 						{
-							std::wstring filename(file.Name);
+							std::wstring filename(file->Name);
 							std::transform(filename.begin(), filename.end(), filename.begin(), ::toupper);
 
 							if (z == 0)
@@ -1913,7 +1913,7 @@ int ScanEngine::Filter(Command command)
 					}
 					else
 					{
-						std::wstring filename(Data.Folders[file.FilePathIndex] + file.Name);
+						std::wstring filename(Data.Folders[file->FilePathIndex] + file->Name);
 						std::transform(filename.begin(), filename.end(), filename.begin(), ::toupper);
 
 						if (SearchTerms[x].find(filename) != std::wstring::npos)
@@ -2442,7 +2442,7 @@ int ScanEngine::Filter(Command command)
 				{
 					tsco = SearchCriteria[z];
 
-					std::wstring username(Data.Users[file_object.Owner].Name);
+					std::wstring username(Data.Users[file_object.Owner]->Name);
 
 					std::transform(username.begin(), username.end(), username.begin(), ::toupper);
 
@@ -2586,7 +2586,7 @@ void ScanEngine::PopulateSortedFiles()
 {
 	for (int t = 0; t < Data.Files.size(); t++)
 	{
-		std::wstring n = Data.Folders[Data.Files[t].FilePathIndex] + Data.Files[t].Name;
+		std::wstring n = Data.Folders[Data.Files[t]->FilePathIndex] + Data.Files[t]->Name;
 
 		FileObjectSorted fso(t, n.substr(Path.String.length()));
 
@@ -2599,9 +2599,9 @@ void ScanEngine::PopulateSortedFiles()
 // ==============================================================================================================
 
 
-FileObject ScanEngine::ImportRow(const std::wstring input)
+FileObject* ScanEngine::ImportRow(const std::wstring input)
 {
-	FileObject f;
+	FileObject* f = new FileObject();
 	int index = 0;
 	std::wstring row(input + L",");
 	std::wstring field(L"");
@@ -2618,7 +2618,7 @@ FileObject ScanEngine::ImportRow(const std::wstring input)
 			switch (index)
 			{
 			case 0:
-				f.Name = field;
+				f->Name = field;
 				break;
 			case 1:
 				//
@@ -2639,11 +2639,11 @@ FileObject ScanEngine::ImportRow(const std::wstring input)
 				{
 					Data.Folders.push_back(field);
 
-					f.FilePathIndex = Data.Folders.size() - 1;
+					f->FilePathIndex = Data.Folders.size() - 1;
 				}
 				else
 				{
-					f.FilePathIndex = folderindex;
+					f->FilePathIndex = folderindex;
 				}
 
 				break;
@@ -2652,10 +2652,10 @@ FileObject ScanEngine::ImportRow(const std::wstring input)
 				// size as text, captured below
 				break;
 			case 4:
-				f.Size = stoll(field);
+				f->Size = stoll(field);
 				break;
 			case 5:
-				f.SizeOnDisk = stoi(field);
+				f->SizeOnDisk = stoi(field);
 				break;
 			case 6:
 				// date as text, captured from 8
@@ -2667,34 +2667,34 @@ FileObject ScanEngine::ImportRow(const std::wstring input)
 				// date as text, captured from 10
 				break;
 			case 9:
-				f.DateCreated = stoi(field);
+				f->DateCreated = stoi(field);
 				break;
 			case 10:
-				f.DateAccessed = stoi(field);
+				f->DateAccessed = stoi(field);
 				break;
 			case 11:
-				f.DateModified = stoi(field);
+				f->DateModified = stoi(field);
 				break;
 			case 12:
-				f.TimeCreated = stoi(field);
+				f->TimeCreated = stoi(field);
 				break;
 			case 13:
-				f.TimeAccessed = stoi(field);
+				f->TimeAccessed = stoi(field);
 				break;
 			case 14:
-				f.TimeModified = stoi(field);
+				f->TimeModified = stoi(field);
 				break;
 			case 15:
 				// category as text, captured below
 				break;
 			case 16:
-				f.Category = stoi(field);
+				f->Category = stoi(field);
 
-				if (f.Category == 99)
+				if (f->Category == 99)
 				{
 					Data.FolderCount++;
 
-					f.Category = __FileCategoryDirectory;
+					f->Category = __FileCategoryDirectory;
 				}
 				break;
 			case 17:
@@ -2711,18 +2711,18 @@ FileObject ScanEngine::ImportRow(const std::wstring input)
 
 					if (z == -1)
 					{
-						UserData newUser(owner);
+						UserData *newUser = new UserData(owner);
 
 						Data.Users.push_back(newUser);
 
 						z = Data.Users.size() - 1;
 					}
 
-					f.Owner = z;
+					f->Owner = z;
 				}
 				else
 				{
-					f.Owner = 0;
+					f->Owner = 0;
 				}
 				break;
 			case 18:
@@ -2741,11 +2741,11 @@ FileObject ScanEngine::ImportRow(const std::wstring input)
 				// temporary, captured from attributes
 				break;
 			case 23:
-				f.Attributes = stoi(field);
+				f->Attributes = stoi(field);
 
-				if (f.Attributes & FILE_ATTRIBUTE_DIRECTORY)
+				if (f->Attributes & FILE_ATTRIBUTE_DIRECTORY)
 				{
-					f.Category = __FileCategoryDirectory;
+					f->Category = __FileCategoryDirectory;
 				}
 
 				break;
@@ -2780,9 +2780,9 @@ bool ScanEngine::ImportFromCSV(const std::wstring file_name)
 			{
 				if (s[0] == L'\"')
 				{
-					FileObject f = ImportRow(s);
+					FileObject *f = ImportRow(s);
 
-					if (!f.Name.empty())
+					if (!f->Name.empty())
 					{
 						Data.Files.push_back(f);
 					}

@@ -44,7 +44,7 @@ namespace ReportJSON
 
 			for (int t = 0; t < GScanEngine->Data.Files.size(); t++)
 			{
-				std::wstring json = GScanEngine->Data.Files[t].ToJSON(GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex], GScanEngine->Data.Users[GScanEngine->Data.Files[t].Owner].Name);
+				std::wstring json = GScanEngine->Data.Files[t]->ToJSON(GScanEngine->Data.Folders[GScanEngine->Data.Files[t]->FilePathIndex], GScanEngine->Data.Users[GScanEngine->Data.Files[t]->Owner]->Name);
 
 				if (t == GScanEngine->Data.Files.size() - 1)
 				{
@@ -82,11 +82,11 @@ namespace ReportJSON
 			{
 				if (t == GScanEngine->Data.Files.size() - 1)
 				{
-					ofile << Formatting::to_utf8(L"    { \"file\": \"" + Formatting::ReplaceForJSON(GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + GScanEngine->Data.Files[t].Name) + L"\" }\n");
+					ofile << Formatting::to_utf8(L"    { \"file\": \"" + Formatting::ReplaceForJSON(GScanEngine->Data.Folders[GScanEngine->Data.Files[t]->FilePathIndex] + GScanEngine->Data.Files[t]->Name) + L"\" }\n");
 				}
 				else
 				{
-					ofile << Formatting::to_utf8(L"    { \"file\": \"" + Formatting::ReplaceForJSON(GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + GScanEngine->Data.Files[t].Name) + L"\" },\n");
+					ofile << Formatting::to_utf8(L"    { \"file\": \"" + Formatting::ReplaceForJSON(GScanEngine->Data.Folders[GScanEngine->Data.Files[t]->FilePathIndex] + GScanEngine->Data.Files[t]->Name) + L"\" },\n");
 				}
 			}
 

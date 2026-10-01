@@ -143,7 +143,7 @@ namespace ReportCSV
 				}
 				else
 				{
-					if (GScanEngine->Data.Files[t].Category == options.Category)
+					if (GScanEngine->Data.Files[t]->Category == options.Category)
 					{
 						AddToFile = true;
 					}
@@ -151,8 +151,8 @@ namespace ReportCSV
 
 				if (AddToFile)
 				{ 
-					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t].ToCSV(GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex],
-						                                                          GScanEngine->Data.Users[GScanEngine->Data.Files[t].Owner].Name, 
+					ofile << Formatting::to_utf8(GScanEngine->Data.Files[t]->ToCSV(GScanEngine->Data.Folders[GScanEngine->Data.Files[t]->FilePathIndex],
+						                                                          GScanEngine->Data.Users[GScanEngine->Data.Files[t]->Owner]->Name,
 																				  options.Units) + L"\n");				
 				}
 			}

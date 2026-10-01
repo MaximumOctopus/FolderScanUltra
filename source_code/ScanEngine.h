@@ -89,7 +89,7 @@ struct ScanData
 	ConsolidatedData FileAttributes[__AttributesCount];
 	ConsolidatedData ExtensionSpread[__FileCategoriesCount];
 
-	std::vector<FileObject> Files;
+	std::vector<FileObject*> Files;
 	std::vector<std::wstring> Folders;
 
 	std::vector<std::wstring> TemporaryFiles;
@@ -97,17 +97,17 @@ struct ScanData
 	std::vector<std::wstring> NullFiles;
 	std::vector<std::wstring> NullFolders;
 
-	std::vector<FileObject> Top100Large;
-	std::vector<FileObject> Top100Small;
-	std::vector<FileObject> Top100Newest;
-	std::vector<FileObject> Top100Oldest;
+	std::vector<FileObject*> Top100Large;
+	std::vector<FileObject*> Top100Small;
+	std::vector<FileObject*> Top100Newest;
+	std::vector<FileObject*> Top100Oldest;
 
-	std::vector<FileDateObject> FileDates;
+	std::vector<FileDateObject*> FileDates;
 
-	std::vector<UserData> Users;
+	std::vector<UserData*> Users;
 
-	std::vector<FileObject> RootFiles;
-	std::vector<RootFolder> RootFolders;
+	std::vector<FileObject*> RootFiles;
+	std::vector<RootFolder*> RootFolders;
 };
 
 
@@ -139,7 +139,7 @@ private:
 
 	void PopulateDiskStat();
 
-	FileObject ImportRow(const std::wstring);
+	FileObject* ImportRow(const std::wstring);
 	bool ImportFromCSV(const std::wstring);
 	std::wstring GetScanPathFromFolderList();
 

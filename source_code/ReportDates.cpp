@@ -74,40 +74,40 @@ void ReportDates::Day(DateReportOptions options)
 			{
 				if (options.Created)
 				{
-					if (GScanEngine->Data.Files[t].DateCreated != lastdate)
+					if (GScanEngine->Data.Files[t]->DateCreated != lastdate)
 					{
-						ofile << Formatting::to_utf8(L"\n " + Convert::YYYYMMDDToMonthDayYear(GScanEngine->Data.Files[t].DateCreated) + L"\n\n");
+						ofile << Formatting::to_utf8(L"\n " + Convert::YYYYMMDDToMonthDayYear(GScanEngine->Data.Files[t]->DateCreated) + L"\n\n");
 
-						lastdate = GScanEngine->Data.Files[t].DateCreated;
+						lastdate = GScanEngine->Data.Files[t]->DateCreated;
 
-						date = std::to_wstring(GScanEngine->Data.Files[t].DateCreated);
+						date = std::to_wstring(GScanEngine->Data.Files[t]->DateCreated);
 					}
 				}
 				else
 				{
-					if (GScanEngine->Data.Files[t].DateModified != lastdate)
+					if (GScanEngine->Data.Files[t]->DateModified != lastdate)
 					{
-						ofile << Formatting::to_utf8(L"\n " + Convert::YYYYMMDDToMonthDayYear(GScanEngine->Data.Files[t].DateModified) + L"\n\n");
+						ofile << Formatting::to_utf8(L"\n " + Convert::YYYYMMDDToMonthDayYear(GScanEngine->Data.Files[t]->DateModified) + L"\n\n");
 
-						lastdate = GScanEngine->Data.Files[t].DateModified;
+						lastdate = GScanEngine->Data.Files[t]->DateModified;
 
-						date = std::to_wstring(GScanEngine->Data.Files[t].DateModified);
+						date = std::to_wstring(GScanEngine->Data.Files[t]->DateModified);
 					}
 				}
 
-				if (GScanEngine->Data.Files[t].Attributes & FILE_ATTRIBUTE_DIRECTORY)
+				if (GScanEngine->Data.Files[t]->Attributes & FILE_ATTRIBUTE_DIRECTORY)
 				{
 					ofile << Formatting::to_utf8(L"  " +
 						date + L"  " +
 						L"      [FOLDER] " +
-						GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + GScanEngine->Data.Files[t].Name + L"\n");
+						GScanEngine->Data.Folders[GScanEngine->Data.Files[t]->FilePathIndex] + GScanEngine->Data.Files[t]->Name + L"\n");
 				}
 				else
 				{
 					ofile << Formatting::to_utf8(L"  " +
 						date + L"  " +
-						Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanEngine->Data.Files[t].Size), 14, L' ') + L" " +
-						GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + GScanEngine->Data.Files[t].Name + L"\n");
+						Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanEngine->Data.Files[t]->Size), 14, L' ') + L" " +
+						GScanEngine->Data.Folders[GScanEngine->Data.Files[t]->FilePathIndex] + GScanEngine->Data.Files[t]->Name + L"\n");
 				}
 			}
 		}
@@ -139,48 +139,48 @@ void ReportDates::Month(DateReportOptions options)
 			{
 				if (options.Created)
 				{
-					std::wstring cd = std::to_wstring(GScanEngine->Data.Files[t].DateCreated);
+					std::wstring cd = std::to_wstring(GScanEngine->Data.Files[t]->DateCreated);
 
 					int fm = std::stoi(cd.substr(4, 2));
 
 					if (fm != lastmonth)
 					{
-						ofile << Formatting::to_utf8(L"\n " + Convert::YYYYMMDDToMonthYear(GScanEngine->Data.Files[t].DateCreated) + L"\n\n");
+						ofile << Formatting::to_utf8(L"\n " + Convert::YYYYMMDDToMonthYear(GScanEngine->Data.Files[t]->DateCreated) + L"\n\n");
 
 						lastmonth = fm;
 					}
 
-					date = std::to_wstring(GScanEngine->Data.Files[t].DateCreated);
+					date = std::to_wstring(GScanEngine->Data.Files[t]->DateCreated);
 				}
 				else
 				{ 
-					std::wstring cd = std::to_wstring(GScanEngine->Data.Files[t].DateModified);
+					std::wstring cd = std::to_wstring(GScanEngine->Data.Files[t]->DateModified);
 
 					int fm = std::stoi(cd.substr(4, 2));
 
 					if (fm != lastmonth)
 					{
-						ofile << Formatting::to_utf8(L"\n " + Convert::YYYYMMDDToMonthYear(GScanEngine->Data.Files[t].DateModified) + L"\n\n");
+						ofile << Formatting::to_utf8(L"\n " + Convert::YYYYMMDDToMonthYear(GScanEngine->Data.Files[t]->DateModified) + L"\n\n");
 
 						lastmonth = fm;
 					}
 
-					date = std::to_wstring(GScanEngine->Data.Files[t].DateModified);
+					date = std::to_wstring(GScanEngine->Data.Files[t]->DateModified);
 				}
 
-				if (GScanEngine->Data.Files[t].Attributes & FILE_ATTRIBUTE_DIRECTORY)
+				if (GScanEngine->Data.Files[t]->Attributes & FILE_ATTRIBUTE_DIRECTORY)
 				{
 					ofile << Formatting::to_utf8(L"  " +
 						date + L"  " +
 						L"      [FOLDER] " +
-						GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + GScanEngine->Data.Files[t].Name + L"\n");
+						GScanEngine->Data.Folders[GScanEngine->Data.Files[t]->FilePathIndex] + GScanEngine->Data.Files[t]->Name + L"\n");
 				}
 				else
 				{
 					ofile << Formatting::to_utf8(L"  " +
 						date + L"  " +
-						Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanEngine->Data.Files[t].Size), 14, L' ') + L" " +
-						GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + GScanEngine->Data.Files[t].Name + L"\n");
+						Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanEngine->Data.Files[t]->Size), 14, L' ') + L" " +
+						GScanEngine->Data.Folders[GScanEngine->Data.Files[t]->FilePathIndex] + GScanEngine->Data.Files[t]->Name + L"\n");
 				}
 			}
 		}
@@ -212,48 +212,48 @@ void ReportDates::Year(DateReportOptions options)
 			{
 				if (options.Created)
 				{
-					std::wstring cd = std::to_wstring(GScanEngine->Data.Files[t].DateCreated);
+					std::wstring cd = std::to_wstring(GScanEngine->Data.Files[t]->DateCreated);
 
 					int fy = std::stoi(cd.substr(0, 4));
 
 					if (fy != lastyear)
 					{
-						ofile << Formatting::to_utf8(L"\n " + Convert::YYYYMMDDToMonthYear(GScanEngine->Data.Files[t].DateCreated) + L"\n\n");
+						ofile << Formatting::to_utf8(L"\n " + Convert::YYYYMMDDToMonthYear(GScanEngine->Data.Files[t]->DateCreated) + L"\n\n");
 
 						lastyear = fy;
 					}
 
-					date = std::to_wstring(GScanEngine->Data.Files[t].DateCreated);
+					date = std::to_wstring(GScanEngine->Data.Files[t]->DateCreated);
 				}
 				else
 				{
-					std::wstring cd = std::to_wstring(GScanEngine->Data.Files[t].DateModified);
+					std::wstring cd = std::to_wstring(GScanEngine->Data.Files[t]->DateModified);
 
 					int fy = std::stoi(cd.substr(0, 4));
 
 					if (fy != lastyear)
 					{
-						ofile << Formatting::to_utf8(L"\n " + Convert::YYYYMMDDToMonthYear(GScanEngine->Data.Files[t].DateModified) + L"\n\n");
+						ofile << Formatting::to_utf8(L"\n " + Convert::YYYYMMDDToMonthYear(GScanEngine->Data.Files[t]->DateModified) + L"\n\n");
 
 						lastyear = fy;
 					}
 
-					date = std::to_wstring(GScanEngine->Data.Files[t].DateModified);
+					date = std::to_wstring(GScanEngine->Data.Files[t]->DateModified);
 				}
 
-				if (GScanEngine->Data.Files[t].Attributes & FILE_ATTRIBUTE_DIRECTORY)
+				if (GScanEngine->Data.Files[t]->Attributes & FILE_ATTRIBUTE_DIRECTORY)
 				{
 					ofile << Formatting::to_utf8(L"  " +
 						date + L"  " +
 						L"      [FOLDER] " +
-						GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + GScanEngine->Data.Files[t].Name + L"\n");
+						GScanEngine->Data.Folders[GScanEngine->Data.Files[t]->FilePathIndex] + GScanEngine->Data.Files[t]->Name + L"\n");
 				}
 				else
 				{
 					ofile << Formatting::to_utf8(L"  " +
 						date + L"  " +
-						Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanEngine->Data.Files[t].Size), 14, L' ') + L" " +
-						GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + GScanEngine->Data.Files[t].Name + L"\n");
+						Formatting::AddLeading(Convert::ConvertToUsefulUnit(GScanEngine->Data.Files[t]->Size), 14, L' ') + L" " +
+						GScanEngine->Data.Folders[GScanEngine->Data.Files[t]->FilePathIndex] + GScanEngine->Data.Files[t]->Name + L"\n");
 				}
 			}
 		}

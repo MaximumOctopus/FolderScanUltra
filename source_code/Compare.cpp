@@ -61,36 +61,36 @@ void Compare::Execute()
 
 		if (pos == GScanEngineCompare->SortedFiles.end())
 		{
-			std::wcout << L" Missing file   : " << s.Name << L" (" << Convert::ConvertToUsefulUnit(GScanEngine->Data.Files[s.index].Size) << L"\n";
+			std::wcout << L" Missing file   : " << s.Name << L" (" << Convert::ConvertToUsefulUnit(GScanEngine->Data.Files[s.index]->Size) << L"\n";
 
 			differences++;
 			missing_files++;
 
-			missing_files_size += GScanEngine->Data.Files[s.index].Size;
+			missing_files_size += GScanEngine->Data.Files[s.index]->Size;
 		}
 		else
 		{
 			FileObjectSorted fos = *pos;
 
-			if (GScanEngine->Data.Files[s.index].Size != GScanEngineCompare->Data.Files[fos.index].Size)
+			if (GScanEngine->Data.Files[s.index]->Size != GScanEngineCompare->Data.Files[fos.index]->Size)
 			{
-				std::wcout << L" Size not equal : " << s.Name << L" (" << std::to_wstring(GScanEngine->Data.Files[s.index].Size) << L" vs " << GScanEngineCompare->Data.Files[fos.index].Size << L")\n";
+				std::wcout << L" Size not equal : " << s.Name << L" (" << std::to_wstring(GScanEngine->Data.Files[s.index]->Size) << L" vs " << GScanEngineCompare->Data.Files[fos.index]->Size << L")\n";
 
-				if (GScanEngine->Data.Files[s.index].Size > GScanEngineCompare->Data.Files[fos.index].Size)
+				if (GScanEngine->Data.Files[s.index]->Size > GScanEngineCompare->Data.Files[fos.index]->Size)
 				{
-					size_delta += GScanEngine->Data.Files[s.index].Size - GScanEngineCompare->Data.Files[fos.index].Size;
+					size_delta += GScanEngine->Data.Files[s.index]->Size - GScanEngineCompare->Data.Files[fos.index]->Size;
 				}
 				else
 				{
-					size_delta += GScanEngineCompare->Data.Files[fos.index].Size - GScanEngine->Data.Files[s.index].Size;
+					size_delta += GScanEngineCompare->Data.Files[fos.index]->Size - GScanEngine->Data.Files[s.index]->Size;
 				}
 
 				differences++;
 			}
 
-			if (GScanEngine->Data.Files[s.index].DateModified != GScanEngineCompare->Data.Files[fos.index].DateModified)
+			if (GScanEngine->Data.Files[s.index]->DateModified != GScanEngineCompare->Data.Files[fos.index]->DateModified)
 			{
-				std::wcout << L" Date modified  : " << s.Name << L" (" << std::to_wstring(GScanEngine->Data.Files[s.index].DateModified) << L" vs " << GScanEngineCompare->Data.Files[fos.index].DateModified << L")\n";
+				std::wcout << L" Date modified  : " << s.Name << L" (" << std::to_wstring(GScanEngine->Data.Files[s.index]->DateModified) << L" vs " << GScanEngineCompare->Data.Files[fos.index]->DateModified << L")\n";
 
 				differences++;
 			}
@@ -107,12 +107,12 @@ void Compare::Execute()
 
 		if (pos == GScanEngine->SortedFiles.end())
 		{
-			std::wcout << L" New file       : " << s.Name << L" (" << Convert::ConvertToUsefulUnit(GScanEngineCompare->Data.Files[s.index].Size) << L"\n";
+			std::wcout << L" New file       : " << s.Name << L" (" << Convert::ConvertToUsefulUnit(GScanEngineCompare->Data.Files[s.index]->Size) << L"\n";
 
 			differences++;
 			new_files++;
 
-			new_files_size += GScanEngineCompare->Data.Files[s.index].Size;
+			new_files_size += GScanEngineCompare->Data.Files[s.index]->Size;
 		}
 	}
 

@@ -43,7 +43,7 @@ extern Settings* GSettings;
 
 namespace ReportHTML
 {
-	bool sortBySize(const UserData& lhs, const UserData& rhs) { return lhs.Size < rhs.Size; }
+	bool sortBySize(const UserData *lhs, const UserData *rhs) { return lhs->Size < rhs->Size; }
 
 
 	void GenerateReport(HTMLReportOptions options)
@@ -195,9 +195,9 @@ namespace ReportHTML
 		{
 			std::wstring folder = GScanEngine->Path.String;
 
-			if (GScanEngine->Data.RootFolders[r].Name != L"root")
+			if (GScanEngine->Data.RootFolders[r]->Name != L"root")
 			{
-				folder += GScanEngine->Data.RootFolders[r].Name + L"\\";
+				folder += GScanEngine->Data.RootFolders[r]->Name + L"\\";
 			}
 
 			int folderIndex = GScanEngine->GetFolderIndex(folder);
@@ -207,7 +207,7 @@ namespace ReportHTML
 				if (!deep.ProcessFolder(folderIndex))
 				{
 					// if there are no sub-folders then use the root folder's data
-					deep.Add(L"\"", GScanEngine->Data.RootFolders[r].Size, GScanEngine->Data.RootFolders[r].Count);
+					deep.Add(L"\"", GScanEngine->Data.RootFolders[r]->Size, GScanEngine->Data.RootFolders[r]->Count);
 				}
 
 				if (deep.FolderData.size() != 0)
@@ -442,8 +442,8 @@ namespace ReportHTML
 
 				for (int i = 0; i < GScanEngine->Data.Users.size(); i++)
 				{
-					if (std::round(((double)GScanEngine->Data.Users[i].Count / (double)GScanEngine->Data.FileCount) * 100) > large1) { large1 = std::round(((double)GScanEngine->Data.Users[i].Count / (double)GScanEngine->Data.FileCount) * 100); }
-					if (std::round(((double)GScanEngine->Data.Users[i].Size / (double)GScanEngine->Data.TotalSize) * 100) > large2) { large2 = std::round(((double)GScanEngine->Data.Users[i].Size / (double)GScanEngine->Data.TotalSize) * 100); }
+					if (std::round(((double)GScanEngine->Data.Users[i]->Count / (double)GScanEngine->Data.FileCount) * 100) > large1) { large1 = std::round(((double)GScanEngine->Data.Users[i]->Count / (double)GScanEngine->Data.FileCount) * 100); }
+					if (std::round(((double)GScanEngine->Data.Users[i]->Size / (double)GScanEngine->Data.TotalSize) * 100) > large2) { large2 = std::round(((double)GScanEngine->Data.Users[i]->Size / (double)GScanEngine->Data.TotalSize) * 100); }
 				}
 
 				if (large1 <= 0) large1 = __ReportSizes[__rsBarGraph];
@@ -457,14 +457,14 @@ namespace ReportHTML
 
 				for (int t = 0; t < GScanEngine->Data.Users.size(); t++)
 				{
-					SevenColumnTableRow(ofile, rowidx, GScanEngine->Data.Users[t].Name,
-						std::to_wstring(GScanEngine->Data.Users[t].Count),
-						Convert::DoubleToPercent((double)GScanEngine->Data.Users[t].Count / (double)GScanEngine->Data.FileCount),
-						Convert::GetSizeString(options.Units, GScanEngine->Data.Users[t].Size),
-						Convert::DoubleToPercent((double)GScanEngine->Data.Users[t].Size / (double)GScanEngine->Data.TotalSize),
+					SevenColumnTableRow(ofile, rowidx, GScanEngine->Data.Users[t]->Name,
+						std::to_wstring(GScanEngine->Data.Users[t]->Count),
+						Convert::DoubleToPercent((double)GScanEngine->Data.Users[t]->Count / (double)GScanEngine->Data.FileCount),
+						Convert::GetSizeString(options.Units, GScanEngine->Data.Users[t]->Size),
+						Convert::DoubleToPercent((double)GScanEngine->Data.Users[t]->Size / (double)GScanEngine->Data.TotalSize),
 						GSettings->Reports.HTMLColours[4],
-						(((double)GScanEngine->Data.Users[t].Count / (double)GScanEngine->Data.FileCount) * 100) * ((double)__ReportSizes[__rsBarGraph] / (double)large1),
-						((double)(GScanEngine->Data.Users[t].Size / (double)GScanEngine->Data.TotalSize) * 100) * ((double)__ReportSizes[__rsBarGraph] / (double)large2)
+						(((double)GScanEngine->Data.Users[t]->Count / (double)GScanEngine->Data.FileCount) * 100) * ((double)__ReportSizes[__rsBarGraph] / (double)large1),
+						((double)(GScanEngine->Data.Users[t]->Size / (double)GScanEngine->Data.TotalSize) * 100) * ((double)__ReportSizes[__rsBarGraph] / (double)large2)
 					);
 
 					rowidx++;
@@ -858,9 +858,9 @@ namespace ReportHTML
 
 			for (int t = 0; t < GScanEngine->Data.RootFolders.size(); t++)
 			{
-				if (std::round(((double)GScanEngine->Data.RootFolders[t].Count / (double)GScanEngine->Data.FileCount) * 100) > large1)
+				if (std::round(((double)GScanEngine->Data.RootFolders[t]->Count / (double)GScanEngine->Data.FileCount) * 100) > large1)
 				{
-					large1 = std::round(((double)GScanEngine->Data.RootFolders[t].Count / (double)GScanEngine->Data.FileCount) * 100);
+					large1 = std::round(((double)GScanEngine->Data.RootFolders[t]->Count / (double)GScanEngine->Data.FileCount) * 100);
 				}
 			}
 			
@@ -870,7 +870,7 @@ namespace ReportHTML
 			
 			for (int t = 0; t < GScanEngine->Data.RootFolders.size(); t++)
 			{
-				if (GScanEngine->Data.RootFolders[t].Count != 0)
+				if (GScanEngine->Data.RootFolders[t]->Count != 0)
 				 {
 					if (GSettings->Reports.HTMLMonoBargraph)
 					{
@@ -887,18 +887,18 @@ namespace ReportHTML
 
 					if (t == 0)
 					{
-						link = L"<a href=\"" + Utility::WebFileLink(GScanEngine->Path.String) + L"\" target=\"_blank\">" + Formatting::MakeItalic(GScanEngine->Data.RootFolders[t].Name, GScanEngine->Data.RootFolders[t].Attributes & FILE_ATTRIBUTE_HIDDEN) + L"</a>";
+						link = L"<a href=\"" + Utility::WebFileLink(GScanEngine->Path.String) + L"\" target=\"_blank\">" + Formatting::MakeItalic(GScanEngine->Data.RootFolders[t]->Name, GScanEngine->Data.RootFolders[t]->Attributes & FILE_ATTRIBUTE_HIDDEN) + L"</a>";
 					}
 					else
 					{
-						link = L"<a href=\"" + Utility::WebFileLink(GScanEngine->Path.String + GScanEngine->Data.RootFolders[t].Name) + L"\" target=\"_blank\">" + Formatting::MakeItalic(GScanEngine->Data.RootFolders[t].Name, GScanEngine->Data.RootFolders[t].Attributes & FILE_ATTRIBUTE_HIDDEN) + L"</a>";
+						link = L"<a href=\"" + Utility::WebFileLink(GScanEngine->Path.String + GScanEngine->Data.RootFolders[t]->Name) + L"\" target=\"_blank\">" + Formatting::MakeItalic(GScanEngine->Data.RootFolders[t]->Name, GScanEngine->Data.RootFolders[t]->Attributes & FILE_ATTRIBUTE_HIDDEN) + L"</a>";
 					}
 
 					FourColumnTableRow(ofile, rowidx, link,
-						std::to_wstring(GScanEngine->Data.RootFolders[t].Count),
-						Convert::DoubleToPercent((double)GScanEngine->Data.RootFolders[t].Count / (double)GScanEngine->Data.FileCount),
+						std::to_wstring(GScanEngine->Data.RootFolders[t]->Count),
+						Convert::DoubleToPercent((double)GScanEngine->Data.RootFolders[t]->Count / (double)GScanEngine->Data.FileCount),
 						colour,
-						(((double)GScanEngine->Data.RootFolders[t].Count / (double)GScanEngine->Data.FileCount) * 100) * ((double)__ReportSizes[__rsBarGraphSmall] / (double)large1)
+						(((double)GScanEngine->Data.RootFolders[t]->Count / (double)GScanEngine->Data.FileCount) * 100) * ((double)__ReportSizes[__rsBarGraphSmall] / (double)large1)
 					);
 
 					rowidx++;
@@ -927,9 +927,9 @@ namespace ReportHTML
 
 				for (int t = 0; t < GScanEngine->Data.RootFolders.size(); t++)
 				{
-					if (std::round(((double)GScanEngine->Data.RootFolders[t].Size / (double)GScanEngine->Data.TotalSize) * 100) > large1)
+					if (std::round(((double)GScanEngine->Data.RootFolders[t]->Size / (double)GScanEngine->Data.TotalSize) * 100) > large1)
 					{
-						large1 = std::round(((double)GScanEngine->Data.RootFolders[t].Size / (double)GScanEngine->Data.TotalSize) * 100);
+						large1 = std::round(((double)GScanEngine->Data.RootFolders[t]->Size / (double)GScanEngine->Data.TotalSize) * 100);
 					}
 				}
 
@@ -941,7 +941,7 @@ namespace ReportHTML
 
 				for (int t = 0; t < GScanEngine->Data.RootFolders.size(); t++)
 				{
-					if (GScanEngine->Data.RootFolders[t].Count != 0)
+					if (GScanEngine->Data.RootFolders[t]->Count != 0)
 					{
 						if (GSettings->Reports.HTMLMonoBargraph)
 						{
@@ -956,18 +956,18 @@ namespace ReportHTML
 						
 						if (t == 0)
 						{
-							link = L"<a href=\"" + Utility::WebFileLink(GScanEngine->Path.String) + L"\" target=\"_blank\">" + Formatting::MakeItalic(GScanEngine->Data.RootFolders[t].Name, GScanEngine->Data.RootFolders[t].Attributes & FILE_ATTRIBUTE_HIDDEN) + L"</a>";
+							link = L"<a href=\"" + Utility::WebFileLink(GScanEngine->Path.String) + L"\" target=\"_blank\">" + Formatting::MakeItalic(GScanEngine->Data.RootFolders[t]->Name, GScanEngine->Data.RootFolders[t]->Attributes & FILE_ATTRIBUTE_HIDDEN) + L"</a>";
 						}
 						else
 						{
-							link = L"<a href=\"" + Utility::WebFileLink(GScanEngine->Path.String + GScanEngine->Data.RootFolders[t].Name) + L"\" target=\"_blank\">" + Formatting::MakeItalic(GScanEngine->Data.RootFolders[t].Name, GScanEngine->Data.RootFolders[t].Attributes  & FILE_ATTRIBUTE_HIDDEN) + L"</a>";
+							link = L"<a href=\"" + Utility::WebFileLink(GScanEngine->Path.String + GScanEngine->Data.RootFolders[t]->Name) + L"\" target=\"_blank\">" + Formatting::MakeItalic(GScanEngine->Data.RootFolders[t]->Name, GScanEngine->Data.RootFolders[t]->Attributes  & FILE_ATTRIBUTE_HIDDEN) + L"</a>";
 						}
 
 						FourColumnTableRow(ofile, rowidx, link,
-							Convert::GetSizeString(options.Units, GScanEngine->Data.RootFolders[t].Size),
-							Convert::DoubleToPercent((double)GScanEngine->Data.RootFolders[t].Size / (double)GScanEngine->Data.TotalSize),
+							Convert::GetSizeString(options.Units, GScanEngine->Data.RootFolders[t]->Size),
+							Convert::DoubleToPercent((double)GScanEngine->Data.RootFolders[t]->Size / (double)GScanEngine->Data.TotalSize),
 							colour,
-							(((double)GScanEngine->Data.RootFolders[t].Size / (double)GScanEngine->Data.TotalSize) * 100)* ((double)__ReportSizes[__rsBarGraphSmall] / (double)large1)
+							(((double)GScanEngine->Data.RootFolders[t]->Size / (double)GScanEngine->Data.TotalSize) * 100)* ((double)__ReportSizes[__rsBarGraphSmall] / (double)large1)
 						);
 
 						rowidx++;
@@ -994,9 +994,9 @@ namespace ReportHTML
 
 					for (int t = 0; t < GScanEngine->Data.RootFolders.size(); t++)
 					{
-						if (std::round(((double)GScanEngine->Data.RootFolders[t].Size / (double)GScanEngine->Data.TotalSize) * 100) > large1)
+						if (std::round(((double)GScanEngine->Data.RootFolders[t]->Size / (double)GScanEngine->Data.TotalSize) * 100) > large1)
 						{
-							large1 = std::round(((double)GScanEngine->Data.RootFolders[t].Size / (double)GScanEngine->Data.TotalSize) * 100);
+							large1 = std::round(((double)GScanEngine->Data.RootFolders[t]->Size / (double)GScanEngine->Data.TotalSize) * 100);
 						}
 					}
 
@@ -1008,7 +1008,7 @@ namespace ReportHTML
 
 					for (int t = 0; t < GScanEngine->Data.RootFolders.size(); t++)
 					{
-						if (GScanEngine->Data.RootFolders[t].Count != 0)
+						if (GScanEngine->Data.RootFolders[t]->Count != 0)
 						{
 							if (GSettings->Reports.HTMLMonoBargraph)
 							{
@@ -1023,18 +1023,18 @@ namespace ReportHTML
 
 							if (t == 0)
 							{
-								link = L"<a href=\"" + Utility::WebFileLink(GScanEngine->Path.String) + L"\" target=\"_blank\">" + Formatting::MakeItalic(GScanEngine->Data.RootFolders[t].Name, GScanEngine->Data.RootFolders[t].Attributes & FILE_ATTRIBUTE_HIDDEN) + L"</a>";
+								link = L"<a href=\"" + Utility::WebFileLink(GScanEngine->Path.String) + L"\" target=\"_blank\">" + Formatting::MakeItalic(GScanEngine->Data.RootFolders[t]->Name, GScanEngine->Data.RootFolders[t]->Attributes & FILE_ATTRIBUTE_HIDDEN) + L"</a>";
 							}
 							else
 							{
-								link = L"<a href=\"" + Utility::WebFileLink(GScanEngine->Path.String + GScanEngine->Data.RootFolders[t].Name) + L"\" target=\"_blank\">" + Formatting::MakeItalic(GScanEngine->Data.RootFolders[t].Name, GScanEngine->Data.RootFolders[t].Attributes & FILE_ATTRIBUTE_HIDDEN) + L"</a>";
+								link = L"<a href=\"" + Utility::WebFileLink(GScanEngine->Path.String + GScanEngine->Data.RootFolders[t]->Name) + L"\" target=\"_blank\">" + Formatting::MakeItalic(GScanEngine->Data.RootFolders[t]->Name, GScanEngine->Data.RootFolders[t]->Attributes & FILE_ATTRIBUTE_HIDDEN) + L"</a>";
 							}
 
 							FourColumnTableRow(ofile, rowidx, link,
-								Convert::GetSizeString(options.Units, GScanEngine->Data.RootFolders[t].Size),
-								Convert::DoubleToPercent((double)GScanEngine->Data.RootFolders[t].Size / (double)GScanEngine->Data.TotalSize),
+								Convert::GetSizeString(options.Units, GScanEngine->Data.RootFolders[t]->Size),
+								Convert::DoubleToPercent((double)GScanEngine->Data.RootFolders[t]->Size / (double)GScanEngine->Data.TotalSize),
 								colour,
-								(((double)GScanEngine->Data.RootFolders[t].Size / (double)GScanEngine->Data.TotalSize) * 100) * ((double)__ReportSizes[__rsBarGraphSmall] / (double)large1)
+								(((double)GScanEngine->Data.RootFolders[t]->Size / (double)GScanEngine->Data.TotalSize) * 100) * ((double)__ReportSizes[__rsBarGraphSmall] / (double)large1)
 							);
 
 							rowidx++;
@@ -1071,13 +1071,13 @@ namespace ReportHTML
 
 			if (GScanEngine->Data.TotalSize != 0)
 			{
-				tableWidth = ((double)GScanEngine->Data.Top100Large[t].Size / (double)GScanEngine->Data.TotalSize) * (double)__ReportSizes[__rsBarGraphSmall];
+				tableWidth = ((double)GScanEngine->Data.Top100Large[t]->Size / (double)GScanEngine->Data.TotalSize) * (double)__ReportSizes[__rsBarGraphSmall];
 			}
 
 			FourColumnTableRow(ofile, t, 
-				GScanEngine->Data.Folders[GScanEngine->Data.Top100Large[t].FilePathIndex] + GScanEngine->Data.Top100Large[t].Name,
-				Convert::GetSizeString(options.Units, GScanEngine->Data.Top100Large[t].Size),
-				GScanEngine->Data.Users[GScanEngine->Data.Top100Large[t].Owner].Name,
+				GScanEngine->Data.Folders[GScanEngine->Data.Top100Large[t]->FilePathIndex] + GScanEngine->Data.Top100Large[t]->Name,
+				Convert::GetSizeString(options.Units, GScanEngine->Data.Top100Large[t]->Size),
+				GScanEngine->Data.Users[GScanEngine->Data.Top100Large[t]->Owner]->Name,
 				GSettings->Reports.HTMLColours[4],
 				tableWidth
 				);
@@ -1109,8 +1109,8 @@ namespace ReportHTML
 				ofile << Formatting::to_utf8(L"<tr class=\"C4G\" bgcolor=\"#" + Convert::WebColour(GSettings->Reports.HTMLColours[10]) + L"\">\n");
 			}
 			
-			ofile << Formatting::to_utf8(L"<td height=\"13\" width=\"685\">" + GScanEngine->Data.Folders[GScanEngine->Data.Top100Small[t].FilePathIndex] + GScanEngine->Data.Top100Small[t].Name + L"</td>\n");
-			ofile << Formatting::to_utf8(L"<td height=\"13\" width=\"85\"><div align=\"" + options.Align + L"\">" + Convert::GetSizeString(options.Units, GScanEngine->Data.Top100Small[t].Size) + L"</div></td>\n");
+			ofile << Formatting::to_utf8(L"<td height=\"13\" width=\"685\">" + GScanEngine->Data.Folders[GScanEngine->Data.Top100Small[t]->FilePathIndex] + GScanEngine->Data.Top100Small[t]->Name + L"</td>\n");
+			ofile << Formatting::to_utf8(L"<td height=\"13\" width=\"85\"><div align=\"" + options.Align + L"\">" + Convert::GetSizeString(options.Units, GScanEngine->Data.Top100Small[t]->Size) + L"</div></td>\n");
 			ofile << Formatting::to_utf8(L"</tr>\n");
 		}
 
@@ -1130,10 +1130,10 @@ namespace ReportHTML
 
 		for (int t = 0; t < GScanEngine->Data.Top100Newest.size(); t++)
 		{
-			FourColumnTableDoubleTitleNoGraphRow(ofile, t, GScanEngine->Data.Top100Newest[t].Name,
-				Convert::IntDateToString(GScanEngine->Data.Top100Newest[t].DateCreated),
-				Convert::GetSizeString(options.Units, GScanEngine->Data.Top100Newest[t].Size),
-				GScanEngine->Data.Users[GScanEngine->Data.Top100Newest[t].Owner].Name
+			FourColumnTableDoubleTitleNoGraphRow(ofile, t, GScanEngine->Data.Top100Newest[t]->Name,
+				Convert::IntDateToString(GScanEngine->Data.Top100Newest[t]->DateCreated),
+				Convert::GetSizeString(options.Units, GScanEngine->Data.Top100Newest[t]->Size),
+				GScanEngine->Data.Users[GScanEngine->Data.Top100Newest[t]->Owner]->Name
 			);		
 		}
 
@@ -1153,10 +1153,10 @@ namespace ReportHTML
 
 		for (int t = 0; t < GScanEngine->Data.Top100Oldest.size(); t++)
 		{
-			FourColumnTableDoubleTitleNoGraphRow(ofile, t, GScanEngine->Data.Top100Newest[t].Name,
-				Convert::IntDateToString(GScanEngine->Data.Top100Oldest[t].DateCreated),
-				Convert::GetSizeString(options.Units, GScanEngine->Data.Top100Oldest[t].Size),
-				GScanEngine->Data.Users[GScanEngine->Data.Top100Oldest[t].Owner].Name
+			FourColumnTableDoubleTitleNoGraphRow(ofile, t, GScanEngine->Data.Top100Newest[t]->Name,
+				Convert::IntDateToString(GScanEngine->Data.Top100Oldest[t]->DateCreated),
+				Convert::GetSizeString(options.Units, GScanEngine->Data.Top100Oldest[t]->Size),
+				GScanEngine->Data.Users[GScanEngine->Data.Top100Oldest[t]->Owner]->Name
 			);
 		}
 
@@ -1187,16 +1187,16 @@ namespace ReportHTML
 
 			for (int t = 0; t < GScanEngine->Data.FileDates.size(); t++)
 			{
-				if (std::round(((double)GScanEngine->Data.FileDates[t].Count / (double)GScanEngine->Data.FileCount) * 100) > large1)
+				if (std::round(((double)GScanEngine->Data.FileDates[t]->Count / (double)GScanEngine->Data.FileCount) * 100) > large1)
 				{
-					large1 = std::round(((double)GScanEngine->Data.FileDates[t].Count / (double)GScanEngine->Data.FileCount) * 100);
+					large1 = std::round(((double)GScanEngine->Data.FileDates[t]->Count / (double)GScanEngine->Data.FileCount) * 100);
 				}
 
 				if (GScanEngine->Data.TotalSize != 0)
 				{
-					if (std::round(((double)GScanEngine->Data.FileDates[t].Size / (double)GScanEngine->Data.TotalSize) * 100) > large2)
+					if (std::round(((double)GScanEngine->Data.FileDates[t]->Size / (double)GScanEngine->Data.TotalSize) * 100) > large2)
 					{
-						large2 = std::round(((double)GScanEngine->Data.FileDates[t].Size / (double)GScanEngine->Data.TotalSize) * 100);
+						large2 = std::round(((double)GScanEngine->Data.FileDates[t]->Size / (double)GScanEngine->Data.TotalSize) * 100);
 					}
 				}
 			}
@@ -1209,28 +1209,28 @@ namespace ReportHTML
 			for (int t = 0; t < GScanEngine->Data.FileDates.size(); t++)
 			{
 
-				if ((GScanEngine->Data.FileCount != 0) && (GScanEngine->Data.FileDates[t].Count != 0))
+				if ((GScanEngine->Data.FileCount != 0) && (GScanEngine->Data.FileDates[t]->Count != 0))
 				{
 					std::wstring aspc = L"100%";
 					float aspcgraph = (double)__ReportSizes[__rsBarGraph];
 
 					if (GScanEngine->Data.TotalSize != 0)
 					{
-						aspc = Convert::DoubleToPercent((double)GScanEngine->Data.FileDates[t].Size / (double)GScanEngine->Data.TotalSize);
+						aspc = Convert::DoubleToPercent((double)GScanEngine->Data.FileDates[t]->Size / (double)GScanEngine->Data.TotalSize);
 					}
 
 					if (GScanEngine->Data.TotalSize != 0)
 					{
-						aspcgraph = (((double)GScanEngine->Data.FileDates[t].Size / (double)GScanEngine->Data.TotalSize) * 100) * ((double)__ReportSizes[__rsBarGraph] / (double)large2);
+						aspcgraph = (((double)GScanEngine->Data.FileDates[t]->Size / (double)GScanEngine->Data.TotalSize) * 100) * ((double)__ReportSizes[__rsBarGraph] / (double)large2);
 					}
 
-					SevenColumnTableRow(ofile, rowidx, std::to_wstring(GScanEngine->Data.FileDates[t].Year),
-						std::to_wstring(GScanEngine->Data.FileDates[t].Count),
-						Convert::DoubleToPercent((double)GScanEngine->Data.FileDates[t].Count / (double)GScanEngine->Data.FileCount),
-						Convert::GetSizeString(options.Units, GScanEngine->Data.FileDates[t].Size),
+					SevenColumnTableRow(ofile, rowidx, std::to_wstring(GScanEngine->Data.FileDates[t]->Year),
+						std::to_wstring(GScanEngine->Data.FileDates[t]->Count),
+						Convert::DoubleToPercent((double)GScanEngine->Data.FileDates[t]->Count / (double)GScanEngine->Data.FileCount),
+						Convert::GetSizeString(options.Units, GScanEngine->Data.FileDates[t]->Size),
 						aspc,
 						GSettings->Reports.HTMLColours[4],
-						(((double)GScanEngine->Data.FileDates[t].Count / (double)GScanEngine->Data.FileCount) * 100) * ((double)__ReportSizes[__rsBarGraph] / (double)large1),
+						(((double)GScanEngine->Data.FileDates[t]->Count / (double)GScanEngine->Data.FileCount) * 100) * ((double)__ReportSizes[__rsBarGraph] / (double)large1),
 						aspcgraph
 						);
 
@@ -1505,7 +1505,7 @@ namespace ReportHTML
 		{
 			colour = __SpectrumColours[t % __SpectrumMod];
 
-			ofile << Formatting::to_utf8(L"[\"" + GScanEngine->Data.RootFolders[t].Name + L"\", " + std::to_wstring(GScanEngine->Data.RootFolders[t].Count) + L", '#" + Convert::WebColour(colour) + L"'],\n");
+			ofile << Formatting::to_utf8(L"[\"" + GScanEngine->Data.RootFolders[t]->Name + L"\", " + std::to_wstring(GScanEngine->Data.RootFolders[t]->Count) + L", '#" + Convert::WebColour(colour) + L"'],\n");
 		}
 
 		ofile << Formatting::to_utf8(L"]);\n");
@@ -1516,7 +1516,7 @@ namespace ReportHTML
 		{
 			colour = __SpectrumColours[t % __SpectrumMod];
 
-			ofile << Formatting::to_utf8(L"[\"" + GScanEngine->Data.RootFolders[t].Name + L"\", " + std::to_wstring(GScanEngine->Data.RootFolders[t].Size) + L", '#" + Convert::WebColour(colour) + L"'],\n");
+			ofile << Formatting::to_utf8(L"[\"" + GScanEngine->Data.RootFolders[t]->Name + L"\", " + std::to_wstring(GScanEngine->Data.RootFolders[t]->Size) + L", '#" + Convert::WebColour(colour) + L"'],\n");
 		}
 
 		ofile << Formatting::to_utf8(L"]);\n");
@@ -1553,11 +1553,11 @@ namespace ReportHTML
 
 		for (int t = 0; t < GScanEngine->Data.FileDates.size(); t++)
 		{
-			if (GScanEngine->Data.FileDates[t].Count != 0)
+			if (GScanEngine->Data.FileDates[t]->Count != 0)
 			{
 				colour = __SpectrumColours[t % __SpectrumMod];
 
-				ofile << Formatting::to_utf8(L"['" + std::to_wstring(GScanEngine->Data.FileDates[t].Year) + L"', " + std::to_wstring(GScanEngine->Data.FileDates[t].Count) + L", '#" + Convert::WebColour(colour) + L"'],\n");
+				ofile << Formatting::to_utf8(L"['" + std::to_wstring(GScanEngine->Data.FileDates[t]->Year) + L"', " + std::to_wstring(GScanEngine->Data.FileDates[t]->Count) + L", '#" + Convert::WebColour(colour) + L"'],\n");
 			}
 		}
 
@@ -1567,11 +1567,11 @@ namespace ReportHTML
 
 		for (int t = 0; t < GScanEngine->Data.FileDates.size(); t++)
 		{
-			if (GScanEngine->Data.FileDates[t].Count != 0)
+			if (GScanEngine->Data.FileDates[t]->Count != 0)
 			{
 				colour = __SpectrumColours[t % __SpectrumMod];
 
-				ofile << Formatting::to_utf8(L"['" + std::to_wstring(GScanEngine->Data.FileDates[t].Year) + L"', " + std::to_wstring(GScanEngine->Data.FileDates[t].Size) + L", '#" + Convert::WebColour(colour) + L"'],\n");
+				ofile << Formatting::to_utf8(L"['" + std::to_wstring(GScanEngine->Data.FileDates[t]->Year) + L"', " + std::to_wstring(GScanEngine->Data.FileDates[t]->Size) + L", '#" + Convert::WebColour(colour) + L"'],\n");
 			}
 		}
 
