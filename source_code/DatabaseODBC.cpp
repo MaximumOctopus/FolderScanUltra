@@ -160,7 +160,7 @@ bool DatabaseODBC::PopulateFileTable(const std::wstring table_name)
 	std::wstring stem = L"INSERT INTO \"" + table_name + L"\" (FilePath, FilePathIdx, FileName, FileSize, FileSizeDisk, FileDateC, FileDateA, FileDateM, Category, Directory, Readonly, Hidden, System, Archive, Temp, Owner) VALUES (";
 	std::wstring sql;
 
-	for (int t = 0; t < GScanEngine->Data.Folders.size(); t++)
+	for (int t = 0; t < GScanEngine->Data.Files.size(); t++)
 	{
 		sql = stem + L"\"" + GScanEngine->Data.Folders[GScanEngine->Data.Files[t].FilePathIndex] + L"\", " +
 			std::to_wstring(GScanEngine->Data.Files[t].FilePathIndex) + L", " +
