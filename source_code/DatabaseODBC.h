@@ -12,6 +12,7 @@
 
 #pragma once
 
+#ifdef __XINORBIS
 
 #include <string>
 #include <windows.h>
@@ -53,3 +54,6 @@ public:
 	DatabaseODBC(std::wstring &);
 	~DatabaseODBC();
 };
+
+
+#endif

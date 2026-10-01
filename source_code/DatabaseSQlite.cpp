@@ -18,11 +18,11 @@
 #include "Convert.h"
 #include "DatabaseSQlite.h"
 #include "LanguageHandler.h"
-#include "ScanDetails.h"
+#include "ScanEngine.h"
 #include "sqlite3.h"
 
 extern LanguageHandler* GLanguageHandler;
-extern ScanDetails* GScanDetails;
+extern ScanEngine* GScanEngine;
 
 
 DatabaseSQlite::DatabaseSQlite(std::wstring file_name)
@@ -152,11 +152,11 @@ bool DatabaseSQlite::PopulateFileTable(const std::wstring table_name)
 
 	sqlite3_stmt* stmt;
 
-	for (FileObject *file : GScanEngine->Data.Files.size(); t++)
+	for (FileObject *file : GScanEngine->Data.Files)
 	{
 		sql = stem + L"\"" + GScanEngine->Data.Folders[file->FilePathIndex] + L"\", " +
 					 std::to_wstring(file->FilePathIndex) + L", " +
-					 L"\"" + GScanEngine->Data.Files[t].FileName + L"\", " +
+					 L"\"" + file->Name + L"\", " +
 					 std::to_wstring(file->Size) + L", " +
 					 std::to_wstring(file->SizeOnDisk) + L", " +
 					 std::to_wstring(file->DateCreated) + L", " +
@@ -389,12 +389,12 @@ bool DatabaseSQlite::PopulateSystemTable(const std::wstring table_name, const st
 	sqlite3_stmt* stmt;
 
 	std::wstring sql = stem + L"\"" + data_table_name + L"\", " +
-					   L"\"" + GScanDetails->Path.String + L"\", " +
-					   L"\"" + Convert::ConvertToUsefulUnit(GScanDetails->Data.TotalSize) + L"\", " +
-					   std::to_wstring(GScanDetails->Data.TotalSize) + L", " +
-					   std::to_wstring(GScanDetails->Data.FileCount) + L", " +
-					   std::to_wstring(GScanDetails->Data.FolderCount) + L", " +
-					   GScanDetails->Path.DateInt + L");";
+					   L"\"" + GScanEngine->Path.String + L"\", " +
+					   L"\"" + Convert::ConvertToUsefulUnit(GScanEngine->Data.TotalSize) + L"\", " +
+					   std::to_wstring(GScanEngine->Data.TotalSize) + L", " +
+					   std::to_wstring(GScanEngine->Data.FileCount) + L", " +
+					   std::to_wstring(GScanEngine->Data.FolderCount) + L", " +
+					   GScanEngine->Path.DateInt + L");";
 			
 	int rc = sqlite3_prepare16_v2(db, sql.c_str(), -1, &stmt, NULL);
 
